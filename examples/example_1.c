@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
   girara_session_destroy(session);
 
-  gtk_main();
+  /*gtk_main();*/
   
   return 0;
 }

@@ -22,18 +22,18 @@ typedef struct girara_setting_s girara_setting_t;
 
 typedef gboolean (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
 
+typedef int (*girara_setting_callback_t)(girara_session_t* session, girara_setting_t* setting);
+
 struct girara_setting_s
 {
   char* name;
-  void* variable;
-  char  type;
+  void* value;
+  int   type;
   gboolean init_only;
   char* description;
-  void (*callback)(girara_session_t*, girara_setting_t*);
+  girara_setting_callback_t callback;
   struct girara_setting_s *next;
 };
-
-typedef int (*girara_setting_callback_t)(girara_session_t* session, girara_setting_t* setting);
 
 struct girara_statusbar_item_s
 {
@@ -183,6 +183,8 @@ struct girara_session_s
 
   struct
   {
+    girara_setting_t* settings;
+
     char* font;
     char* default_background;
     char* default_foreground;

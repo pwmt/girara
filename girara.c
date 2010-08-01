@@ -29,6 +29,7 @@ girara_session_create()
 
   session->elements.statusbar_items    = NULL;
 
+  session->settings.settings                        = NULL;
   session->settings.font                            = "monospace normal 9";
   session->settings.default_background              = "#000000";
   session->settings.default_foreground              = "#DDDDDD";
@@ -154,6 +155,22 @@ girara_session_destroy(girara_session_t* session)
   /* clena up style */
   pango_font_description_free(session->style.font);
 
+  /* clean up settings */
+  girara_setting_t* setting = session->settings.settings;
+  while(setting)
+  {
+    girara_setting_t* tmp = setting->next;
+
+    if(setting->name)
+      free(setting->name);
+    if(setting->description)
+      free(setting->description);
+
+    free(setting);
+
+    setting = tmp;
+  }
+
   /* clean up statusbar items */
   girara_statusbar_item_t* item = session->elements.statusbar_items;
   while(item)
@@ -175,12 +192,49 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   if(!session)
     return FALSE;
 
+  /* search for existing setting */
+  girara_setting_t* tmp = session->settings.settings;
+  while(tmp && tmp->next)
+  {
+    if(!g_strcmp0(name, tmp->name))
+      return FALSE;
+
+    tmp = tmp->next;
+  }
+
+  /* add new setting */
+  girara_setting_t* setting = malloc(sizeof(girara_setting_t));
+  if(!setting)
+    return FALSE;
+
+  setting->name        = name ? g_strdup(name) : NULL;
+  setting->value       = value;
+  setting->type        = type;
+  setting->init_only   = init_only;
+  setting->description = description ? g_strdup(description) : NULL;
+  setting->callback    = callback;
+  setting->next        = NULL;
+
+  if(tmp)
+    tmp->next = setting;
+  else
+    session->settings.settings = setting;
+
   return TRUE;
 }
 
 gboolean
 girara_setting_set(girara_session_t* session, char* name, void* value)
 {
+  if(!session)
+    return FALSE;
+
+  girara_setting_t* setting = session->settings.settings;
+  while(setting)
+  {
+    setting = setting->next;
+  }
+
   return TRUE;
 }
 
