@@ -27,7 +27,13 @@ typedef int (*girara_setting_callback_t)(girara_session_t* session, girara_setti
 struct girara_setting_s
 {
   char* name;
-  void* value;
+  union
+  {
+    gboolean b;
+    int i;
+    float f;
+    char *s;
+  } value;
   int   type;
   gboolean init_only;
   char* description;

@@ -165,6 +165,8 @@ girara_session_destroy(girara_session_t* session)
       free(setting->name);
     if(setting->description)
       free(setting->description);
+    if(setting->type == STRING && setting->value.s != NULL)
+      free(setting->value.s);
 
     free(setting);
 
@@ -189,8 +191,8 @@ girara_session_destroy(girara_session_t* session)
 gboolean
 girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback)
 {
-  if(!session)
-    return FALSE;
+  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(name != NULL, FALSE);
 
   /* search for existing setting */
   girara_setting_t* tmp = session->settings.settings;
@@ -207,13 +209,28 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   if(!setting)
     return FALSE;
 
-  setting->name        = name ? g_strdup(name) : NULL;
-  setting->value       = value;
+  setting->name        = g_strdup(name);
   setting->type        = type;
   setting->init_only   = init_only;
   setting->description = description ? g_strdup(description) : NULL;
   setting->callback    = callback;
   setting->next        = NULL;
+  
+  switch (type)
+  {
+    case BOOLEAN:
+      setting->value.b = *((gboolean *) value);
+      break;
+    case FLOAT:
+      setting->value.f = *((float *) value);
+      break;
+    case INT:
+      setting->value.i = *((int *) value);
+      break;
+    case STRING:
+      setting->value.s = g_strdup(value);
+      break;
+  }
 
   if(tmp)
     tmp->next = setting;
@@ -226,16 +243,41 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
 gboolean
 girara_setting_set(girara_session_t* session, char* name, void* value)
 {
-  if(!session)
-    return FALSE;
+  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(name != NULL, FALSE);
 
-  girara_setting_t* setting = session->settings.settings;
-  while(setting)
+  for (girara_setting_t* setting = session->settings.settings; setting != NULL; setting = setting->next)
   {
-    setting = setting->next;
+    if (g_strcmp0(setting->name, name) != 0)
+      continue;
+
+    switch (setting->type)
+    {
+      case BOOLEAN:
+        setting->value.b = *((gboolean *) value);
+        break;
+      case FLOAT:
+        setting->value.f = *((float *) value);
+        break;
+      case INT:
+        setting->value.i = *((int *) value);
+        break;
+      case STRING:
+        if (setting->value.s != NULL)
+          g_free(setting->value.s);
+        setting->value.s = g_strdup(value);
+        break;
+      default:
+        return FALSE;
+    }
+
+    if (setting->callback != NULL)
+      setting->callback(session, setting);
+
+    return TRUE;
   }
 
-  return TRUE;
+  return FALSE;
 }
 
 gboolean
