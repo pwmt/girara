@@ -4,6 +4,17 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+enum girara_completion_arguments_e
+{
+  GIRARA_HIDE = 1,
+  GIRARA_NEXT,
+  GIRARA_PREVIOUS,
+  GIRARA_NEXT_GROUP,
+  GIRARA_PREVIOUS_GROUP,
+  GIRARA_HIGHLIGHT,
+  GIRARA_NORMAL
+};
+
 enum girara_setting_type_e
 {
   BOOLEAN,
@@ -81,6 +92,15 @@ struct girara_completion_s
 };
 
 typedef struct girara_completion_s girara_completion_t;
+
+typedef struct
+{
+  char*      command;
+  char*      description;
+  int        command_id;
+  gboolean   is_group;
+  GtkWidget* row;
+} girara_completion_row_t;
 
 typedef int (*girara_completion_function_t)(girara_session_t*, char*);
 
@@ -218,6 +238,7 @@ struct girara_session_s
     char* notification_warning_foreground;
     int   height;
     int   width;
+    int   n_completion_items;
   } settings;
 
   struct
@@ -231,6 +252,7 @@ struct girara_session_s
   {
     GString *buffer;
     int current_mode;
+    int number_of_commands;
   } global;
 
   struct
@@ -265,5 +287,6 @@ girara_completion_group_t* girara_completion_group_create(char*);
 void girara_completion_add_group(girara_completion_t*, girara_completion_group_t*);
 void girara_completion_free(girara_completion_t*);
 void girara_completion_group_add_element(girara_completion_group_t*, char*, char*);
+void girara_isc_completion(girara_session_t*, girara_argument_t*);
 
 #endif
