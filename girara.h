@@ -66,11 +66,18 @@ struct girara_completion_element_s
 
 typedef struct girara_completion_element_s girara_completion_element_t;
 
-struct girara_completion_s
+struct girara_completion_group_s
 {
   char *value;
   girara_completion_element_t *elements;
-  struct girara_completion_s *next;
+  struct girara_completion_group_s *next;
+};
+
+typedef struct girara_completion_group_s girara_completion_group_t;
+
+struct girara_completion_s
+{
+  girara_completion_group_t *groups;
 };
 
 typedef struct girara_completion_s girara_completion_t;
@@ -243,5 +250,11 @@ girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, gb
 gboolean girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text);
 
 gboolean girara_set_view(girara_session_t* session, GtkWidget* widget);
+
+girara_completion_t* girara_completion_init();
+girara_completion_group_t* girara_completion_group_create(char*);
+void girara_completion_add_group(girara_completion_t*, girara_completion_group_t*);
+void girara_completion_free(girara_completion_t*);
+void girara_completion_group_add_element(girara_completion_group_t*, char*, char*);
 
 #endif

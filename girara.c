@@ -6,7 +6,7 @@
 
 #define CLEAN(m) (m & ~(GDK_MOD2_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
 
-/* function declarations */
+/* callback declarations */
 gboolean girara_callback_view_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
 gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
 gboolean girara_callback_inputbar_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
@@ -734,4 +734,95 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   }
 
   return FALSE;
+}
+
+girara_completion_t*
+girara_completion_init()
+{
+  girara_completion_t *completion = g_slice_new(girara_completion_t);
+  completion->groups = NULL;
+
+  return completion;
+}
+
+girara_completion_group_t*
+girara_completion_group_create(char* name)
+{
+  girara_completion_group_t* group = g_slice_new(girara_completion_group_t);
+
+  group->value    = name ? g_strdup(name) : NULL;
+  group->elements = NULL;
+  group->next     = NULL;
+
+  return group;
+}
+
+void
+girara_completion_add_group(girara_completion_t* completion, girara_completion_group_t* group)
+{
+  g_return_if_fail(completion != NULL);
+  g_return_if_fail(group      != NULL);
+
+  girara_completion_group_t* cg = completion->groups;
+
+  while(cg && cg->next)
+    cg = cg->next;
+
+  if(cg)
+    cg->next = group;
+  else
+    completion->groups = group;
+}
+
+void
+girara_completion_free(girara_completion_t* completion)
+{
+  g_return_if_fail(completion != NULL);
+
+  girara_completion_group_t* group = completion->groups;
+  girara_completion_element_t *element;
+
+  while(group)
+  {
+    element = group->elements;
+    while(element)
+    {
+      girara_completion_element_t* ne = element->next;
+      g_free(element->value);
+      if(element->description)
+        g_free(element->description);
+      g_slice_free(girara_completion_element_t,  element);
+      element = ne;
+    }
+
+    girara_completion_group_t *ng = group->next;
+    if(group->value) g_free(group->value);
+    g_slice_free(girara_completion_group_t, group);
+    group = ng;
+  }
+
+  g_slice_free(girara_completion_t, completion);
+}
+
+void
+completion_group_add_element(girara_completion_group_t* group, char* name, char* description)
+{
+  g_return_if_fail(group != NULL);
+  g_return_if_fail(name != NULL);
+
+  girara_completion_element_t* el = group->elements;
+
+  while(el && el->next)
+    el = el->next;
+
+  girara_completion_element_t* new_element = g_slice_new(girara_completion_element_t);
+
+  new_element->value       = g_strdup(name);
+  new_element->description = description ?  g_strdup(description) : NULL;
+  new_element->next        = NULL;
+
+  if(el)
+    el->next = new_element;
+  else
+    group->elements = new_element;
 }
