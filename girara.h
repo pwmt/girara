@@ -49,7 +49,7 @@ typedef struct
   void *data;
 } girara_argument_t;
 
-typedef gboolean (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*);
+typedef void (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*);
 
 struct girara_completion_element_s
 {
@@ -205,6 +205,16 @@ struct girara_session_s
     int   height;
     int   width;
   } settings;
+
+  struct
+  {
+    int view_key_pressed;
+  } signals;
+
+  struct
+  {
+    int current_mode;
+  } global;
 };
 
 girara_session_t* girara_session_create();

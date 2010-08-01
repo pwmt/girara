@@ -3,6 +3,11 @@
 
 #include "../girara.h"
 
+void sc_quit(girara_session_t* session, girara_argument_t* argument)
+{
+  gtk_main_quit();
+}
+
 int main(int argc, char *argv[])
 {
   gtk_init(&argc, &argv);
@@ -13,9 +18,12 @@ int main(int argc, char *argv[])
   girara_statusbar_item_t* item = girara_statusbar_item_add(session, TRUE, TRUE, TRUE, NULL);
   girara_statusbar_item_set_text(session, item, "girara-left");
 
-  girara_session_destroy(session);
+  girara_argument_t argument = {0, NULL};
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q, NULL, sc_quit, 0, argument);
 
-  /*gtk_main();*/
+  gtk_main();
+
+  girara_session_destroy(session);
   
   return 0;
 }
