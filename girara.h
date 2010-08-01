@@ -35,10 +35,13 @@ struct girara_setting_s
 
 typedef int (*girara_setting_callback_t)(girara_session_t* session, girara_setting_t* setting);
 
-typedef struct
+struct girara_statusbar_item_s
 {
   GtkLabel *text;
-} girara_statusbar_item_t;
+  struct girara_statusbar_item_s *next;
+};
+
+typedef struct girara_statusbar_item_s girara_statusbar_item_t;
 
 typedef struct
 {
@@ -175,6 +178,11 @@ struct girara_session_s
 
   struct
   {
+    girara_statusbar_item_t* statusbar_items;
+  } elements;
+
+  struct
+  {
     char* font;
     char* default_background;
     char* default_foreground;
@@ -192,6 +200,8 @@ struct girara_session_s
     char* notification_error_foreground;
     char* notification_warning_background;
     char* notification_warning_foreground;
+    int   height;
+    int   width;
   } settings;
 };
 
@@ -208,7 +218,7 @@ int girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int ke
 int girara_inputbar_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument);
 int girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument);
 
-girara_statusbar_item_t* girara_statusbar_add_item(girara_session_t* session, gboolean expand, gboolean fill, girara_statusbar_event_t callback);
+girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean fill, gboolean left, girara_statusbar_event_t callback);
 int girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text);
 
 int girara_set_view(girara_session_t* session, GtkWidget* widget);

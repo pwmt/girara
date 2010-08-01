@@ -27,6 +27,8 @@ girara_session_create()
   session->bindings.shortcuts          = NULL;
   session->bindings.inputbar_shortcuts = NULL;
 
+  session->elements.statusbar_items    = NULL;
+
   session->settings.font                            = "monospace normal 9";
   session->settings.default_background              = "#000000";
   session->settings.default_foreground              = "#DDDDDD";
@@ -44,6 +46,9 @@ girara_session_create()
   session->settings.notification_error_foreground   = "#FFFFFF";
   session->settings.notification_warning_background = "#FFF712";
   session->settings.notification_warning_foreground = "#000000";
+
+  session->settings.width  = 800;
+  session->settings.height = 600;
 
   /* add default settings */
   girara_setting_add(session, "font",                     &(session->settings.font),                            STRING, TRUE, NULL, NULL);
@@ -63,6 +68,8 @@ girara_session_create()
   girara_setting_add(session, "notification-error-bg",    &(session->settings.notification_error_background),   STRING, TRUE, NULL, NULL);
   girara_setting_add(session, "notification-warning-fg",  &(session->settings.notification_warning_foreground), STRING, TRUE, NULL, NULL);
   girara_setting_add(session, "notification-warning-bg",  &(session->settings.notification_warning_background), STRING, TRUE, NULL, NULL);
+  girara_setting_add(session, "width",                    &(session->settings.width),                           INT,    TRUE, NULL, NULL);
+  girara_setting_add(session, "height",                   &(session->settings.height),                          INT,    TRUE, NULL, NULL);
 
   return session;
 }
@@ -102,7 +109,7 @@ girara_session_init(girara_session_t* session)
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.statusbar), FALSE, FALSE, 0);
   gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),  FALSE, FALSE, 0);
 
-  /* set values */
+  /* parse color values */
   gdk_color_parse(session->settings.default_foreground,              &(session->style.default_foreground));
   gdk_color_parse(session->settings.default_background,              &(session->style.default_background));
   gdk_color_parse(session->settings.inputbar_foreground,             &(session->style.inputbar_foreground));
@@ -122,6 +129,17 @@ girara_session_init(girara_session_t* session)
 
   session->style.font = pango_font_description_from_string(session->settings.font);
 
+  /* statusbar */
+  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));
+
+  /* inputbar */
+  gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_background));
+  gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+  gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),                     session->style.font);
+
+  /* set window size */
+  gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), session->settings.width, session->settings.height);
+
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
 
   return 0;
@@ -130,13 +148,33 @@ girara_session_init(girara_session_t* session)
 void
 girara_session_destroy(girara_session_t* session)
 {
-  if(session)
-    free(session);
+  if(!session)
+    return;
+
+  /* clena up style */
+  pango_font_description_free(session->style.font);
+
+  /* clean up statusbar items */
+  girara_statusbar_item_t* item = session->elements.statusbar_items;
+  while(item)
+  {
+    girara_statusbar_item_t* tmp = item->next;
+
+    free(item);
+
+    item = tmp;
+  }
+
+  free(session);
 }
 
 int
 girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback)
 {
+  if(!session)
+    return -1;
+
+
   return 0;
 }
 
@@ -164,7 +202,7 @@ girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, g
   return 0;
 }
 
-int 
+int
 girara_inputbar_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument)
 {
   return 0;
@@ -177,14 +215,52 @@ girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_s
 }
 
 girara_statusbar_item_t*
-girara_statusbar_add_item(girara_session_t* session, gboolean expand, gboolean fill, girara_statusbar_event_t callback)
+girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean fill, gboolean left, girara_statusbar_event_t callback)
 {
-  return NULL;
+  if(!session)
+    return NULL;
+
+  girara_statusbar_item_t* item = malloc(sizeof(girara_statusbar_item_t));
+  if(!item)
+    return NULL;
+
+  item->text = GTK_LABEL(gtk_label_new(NULL));
+  item->next = NULL;
+
+  /* set style */
+  gtk_widget_modify_fg(GTK_WIDGET(item->text),     GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+  gtk_widget_modify_font(GTK_WIDGET(item->text),   session->style.font);
+
+  /* set properties */
+  gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.0);
+  gtk_misc_set_padding(GTK_MISC(item->text),       2.0, 4.0);
+  gtk_label_set_use_markup(item->text,             TRUE);
+
+  if(callback)
+    g_signal_connect(G_OBJECT(item->text), "event", G_CALLBACK(callback), NULL);
+
+  /* add it to the list */
+  gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->text), expand, fill, 2);
+  gtk_widget_show_all(GTK_WIDGET(item->text));
+
+  if(session->elements.statusbar_items)
+    item->next = session->elements.statusbar_items;
+
+  session->elements.statusbar_items = item;
+
+  return item;
 }
 
 int
 girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text)
 {
+  if(!session || !item)
+    return -1;
+
+  char* escaped_text = g_markup_escape_text(text, -1);
+  gtk_label_set_markup((GtkLabel*) item->text, escaped_text);
+  g_free(escaped_text);
+
   return 0;
 }
 
