@@ -163,7 +163,7 @@ girara_session_destroy(girara_session_t* session)
   if(!session)
     return FALSE;
 
-  /* clena up style */
+  /* clean up style */
   pango_font_description_free(session->style.font);
 
   /* clean up shortcuts */
@@ -171,10 +171,17 @@ girara_session_destroy(girara_session_t* session)
   while(shortcut)
   {
     girara_shortcut_t* tmp = shortcut->next;
-
     free(shortcut);
-
     shortcut = tmp;
+  }
+
+  /* clean up mouse events */
+  girara_mouse_event_t* mouse_event = session->bindings.mouse_events;
+  while(mouse_event)
+  {
+    girara_mouse_event_t* tmp = mouse_event->next;
+    free(mouse_event);
+    mouse_event = tmp;
   }
 
   /* clean up settings */
@@ -188,7 +195,6 @@ girara_session_destroy(girara_session_t* session)
       free(setting->description);
     if(setting->type == STRING && setting->value.s != NULL)
       free(setting->value.s);
-
     free(setting);
 
     setting = tmp;
@@ -199,9 +205,7 @@ girara_session_destroy(girara_session_t* session)
   while(item)
   {
     girara_statusbar_item_t* tmp = item->next;
-
     free(item);
-
     item = tmp;
   }
 
@@ -365,6 +369,42 @@ girara_inputbar_special_command_add(girara_session_t* session, char identifier, 
 gboolean
 girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument)
 {
+  if(!session || !function)
+    return FALSE;
+
+  /* search for existing binding */
+  girara_mouse_event_t* tmp = session->bindings.mouse_events;
+
+  while(tmp)
+  {
+    if(tmp->mask == mask && tmp->button == button &&
+       tmp->mode == mode)
+    {
+      tmp->function = function;
+      tmp->argument = argument;
+      return TRUE;
+    }
+
+    tmp = tmp->next;
+  }
+
+  /* add new mouse event */
+  girara_mouse_event_t* mouse_event = malloc(sizeof(girara_mouse_event_t));
+  if(!mouse_event)
+    return FALSE;
+
+  mouse_event->mask     = mask;
+  mouse_event->button   = button;
+  mouse_event->function = function;
+  mouse_event->mode     = mode;
+  mouse_event->argument = argument;
+  mouse_event->next     = NULL;
+
+  if(tmp)
+    tmp->next = mouse_event;
+  else
+    session->bindings.mouse_events = mouse_event;
+
   return TRUE;
 }
 
