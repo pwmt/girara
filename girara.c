@@ -155,14 +155,24 @@ girara_session_destroy(girara_session_t* session)
   /* clena up style */
   pango_font_description_free(session->style.font);
 
+  /* clean up shortcuts */
+  girara_shortcut_t* shortcut = session->bindings.shortcuts;
+  while(shortcut)
+  {
+    girara_shortcut_t* tmp = shortcut->next;
+
+    free(shortcut);
+
+    shortcut = tmp;
+  }
+
   /* clean up settings */
   girara_setting_t* setting = session->settings.settings;
   while(setting)
   {
     girara_setting_t* tmp = setting->next;
 
-    if(setting->name)
-      free(setting->name);
+    free(setting->name);
     if(setting->description)
       free(setting->description);
     if(setting->type == STRING && setting->value.s != NULL)
@@ -283,6 +293,43 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
 gboolean
 girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument)
 {
+  if(!session || (buffer && (key || modifier)))
+    return FALSE;
+
+  /* search for existing binding */
+  girara_shortcut_t* tmp = session->bindings.shortcuts;
+
+  while(tmp)
+  {
+    if(tmp->mask == modifier && tmp->key == key &&
+       tmp->buffered_command == buffer && tmp->mode == mode)
+    {
+      tmp->function = function;
+      tmp->argument = argument;
+      return TRUE;
+    }
+
+    tmp = tmp->next;
+  }
+
+  /* add new shortcut */
+  girara_shortcut_t* shortcut = malloc(sizeof(girara_shortcut_t));
+  if(!shortcut)
+    return FALSE;
+
+  shortcut->mask             = modifier;
+  shortcut->key              = key;
+  shortcut->buffered_command = buffer;
+  shortcut->function         = function;
+  shortcut->mode             = mode;
+  shortcut->argument         = argument;
+  shortcut->next             = NULL;
+
+  if(tmp)
+    tmp->next = shortcut;
+  else
+    session->bindings.shortcuts = shortcut;
+
   return TRUE;
 }
 
