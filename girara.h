@@ -248,6 +248,8 @@ gboolean girara_mouse_event_add(girara_session_t* session, int mask, int button,
 
 girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean fill, gboolean left, girara_statusbar_event_t callback);
 gboolean girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text);
+gboolean girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color);
+gboolean girara_statusbar_set_background(girara_session_t* session, char* color);
 
 gboolean girara_set_view(girara_session_t* session, GtkWidget* widget);
 

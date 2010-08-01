@@ -591,6 +591,31 @@ girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_
 }
 
 gboolean
+girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color)
+{
+  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(item    != NULL, FALSE);
+
+  GdkColor gdk_color;
+  gdk_color_parse(color, &gdk_color);
+  gtk_widget_modify_fg(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &gdk_color);
+
+  return TRUE;
+}
+
+gboolean
+girara_statusbar_set_background(girara_session_t* session, char* color)
+{
+  g_return_val_if_fail(session != NULL, FALSE);
+
+  GdkColor gdk_color;
+  gdk_color_parse(color, &gdk_color);
+  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
+
+  return TRUE;
+}
+
+gboolean
 girara_set_view(girara_session_t* session, GtkWidget* widget)
 {
   g_return_val_if_fail(session != NULL, FALSE);
