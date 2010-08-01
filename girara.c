@@ -74,7 +74,7 @@ girara_session_create()
   return session;
 }
 
-int
+gboolean
 girara_session_init(girara_session_t* session)
 {
   if(session->gtk.embed)
@@ -145,11 +145,11 @@ girara_session_init(girara_session_t* session)
   return 0;
 }
 
-void
+gboolean
 girara_session_destroy(girara_session_t* session)
 {
   if(!session)
-    return;
+    return FALSE;
 
   /* clena up style */
   pango_font_description_free(session->style.font);
@@ -166,52 +166,52 @@ girara_session_destroy(girara_session_t* session)
   }
 
   free(session);
+  return TRUE;
 }
 
-int
+gboolean
 girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback)
 {
   if(!session)
-    return -1;
+    return FALSE;
 
-
-  return 0;
+  return TRUE;
 }
 
-int
+gboolean
 girara_setting_set(girara_session_t* session, char* name, void* value)
 {
-  return 0;
+  return TRUE;
 }
 
-int
+gboolean
 girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument)
 {
-  return 0;
+  return TRUE;
 }
 
-int
+gboolean
 girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description)
 {
-  return 0;
+  return TRUE;
 }
 
-int
+gboolean
 girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, girara_shortcut_function_t function, girara_argument_t argument)
 {
-  return 0;
+  return TRUE;
 }
 
-int
+gboolean
 girara_inputbar_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument)
 {
-  return 0;
+  return TRUE;
 }
 
-int
+gboolean
 girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument)
 {
-  return 0;
+  return TRUE;
 }
 
 girara_statusbar_item_t*
@@ -251,21 +251,21 @@ girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean f
   return item;
 }
 
-int
+gboolean
 girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text)
 {
   if(!session || !item)
-    return -1;
+    return FALSE;
 
   char* escaped_text = g_markup_escape_text(text, -1);
   gtk_label_set_markup((GtkLabel*) item->text, escaped_text);
   g_free(escaped_text);
 
-  return 0;
+  return TRUE;
 }
 
-int
+gboolean
 girara_set_view(girara_session_t* session, GtkWidget* widget)
 {
-  return 0;
+  return TRUE;
 }
