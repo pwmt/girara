@@ -9,6 +9,7 @@
 /* function declarations */
 gboolean girara_callback_view_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
 gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
+gboolean girara_callback_inputbar_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
 
 girara_session_t*
 girara_session_create()
@@ -118,8 +119,8 @@ girara_session_init(girara_session_t* session)
   gtk_entry_set_has_frame(session->gtk.inputbar, FALSE);
   gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar), TRUE);
 
-  /*session->signals.inputbar_key_pressed = g_signal_connect(G_OBJECT(session->gtk.inputbar), "key-press-event", G_CALLBACK(girara_callback_inputbar_activate), session);*/
-  session->signals.inputbar_activate    = g_signal_connect(G_OBJECT(session->gtk.inputbar), "activate",        G_CALLBACK(girara_callback_inputbar_activate), session);
+  session->signals.inputbar_key_pressed = g_signal_connect(G_OBJECT(session->gtk.inputbar), "key-press-event", G_CALLBACK(girara_callback_inputbar_key_press_event), session);
+  session->signals.inputbar_activate    = g_signal_connect(G_OBJECT(session->gtk.inputbar), "activate",        G_CALLBACK(girara_callback_inputbar_activate),        session);
 
   /* packing */
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),       TRUE,  TRUE, 0);
@@ -689,6 +690,47 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     }
 
     command = command->next;
+  }
+
+  return FALSE;
+}
+
+gboolean
+girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, FALSE);
+
+  girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
+  while(inputbar_shortcut)
+  {
+    if(inputbar_shortcut->key == event->keyval
+     && inputbar_shortcut->mask == CLEAN(event->state))
+    {
+      inputbar_shortcut->function(session, &(inputbar_shortcut->argument));
+      return TRUE;
+    }
+
+    inputbar_shortcut = inputbar_shortcut->next;
+  }
+
+  /* special commands */
+  char *identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
+  char identifier    = identifier_s[0];
+  g_free(identifier_s);
+
+  girara_special_command_t* special_command = session->bindings.special_commands;
+  while(special_command)
+  {
+    if((special_command->identifier == identifier) &&
+       (special_command->always == TRUE))
+    {
+      gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
+      special_command->function(session, input, &(special_command->argument));
+      g_free(input);
+      return TRUE;
+    }
+
+    special_command = special_command->next;
   }
 
   return FALSE;
