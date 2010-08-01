@@ -175,6 +175,20 @@ girara_session_destroy(girara_session_t* session)
     shortcut = tmp;
   }
 
+  /* clean up commands */
+  girara_command_t* command = session->bindings.commands;
+  while(command)
+  {
+    girara_command_t* tmp = command->next;
+    free(command->command);
+    if(command->abbr)
+      free(command->abbr);
+    if(command->description)
+      free(command->description);
+    free(command);
+    command = tmp;
+  }
+
   /* clean up mouse events */
   girara_mouse_event_t* mouse_event = session->bindings.mouse_events;
   while(mouse_event)
@@ -351,6 +365,48 @@ girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buff
 gboolean
 girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description)
 {
+  if(!session || !command || !function)
+    return FALSE;
+
+  /* search for existing binding */
+  girara_command_t* tmp = session->bindings.commands;
+
+  while(tmp)
+  {
+    if(!g_strcmp0(tmp->command, command))
+    {
+      if(tmp->abbr)
+        free(tmp->abbr);
+      if(tmp->description)
+        free(tmp->description);
+
+      tmp->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
+      tmp->function    = function;
+      tmp->completion  = completion;
+      tmp->description = description ? g_strdup(description) : NULL;
+      return TRUE;
+    }
+
+    tmp = tmp->next;
+  }
+
+  /* add new inputbar command */
+  girara_command_t* new_command = malloc(sizeof(girara_command_t));
+  if(!command)
+    return FALSE;
+
+  new_command->command     = g_strdup(command);
+  new_command->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
+  new_command->function    = function;
+  new_command->completion  = completion;
+  new_command->description = description ? g_strdup(description) : NULL;
+  new_command->next        = NULL;
+
+  if(tmp)
+    tmp->next = new_command;
+  else
+    session->bindings.commands = new_command;
+
   return TRUE;
 }
 
