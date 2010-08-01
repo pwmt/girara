@@ -4,15 +4,6 @@
 #include "../girara.h"
 
 int setting_cb(girara_session_t* session, girara_setting_t* setting);
-gboolean cmd_quit(girara_session_t* session, int argc, char** argv)
-{
-  gtk_main_quit();
-  return FALSE;
-}
-void sc_quit(girara_session_t* session, girara_argument_t* argument)
-{
-  gtk_main_quit();
-}
 
 int main(int argc, char *argv[])
 {
@@ -21,8 +12,6 @@ int main(int argc, char *argv[])
   girara_session_t* session = girara_session_create();
   girara_session_init(session);
 
-  girara_inputbar_command_add(session, "quit", NULL, cmd_quit, NULL, "Quit the program");
-
   int test_val_int = -1337;
   girara_setting_add(session, "test-val-int", &test_val_int, INT, FALSE, NULL, setting_cb);
   test_val_int = 42;
@@ -30,9 +19,6 @@ int main(int argc, char *argv[])
 
   girara_statusbar_item_t* item = girara_statusbar_item_add(session, TRUE, TRUE, TRUE, NULL);
   girara_statusbar_item_set_text(session, item, "girara-left");
-
-  girara_argument_t argument = {0, NULL};
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q, NULL, sc_quit, 0, argument);
 
   gtk_main();
 

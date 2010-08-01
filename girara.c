@@ -6,11 +6,21 @@
 
 #define CLEAN(m) (m & ~(GDK_MOD2_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
 
+/* default shortcuts */
+void girara_sc_focus_inputbar(girara_session_t*, girara_argument_t*);
+void girara_sc_quit(girara_session_t*, girara_argument_t*);
+
+/* default commands */
+gboolean girara_cmd_map(girara_session_t*, int, char**);
+gboolean girara_cmd_quit(girara_session_t*, int, char**);
+gboolean girara_cmd_set(girara_session_t*, int, char**);
+
 /* callback declarations */
 gboolean girara_callback_view_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
 gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
 gboolean girara_callback_inputbar_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
 
+/* header functions implementation */
 girara_session_t*
 girara_session_create()
 {
@@ -82,6 +92,15 @@ girara_session_create()
   girara_setting_add(session, "width",                    &(session->settings.width),                           INT,    TRUE, NULL, NULL);
   girara_setting_add(session, "height",                   &(session->settings.height),                          INT,    TRUE, NULL, NULL);
 
+  /* default shortcuts */
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           0, 0, NULL);
+  girara_shortcut_add(session, 0,                GDK_colon, NULL, girara_sc_focus_inputbar, 0, 0, ":");
+
+  /* default commands */
+  girara_inputbar_command_add(session, "map",  "m", girara_cmd_map,  NULL, "Map a key sequence");
+  girara_inputbar_command_add(session, "quit", "q", girara_cmd_quit, NULL, "Quit the program");
+  girara_inputbar_command_add(session, "set",  "s", girara_cmd_set,  NULL, "Set an option");
+
   return session;
 }
 
@@ -104,7 +123,7 @@ girara_session_init(girara_session_t* session)
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
 
   /* view */
-  session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event", 
+  session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
       G_CALLBACK(girara_callback_view_key_press_event), session);
 
   /* box */
@@ -275,7 +294,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   setting->description = description ? g_strdup(description) : NULL;
   setting->callback    = callback;
   setting->next        = NULL;
-  
+
   switch (type)
   {
     case BOOLEAN:
@@ -294,7 +313,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
 
   if(tmp)
     tmp->next = setting;
-  else
+  if(!session->settings.settings)
     session->settings.settings = setting;
 
   return TRUE;
@@ -341,15 +360,17 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
 }
 
 gboolean
-girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument)
+girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(!(buffer && (key || modifier)), FALSE);
 
+  girara_argument_t argument = {argument_n, argument_data};
+
   /* search for existing binding */
   girara_shortcut_t* tmp = session->bindings.shortcuts;
 
-  while(tmp)
+  while(tmp && tmp->next)
   {
     if(tmp->mask == modifier && tmp->key == key &&
        tmp->buffered_command == buffer && tmp->mode == mode)
@@ -375,7 +396,7 @@ girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buff
 
   if(tmp)
     tmp->next = shortcut;
-  else
+  if(!session->bindings.shortcuts)
     session->bindings.shortcuts = shortcut;
 
   return TRUE;
@@ -391,7 +412,7 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   /* search for existing binding */
   girara_command_t* tmp = session->bindings.commands;
 
-  while(tmp)
+  while(tmp && tmp->next)
   {
     if(!g_strcmp0(tmp->command, command))
     {
@@ -422,22 +443,24 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
 
   if(tmp)
     tmp->next = new_command;
-  else
+  if(!session->bindings.commands)
     session->bindings.commands = new_command;
 
   return TRUE;
 }
 
 gboolean
-girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, girara_shortcut_function_t function, girara_argument_t argument)
+girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, girara_shortcut_function_t function, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
 
+  girara_argument_t argument = {argument_n, argument_data};
+
   /* search for existing special command */
   girara_inputbar_shortcut_t* tmp = session->bindings.inputbar_shortcuts;
 
-  while(tmp)
+  while(tmp && tmp->next)
   {
     if(tmp->mask == modifier && tmp->key == key)
     {
@@ -459,22 +482,24 @@ girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, g
 
   if(tmp)
     tmp->next = inputbar_shortcut;
-  else
+  if(!session->bindings.inputbar_shortcuts)
     session->bindings.inputbar_shortcuts = inputbar_shortcut;
 
   return TRUE;
 }
 
 gboolean
-girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument)
+girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
 
+  girara_argument_t argument = {argument_n, argument_data};
+
   /* search for existing special command */
   girara_special_command_t* tmp = session->bindings.special_commands;
 
-  while(tmp)
+  while(tmp && tmp->next)
   {
     if(tmp->identifier == identifier)
     {
@@ -497,22 +522,24 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
 
   if(tmp)
     tmp->next = special_command;
-  else
+  if(session->bindings.special_commands)
     session->bindings.special_commands = special_command;
 
   return TRUE;
 }
 
 gboolean
-girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument)
+girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
 
+  girara_argument_t argument = {argument_n, argument_data};
+
   /* search for existing binding */
   girara_mouse_event_t* tmp = session->bindings.mouse_events;
 
-  while(tmp)
+  while(tmp && tmp->next)
   {
     if(tmp->mask == mask && tmp->button == button &&
        tmp->mode == mode)
@@ -537,7 +564,7 @@ girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_s
 
   if(tmp)
     tmp->next = mouse_event;
-  else
+  if(!session->bindings.mouse_events)
     session->bindings.mouse_events = mouse_event;
 
   return TRUE;
@@ -623,6 +650,50 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
   return TRUE;
 }
 
+/* default shortcut implementation */
+void
+girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
+{
+  g_return_if_fail(session != NULL);
+
+  if(!(GTK_WIDGET_VISIBLE(GTK_WIDGET(session->gtk.inputbar))))
+    gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
+
+  if(argument->data)
+  {
+    gtk_entry_set_text(session->gtk.inputbar, (char*) argument->data);
+    gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar));
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+  }
+}
+
+void
+girara_sc_quit(girara_session_t* session, girara_argument_t* argument)
+{
+  gtk_main_quit();
+}
+
+/* default commands implementation */
+gboolean
+girara_cmd_map(girara_session_t* session, int argc, char** argv)
+{
+  return TRUE;
+}
+
+gboolean
+girara_cmd_quit(girara_session_t* session, int argc, char** argv)
+{
+  gtk_main_quit();
+  return TRUE;
+}
+
+gboolean
+girara_cmd_set(girara_session_t* session, int argc, char** argv)
+{
+  return TRUE;
+}
+
+/* callback implementation */
 gboolean
 girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
 {
@@ -633,7 +704,8 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
   {
     if(
        event->keyval == shortcut->key
-       && CLEAN(event->state) == shortcut->mask
+       && (CLEAN(event->state) == shortcut->mask || (shortcut->key >= 0x21
+       && shortcut->key <= 0x7E && CLEAN(event->state) == GDK_SHIFT_MASK))
        && (session->global.current_mode & shortcut->mode || shortcut->mode == 0)
        && shortcut->function
       )
