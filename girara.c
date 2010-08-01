@@ -7,7 +7,8 @@
 #define CLEAN(m) (m & ~(GDK_MOD2_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
 
 /* function declarations */
-gboolean girara_callback_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
+gboolean girara_callback_view_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
+gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
 
 girara_session_t*
 girara_session_create()
@@ -29,6 +30,7 @@ girara_session_create()
 
   session->bindings.mouse_events       = NULL;
   session->bindings.commands           = NULL;
+  session->bindings.special_commands   = NULL;
   session->bindings.shortcuts          = NULL;
   session->bindings.inputbar_shortcuts = NULL;
 
@@ -56,7 +58,9 @@ girara_session_create()
   session->settings.width  = 800;
   session->settings.height = 600;
 
-  session->signals.view_key_pressed = 0;
+  session->signals.view_key_pressed     = 0;
+  session->signals.inputbar_key_pressed = 0;
+  session->signals.inputbar_activate    = 0;
 
   /* add default settings */
   girara_setting_add(session, "font",                     &(session->settings.font),                            STRING, TRUE, NULL, NULL);
@@ -102,7 +106,7 @@ girara_session_init(girara_session_t* session)
 
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event", 
-      G_CALLBACK(girara_callback_key_press_event), session);
+      G_CALLBACK(girara_callback_view_key_press_event), session);
 
   /* box */
   gtk_box_set_spacing(session->gtk.box, 0);
@@ -115,6 +119,9 @@ girara_session_init(girara_session_t* session)
   gtk_entry_set_inner_border(session->gtk.inputbar, NULL);
   gtk_entry_set_has_frame(session->gtk.inputbar, FALSE);
   gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar), TRUE);
+
+  /*session->signals.inputbar_key_pressed = g_signal_connect(G_OBJECT(session->gtk.inputbar), "key-press-event", G_CALLBACK(girara_callback_inputbar_activate), session);*/
+  session->signals.inputbar_activate    = g_signal_connect(G_OBJECT(session->gtk.inputbar), "activate",        G_CALLBACK(girara_callback_inputbar_activate), session);
 
   /* packing */
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),       TRUE,  TRUE, 0);
@@ -417,7 +424,7 @@ girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, g
 }
 
 gboolean
-girara_inputbar_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument)
+girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument)
 {
   return TRUE;
 }
@@ -521,7 +528,7 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
 }
 
 gboolean
-girara_callback_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
+girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
 {
   girara_shortcut_t* shortcut = session->bindings.shortcuts;
   while(shortcut)
@@ -541,4 +548,76 @@ girara_callback_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_se
   }
 
   return FALSE;
+}
+
+gboolean
+girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
+{
+  gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
+  if(!input)
+    return FALSE;
+
+  gchar **tokens = g_strsplit(input, " ", -1);
+  if(!tokens)
+  {
+    g_free(input);
+    return FALSE;
+  }
+
+  gchar *cmd = tokens[0];
+  int length = g_strv_length(tokens);
+
+  if(length < 1)
+  {
+    g_free(input);
+    g_strfreev(tokens);
+    return FALSE;
+  }
+
+  /* special commands */
+  char *identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
+  char identifier    = identifier_s[0];
+  g_free(identifier_s);
+
+  girara_special_command_t* special_command = session->bindings.special_commands;
+  while(special_command)
+  {
+    if(special_command->identifier == identifier)
+    {
+      if(special_command->always == 1)
+      {
+        g_free(input);
+        g_strfreev(tokens);
+        return FALSE;
+      }
+
+      special_command->function(session, input, &(special_command->argument));
+
+      g_free(input);
+      g_strfreev(tokens);
+      return TRUE;
+    }
+
+    special_command = special_command->next;
+  }
+
+  /* search commands */
+  girara_command_t* command = session->bindings.commands;
+  while(command)
+  {
+    if((g_strcmp0(cmd, command->command) == 0) ||
+       (g_strcmp0(cmd, command->abbr)    == 0))
+    {
+      command->function(session, length - 1, tokens + 1);
+      break;
+    }
+
+    command = command->next;
+  }
+
+  g_free(input);
+  g_strfreev(tokens);
+
+  return TRUE;
+
 }

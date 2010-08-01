@@ -103,18 +103,18 @@ typedef struct girara_inputbar_shortcut_s girara_inputbar_shortcut_t;
 
 typedef gboolean (*girara_inputbar_special_function_t)(girara_session_t*, char*, girara_argument_t*);
 
-struct girara_inputbar_special_command_s
+struct girara_special_command_s
 {
   char identifier;
   girara_inputbar_special_function_t function;
   gboolean always;
   girara_argument_t argument;
-  struct girara_inputbar_special_command_s *next;
+  struct girara_special_command_s *next;
 };
 
-typedef struct girara_inputbar_special_command_s girara_inputbar_special_command_t;
+typedef struct girara_special_command_s girara_special_command_t;
 
-typedef gboolean (*girara_command_function_t)(int, char**);
+typedef gboolean (*girara_command_function_t)(girara_session_t*, int, char**);
 
 struct girara_command_s
 {
@@ -179,6 +179,7 @@ struct girara_session_s
     girara_mouse_event_t* mouse_events;
     girara_command_t* commands;
     girara_shortcut_t* shortcuts;
+    girara_special_command_t* special_commands;
     girara_inputbar_shortcut_t* inputbar_shortcuts;
   } bindings;
 
@@ -214,6 +215,8 @@ struct girara_session_s
 
   struct
   {
+    int inputbar_activate;
+    int inputbar_key_pressed;
     int view_key_pressed;
   } signals;
 
@@ -233,7 +236,7 @@ gboolean girara_setting_set(girara_session_t* session, char* name, void* value);
 gboolean girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument);
 gboolean girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description);
 gboolean girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, girara_shortcut_function_t function, girara_argument_t argument);
-gboolean girara_inputbar_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument);
+gboolean girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, girara_argument_t argument);
 gboolean girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument);
 
 girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean fill, gboolean left, girara_statusbar_event_t callback);

@@ -4,8 +4,9 @@
 #include "../girara.h"
 
 int setting_cb(girara_session_t* session, girara_setting_t* setting);
-gboolean cmd_quit(int argc, char** argv)
+gboolean cmd_quit(girara_session_t* session, int argc, char** argv)
 {
+  gtk_main_quit();
   return FALSE;
 }
 void sc_quit(girara_session_t* session, girara_argument_t* argument)
