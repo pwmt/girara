@@ -13,7 +13,7 @@ gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
 girara_session_t*
 girara_session_create()
 {
-  girara_session_t* session = malloc(sizeof(girara_session_t));
+  girara_session_t* session = g_slice_new(girara_session_t);
   if(!session)
     return NULL;
 
@@ -178,7 +178,7 @@ girara_session_destroy(girara_session_t* session)
   while(shortcut)
   {
     girara_shortcut_t* tmp = shortcut->next;
-    free(shortcut);
+    g_slice_free(girara_shortcut_t, shortcut);
     shortcut = tmp;
   }
 
@@ -192,7 +192,7 @@ girara_session_destroy(girara_session_t* session)
       free(command->abbr);
     if(command->description)
       free(command->description);
-    free(command);
+    g_slice_free(girara_command_t, command);
     command = tmp;
   }
 
@@ -201,7 +201,7 @@ girara_session_destroy(girara_session_t* session)
   while(mouse_event)
   {
     girara_mouse_event_t* tmp = mouse_event->next;
-    free(mouse_event);
+    g_slice_free(girara_mouse_event_t, mouse_event);
     mouse_event = tmp;
   }
 
@@ -216,7 +216,7 @@ girara_session_destroy(girara_session_t* session)
       free(setting->description);
     if(setting->type == STRING && setting->value.s != NULL)
       free(setting->value.s);
-    free(setting);
+    g_slice_free(girara_setting_t, setting);
 
     setting = tmp;
   }
@@ -226,11 +226,11 @@ girara_session_destroy(girara_session_t* session)
   while(item)
   {
     girara_statusbar_item_t* tmp = item->next;
-    free(item);
+    g_slice_free(girara_statusbar_item_t, item);
     item = tmp;
   }
 
-  free(session);
+  g_slice_free(girara_session_t, session);
   return TRUE;
 }
 
@@ -251,7 +251,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   }
 
   /* add new setting */
-  girara_setting_t* setting = malloc(sizeof(girara_setting_t));
+  girara_setting_t* setting = g_slice_new(girara_setting_t);
   if(!setting)
     return FALSE;
 
@@ -349,7 +349,7 @@ girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buff
   }
 
   /* add new shortcut */
-  girara_shortcut_t* shortcut = malloc(sizeof(girara_shortcut_t));
+  girara_shortcut_t* shortcut = g_slice_new(girara_shortcut_t);
   if(!shortcut)
     return FALSE;
 
@@ -398,7 +398,7 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   }
 
   /* add new inputbar command */
-  girara_command_t* new_command = malloc(sizeof(girara_command_t));
+  girara_command_t* new_command = g_slice_new(girara_command_t);
   if(!command)
     return FALSE;
 
@@ -452,7 +452,7 @@ girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_s
   }
 
   /* add new mouse event */
-  girara_mouse_event_t* mouse_event = malloc(sizeof(girara_mouse_event_t));
+  girara_mouse_event_t* mouse_event = g_slice_new(girara_mouse_event_t);
   if(!mouse_event)
     return FALSE;
 
@@ -477,7 +477,7 @@ girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean f
   if(!session)
     return NULL;
 
-  girara_statusbar_item_t* item = malloc(sizeof(girara_statusbar_item_t));
+  girara_statusbar_item_t* item = g_slice_new(girara_statusbar_item_t);
   if(!item)
     return NULL;
 
