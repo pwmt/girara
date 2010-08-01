@@ -2,7 +2,7 @@
 
 include ../config.mk
 
-SOURCE   = 
+SOURCE   = example_1.c
 OBJECTS  = ${SOURCE:.c=}
 
 all: options ${OBJECTS}
@@ -16,7 +16,7 @@ options:
 
 %: %.c
 	@echo CC $<
-	@${CC} ${CFLAGS} -o $@ $< ../${ITLIB}
+	@${CC} ${CFLAGS} -o $@ $< ../libgirara.a ${LIBS}
 
 ${OBJECTS}:  ../config.mk
 

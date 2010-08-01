@@ -42,6 +42,7 @@ ${PROJECT}-debug: ${DOBJECTS}
 	@ar rc lib${PROJECT}.a $(DOBJECTS)
 
 debug: ${PROJECT}-debug
+	make -C examples
 
 valgrind: debug
 	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes \

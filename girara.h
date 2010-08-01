@@ -136,12 +136,12 @@ struct girara_session_s
   struct
   {
     GtkWidget       *window;
-    GtkBin          *view;
+    GtkBox          *box;
+    GtkWidget       *view;
     GtkWidget       *statusbar;
     GtkBox          *statusbar_entries;
     GtkEntry        *inputbar;
     GdkNativeWindow  embed;
-    char            *winid;
   } gtk;
 
   struct
@@ -172,13 +172,34 @@ struct girara_session_s
     girara_shortcut_t* shortcuts;
     girara_inputbar_shortcut_t* inputbar_shortcuts;
   } bindings;
+
+  struct
+  {
+    char* font;
+    char* default_background;
+    char* default_foreground;
+    char* inputbar_background;
+    char* inputbar_foreground;
+    char* statusbar_background;
+    char* statusbar_foreground;
+    char* completion_foreground;
+    char* completion_background;
+    char* completion_group_foreground;
+    char* completion_group_background;
+    char* completion_highlight_foreground;
+    char* completion_highlight_background;
+    char* notification_error_background;
+    char* notification_error_foreground;
+    char* notification_warning_background;
+    char* notification_warning_foreground;
+  } settings;
 };
 
 girara_session_t* girara_session_create();
 int girara_session_init(girara_session_t* session);
 void girara_session_destroy(girara_session_t* session);
 
-int girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, char* description, girara_setting_callback_t callback);
+int girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback);
 int girara_setting_set(girara_session_t* session, char* name, void* value);
 
 int girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, girara_argument_t argument);
