@@ -4,6 +4,11 @@
 
 #include "girara.h"
 
+#define CLEAN(m) (m & ~(GDK_MOD2_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
+
+/* function declarations */
+gboolean girara_callback_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
+
 girara_session_t*
 girara_session_create()
 {
@@ -51,6 +56,8 @@ girara_session_create()
   session->settings.width  = 800;
   session->settings.height = 600;
 
+  session->signals.view_key_pressed = 0;
+
   /* add default settings */
   girara_setting_add(session, "font",                     &(session->settings.font),                            STRING, TRUE, NULL, NULL);
   girara_setting_add(session, "default-fg",               &(session->settings.default_foreground),              STRING, TRUE, NULL, NULL);
@@ -92,6 +99,10 @@ girara_session_init(girara_session_t* session)
   /* window */
   GdkGeometry hints = {1, 1};
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
+
+  /* view */
+  session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event", 
+      G_CALLBACK(girara_callback_key_press_event), session);
 
   /* box */
   gtk_box_set_spacing(session->gtk.box, 0);
@@ -411,4 +422,27 @@ gboolean
 girara_set_view(girara_session_t* session, GtkWidget* widget)
 {
   return TRUE;
+}
+
+gboolean
+girara_callback_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
+{
+  girara_shortcut_t* shortcut = session->bindings.shortcuts;
+  while(shortcut)
+  {
+    if(
+       event->keyval == shortcut->key
+       && CLEAN(event->state) == shortcut->mask
+       && (session->global.current_mode & shortcut->mode || shortcut->mode == 0)
+       && shortcut->function
+      )
+    {
+      shortcut->function(session, &(shortcut->argument));
+      return TRUE;
+    }
+
+    shortcut = shortcut->next;
+  }
+
+  return FALSE;
 }
