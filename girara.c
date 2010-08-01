@@ -506,6 +506,7 @@ girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, g
   inputbar_shortcut->key      = key;
   inputbar_shortcut->function = function;
   inputbar_shortcut->argument = argument;
+  inputbar_shortcut->next     = NULL;
 
   if(tmp)
     tmp->next = inputbar_shortcut;

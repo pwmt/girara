@@ -102,7 +102,7 @@ typedef struct
   GtkWidget* row;
 } girara_completion_row_t;
 
-typedef int (*girara_completion_function_t)(girara_session_t*, char*);
+typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t*, char*);
 
 struct girara_shortcut_s
 {
