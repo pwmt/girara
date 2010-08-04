@@ -213,11 +213,11 @@ girara_session_destroy(girara_session_t* session)
   while(command)
   {
     girara_command_t* tmp = command->next;
-    free(command->command);
+    g_free(command->command);
     if(command->abbr)
-      free(command->abbr);
+      g_free(command->abbr);
     if(command->description)
-      free(command->description);
+      g_free(command->description);
     g_slice_free(girara_command_t, command);
     command = tmp;
   }
@@ -246,11 +246,11 @@ girara_session_destroy(girara_session_t* session)
   {
     girara_setting_t* tmp = setting->next;
 
-    free(setting->name);
+    g_free(setting->name);
     if(setting->description)
-      free(setting->description);
+      g_free(setting->description);
     if(setting->type == STRING && setting->value.s != NULL)
-      free(setting->value.s);
+      g_free(setting->value.s);
     g_slice_free(girara_setting_t, setting);
 
     setting = tmp;
