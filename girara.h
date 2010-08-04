@@ -72,6 +72,7 @@ struct girara_completion_element_s
 {
   char *value;
   char *description;
+  GtkWidget* widget;
   struct girara_completion_element_s *next;
 };
 
@@ -81,6 +82,7 @@ struct girara_completion_group_s
 {
   char *value;
   girara_completion_element_t *elements;
+  GtkWidget* widget;
   struct girara_completion_group_s *next;
 };
 
@@ -92,15 +94,6 @@ struct girara_completion_s
 };
 
 typedef struct girara_completion_s girara_completion_t;
-
-typedef struct
-{
-  char*      command;
-  char*      description;
-  int        command_id;
-  gboolean   is_group;
-  GtkWidget* row;
-} girara_completion_row_t;
 
 typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t*, char*);
 
@@ -283,10 +276,10 @@ gboolean girara_statusbar_set_background(girara_session_t* session, char* color)
 gboolean girara_set_view(girara_session_t* session, GtkWidget* widget);
 
 girara_completion_t* girara_completion_init();
-girara_completion_group_t* girara_completion_group_create(char*);
+girara_completion_group_t* girara_completion_group_create(girara_session_t*, char*);
 void girara_completion_add_group(girara_completion_t*, girara_completion_group_t*);
 void girara_completion_free(girara_completion_t*);
-void girara_completion_group_add_element(girara_completion_group_t*, char*, char*);
+void girara_completion_group_add_element(girara_session_t*, girara_completion_group_t*, char*, char*);
 void girara_isc_completion(girara_session_t*, girara_argument_t*);
 
 #endif
