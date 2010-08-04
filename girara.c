@@ -1,6 +1,8 @@
 /* See LICENSE file for license and copyright information */
 
 #include <stdlib.h>
+#include <limits.h>
+#include <string.h>
 
 #include "girara.h"
 
@@ -70,6 +72,12 @@ girara_session_create()
   session->signals.view_key_pressed     = 0;
   session->signals.inputbar_key_pressed = 0;
   session->signals.inputbar_activate    = 0;
+
+  session->global.buffer       = NULL;
+  session->global.current_mode = 0;
+
+  session->buffer.n       = 0;
+  session->buffer.command = NULL;
 
   /* add default settings */
   girara_setting_add(session, "font",                     &(session->settings.font),                            STRING, TRUE, NULL, NULL);
@@ -265,6 +273,12 @@ girara_session_destroy(girara_session_t* session)
     item = tmp;
   }
 
+  /* clean up buffer */
+  if(session->buffer.command) g_string_free(session->buffer.command, TRUE);
+  if(session->global.buffer)  g_string_free(session->global.buffer,  TRUE);
+  session->buffer.command = NULL;
+  session->global.buffer  = NULL;
+
   g_slice_free(girara_session_t, session);
   return TRUE;
 }
@@ -363,7 +377,7 @@ gboolean
 girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session != NULL, FALSE);
-  g_return_val_if_fail(!(buffer && (key || modifier)), FALSE);
+  g_return_val_if_fail(buffer || key || modifier, FALSE);
 
   girara_argument_t argument = {argument_n, argument_data};
 
@@ -372,8 +386,9 @@ girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buff
 
   while(tmp && tmp->next)
   {
-    if(tmp->mask == modifier && tmp->key == key &&
-       tmp->buffered_command == buffer && tmp->mode == mode)
+    if(((tmp->mask == modifier && tmp->key == key) ||
+       (buffer && tmp->buffered_command && !strcmp(tmp->buffered_command, buffer)))
+        && tmp->mode == mode)
     {
       tmp->function = function;
       tmp->argument = argument;
@@ -699,8 +714,9 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
+  /* check for existing shortcut */
   girara_shortcut_t* shortcut = session->bindings.shortcuts;
-  while(shortcut)
+  while(!session->buffer.command && shortcut)
   {
     if(
        event->keyval == shortcut->key
@@ -710,11 +726,78 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
        && shortcut->function
       )
     {
-      shortcut->function(session, &(shortcut->argument));
+      int t = (session->buffer.n > 0) ? session->buffer.n : 1;
+      for(int i = 0; i < t; i++)
+        shortcut->function(session, &(shortcut->argument));
       return TRUE;
     }
 
     shortcut = shortcut->next;
+  }
+
+  /* update buffer */
+  if(event->keyval >= 0x21 && event->keyval <= 0x7E)
+  {
+    /* overall buffer */
+    if(!session->global.buffer)
+      session->global.buffer = g_string_new("");
+
+    session->global.buffer = g_string_append_c(session->global.buffer, event->keyval);
+
+    if(!session->buffer.command && event->keyval >= 0x30 && event->keyval <= 0x39)
+    {
+      if(((session->buffer.n * 10) + (event->keyval - '0')) < INT_MAX)
+        session->buffer.n = (session->buffer.n * 10) + (event->keyval - '0');
+    }
+    else
+    {
+      if(!session->buffer.command)
+        session->buffer.command = g_string_new("");
+
+      session->buffer.command = g_string_append_c(session->buffer.command, event->keyval);
+    }
+  }
+
+  /* check for buffer command */
+  if(session->buffer.command)
+  {
+    gboolean matching_command = FALSE;
+
+    shortcut = session->bindings.shortcuts;
+    while(shortcut)
+    {
+      if(shortcut->buffered_command)
+      {
+        /* buffer could match a command */
+        if(!strncmp(session->buffer.command->str, shortcut->buffered_command, session->buffer.command->len))
+        {
+          /* command matches buffer exactly */
+          if(!strcmp(session->buffer.command->str, shortcut->buffered_command))
+          {
+            g_string_free(session->buffer.command, TRUE);
+            g_string_free(session->global.buffer,  TRUE);
+            session->buffer.command = NULL;
+            session->global.buffer  = NULL;
+
+            shortcut->function(session, &(shortcut->argument));
+            return TRUE;
+          }
+
+          matching_command = TRUE;
+        }
+      }
+
+      shortcut = shortcut->next;
+    }
+
+    /* free buffer if buffer will never match a command */
+    if(!matching_command)
+    {
+      g_string_free(session->buffer.command, TRUE);
+      g_string_free(session->global.buffer,  TRUE);
+      session->buffer.command = NULL;
+      session->global.buffer  = NULL;
+    }
   }
 
   return FALSE;

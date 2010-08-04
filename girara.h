@@ -229,8 +229,15 @@ struct girara_session_s
 
   struct
   {
+    GString *buffer;
     int current_mode;
   } global;
+
+  struct
+  {
+    int n;
+    GString *command;
+  } buffer;
 };
 
 girara_session_t* girara_session_create();
