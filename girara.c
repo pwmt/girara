@@ -25,6 +25,11 @@ gboolean girara_callback_view_key_press_event(GtkWidget*, GdkEventKey*, girara_s
 gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
 gboolean girara_callback_inputbar_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
 
+/* internal shortcuts */
+void girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
+void girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
+void girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
+
 /* header functions implementation */
 GtkWidget* girara_completion_row_create(girara_session_t*, char*, char*, gboolean);
 void girara_completion_row_set_color(girara_session_t*, GtkWidget*, int);
@@ -85,6 +90,7 @@ girara_session_create()
 
   session->global.current_mode       = 0;
   session->global.number_of_commands = 0;
+  session->global.buffer             = NULL;
 
   /* add default settings */
   girara_setting_add(session, "font",                     &(session->settings.font),                            STRING, TRUE, NULL, NULL);
@@ -112,7 +118,18 @@ girara_session_create()
   girara_shortcut_add(session, 0,                GDK_colon, NULL, girara_sc_focus_inputbar, 0, 0, ":");
 
   /* default inputbar shortcuts */
-  girara_inputbar_shortcut_add(session, 0, GDK_Tab, girara_isc_completion, GIRARA_NEXT, NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_Escape,       girara_isc_abort,               0,                           NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_c,            girara_isc_abort,               0,                           NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_Tab,          girara_isc_completion,          GIRARA_NEXT,                 NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_Tab,          girara_isc_completion,          GIRARA_NEXT_GROUP,           NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_ISO_Left_Tab, girara_isc_completion,          GIRARA_PREVIOUS,             NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_ISO_Left_Tab, girara_isc_completion,          GIRARA_PREVIOUS_GROUP,       NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_BackSpace,    girara_isc_string_manipulation, GIRARA_DELETE_LAST_CHAR,     NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_h,            girara_isc_string_manipulation, GIRARA_DELETE_LAST_CHAR,     NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_u,            girara_isc_string_manipulation, GIRARA_DELETE_TO_LINE_START, NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_w,            girara_isc_string_manipulation, GIRARA_DELETE_LAST_WORD,     NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_f,            girara_isc_string_manipulation, GIRARA_NEXT_CHAR,            NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_b,            girara_isc_string_manipulation, GIRARA_PREVIOUS_CHAR,        NULL);
 
   /* default commands */
   girara_inputbar_command_add(session, "map",  "m", girara_cmd_map,  NULL, "Map a key sequence");
@@ -1025,9 +1042,73 @@ completion_group_add_element(girara_session_t* session, girara_completion_group_
 }
 
 void
+girara_isc_abort(girara_session_t* session, girara_argument_t* argument)
+{
+  /* hide completion */
+  girara_argument_t arg = { GIRARA_HIDE };
+  girara_isc_completion(session, &arg);
+
+  /* clear inputbar */
+  gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
+
+  /* grab view */
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
+}
+
+void
 girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 {
   g_return_if_fail(session != NULL);
+}
+
+void
+girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument)
+{
+  gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
+  int    length = strlen(input);
+  int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar));
+  int i;
+
+  switch (argument->n)
+  {
+    case GIRARA_DELETE_LAST_WORD:
+      i = pos - 1;
+
+      if(!pos)
+        return;
+
+      /* remove trailing spaces */
+      for(; i >= 0 && input[i] == ' '; i--);
+
+      /* find the beginning of the word */
+      while((i == (pos - 1)) || ((i > 0) && (input[i] != ' ')
+            && (input[i] != '/') && (input[i] != '.')
+            && (input[i] != '-') && (input[i] != '=')
+            && (input[i] != '&') && (input[i] != '#')
+            && (input[i] != '?')
+            ))
+        i--;
+
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar),  i, pos);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), i);
+      break;
+    case GIRARA_DELETE_LAST_CHAR:
+      if((length - 1) <= 0)
+        girara_isc_abort(session, argument);
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos - 1, pos);
+      break;
+    case GIRARA_DELETE_TO_LINE_START:
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 1, pos);
+      break;
+    case GIRARA_NEXT_CHAR:
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), pos + 1);
+      break;
+    case GIRARA_PREVIOUS_CHAR:
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), (pos == 0) ? 0 : pos - 1);
+      break;
+  }
+
+  g_free(input);
 }
 
 GtkWidget*
