@@ -1059,6 +1059,138 @@ void
 girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 {
   g_return_if_fail(session != NULL);
+
+  /* get current text */
+  gchar *input     = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
+  int input_length = strlen(input);
+
+  if(!input || !input_length || input[0] != ':')
+  {
+    if(input) g_free(input);
+    return;
+  }
+
+  /* parse current command and parameter */
+  char *tmp = strstr(input, " ");
+  char *current_command   = NULL;
+  char *current_parameter = NULL;
+
+  if(tmp)
+  {
+    current_command   = g_strndup(input + 1, tmp - input);
+    current_parameter = g_strdup(tmp + 1);
+  }
+  else
+  {
+    current_command = g_strdup(input + 1);
+  }
+
+  if(!current_command)
+  {
+    g_free(input);
+    return;
+  }
+
+  /* create result box */
+  static GtkBox* results          = NULL;
+  static char *previous_command   = NULL;
+  static char *previous_parameter = NULL;
+
+  /* delete old list iff
+   *   the completion should be hidden
+   *   the current command differs from the previous one
+   *   the current parameter differs from the previous one
+   */
+  if(
+      (argument->n == GIRARA_HIDE) ||
+      (current_command   && previous_command   && strcmp(current_command,   previous_command)) ||
+      (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter))
+    )
+  {
+    if(results)
+    {
+      GList* list = gtk_container_get_children(GTK_CONTAINER(results));
+      for(GList* element = list; element; element = g_list_next(element))
+        gtk_widget_destroy(GTK_WIDGET(element->data));
+      g_list_free(list);
+
+      gtk_widget_destroy(GTK_WIDGET(results));
+      results = NULL;
+    }
+
+    if(argument->n == GIRARA_HIDE)
+    {
+      if(previous_command) g_free(previous_command);
+      previous_command = NULL;
+
+      if(previous_parameter) g_free(previous_parameter);
+      previous_parameter = NULL;
+
+      if(current_parameter) g_free(current_parameter);
+      current_parameter = NULL;
+
+      g_free(current_command);
+      g_free(input);
+      return;
+    }
+  }
+
+  /* create new list iff
+   *  there is no current list
+   *  the current command differs from the previous one
+   *  the current parameter differs from the previous one
+   */
+  if(!results)
+  {
+    results = GTK_BOX(gtk_vbox_new(FALSE, 0));
+
+    /* based on parameters */
+    if(strchr(input, ' '))
+    {
+
+    }
+    /* based on commands */
+    else
+    {
+      /* create command rows */
+      girara_command_t* command = session->bindings.commands;
+      while(command)
+      {
+        GtkEventBox* row = GTK_EVENT_BOX(girara_completion_row_create(session, command->command, NULL, FALSE));
+        gtk_box_pack_start(results, GTK_WIDGET(row), FALSE, FALSE, 0);
+        command = command->next;
+      }
+    }
+
+    gtk_box_pack_start(session->gtk.box, GTK_WIDGET(results), FALSE, FALSE, 0);
+    gtk_widget_show(GTK_WIDGET(results));
+  }
+
+  /* update coloring */
+  if(results)
+  {
+    GList* list = gtk_container_get_children(GTK_CONTAINER(results));
+
+    for(GList* element = list; element; element = g_list_next(element))
+    {
+      girara_completion_row_set_color(session, GTK_WIDGET(element->data), GIRARA_HIGHLIGHT);
+    }
+
+    g_list_free(list);
+  }
+
+  if(previous_command)   g_free(previous_command);
+  if(previous_parameter) g_free(previous_parameter);
+
+  previous_command   = g_strdup(current_command);
+  previous_parameter = g_strdup(current_parameter);
+
+  if(current_parameter) g_free(current_parameter);
+  current_parameter = NULL;
+
+  g_free(current_command);
+  g_free(input);
+
 }
 
 void
@@ -1172,5 +1304,23 @@ girara_completion_row_create(girara_session_t* session, char* command, char* des
 void
 girara_completion_row_set_color(girara_session_t* session, GtkWidget* row, int mode)
 {
+  g_return_if_fail(session != NULL);
+  g_return_if_fail(row     != NULL);
 
+  GtkBox      *col   = (GtkBox*)      g_list_nth_data(gtk_container_get_children(GTK_CONTAINER(row)), 0);
+  GtkLabel    *cmd   = (GtkLabel*)    g_list_nth_data(gtk_container_get_children(GTK_CONTAINER(col)), 0);
+  GtkLabel    *cdesc = (GtkLabel*)    g_list_nth_data(gtk_container_get_children(GTK_CONTAINER(col)), 1);
+
+  if(mode == GIRARA_HIGHLIGHT)
+  {
+    gtk_widget_modify_fg(GTK_WIDGET(cmd),   GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
+    gtk_widget_modify_fg(GTK_WIDGET(cdesc), GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
+    gtk_widget_modify_bg(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_highlight_background));
+  }
+  else
+  {
+    gtk_widget_modify_fg(GTK_WIDGET(cmd),   GTK_STATE_NORMAL, &(session->style.completion_foreground));
+    gtk_widget_modify_fg(GTK_WIDGET(cdesc), GTK_STATE_NORMAL, &(session->style.completion_foreground));
+    gtk_widget_modify_bg(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_background));
+  }
 }
