@@ -1156,8 +1156,13 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       girara_command_t* command = session->bindings.commands;
       while(command)
       {
-        GtkEventBox* row = GTK_EVENT_BOX(girara_completion_row_create(session, command->command, NULL, FALSE));
-        gtk_box_pack_start(results, GTK_WIDGET(row), FALSE, FALSE, 0);
+        if( (!strncmp(current_command, command->command, strlen(current_command))) ||
+            (!strncmp(current_command, command->abbr,    strlen(current_command)))
+          )
+        {
+          GtkEventBox* row = GTK_EVENT_BOX(girara_completion_row_create(session, command->command, NULL, FALSE));
+          gtk_box_pack_start(results, GTK_WIDGET(row), FALSE, FALSE, 0);
+        }
         command = command->next;
       }
     }
@@ -1307,20 +1312,35 @@ girara_completion_row_set_color(girara_session_t* session, GtkWidget* row, int m
   g_return_if_fail(session != NULL);
   g_return_if_fail(row     != NULL);
 
-  GtkBox      *col   = (GtkBox*)      g_list_nth_data(gtk_container_get_children(GTK_CONTAINER(row)), 0);
-  GtkLabel    *cmd   = (GtkLabel*)    g_list_nth_data(gtk_container_get_children(GTK_CONTAINER(col)), 0);
-  GtkLabel    *cdesc = (GtkLabel*)    g_list_nth_data(gtk_container_get_children(GTK_CONTAINER(col)), 1);
+  GList* columns  = gtk_container_get_children(GTK_CONTAINER(row));
+  if(!columns)
+    return;
+
+  GtkBox *col     = GTK_BOX(g_list_nth_data(columns, 0));
+  GList* items    = gtk_container_get_children(GTK_CONTAINER(col));
+
+  if(!items)
+  {
+    g_list_free(columns);
+    return;
+  }
+
+  GtkLabel *cmd   = GTK_LABEL(g_list_nth_data(items, 0));
+  GtkLabel *desc  = GTK_LABEL(g_list_nth_data(items, 1));
 
   if(mode == GIRARA_HIGHLIGHT)
   {
     gtk_widget_modify_fg(GTK_WIDGET(cmd),   GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
-    gtk_widget_modify_fg(GTK_WIDGET(cdesc), GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
+    gtk_widget_modify_fg(GTK_WIDGET(desc),  GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
     gtk_widget_modify_bg(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_highlight_background));
   }
   else
   {
     gtk_widget_modify_fg(GTK_WIDGET(cmd),   GTK_STATE_NORMAL, &(session->style.completion_foreground));
-    gtk_widget_modify_fg(GTK_WIDGET(cdesc), GTK_STATE_NORMAL, &(session->style.completion_foreground));
+    gtk_widget_modify_fg(GTK_WIDGET(desc),  GTK_STATE_NORMAL, &(session->style.completion_foreground));
     gtk_widget_modify_bg(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_background));
   }
+
+  g_list_free(columns);
+  g_list_free(items);
 }
