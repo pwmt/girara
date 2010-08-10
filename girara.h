@@ -77,7 +77,6 @@ struct girara_completion_element_s
 {
   char *value;
   char *description;
-  GtkWidget* widget;
   struct girara_completion_element_s *next;
 };
 
@@ -87,7 +86,6 @@ struct girara_completion_group_s
 {
   char *value;
   girara_completion_element_t *elements;
-  GtkWidget* widget;
   struct girara_completion_group_s *next;
 };
 

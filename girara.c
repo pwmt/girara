@@ -31,8 +31,18 @@ void girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
 void girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
 
 /* header functions implementation */
-GtkWidget* girara_completion_row_create(girara_session_t*, char*, char*, gboolean);
-void girara_completion_row_set_color(girara_session_t*, GtkWidget*, int);
+GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, gboolean);
+void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
+
+/* completion */
+struct girara_internal_completion_entry_s
+{
+  gboolean group;
+  char* value;
+  GtkEventBox* widget;
+};
+
+typedef struct girara_internal_completion_entry_s girara_internal_completion_entry_t;
 
 girara_session_t*
 girara_session_create()
@@ -962,7 +972,6 @@ girara_completion_group_create(girara_session_t* session, char* name)
 
   group->value    = name ? g_strdup(name) : NULL;
   group->elements = NULL;
-  group->widget   = girara_completion_row_create(session, name, NULL, TRUE);
   group->next     = NULL;
 
   return group;
@@ -1001,12 +1010,10 @@ girara_completion_free(girara_completion_t* completion)
       girara_completion_element_t* ne = element->next;
       g_free(element->value);
       if(element->description) g_free(element->description);
-      if(element->widget) gtk_widget_destroy(element->widget);
       g_slice_free(girara_completion_element_t,  element);
       element = ne;
     }
 
-    if(group->widget) gtk_widget_destroy(group->widget);
     girara_completion_group_t *ng = group->next;
     if(group->value) g_free(group->value);
     g_slice_free(girara_completion_group_t, group);
@@ -1032,7 +1039,6 @@ completion_group_add_element(girara_session_t* session, girara_completion_group_
 
   new_element->value       = g_strdup(name);
   new_element->description = description ?  g_strdup(description) : NULL;
-  new_element->widget      = girara_completion_row_create(session, name, description, FALSE);
   new_element->next        = NULL;
 
   if(el)
@@ -1093,8 +1099,12 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
   /* create result box */
   static GtkBox* results          = NULL;
+  static GList* entries           = NULL;
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
+  static gboolean command_mode    = TRUE;
+
+  static girara_internal_completion_entry_t* current_entry = NULL;
 
   /* delete old list iff
    *   the completion should be hidden
@@ -1109,14 +1119,28 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   {
     if(results)
     {
-      GList* list = gtk_container_get_children(GTK_CONTAINER(results));
-      for(GList* element = list; element; element = g_list_next(element))
-        gtk_widget_destroy(GTK_WIDGET(element->data));
-      g_list_free(list);
+      for(GList* element = entries; element; element = g_list_next(element))
+      {
+        girara_internal_completion_entry_t* entry = (girara_internal_completion_entry_t*) element->data;
+        if(entry)
+        {
+          gtk_widget_destroy(GTK_WIDGET(entry->widget));
+          g_free(entry->value);
+        }
+      }
 
+      /* delete elements */
+      g_list_free(entries);
+      entries = NULL;
+
+      /* delete row box */
       gtk_widget_destroy(GTK_WIDGET(results));
       results = NULL;
+
+      current_entry = NULL;
     }
+
+    command_mode = TRUE;
 
     if(argument->n == GIRARA_HIDE)
     {
@@ -1147,11 +1171,13 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     /* based on parameters */
     if(strchr(input, ' '))
     {
-
+      command_mode = FALSE;
     }
     /* based on commands */
     else
     {
+      command_mode = TRUE;
+
       /* create command rows */
       girara_command_t* command = session->bindings.commands;
       while(command)
@@ -1160,9 +1186,22 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
             (!strncmp(current_command, command->abbr,    strlen(current_command)))
           )
         {
-          GtkEventBox* row = GTK_EVENT_BOX(girara_completion_row_create(session, command->command, NULL, FALSE));
-          gtk_box_pack_start(results, GTK_WIDGET(row), FALSE, FALSE, 0);
+          /* create entry */
+          girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
+          entry->group  = FALSE;
+          entry->value  = g_strdup(command->command);
+          entry->widget = girara_completion_row_create(session, command->command, NULL, FALSE);
+
+          entries = g_list_append(entries, entry);
+
+          /* show entry row */
+          gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+
+          /* set current entry */
+          if(g_list_length(entries) == 1)
+            current_entry = entry;
         }
+
         command = command->next;
       }
     }
@@ -1172,16 +1211,30 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   }
 
   /* update coloring */
-  if(results)
+  if(entries)
   {
-    GList* list = gtk_container_get_children(GTK_CONTAINER(results));
+    girara_completion_row_set_color(session, current_entry->widget, GIRARA_NORMAL);
 
-    for(GList* element = list; element; element = g_list_next(element))
+    if(g_list_length(entries) > 1)
     {
-      girara_completion_row_set_color(session, GTK_WIDGET(element->data), GIRARA_HIGHLIGHT);
+      if(argument->n == GIRARA_NEXT || argument->n == GIRARA_NEXT_GROUP)
+        current_entry = (girara_internal_completion_entry_t*) g_list_next(entries);
+      else if(argument->n == GIRARA_PREVIOUS || argument->n == GIRARA_PREVIOUS_GROUP)
+        current_entry = (girara_internal_completion_entry_t*) g_list_previous(entries);
     }
 
-    g_list_free(list);
+    girara_completion_row_set_color(session, current_entry->widget, GIRARA_HIGHLIGHT);
+
+    /* update text */
+    char* temp;
+    if(command_mode)
+      temp = g_strconcat(":", current_entry->value, (g_list_length(entries) == 1) ? " "  : NULL, NULL);
+    else
+      temp = g_strconcat(":", previous_command, " ", current_entry->value, NULL);
+
+    gtk_entry_set_text(session->gtk.inputbar, temp);
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+    g_free(temp);
   }
 
   if(previous_command)   g_free(previous_command);
@@ -1248,11 +1301,11 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
   g_free(input);
 }
 
-GtkWidget*
+GtkEventBox*
 girara_completion_row_create(girara_session_t* session, char* command, char* description, gboolean group)
 {
   GtkBox      *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
-  GtkWidget *row   = GTK_WIDGET((gtk_event_box_new()));
+  GtkEventBox *row = GTK_EVENT_BOX(gtk_event_box_new());
 
   GtkLabel *show_command     = GTK_LABEL(gtk_label_new(NULL));
   GtkLabel *show_description = GTK_LABEL(gtk_label_new(NULL));
@@ -1301,30 +1354,19 @@ girara_completion_row_create(girara_session_t* session, char* command, char* des
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), FALSE, FALSE, 2);
 
   gtk_container_add(GTK_CONTAINER(row), GTK_WIDGET(col));
-  gtk_widget_show_all(row);
+  gtk_widget_show_all(GTK_WIDGET(row));
 
   return row;
 }
 
 void
-girara_completion_row_set_color(girara_session_t* session, GtkWidget* row, int mode)
+girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int mode)
 {
   g_return_if_fail(session != NULL);
   g_return_if_fail(row     != NULL);
 
-  GList* columns  = gtk_container_get_children(GTK_CONTAINER(row));
-  if(!columns)
-    return;
-
-  GtkBox *col     = GTK_BOX(g_list_nth_data(columns, 0));
+  GtkBox *col     = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
   GList* items    = gtk_container_get_children(GTK_CONTAINER(col));
-
-  if(!items)
-  {
-    g_list_free(columns);
-    return;
-  }
-
   GtkLabel *cmd   = GTK_LABEL(g_list_nth_data(items, 0));
   GtkLabel *desc  = GTK_LABEL(g_list_nth_data(items, 1));
 
@@ -1341,6 +1383,5 @@ girara_completion_row_set_color(girara_session_t* session, GtkWidget* row, int m
     gtk_widget_modify_bg(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_background));
   }
 
-  g_list_free(columns);
   g_list_free(items);
 }
