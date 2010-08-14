@@ -132,7 +132,7 @@ girara_session_create()
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_c,            girara_isc_abort,               0,                           NULL);
   girara_inputbar_shortcut_add(session, 0,                GDK_Tab,          girara_isc_completion,          GIRARA_NEXT,                 NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_Tab,          girara_isc_completion,          GIRARA_NEXT_GROUP,           NULL);
-  girara_inputbar_shortcut_add(session, 0,                GDK_ISO_Left_Tab, girara_isc_completion,          GIRARA_PREVIOUS,             NULL);
+  girara_inputbar_shortcut_add(session, GDK_SHIFT_MASK,   GDK_ISO_Left_Tab, girara_isc_completion,          GIRARA_PREVIOUS,             NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_ISO_Left_Tab, girara_isc_completion,          GIRARA_PREVIOUS_GROUP,       NULL);
   girara_inputbar_shortcut_add(session, 0,                GDK_BackSpace,    girara_isc_string_manipulation, GIRARA_DELETE_LAST_CHAR,     NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_h,            girara_isc_string_manipulation, GIRARA_DELETE_LAST_CHAR,     NULL);
@@ -1196,14 +1196,14 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
           /* show entry row */
           gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
-
-          /* set current entry */
-          if(g_list_length(entries) == 1)
-            current_entry = entry;
         }
 
         command = command->next;
       }
+
+      /* set current entry */
+      if(entries)
+        current_entry = (girara_internal_completion_entry_t*) g_list_last(entries)->data;
     }
 
     gtk_box_pack_start(session->gtk.box, GTK_WIDGET(results), FALSE, FALSE, 0);
@@ -1218,9 +1218,23 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     if(g_list_length(entries) > 1)
     {
       if(argument->n == GIRARA_NEXT || argument->n == GIRARA_NEXT_GROUP)
-        current_entry = (girara_internal_completion_entry_t*) (g_list_next(entries))->data;
+      {
+        GList* entry = g_list_next(entries);
+        if(!entry)
+          entry = g_list_first(entries);
+
+        current_entry = (girara_internal_completion_entry_t*) entry->data;
+        entries = entry;
+      }
       else if(argument->n == GIRARA_PREVIOUS || argument->n == GIRARA_PREVIOUS_GROUP)
-        current_entry = (girara_internal_completion_entry_t*) (g_list_previous(entries))->data;
+      {
+        GList* entry = g_list_previous(entries);
+        if(!entry)
+          entry = g_list_last(entries);
+
+        current_entry = (girara_internal_completion_entry_t*) entry->data;
+        entries = entry;
+      }
     }
 
     girara_completion_row_set_color(session, current_entry->widget, GIRARA_HIGHLIGHT);
@@ -1235,20 +1249,19 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     gtk_entry_set_text(session->gtk.inputbar, temp);
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
     g_free(temp);
+
+    if(previous_command)   g_free(previous_command);
+    if(previous_parameter) g_free(previous_parameter);
+
+    previous_command   = command_mode ? g_strdup(current_entry->value) : current_command;
+    previous_parameter = command_mode ? current_parameter : g_strdup(current_entry->value);
   }
-
-  if(previous_command)   g_free(previous_command);
-  if(previous_parameter) g_free(previous_parameter);
-
-  previous_command   = g_strdup(current_command);
-  previous_parameter = g_strdup(current_parameter);
 
   if(current_parameter) g_free(current_parameter);
   current_parameter = NULL;
 
   g_free(current_command);
   g_free(input);
-
 }
 
 void
