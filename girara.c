@@ -1218,9 +1218,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     if(g_list_length(entries) > 1)
     {
       if(argument->n == GIRARA_NEXT || argument->n == GIRARA_NEXT_GROUP)
-        current_entry = (girara_internal_completion_entry_t*) g_list_next(entries);
+        current_entry = (girara_internal_completion_entry_t*) (g_list_next(entries))->data;
       else if(argument->n == GIRARA_PREVIOUS || argument->n == GIRARA_PREVIOUS_GROUP)
-        current_entry = (girara_internal_completion_entry_t*) g_list_previous(entries);
+        current_entry = (girara_internal_completion_entry_t*) (g_list_previous(entries))->data;
     }
 
     girara_completion_row_set_color(session, current_entry->widget, GIRARA_HIGHLIGHT);
