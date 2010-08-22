@@ -890,6 +890,9 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
       g_free(input);
       g_strfreev(tokens);
+
+      girara_isc_abort(session, NULL);
+
       return TRUE;
     }
 
@@ -906,11 +909,17 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       command->function(session, length - 1, tokens + 1);
       g_free(input);
       g_strfreev(tokens);
+
+      girara_isc_abort(session, NULL);
+
       return TRUE;
     }
 
     command = command->next;
   }
+
+  /* no known command */
+  girara_isc_abort(session, NULL);
 
   return FALSE;
 }
