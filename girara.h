@@ -4,7 +4,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-enum girara_completion_arguments_e
+typedef enum girara_completion_arguments_e
 {
   GIRARA_HIDE = 1,
   GIRARA_NEXT,
@@ -18,19 +18,17 @@ enum girara_completion_arguments_e
   GIRARA_NEXT_CHAR,
   GIRARA_PREVIOUS_CHAR,
   GIRARA_DELETE_TO_LINE_START
-};
+} girara_completion_argument_t;
 
-enum girara_setting_type_e
+typedef enum girara_setting_type_e
 {
   BOOLEAN,
   FLOAT,
   INT,
   STRING
-};
+} girara_setting_type_t;
 
 typedef int girara_mode_t;
-
-typedef enum girara_setting_type_e girara_setting_type_t;
 
 typedef struct girara_session_s girara_session_t;
 
@@ -57,13 +55,11 @@ struct girara_setting_s
   struct girara_setting_s *next;
 };
 
-struct girara_statusbar_item_s
+typedef struct girara_statusbar_item_s
 {
   GtkLabel *text;
   struct girara_statusbar_item_s *next;
-};
-
-typedef struct girara_statusbar_item_s girara_statusbar_item_t;
+} girara_statusbar_item_t;
 
 typedef struct
 {
@@ -73,34 +69,28 @@ typedef struct
 
 typedef void (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*);
 
-struct girara_completion_element_s
+typedef struct girara_completion_element_s
 {
   char *value;
   char *description;
   struct girara_completion_element_s *next;
-};
+} girara_completion_element_t;
 
-typedef struct girara_completion_element_s girara_completion_element_t;
-
-struct girara_completion_group_s
+typedef struct girara_completion_group_s
 {
   char *value;
   girara_completion_element_t *elements;
   struct girara_completion_group_s *next;
-};
+} girara_completion_group_t;
 
-typedef struct girara_completion_group_s girara_completion_group_t;
-
-struct girara_completion_s
+typedef struct girara_completion_s
 {
   girara_completion_group_t *groups;
-};
-
-typedef struct girara_completion_s girara_completion_t;
+} girara_completion_t;
 
 typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t*, char*);
 
-struct girara_shortcut_s
+typedef struct girara_shortcut_s
 {
   int mask;
   int key;
@@ -109,37 +99,31 @@ struct girara_shortcut_s
   int mode;
   girara_argument_t argument;
   struct girara_shortcut_s *next;
-};
+} girara_shortcut_t;
 
-typedef struct girara_shortcut_s girara_shortcut_t;
-
-struct girara_inputbar_shortcut_s
+typedef struct girara_inputbar_shortcut_s
 {
   int mask;
   int key;
   girara_shortcut_function_t function;
   girara_argument_t argument;
   struct girara_inputbar_shortcut_s *next;
-};
-
-typedef struct girara_inputbar_shortcut_s girara_inputbar_shortcut_t;
+} girara_inputbar_shortcut_t;
 
 typedef gboolean (*girara_inputbar_special_function_t)(girara_session_t*, char*, girara_argument_t*);
 
-struct girara_special_command_s
+typedef struct girara_special_command_s
 {
   char identifier;
   girara_inputbar_special_function_t function;
   gboolean always;
   girara_argument_t argument;
   struct girara_special_command_s *next;
-};
-
-typedef struct girara_special_command_s girara_special_command_t;
+} girara_special_command_t;
 
 typedef gboolean (*girara_command_function_t)(girara_session_t*, int, char**);
 
-struct girara_command_s
+typedef struct girara_command_s
 {
   char* command;
   char* abbr;
@@ -147,11 +131,9 @@ struct girara_command_s
   girara_completion_function_t completion;
   char* description;
   struct girara_command_s *next;
-};
+} girara_command_t;
 
-typedef struct girara_command_s girara_command_t;
-
-struct girara_mouse_event_s
+typedef struct girara_mouse_event_s
 {
   int mask;
   int button;
@@ -159,9 +141,7 @@ struct girara_mouse_event_s
   int mode;
   girara_argument_t argument;
   struct girara_mouse_event_s *next;
-};
-
-typedef struct girara_mouse_event_s girara_mouse_event_t;
+} girara_mouse_event_t;
 
 struct girara_session_s
 {
