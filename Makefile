@@ -44,13 +44,6 @@ ${PROJECT}-debug: ${DOBJECTS}
 debug: ${PROJECT}-debug
 	make -C examples
 
-valgrind: debug
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes \
-		./${PROJECT}-debug
-
-gdb: debug
-	cgdb ${PROJECT}-debug
-
 dist: clean
 	@mkdir -p ${PROJECT}-${VERSION}
 	@cp -R LICENSE Makefile config.mk README \
