@@ -265,4 +265,23 @@ void girara_completion_free(girara_completion_t*);
 void girara_completion_group_add_element(girara_session_t*, girara_completion_group_t*, char*, char*);
 void girara_isc_completion(girara_session_t*, girara_argument_t*);
 
+/* default shortcuts */
+void girara_sc_focus_inputbar(girara_session_t*, girara_argument_t*);
+void girara_sc_quit(girara_session_t*, girara_argument_t*);
+
+/* default commands */
+gboolean girara_cmd_map(girara_session_t*, int, char**);
+gboolean girara_cmd_quit(girara_session_t*, int, char**);
+gboolean girara_cmd_set(girara_session_t*, int, char**);
+
+/* callback declarations */
+gboolean girara_callback_view_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
+gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
+gboolean girara_callback_inputbar_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
+
+/* inputbar shortcuts */
+void girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
+void girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
+void girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
+
 #endif
