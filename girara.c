@@ -1093,6 +1093,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
    */
   if(
       (argument->n == GIRARA_HIDE) ||
+      (!current_command && previous_command) ||
+      (!current_parameter && previous_parameter) ||
       (current_command   && previous_command   && strcmp(current_command,   previous_command)) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter))
     )
@@ -1137,10 +1139,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   /* create new list iff
    *  there is no current list
    */
-  if( !results )
+  if(!results)
   {
-    if (results == NULL)
-      results = GTK_BOX(gtk_vbox_new(FALSE, 0));
+    results = GTK_BOX(gtk_vbox_new(FALSE, 0));
 
     /* based on parameters */
     if(current_parameter != NULL)
