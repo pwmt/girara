@@ -452,7 +452,7 @@ girara_setting_get(girara_session_t* session, char* name)
 }
 
 gboolean
-girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
+girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(buffer || key || modifier, FALSE);
@@ -545,7 +545,7 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
 }
 
 gboolean
-girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, girara_shortcut_function_t function, int argument_n, void* argument_data)
+girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
@@ -625,7 +625,7 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
 }
 
 gboolean
-girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
+girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
