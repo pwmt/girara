@@ -1101,7 +1101,7 @@ void
 girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument))
 {
   /* hide completion */
-  girara_argument_t arg = { GIRARA_HIDE };
+  girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg);
 
   /* clear inputbar */
