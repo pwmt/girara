@@ -293,13 +293,19 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   g_return_val_if_fail(name != NULL, FALSE);
 
   /* search for existing setting */
-  girara_setting_t* tmp = session->settings.settings;
-  while(tmp && tmp->next)
+  girara_setting_t* settings_it = session->settings.settings;
+  if(settings_it)
   {
-    if(!g_strcmp0(name, tmp->name))
-      return FALSE;
+    if(!g_strcmp0(name, settings_it->name))
+        return FALSE;
 
-    tmp = tmp->next;
+    while(settings_it->next)
+    {
+      if(!g_strcmp0(name, settings_it->next->name))
+        return FALSE;
+
+      settings_it = settings_it->next;
+    }
   }
 
   /* add new setting */
@@ -328,9 +334,9 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
       break;
   }
 
-  if(tmp)
-    tmp->next = setting;
-  if(!session->settings.settings)
+  if(settings_it)
+    settings_it->next = setting;
+  else
     session->settings.settings = setting;
 
   return TRUE;
