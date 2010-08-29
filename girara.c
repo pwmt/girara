@@ -1071,11 +1071,6 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   gchar *current_command = (elements[0] != NULL && elements[0][0] != '\0') ? elements[0] : NULL;
   gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL && elements[1][0] != '\0') ? elements[1] : NULL;
 
-  printf("DEBUG: current_command: \"%s\"\n"
-    "DEBUG: current_parameter: \"%s\"\n"
-    "DEBUG: argument->n: %i\n",
-    current_command, current_parameter, argument->n);
-
   /* create result box */
   static GtkBox* results          = NULL;
   static GList* entries           = NULL;
@@ -1083,6 +1078,13 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
   static gboolean command_mode    = TRUE;
+
+  printf("DEBUG: current_command: \"%s\"\n"
+    "DEBUG: current_parameter: \"%s\"\n"
+    "DEBUG: previous_command: \"%s\"\n"
+    "DEBUG: previous_parameter: \"%s\"\n"
+    "DEBUG: argument->n: %i\n",
+    current_command, current_parameter, previous_command, previous_parameter, argument->n);
 
   /* delete old list iff
    *   the completion should be hidden
@@ -1135,9 +1137,10 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   /* create new list iff
    *  there is no current list
    */
-  if(!results)
+  if( !results )
   {
-    results = GTK_BOX(gtk_vbox_new(FALSE, 0));
+    if (results == NULL)
+      results = GTK_BOX(gtk_vbox_new(FALSE, 0));
 
     /* based on parameters */
     if(current_parameter != NULL)
@@ -1176,8 +1179,13 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         entries_current = entries;
     }
 
-    gtk_box_pack_start(session->gtk.box, GTK_WIDGET(results), FALSE, FALSE, 0);
-    gtk_widget_show(GTK_WIDGET(results));
+    if (entries) {
+      gtk_box_pack_start(session->gtk.box, GTK_WIDGET(results), FALSE, FALSE, 0);
+      gtk_widget_show(GTK_WIDGET(results));
+    } else {
+      gtk_widget_destroy(GTK_WIDGET(results));
+      results = NULL;
+    }
   }
 
   /* update coloring */
@@ -1221,8 +1229,11 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     g_free(previous_command);
     g_free(previous_parameter);
 
-    previous_command   = command_mode ? g_strdup(((girara_internal_completion_entry_t *) entries_current->data)->value) : current_command;
-    previous_parameter = command_mode ? current_parameter : g_strdup(((girara_internal_completion_entry_t *) entries_current->data)->value);
+    previous_command   = command_mode ? g_strdup(((girara_internal_completion_entry_t *) entries_current->data)->value) : g_strdup(current_command);
+    previous_parameter = command_mode ? g_strdup(current_parameter) : g_strdup(((girara_internal_completion_entry_t *) entries_current->data)->value);
+  } else {
+    previous_command = g_strdup(current_command);
+    previous_parameter = g_strdup(current_parameter);
   }
 
   g_strfreev(elements);
