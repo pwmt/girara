@@ -11,6 +11,15 @@
 #define FORMAT_COMMAND "<b>%s</b>"
 #define FORMAT_DESCRIPTION "<i>%s</i>"
 
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
+#endif
+
 /* header functions implementation */
 GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, gboolean);
 void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
@@ -130,7 +139,16 @@ girara_session_init(girara_session_t* session)
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
 
   /* window */
-  GdkGeometry hints = {1, 1};
+  GdkGeometry hints = {.base_height = 1,
+    .base_width = 1,
+    .height_inc = 0,
+    .max_aspect = 0,
+    .max_height = 0,
+    .max_width  = 0,
+    .min_aspect = 0,
+    .min_height = 0,
+    .min_width  = 0,
+    .width_inc  = 0};
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
 
   /* view */
@@ -721,7 +739,7 @@ girara_statusbar_set_background(girara_session_t* session, char* color)
 }
 
 gboolean
-girara_set_view(girara_session_t* session, GtkWidget* widget)
+girara_set_view(girara_session_t* session, GtkWidget* UNUSED(widget))
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
@@ -746,34 +764,34 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
 }
 
 void
-girara_sc_quit(girara_session_t* session, girara_argument_t* argument)
+girara_sc_quit(girara_session_t* UNUSED(session), girara_argument_t* UNUSED(argument))
 {
   gtk_main_quit();
 }
 
 /* default commands implementation */
 gboolean
-girara_cmd_map(girara_session_t* session, int argc, char** argv)
+girara_cmd_map(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   return TRUE;
 }
 
 gboolean
-girara_cmd_quit(girara_session_t* session, int argc, char** argv)
+girara_cmd_quit(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   gtk_main_quit();
   return TRUE;
 }
 
 gboolean
-girara_cmd_set(girara_session_t* session, int argc, char** argv)
+girara_cmd_set(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   return TRUE;
 }
 
 /* callback implementation */
 gboolean
-girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
+girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
@@ -998,7 +1016,7 @@ girara_completion_init()
 }
 
 girara_completion_group_t*
-girara_completion_group_create(girara_session_t* session, char* name)
+girara_completion_group_create(girara_session_t* UNUSED(session), char* name)
 {
   girara_completion_group_t* group = g_slice_new(girara_completion_group_t);
 
@@ -1080,7 +1098,7 @@ completion_group_add_element(girara_session_t* session, girara_completion_group_
 }
 
 void
-girara_isc_abort(girara_session_t* session, girara_argument_t* argument)
+girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument))
 {
   /* hide completion */
   girara_argument_t arg = { GIRARA_HIDE };

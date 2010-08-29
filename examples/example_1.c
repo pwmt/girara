@@ -3,6 +3,15 @@
 
 #include "../girara.h"
 
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
+#endif
+
 int setting_cb(girara_session_t* session, girara_setting_t* setting);
 
 int main(int argc, char *argv[])
@@ -43,7 +52,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-int setting_cb(girara_session_t* session, girara_setting_t* setting)
+int setting_cb(girara_session_t* UNUSED(session), girara_setting_t* setting)
 {
   printf("Changed setting '%s'!\n", setting->name);
   return 0;
