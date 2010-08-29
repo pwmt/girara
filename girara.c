@@ -1068,13 +1068,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   gchar **elements = g_strsplit(input + 1, " ", 2);
   g_free(input);
 
-  if (elements[0][0] == '\0') {
-    g_strfreev(elements);
-    return;
-  }
-
-  gchar *current_command = elements[0];
-  gchar *current_parameter = (elements[1] != NULL && elements[1][0] != '\0') ? elements[1] : NULL;
+  gchar *current_command = (elements[0] != NULL && elements[0][0] != '\0') ? elements[0] : NULL;
+  gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL && elements[1][0] != '\0') ? elements[1] : NULL;
 
   printf("DEBUG: current_command: \"%s\"\n"
     "DEBUG: current_parameter: \"%s\"\n",
@@ -1160,7 +1155,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       for (girara_command_t* command = session->bindings.commands;
         command != NULL; command = command->next)
       {
-        if( (!strncmp(current_command, command->command, strlen(current_command))) ||
+        if( current_command == NULL ||
+            (!strncmp(current_command, command->command, strlen(current_command))) ||
             (!strncmp(current_command, command->abbr,    strlen(current_command)))
           )
         {
