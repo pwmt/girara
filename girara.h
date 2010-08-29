@@ -191,10 +191,7 @@ struct girara_session_s
     girara_statusbar_item_t* statusbar_items;
   } elements;
 
-  struct
-  {
-    girara_setting_t* settings;
-  } settings;
+  girara_setting_t* settings;
 
   struct
   {

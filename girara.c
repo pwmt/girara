@@ -49,7 +49,7 @@ girara_session_create()
 
   session->elements.statusbar_items    = NULL;
 
-  session->settings.settings = NULL;
+  session->settings = NULL;
 
   session->signals.view_key_pressed     = 0;
   session->signals.inputbar_key_pressed = 0;
@@ -252,7 +252,7 @@ girara_session_destroy(girara_session_t* session)
   }
 
   /* clean up settings */
-  girara_setting_t* setting = session->settings.settings;
+  girara_setting_t* setting = session->settings;
   while(setting)
   {
     girara_setting_t* tmp = setting->next;
@@ -293,7 +293,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   g_return_val_if_fail(name != NULL, FALSE);
 
   /* search for existing setting */
-  girara_setting_t* settings_it = session->settings.settings;
+  girara_setting_t* settings_it = session->settings;
   if(settings_it)
   {
     if(!g_strcmp0(name, settings_it->name))
@@ -337,7 +337,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   if(settings_it)
     settings_it->next = setting;
   else
-    session->settings.settings = setting;
+    session->settings = setting;
 
   return TRUE;
 }
@@ -348,7 +348,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
 
-  for (girara_setting_t* setting = session->settings.settings; setting != NULL; setting = setting->next)
+  for (girara_setting_t* setting = session->settings; setting != NULL; setting = setting->next)
   {
     if (g_strcmp0(setting->name, name) != 0)
       continue;
@@ -388,7 +388,7 @@ girara_setting_get(girara_session_t* session, char* name)
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
 
-  for(girara_setting_t* setting = session->settings.settings; setting != NULL; setting = setting->next)
+  for(girara_setting_t* setting = session->settings; setting != NULL; setting = setting->next)
   {
     if(g_strcmp0(setting->name, name) != 0)
       continue;
