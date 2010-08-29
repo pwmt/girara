@@ -1060,32 +1060,25 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   gchar *input     = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
   int input_length = strlen(input);
 
-  if(!input || !input_length || input[0] != ':')
-  {
-    if(input) g_free(input);
-    return;
-  }
-
-  /* parse current command and parameter */
-  char *tmp = strstr(input, " ");
-  char *current_command   = NULL;
-  char *current_parameter = NULL;
-
-  if(tmp)
-  {
-    current_command   = g_strndup(input + 1, tmp - input);
-    current_parameter = g_strdup(tmp + 1);
-  }
-  else
-  {
-    current_command = g_strdup(input + 1);
-  }
-
-  if(!current_command)
-  {
+  if (input_length == 0 || input[0] != ':') {
     g_free(input);
     return;
   }
+
+  gchar **elements = g_strsplit(input + 1, " ", 2);
+  g_free(input);
+
+  if (elements[0][0] == '\0') {
+    g_strfreev(elements);
+    return;
+  }
+
+  gchar *current_command = elements[0];
+  gchar *current_parameter = (elements[1] != NULL && elements[1][0] != '\0') ? elements[1] : NULL;
+
+  printf("DEBUG: current_command: \"%s\"\n"
+    "DEBUG: current_parameter: \"%s\"\n",
+    current_command, current_parameter);
 
   /* create result box */
   static GtkBox* results          = NULL;
@@ -1095,6 +1088,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   static gboolean command_mode    = TRUE;
 
   static girara_internal_completion_entry_t* current_entry = NULL;
+
 
   /* delete old list iff
    *   the completion should be hidden
@@ -1132,34 +1126,28 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
     command_mode = TRUE;
 
-    if(argument->n == GIRARA_HIDE)
-    {
-      if(previous_command) g_free(previous_command);
+    if (argument->n == GIRARA_HIDE) {
+      g_free(previous_command);
       previous_command = NULL;
 
-      if(previous_parameter) g_free(previous_parameter);
+      g_free(previous_parameter);
       previous_parameter = NULL;
 
-      if(current_parameter) g_free(current_parameter);
-      current_parameter = NULL;
+      g_strfreev(elements);
 
-      g_free(current_command);
-      g_free(input);
       return;
     }
   }
 
   /* create new list iff
    *  there is no current list
-   *  the current command differs from the previous one
-   *  the current parameter differs from the previous one
    */
   if(!results)
   {
     results = GTK_BOX(gtk_vbox_new(FALSE, 0));
 
     /* based on parameters */
-    if(strchr(input, ' '))
+    if(current_parameter != NULL)
     {
       command_mode = FALSE;
     }
@@ -1169,8 +1157,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       command_mode = TRUE;
 
       /* create command rows */
-      girara_command_t* command = session->bindings.commands;
-      while(command)
+      for (girara_command_t* command = session->bindings.commands;
+        command != NULL; command = command->next)
       {
         if( (!strncmp(current_command, command->command, strlen(current_command))) ||
             (!strncmp(current_command, command->abbr,    strlen(current_command)))
@@ -1187,8 +1175,6 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
           /* show entry row */
           gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
-
-        command = command->next;
       }
 
       /* set current entry */
@@ -1240,19 +1226,16 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
     g_free(temp);
 
-    if(previous_command)   g_free(previous_command);
-    if(previous_parameter) g_free(previous_parameter);
+    g_free(previous_command);
+    g_free(previous_parameter);
 
     previous_command   = command_mode ? g_strdup(current_entry->value) : current_command;
     previous_parameter = command_mode ? current_parameter : g_strdup(current_entry->value);
   }
 
-  if(current_parameter) g_free(current_parameter);
-  current_parameter = NULL;
-
-  g_free(current_command);
-  g_free(input);
+  g_strfreev(elements);
 }
+
 
 void
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument)
