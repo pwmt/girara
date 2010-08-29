@@ -194,27 +194,6 @@ struct girara_session_s
   struct
   {
     girara_setting_t* settings;
-
-    char* font;
-    char* default_background;
-    char* default_foreground;
-    char* inputbar_background;
-    char* inputbar_foreground;
-    char* statusbar_background;
-    char* statusbar_foreground;
-    char* completion_foreground;
-    char* completion_background;
-    char* completion_group_foreground;
-    char* completion_group_background;
-    char* completion_highlight_foreground;
-    char* completion_highlight_background;
-    char* notification_error_background;
-    char* notification_error_foreground;
-    char* notification_warning_background;
-    char* notification_warning_foreground;
-    int   height;
-    int   width;
-    int   n_completion_items;
   } settings;
 
   struct
@@ -244,6 +223,7 @@ gboolean girara_session_destroy(girara_session_t* session);
 
 gboolean girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback);
 gboolean girara_setting_set(girara_session_t* session, char* name, void* value);
+void* girara_setting_get(girara_session_t* session, char* name);
 
 gboolean girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
 gboolean girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description);

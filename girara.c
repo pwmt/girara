@@ -49,28 +49,7 @@ girara_session_create()
 
   session->elements.statusbar_items    = NULL;
 
-  session->settings.settings                        = NULL;
-  session->settings.font                            = "monospace normal 9";
-  session->settings.default_background              = "#000000";
-  session->settings.default_foreground              = "#DDDDDD";
-  session->settings.inputbar_background             = "#141414";
-  session->settings.inputbar_foreground             = "#9FBC00";
-  session->settings.statusbar_background            = "#000000";
-  session->settings.statusbar_foreground            = "#FFFFFF";
-  session->settings.completion_foreground           = "#DDDDDD";
-  session->settings.completion_background           = "#232323";
-  session->settings.completion_group_foreground     = "#DEDEDE";
-  session->settings.completion_group_background     = "#000000";
-  session->settings.completion_highlight_foreground = "#232323";
-  session->settings.completion_highlight_background = "#9FBC00";
-  session->settings.notification_error_background   = "#FF1212";
-  session->settings.notification_error_foreground   = "#FFFFFF";
-  session->settings.notification_warning_background = "#FFF712";
-  session->settings.notification_warning_foreground = "#000000";
-
-  session->settings.width              = 800;
-  session->settings.height             = 600;
-  session->settings.n_completion_items = 15;
+  session->settings.settings = NULL;
 
   session->signals.view_key_pressed     = 0;
   session->signals.inputbar_key_pressed = 0;
@@ -83,26 +62,32 @@ girara_session_create()
   session->global.number_of_commands = 0;
   session->global.buffer             = NULL;
 
+  /* default values */
+  int window_width       = 800;
+  int window_height      = 600;
+  int n_completion_items = 15;
+
   /* add default settings */
-  girara_setting_add(session, "font",                     &(session->settings.font),                            STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "default-fg",               &(session->settings.default_foreground),              STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "default-bg",               &(session->settings.default_background),              STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "inputbar-fg",              &(session->settings.inputbar_foreground),             STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "inputbar-bg",              &(session->settings.inputbar_background),             STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "statusbar-fg",             &(session->settings.statusbar_foreground),            STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "statusbar-bg",             &(session->settings.statusbar_background),            STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-fg",            &(session->settings.completion_foreground),           STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-bg",            &(session->settings.completion_background),           STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-group-fg",      &(session->settings.completion_group_foreground),     STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-group-bg",      &(session->settings.completion_group_background),     STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-highlight-fg",  &(session->settings.completion_highlight_foreground), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-highlight-bg",  &(session->settings.completion_highlight_background), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-error-fg",    &(session->settings.notification_error_foreground),   STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-error-bg",    &(session->settings.notification_error_background),   STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-warning-fg",  &(session->settings.notification_warning_foreground), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-warning-bg",  &(session->settings.notification_warning_background), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "width",                    &(session->settings.width),                           INT,    TRUE, NULL, NULL);
-  girara_setting_add(session, "height",                   &(session->settings.height),                          INT,    TRUE, NULL, NULL);
+  girara_setting_add(session, "font",                     "monospace normal 9", STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-fg",               "#000000",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-bg",               "#DDDDDD",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-fg",              "#141414",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-bg",              "#9FBC00",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-fg",             "#000000",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-bg",             "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-bg",            "#232323",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-group-fg",      "#DEDEDE",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-group-bg",      "#000000",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-highlight-fg",  "#232323",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-highlight-bg",  "#9FBC00",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-error-fg",    "#FF1212",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-error-bg",    "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-warning-fg",  "#FFF712",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-warning-bg",  "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "window-width",             &window_width,        INT,    TRUE,  NULL, NULL);
+  girara_setting_add(session, "window-height",            &window_height,       INT,    TRUE,  NULL, NULL);
+  girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,    FALSE, NULL, NULL);
 
   /* default shortcuts */
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           0, 0, NULL);
@@ -173,35 +158,35 @@ girara_session_init(girara_session_t* session)
   gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),  FALSE, FALSE, 0);
 
   /* parse color values */
-  gdk_color_parse(session->settings.default_foreground,              &(session->style.default_foreground));
-  gdk_color_parse(session->settings.default_background,              &(session->style.default_background));
-  gdk_color_parse(session->settings.inputbar_foreground,             &(session->style.inputbar_foreground));
-  gdk_color_parse(session->settings.inputbar_background,             &(session->style.inputbar_background));
-  gdk_color_parse(session->settings.statusbar_foreground,            &(session->style.statusbar_foreground));
-  gdk_color_parse(session->settings.statusbar_background,            &(session->style.statusbar_background));
-  gdk_color_parse(session->settings.completion_foreground,           &(session->style.completion_foreground));
-  gdk_color_parse(session->settings.completion_background,           &(session->style.completion_background));
-  gdk_color_parse(session->settings.completion_group_foreground,     &(session->style.completion_group_foreground));
-  gdk_color_parse(session->settings.completion_group_background,     &(session->style.completion_group_background));
-  gdk_color_parse(session->settings.completion_highlight_foreground, &(session->style.completion_highlight_foreground));
-  gdk_color_parse(session->settings.completion_highlight_background, &(session->style.completion_highlight_background));
-  gdk_color_parse(session->settings.notification_error_foreground,   &(session->style.notification_error_foreground));
-  gdk_color_parse(session->settings.notification_error_background,   &(session->style.notification_error_background));
-  gdk_color_parse(session->settings.notification_warning_foreground, &(session->style.notification_warning_foreground));
-  gdk_color_parse(session->settings.notification_warning_background, &(session->style.notification_warning_background));
+  /*gdk_color_parse(session->settings.default_foreground,              &(session->style.default_foreground));*/
+  /*gdk_color_parse(session->settings.default_background,              &(session->style.default_background));*/
+  /*gdk_color_parse(session->settings.inputbar_foreground,             &(session->style.inputbar_foreground));*/
+  /*gdk_color_parse(session->settings.inputbar_background,             &(session->style.inputbar_background));*/
+  /*gdk_color_parse(session->settings.statusbar_foreground,            &(session->style.statusbar_foreground));*/
+  /*gdk_color_parse(session->settings.statusbar_background,            &(session->style.statusbar_background));*/
+  /*gdk_color_parse(session->settings.completion_foreground,           &(session->style.completion_foreground));*/
+  /*gdk_color_parse(session->settings.completion_background,           &(session->style.completion_background));*/
+  /*gdk_color_parse(session->settings.completion_group_foreground,     &(session->style.completion_group_foreground));*/
+  /*gdk_color_parse(session->settings.completion_group_background,     &(session->style.completion_group_background));*/
+  /*gdk_color_parse(session->settings.completion_highlight_foreground, &(session->style.completion_highlight_foreground));*/
+  /*gdk_color_parse(session->settings.completion_highlight_background, &(session->style.completion_highlight_background));*/
+  /*gdk_color_parse(session->settings.notification_error_foreground,   &(session->style.notification_error_foreground));*/
+  /*gdk_color_parse(session->settings.notification_error_background,   &(session->style.notification_error_background));*/
+  /*gdk_color_parse(session->settings.notification_warning_foreground, &(session->style.notification_warning_foreground));*/
+  /*gdk_color_parse(session->settings.notification_warning_background, &(session->style.notification_warning_background));*/
 
-  session->style.font = pango_font_description_from_string(session->settings.font);
+  /*session->style.font = pango_font_description_from_string(session->settings.font);*/
 
   /* statusbar */
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));
+  /*gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));*/
 
   /* inputbar */
-  gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_background));
-  gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
-  gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),                     session->style.font);
+  /*gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_background));*/
+  /*gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));*/
+  /*gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),                     session->style.font);*/
 
   /* set window size */
-  gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), session->settings.width, session->settings.height);
+  /*gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), session->settings.width, session->settings.height);*/
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
 
@@ -389,6 +374,57 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
   }
 
   return FALSE;
+}
+
+void*
+girara_setting_get(girara_session_t* session, char* name)
+{
+  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(name != NULL, FALSE);
+
+  for(girara_setting_t* setting = session->settings.settings; setting != NULL; setting = setting->next)
+  {
+    if(g_strcmp0(setting->name, name) != 0)
+      continue;
+
+    gboolean *bvalue = NULL;
+    float    *fvalue = NULL;
+    int      *ivalue = NULL;
+
+    switch(setting->type)
+    {
+      case BOOLEAN:
+        bvalue = malloc(sizeof(gboolean));
+
+        if(!bvalue)
+          return NULL;
+
+        *bvalue = setting->value.b;
+        return bvalue;
+      case FLOAT:
+        fvalue = malloc(sizeof(float));
+
+        if(!fvalue)
+          return NULL;
+
+        *fvalue = setting->value.f;
+        return fvalue;
+      case INT:
+        ivalue = malloc(sizeof(int));
+
+        if(!ivalue)
+          return NULL;
+
+        *ivalue = setting->value.i;
+        return ivalue;
+      case STRING:
+        return g_strdup(setting->value.s);
+      default:
+        return NULL;
+    }
+  }
+
+  return NULL;
 }
 
 gboolean

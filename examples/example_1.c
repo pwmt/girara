@@ -20,6 +20,22 @@ int main(int argc, char *argv[])
   girara_statusbar_item_t* item = girara_statusbar_item_add(session, TRUE, TRUE, TRUE, NULL);
   girara_statusbar_item_set_text(session, item, "girara-left");
 
+  int* x = girara_setting_get(session, "window-width");
+  if(x) {
+    printf("%d\n", *x);
+    free(x);
+  } else {
+    printf("none\n");
+  }
+
+  int* y = girara_setting_get(session, "window-width");
+  if(y) {
+    printf("%d\n", *y);
+    free(y);
+  } else {
+    printf("none\n");
+  }
+
   gtk_main();
 
   girara_session_destroy(session);
