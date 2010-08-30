@@ -460,20 +460,22 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing binding */
-  girara_shortcut_t* tmp = session->bindings.shortcuts;
+  girara_shortcut_t* shortcuts_it = session->bindings.shortcuts;
+  girara_shortcut_t* last_shortcut = shortcuts_it;
 
-  while(tmp && tmp->next)
+  while(shortcuts_it)
   {
-    if(((tmp->mask == modifier && tmp->key == key) ||
-       (buffer && tmp->buffered_command && !strcmp(tmp->buffered_command, buffer)))
-        && tmp->mode == mode)
+    if(((shortcuts_it->mask == modifier && shortcuts_it->key == key) ||
+       (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
+        && shortcuts_it->mode == mode)
     {
-      tmp->function = function;
-      tmp->argument = argument;
+      shortcuts_it->function = function;
+      shortcuts_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_shortcut = shortcuts_it;
+    shortcuts_it = shortcuts_it->next;
   }
 
   /* add new shortcut */
@@ -487,9 +489,9 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   shortcut->argument         = argument;
   shortcut->next             = NULL;
 
-  if(tmp)
-    tmp->next = shortcut;
-  if(!session->bindings.shortcuts)
+  if(last_shortcut)
+    last_shortcut->next = shortcut;
+  else
     session->bindings.shortcuts = shortcut;
 
   return TRUE;
@@ -503,25 +505,27 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   g_return_val_if_fail(function != NULL, FALSE);
 
   /* search for existing binding */
-  girara_command_t* tmp = session->bindings.commands;
+  girara_command_t* commands_it = session->bindings.commands;
+  girara_command_t* last_command = commands_it;
 
-  while(tmp && tmp->next)
+  while(commands_it)
   {
-    if(!g_strcmp0(tmp->command, command))
+    if(!g_strcmp0(commands_it->command, command))
     {
-      if(tmp->abbr)
-        free(tmp->abbr);
-      if(tmp->description)
-        free(tmp->description);
+      if(commands_it->abbr)
+        free(commands_it->abbr);
+      if(commands_it->description)
+        free(commands_it->description);
 
-      tmp->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
-      tmp->function    = function;
-      tmp->completion  = completion;
-      tmp->description = description ? g_strdup(description) : NULL;
+      commands_it->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
+      commands_it->function    = function;
+      commands_it->completion  = completion;
+      commands_it->description = description ? g_strdup(description) : NULL;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_command = commands_it;
+    commands_it = commands_it->next;
   }
 
   /* add new inputbar command */
@@ -534,9 +538,9 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   new_command->description = description ? g_strdup(description) : NULL;
   new_command->next        = NULL;
 
-  if(tmp)
-    tmp->next = new_command;
-  if(!session->bindings.commands)
+  if(last_command)
+    last_command->next = new_command;
+  else
     session->bindings.commands = new_command;
 
   session->global.number_of_commands++;
@@ -553,18 +557,20 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing special command */
-  girara_inputbar_shortcut_t* tmp = session->bindings.inputbar_shortcuts;
+  girara_inputbar_shortcut_t* inp_sh_it = session->bindings.inputbar_shortcuts;
+  girara_inputbar_shortcut_t* last_inp_sh = inp_sh_it;
 
-  while(tmp && tmp->next)
+  while(inp_sh_it)
   {
-    if(tmp->mask == modifier && tmp->key == key)
+    if(inp_sh_it->mask == modifier && inp_sh_it->key == key)
     {
-      tmp->function = function;
-      tmp->argument = argument;
+      inp_sh_it->function = function;
+      inp_sh_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_inp_sh = inp_sh_it;
+    inp_sh_it = inp_sh_it->next;
   }
 
   /* create new inputbar shortcut */
@@ -576,13 +582,14 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   inputbar_shortcut->argument = argument;
   inputbar_shortcut->next     = NULL;
 
-  if(tmp)
-    tmp->next = inputbar_shortcut;
-  if(!session->bindings.inputbar_shortcuts)
+  if(last_inp_sh)
+    last_inp_sh->next = inputbar_shortcut;
+  else
     session->bindings.inputbar_shortcuts = inputbar_shortcut;
 
   return TRUE;
 }
+
 
 gboolean
 girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, int argument_n, void* argument_data)
@@ -593,19 +600,21 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing special command */
-  girara_special_command_t* tmp = session->bindings.special_commands;
+  girara_special_command_t* scommand_it = session->bindings.special_commands;
+  girara_special_command_t* last_scommand = scommand_it;
 
-  while(tmp && tmp->next)
+  while(scommand_it)
   {
-    if(tmp->identifier == identifier)
+    if(scommand_it->identifier == identifier)
     {
-      tmp->function = function;
-      tmp->always   = always;
-      tmp->argument = argument;
+      scommand_it->function = function;
+      scommand_it->always   = always;
+      scommand_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_scommand = scommand_it;
+    scommand_it = scommand_it->next;
   }
 
   /* create new special command */
@@ -616,9 +625,9 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   special_command->always     = always;
   special_command->argument   = argument;
 
-  if(tmp)
-    tmp->next = special_command;
-  if(session->bindings.special_commands)
+  if(last_scommand)
+    last_scommand->next = special_command;
+  else
     session->bindings.special_commands = special_command;
 
   return TRUE;
@@ -633,19 +642,21 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing binding */
-  girara_mouse_event_t* tmp = session->bindings.mouse_events;
+  girara_mouse_event_t* me_it = session->bindings.mouse_events;
+  girara_mouse_event_t* last_me = me_it;
 
-  while(tmp && tmp->next)
+  while(me_it)
   {
-    if(tmp->mask == mask && tmp->button == button &&
-       tmp->mode == mode)
+    if(me_it->mask == mask && me_it->button == button &&
+       me_it->mode == mode)
     {
-      tmp->function = function;
-      tmp->argument = argument;
+      me_it->function = function;
+      me_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_me = me_it;
+    me_it = me_it->next;
   }
 
   /* add new mouse event */
@@ -658,9 +669,9 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   mouse_event->argument = argument;
   mouse_event->next     = NULL;
 
-  if(tmp)
-    tmp->next = mouse_event;
-  if(!session->bindings.mouse_events)
+  if(last_me)
+    last_me->next = mouse_event;
+  else
     session->bindings.mouse_events = mouse_event;
 
   return TRUE;
