@@ -78,12 +78,12 @@ girara_session_create()
 
   /* add default settings */
   girara_setting_add(session, "font",                     "monospace normal 9", STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "default-fg",               "#000000",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "default-bg",               "#DDDDDD",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "inputbar-fg",              "#141414",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "inputbar-bg",              "#9FBC00",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "statusbar-fg",             "#000000",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "statusbar-bg",             "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-bg",               "#000000",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-bg",              "#131313",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-fg",             "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-bg",             "#000000",            STRING, TRUE,  NULL, NULL);
   girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING, TRUE,  NULL, NULL);
   girara_setting_add(session, "completion-bg",            "#232323",            STRING, TRUE,  NULL, NULL);
   girara_setting_add(session, "completion-group-fg",      "#DEDEDE",            STRING, TRUE,  NULL, NULL);
@@ -139,16 +139,20 @@ girara_session_init(girara_session_t* session)
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
 
   /* window */
-  GdkGeometry hints = {.base_height = 1,
-    .base_width = 1,
-    .height_inc = 0,
-    .max_aspect = 0,
-    .max_height = 0,
-    .max_width  = 0,
-    .min_aspect = 0,
-    .min_height = 0,
-    .min_width  = 0,
-    .width_inc  = 0};
+  GdkGeometry hints =
+  {
+    .base_height = 1,
+    .base_width  = 1,
+    .height_inc  = 0,
+    .max_aspect  = 0,
+    .max_height  = 0,
+    .max_width   = 0,
+    .min_aspect  = 0,
+    .min_height  = 0,
+    .min_width   = 0,
+    .width_inc   = 0
+  };
+
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
 
   /* view */
@@ -176,35 +180,164 @@ girara_session_init(girara_session_t* session)
   gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),  FALSE, FALSE, 0);
 
   /* parse color values */
-  /*gdk_color_parse(session->settings.default_foreground,              &(session->style.default_foreground));*/
-  /*gdk_color_parse(session->settings.default_background,              &(session->style.default_background));*/
-  /*gdk_color_parse(session->settings.inputbar_foreground,             &(session->style.inputbar_foreground));*/
-  /*gdk_color_parse(session->settings.inputbar_background,             &(session->style.inputbar_background));*/
-  /*gdk_color_parse(session->settings.statusbar_foreground,            &(session->style.statusbar_foreground));*/
-  /*gdk_color_parse(session->settings.statusbar_background,            &(session->style.statusbar_background));*/
-  /*gdk_color_parse(session->settings.completion_foreground,           &(session->style.completion_foreground));*/
-  /*gdk_color_parse(session->settings.completion_background,           &(session->style.completion_background));*/
-  /*gdk_color_parse(session->settings.completion_group_foreground,     &(session->style.completion_group_foreground));*/
-  /*gdk_color_parse(session->settings.completion_group_background,     &(session->style.completion_group_background));*/
-  /*gdk_color_parse(session->settings.completion_highlight_foreground, &(session->style.completion_highlight_foreground));*/
-  /*gdk_color_parse(session->settings.completion_highlight_background, &(session->style.completion_highlight_background));*/
-  /*gdk_color_parse(session->settings.notification_error_foreground,   &(session->style.notification_error_foreground));*/
-  /*gdk_color_parse(session->settings.notification_error_background,   &(session->style.notification_error_background));*/
-  /*gdk_color_parse(session->settings.notification_warning_foreground, &(session->style.notification_warning_foreground));*/
-  /*gdk_color_parse(session->settings.notification_warning_background, &(session->style.notification_warning_background));*/
+  char* tmp_value = NULL;
 
-  /*session->style.font = pango_font_description_from_string(session->settings.font);*/
+  tmp_value = girara_setting_get(session, "default-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.default_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "default-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.default_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "inputbar-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.inputbar_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "inputbar-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.inputbar_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "statusbar-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.statusbar_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "statusbar-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.statusbar_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-group-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_group_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-group-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_group_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-highlight-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_highlight_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-highlight-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_highlight_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-error-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_error_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-error-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_error_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-warning-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_warning_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-warning-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_warning_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  /* parse font */
+  tmp_value = girara_setting_get(session, "font");
+  if(tmp_value)
+  {
+    session->style.font = pango_font_description_from_string(tmp_value);
+    free(tmp_value);
+    tmp_value = NULL;
+  }
 
   /* statusbar */
-  /*gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));*/
+  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));
 
   /* inputbar */
-  /*gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_background));*/
-  /*gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));*/
-  /*gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),                     session->style.font);*/
+  gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_background));
+  gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+  gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),                     session->style.font);
 
   /* set window size */
-  /*gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), session->settings.width, session->settings.height);*/
+  int* window_width  = girara_setting_get(session, "window-width");
+  int* window_height = girara_setting_get(session, "window-height");
+
+  if(window_width && window_height)
+    gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), *window_width, *window_height);
+
+  if(window_width)
+    free(window_width);
+  if(window_height)
+    free(window_height);
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
 
@@ -300,7 +433,9 @@ girara_session_destroy(girara_session_t* session)
   session->buffer.command = NULL;
   session->global.buffer  = NULL;
 
+  /* clean up session */
   g_slice_free(girara_session_t, session);
+
   return TRUE;
 }
 

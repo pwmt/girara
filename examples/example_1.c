@@ -54,6 +54,6 @@ int main(int argc, char *argv[])
 
 int setting_cb(girara_session_t* UNUSED(session), girara_setting_t* setting)
 {
-  printf("Changed setting '%s'!\n", setting->name);
+  printf("Changed setting '%s' (%c)!\n", setting->name, setting->type);
   return 0;
 }

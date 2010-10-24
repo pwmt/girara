@@ -48,7 +48,7 @@ struct girara_setting_s
     float f;
     char *s;
   } value;
-  int   type;
+  int type;
   gboolean init_only;
   char* description;
   girara_setting_callback_t callback;
