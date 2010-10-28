@@ -1155,7 +1155,10 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
             !strncmp(current_command, command->abbr,    strlen(current_command)) )
         {
           if(command->completion)
+          {
+            previous_command = command->command;
             break;
+          }
           else
           {
             g_strfreev(elements);
