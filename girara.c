@@ -1188,8 +1188,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         /* create group entry */
         girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
         entry->group  = TRUE;
-        entry->value  = g_strdup(element->value);
-        entry->widget = girara_completion_row_create(session, element->value, NULL, FALSE);
+        entry->value  = g_strdup(group->value);
+        entry->widget = girara_completion_row_create(session, group->value, NULL, FALSE);
 
         entries = g_list_append(entries, entry);
 
@@ -1240,14 +1240,11 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
           gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
       }
-
-      /* set current entry */
-      if(entries)
-        entries_current = (argument->n == GIRARA_NEXT) ? g_list_last(entries) : entries;
     }
 
     if(entries)
     {
+      entries_current = (argument->n == GIRARA_NEXT) ? g_list_last(entries) : entries;
       gtk_box_pack_start(session->gtk.box, GTK_WIDGET(results), FALSE, FALSE, 0);
       gtk_widget_show(GTK_WIDGET(results));
     }
