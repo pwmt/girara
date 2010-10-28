@@ -1086,11 +1086,12 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
    *   the completion should be hidden
    *   the current command differs from the previous one
    *   the current parameter differs from the previous one
+   *   no current command is given
    */
   if( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
       (current_command && previous_command && strcmp(current_command, previous_command)) ||
-      !current_command
+      !current_command || (!previous_command && n_parameter > 1)
     )
   {
     if(results)
@@ -1186,14 +1187,17 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         element = group->elements;
 
         /* create group entry */
-        girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
-        entry->group  = TRUE;
-        entry->value  = g_strdup(group->value);
-        entry->widget = girara_completion_row_create(session, group->value, NULL, FALSE);
+        if(group->value)
+        {
+          girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
+          entry->group  = TRUE;
+          entry->value  = g_strdup(group->value);
+          entry->widget = girara_completion_row_create(session, group->value, NULL, FALSE);
 
-        entries = g_list_append(entries, entry);
+          entries = g_list_append(entries, entry);
 
-        gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+          gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+        }
 
         while(element)
         {
