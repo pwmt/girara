@@ -284,4 +284,7 @@ void girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
 void girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
 void girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
 
+/* completion functions */
+girara_completion_t* girara_cc_set(girara_session_t* session, char* input);
+
 #endif

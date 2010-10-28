@@ -123,9 +123,9 @@ girara_session_create()
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_b,            girara_isc_string_manipulation, GIRARA_PREVIOUS_CHAR,        NULL);
 
   /* default commands */
-  girara_inputbar_command_add(session, "map",  "m", girara_cmd_map,  NULL, "Map a key sequence");
-  girara_inputbar_command_add(session, "quit", "q", girara_cmd_quit, NULL, "Quit the program");
-  girara_inputbar_command_add(session, "set",  "s", girara_cmd_set,  NULL, "Set an option");
+  girara_inputbar_command_add(session, "map",  "m", girara_cmd_map,  NULL,          "Map a key sequence");
+  girara_inputbar_command_add(session, "quit", "q", girara_cmd_quit, NULL,          "Quit the program");
+  girara_inputbar_command_add(session, "set",  "s", girara_cmd_set,  girara_cc_set, "Set an option");
 
   return session;
 }
@@ -1014,7 +1014,7 @@ girara_completion_free(girara_completion_t* completion)
 }
 
 void
-completion_group_add_element(girara_session_t* session, girara_completion_group_t* group, char* name, char* description)
+girara_completion_group_add_element(girara_session_t* session, girara_completion_group_t* group, char* name, char* description)
 {
   g_return_if_fail(session != NULL);
   g_return_if_fail(group   != NULL);
@@ -1146,6 +1146,72 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     /* based on parameters */
     if(n_parameter > 1)
     {
+      /* search matching command */
+      girara_command_t* command = NULL;
+      for(command = session->bindings.commands; command != NULL; command = command->next)
+      {
+        if( !strncmp(current_command, command->command, strlen(current_command)) ||
+            !strncmp(current_command, command->abbr,    strlen(current_command)) )
+        {
+          if(command->completion)
+            break;
+          else
+          {
+            g_strfreev(elements);
+            return;
+          }
+        }
+      }
+
+      if(!command)
+      {
+        g_strfreev(elements);
+        return;
+      }
+
+      /* generate completion result */
+      girara_completion_t *result = command->completion(session, current_parameter);
+
+      if(!result || !result->groups)
+      {
+        g_strfreev(elements);
+        return;
+      }
+
+      girara_completion_group_t* group     = result->groups;
+      girara_completion_element_t *element = NULL;
+
+      while(group)
+      {
+        element = group->elements;
+
+        /* create group entry */
+        girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
+        entry->group  = TRUE;
+        entry->value  = g_strdup(element->value);
+        entry->widget = girara_completion_row_create(session, element->value, NULL, FALSE);
+
+        entries = g_list_append(entries, entry);
+
+        gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+
+        while(element)
+        {
+          girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
+          entry->group  = FALSE;
+          entry->value  = g_strdup(element->value);
+          entry->widget = girara_completion_row_create(session, element->value, NULL, FALSE);
+
+          entries = g_list_append(entries, entry);
+
+          gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+
+          element = element->next;
+        }
+
+        group = group->next;
+      }
+
       command_mode = FALSE;
     }
     /* based on commands */
@@ -1283,6 +1349,27 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
   }
 
   g_free(input);
+}
+
+girara_completion_t*
+girara_cc_set(girara_session_t* session, char* input)
+{
+  girara_completion_t* completion  = girara_completion_init();
+  girara_completion_group_t* group = girara_completion_group_create(session, NULL);
+  girara_completion_add_group(completion, group);
+
+  int input_length = input ? strlen(input) : 0;
+
+  girara_setting_t* setting = session->settings.settings;
+  while(setting && setting->next)
+  {
+    if((input_length <= strlen(setting->name)) && !strncmp(input, setting->name, input_length))
+      girara_completion_group_add_element(session, group, setting->name, setting->description);
+
+    setting = setting->next;
+  }
+
+  return completion;
 }
 
 GtkEventBox*
