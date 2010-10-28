@@ -1089,7 +1089,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
    */
   if( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
-      (current_command && previous_command && strcmp(current_command, previous_command))
+      (current_command && previous_command && strcmp(current_command, previous_command)) ||
+      !current_command
     )
   {
     if(results)
