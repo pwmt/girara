@@ -1067,6 +1067,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   }
 
   gchar **elements = g_strsplit(input + 1, " ", 2);
+  int n_parameter  =  g_strv_length(elements);
   g_free(input);
 
   /* get current values */
@@ -1079,7 +1080,6 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   static GList* entries_current   = NULL;
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
-  static int previous_length      = 0;
   static gboolean command_mode    = TRUE;
 
   /* delete old list iff
@@ -1089,8 +1089,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
    */
   if( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
-      (current_command && previous_command && strcmp(current_command, previous_command)) ||
-      (previous_length != input_length)
+      (current_command && previous_command && strcmp(current_command, previous_command))
     )
   {
     if(results)
@@ -1144,7 +1143,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     }
 
     /* based on parameters */
-    if(current_parameter)
+    if(n_parameter > 1)
     {
       command_mode = FALSE;
     }
@@ -1230,7 +1229,6 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     g_free(previous_parameter);
     previous_command   = g_strdup(current_command);
     previous_parameter = g_strdup(current_parameter);
-    previous_length    = strlen(temp);
   }
 
   g_strfreev(elements);
