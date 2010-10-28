@@ -1060,7 +1060,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   gchar *input     = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
   int input_length = strlen(input);
 
-  if (input_length == 0 || input[0] != ':') {
+  if(input_length == 0 || input[0] != ':')
+  {
     g_free(input);
     return;
   }
@@ -1068,7 +1069,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   gchar **elements = g_strsplit(input + 1, " ", 2);
   g_free(input);
 
-  gchar *current_command = (elements[0] != NULL && elements[0][0] != '\0') ? elements[0] : NULL;
+  /* get current values */
+  gchar *current_command   = (elements[0] != NULL && elements[0][0] != '\0') ? elements[0] : NULL;
   gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL && elements[1][0] != '\0') ? elements[1] : NULL;
 
   /* create result box */
@@ -1077,26 +1079,18 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   static GList* entries_current   = NULL;
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
+  static int previous_length      = 0;
   static gboolean command_mode    = TRUE;
-
-  printf("DEBUG: current_command: \"%s\"\n"
-    "DEBUG: current_parameter: \"%s\"\n"
-    "DEBUG: previous_command: \"%s\"\n"
-    "DEBUG: previous_parameter: \"%s\"\n"
-    "DEBUG: argument->n: %i\n",
-    current_command, current_parameter, previous_command, previous_parameter, argument->n);
 
   /* delete old list iff
    *   the completion should be hidden
    *   the current command differs from the previous one
    *   the current parameter differs from the previous one
    */
-  if(
-      (argument->n == GIRARA_HIDE) ||
-      (!current_command && previous_command) ||
-      (!current_parameter && previous_parameter) ||
-      (current_command   && previous_command   && strcmp(current_command,   previous_command)) ||
-      (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter))
+  if( (argument->n == GIRARA_HIDE) ||
+      (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
+      (current_command && previous_command && strcmp(current_command, previous_command)) ||
+      (previous_length != input_length)
     )
   {
     if(results)
@@ -1113,7 +1107,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
       /* delete elements */
       g_list_free(entries);
-      entries = NULL;
+      entries         = NULL;
       entries_current = NULL;
 
       /* delete row box */
@@ -1123,7 +1117,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
     command_mode = TRUE;
 
-    if (argument->n == GIRARA_HIDE) {
+    if(argument->n == GIRARA_HIDE)
+    {
       g_free(previous_command);
       previous_command = NULL;
 
@@ -1142,9 +1137,14 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   if(!results)
   {
     results = GTK_BOX(gtk_vbox_new(FALSE, 0));
+    if(!results)
+    {
+      g_strfreev(elements);
+      return;
+    }
 
     /* based on parameters */
-    if(current_parameter != NULL)
+    if(current_parameter)
     {
       command_mode = FALSE;
     }
@@ -1157,9 +1157,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       for (girara_command_t* command = session->bindings.commands;
         command != NULL; command = command->next)
       {
-        if( current_command == NULL ||
-            (!strncmp(current_command, command->command, strlen(current_command))) ||
-            (!strncmp(current_command, command->abbr,    strlen(current_command)))
+        if(!current_command ||
+            !strncmp(current_command, command->command, strlen(current_command)) ||
+            !strncmp(current_command, command->abbr,    strlen(current_command))
           )
         {
           /* create entry */
@@ -1177,19 +1177,17 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
       /* set current entry */
       if(entries)
-        entries_current = entries;
+        entries_current = (argument->n == GIRARA_NEXT) ? g_list_last(entries) : entries;
     }
 
-    if (entries) {
+    if(entries)
+    {
       gtk_box_pack_start(session->gtk.box, GTK_WIDGET(results), FALSE, FALSE, 0);
       gtk_widget_show(GTK_WIDGET(results));
-    } else {
-      gtk_widget_destroy(GTK_WIDGET(results));
-      results = NULL;
     }
   }
 
-  /* update coloring */
+  /* update entries */
   if(entries)
   {
     girara_completion_row_set_color(session, ((girara_internal_completion_entry_t *) entries_current->data)->widget, GIRARA_NORMAL);
@@ -1219,7 +1217,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     /* update text */
     char* temp;
     if(command_mode)
-      temp = g_strconcat(":", ((girara_internal_completion_entry_t *) entries_current->data)->value, (g_list_length(entries) == 1) ? " "  : NULL, NULL);
+      temp = g_strconcat(":", ((girara_internal_completion_entry_t *) entries_current->data)->value, NULL);
     else
       temp = g_strconcat(":", previous_command, " ", ((girara_internal_completion_entry_t *) entries_current->data)->value, NULL);
 
@@ -1227,19 +1225,16 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
     g_free(temp);
 
+    /* update previous */
     g_free(previous_command);
     g_free(previous_parameter);
-
-    previous_command   = command_mode ? g_strdup(((girara_internal_completion_entry_t *) entries_current->data)->value) : g_strdup(current_command);
-    previous_parameter = command_mode ? g_strdup(current_parameter) : g_strdup(((girara_internal_completion_entry_t *) entries_current->data)->value);
-  } else {
-    previous_command = g_strdup(current_command);
+    previous_command   = g_strdup(current_command);
     previous_parameter = g_strdup(current_parameter);
+    previous_length    = strlen(temp);
   }
 
   g_strfreev(elements);
 }
-
 
 void
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument)
