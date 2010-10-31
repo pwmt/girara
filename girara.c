@@ -1072,7 +1072,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
   /* get current values */
   gchar *current_command   = (elements[0] != NULL && elements[0][0] != '\0') ? elements[0] : NULL;
-  gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL && elements[1][0] != '\0') ? elements[1] : NULL;
+  gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL)    ? elements[1] : NULL;
+
+  unsigned int current_command_length = current_command ? strlen(current_command) : 0;
 
   /* create result box */
   static GtkBox* results          = NULL;
@@ -1081,6 +1083,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
   static gboolean command_mode    = TRUE;
+  static int   previous_length    = 0;
 
   /* delete old list iff
    *   the completion should be hidden
@@ -1091,7 +1094,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   if( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
       (current_command && previous_command && strcmp(current_command, previous_command)) ||
-      !current_command || (!previous_command && n_parameter > 1)
+      input_length != previous_length
     )
   {
     if(results)
@@ -1151,8 +1154,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       girara_command_t* command = NULL;
       for(command = session->bindings.commands; command != NULL; command = command->next)
       {
-        if( !strncmp(current_command, command->command, strlen(current_command)) ||
-            !strncmp(current_command, command->abbr,    strlen(current_command)) )
+        if( !strncmp(current_command, command->command, current_command_length) ||
+            !strncmp(current_command, command->abbr,    current_command_length) )
         {
           if(command->completion)
           {
@@ -1231,8 +1234,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         command != NULL; command = command->next)
       {
         if(!current_command ||
-            !strncmp(current_command, command->command, strlen(current_command)) ||
-            !strncmp(current_command, command->abbr,    strlen(current_command))
+            !strncmp(current_command, command->command, current_command_length) ||
+            !strncmp(current_command, command->abbr,    current_command_length)
           )
         {
           /* create entry */
@@ -1300,6 +1303,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     g_free(previous_parameter);
     previous_command   = g_strdup((command_mode) ? ((girara_internal_completion_entry_t*) entries_current->data)->value : current_command);
     previous_parameter = g_strdup((command_mode) ? current_parameter : ((girara_internal_completion_entry_t*) entries_current->data)->value);
+    previous_length    = strlen(previous_command) + ((command_mode) ? (input_length - current_command_length) : (strlen(previous_parameter) + 2));
   }
 
   g_strfreev(elements);
