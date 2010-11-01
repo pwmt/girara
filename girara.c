@@ -1106,6 +1106,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         {
           gtk_widget_destroy(GTK_WIDGET(entry->widget));
           g_free(entry->value);
+          g_slice_free(girara_internal_completion_entry_t, entry);
         }
       }
 
@@ -1236,6 +1237,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
         group = group->next;
       }
+
+      girara_completion_free(result);
 
       command_mode = FALSE;
     }
