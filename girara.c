@@ -239,7 +239,8 @@ girara_session_destroy(girara_session_t* session)
   while(command)
   {
     girara_command_t* tmp = command->next;
-    g_free(command->command);
+    if(command->command)
+      g_free(command->command);
     if(command->abbr)
       g_free(command->abbr);
     if(command->description)
@@ -706,6 +707,9 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
 void
 girara_sc_quit(girara_session_t* session, girara_argument_t* argument)
 {
+  girara_argument_t arg = { GIRARA_HIDE };
+  girara_isc_completion(session, &arg);
+
   gtk_main_quit();
 }
 
@@ -719,6 +723,9 @@ girara_cmd_map(girara_session_t* session, int argc, char** argv)
 gboolean
 girara_cmd_quit(girara_session_t* session, int argc, char** argv)
 {
+  girara_argument_t arg = { GIRARA_HIDE };
+  girara_isc_completion(session, &arg);
+
   gtk_main_quit();
   return TRUE;
 }
@@ -1166,7 +1173,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         {
           if(command->completion)
           {
-            previous_command = command->command;
+            previous_command = g_strdup(command->command);
             break;
           }
           else
@@ -1214,7 +1221,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
           entry->group  = TRUE;
           entry->value  = g_strdup(group->value);
-          entry->widget = girara_completion_row_create(session, group->value, NULL, FALSE);
+          entry->widget = girara_completion_row_create(session, group->value, NULL, TRUE);
 
           entries = g_list_append(entries, entry);
 
