@@ -1071,8 +1071,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   g_free(input);
 
   /* get current values */
-  gchar *current_command   = (elements[0] != NULL && elements[0][0] != '\0') ? elements[0] : NULL;
-  gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL)    ? elements[1] : NULL;
+  gchar *current_command   = (elements[0] != NULL && elements[0][0] != '\0') ? g_strdup(elements[0]) : NULL;
+  gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL)    ? g_strdup(elements[1]) : NULL;
 
   unsigned int current_command_length = current_command ? strlen(current_command) : 0;
 
@@ -1131,6 +1131,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
       g_strfreev(elements);
 
+      g_free(current_command);
+      g_free(current_parameter);
+
       return;
     }
   }
@@ -1143,6 +1146,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     results = GTK_BOX(gtk_vbox_new(FALSE, 0));
     if(!results)
     {
+      g_free(current_command);
+      g_free(current_parameter);
+
       g_strfreev(elements);
       return;
     }
@@ -1164,6 +1170,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
           }
           else
           {
+            g_free(current_command);
+            g_free(current_parameter);
+
             g_strfreev(elements);
             return;
           }
@@ -1172,6 +1181,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
       if(!command)
       {
+        g_free(current_command);
+        g_free(current_parameter);
+
         g_strfreev(elements);
         return;
       }
@@ -1181,6 +1193,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 
       if(!result || !result->groups)
       {
+        g_free(current_command);
+        g_free(current_parameter);
+
         g_strfreev(elements);
         return;
       }
@@ -1305,6 +1320,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     previous_parameter = g_strdup((command_mode) ? current_parameter : ((girara_internal_completion_entry_t*) entries_current->data)->value);
     previous_length    = strlen(previous_command) + ((command_mode) ? (input_length - current_command_length) : (strlen(previous_parameter) + 2));
   }
+
+  g_free(current_command);
+  g_free(current_parameter);
 
   g_strfreev(elements);
 }
