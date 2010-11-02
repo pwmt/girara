@@ -1173,6 +1173,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         {
           if(command->completion)
           {
+            g_free(previous_command);
             previous_command = g_strdup(command->command);
             break;
           }
