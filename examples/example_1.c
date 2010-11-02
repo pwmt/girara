@@ -3,6 +3,15 @@
 
 #include "../girara.h"
 
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
+#endif
+
 int setting_cb(girara_session_t* session, girara_setting_t* setting);
 
 int main(int argc, char *argv[])
@@ -20,6 +29,22 @@ int main(int argc, char *argv[])
   girara_statusbar_item_t* item = girara_statusbar_item_add(session, TRUE, TRUE, TRUE, NULL);
   girara_statusbar_item_set_text(session, item, "girara-left");
 
+  int* x = girara_setting_get(session, "window-width");
+  if(x) {
+    printf("%d\n", *x);
+    free(x);
+  } else {
+    printf("none\n");
+  }
+
+  int* y = girara_setting_get(session, "window-width");
+  if(y) {
+    printf("%d\n", *y);
+    free(y);
+  } else {
+    printf("none\n");
+  }
+
   gtk_main();
 
   girara_session_destroy(session);
@@ -27,8 +52,8 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-int setting_cb(girara_session_t* session, girara_setting_t* setting)
+int setting_cb(girara_session_t* UNUSED(session), girara_setting_t* setting)
 {
-  printf("Changed setting '%s'!\n", setting->name);
+  printf("Changed setting '%s' (%c)!\n", setting->name, setting->type);
   return 0;
 }

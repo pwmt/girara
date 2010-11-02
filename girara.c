@@ -11,6 +11,15 @@
 #define FORMAT_COMMAND "<b>%s</b>"
 #define FORMAT_DESCRIPTION "<i>%s</i>"
 
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
+#endif
+
 /* header functions implementation */
 GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, gboolean);
 void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
@@ -49,28 +58,7 @@ girara_session_create()
 
   session->elements.statusbar_items    = NULL;
 
-  session->settings.settings                        = NULL;
-  session->settings.font                            = "monospace normal 9";
-  session->settings.default_background              = "#000000";
-  session->settings.default_foreground              = "#DDDDDD";
-  session->settings.inputbar_background             = "#141414";
-  session->settings.inputbar_foreground             = "#9FBC00";
-  session->settings.statusbar_background            = "#000000";
-  session->settings.statusbar_foreground            = "#FFFFFF";
-  session->settings.completion_foreground           = "#DDDDDD";
-  session->settings.completion_background           = "#232323";
-  session->settings.completion_group_foreground     = "#DEDEDE";
-  session->settings.completion_group_background     = "#000000";
-  session->settings.completion_highlight_foreground = "#232323";
-  session->settings.completion_highlight_background = "#9FBC00";
-  session->settings.notification_error_background   = "#FF1212";
-  session->settings.notification_error_foreground   = "#FFFFFF";
-  session->settings.notification_warning_background = "#FFF712";
-  session->settings.notification_warning_foreground = "#000000";
-
-  session->settings.width              = 800;
-  session->settings.height             = 600;
-  session->settings.n_completion_items = 15;
+  session->settings = NULL;
 
   session->signals.view_key_pressed     = 0;
   session->signals.inputbar_key_pressed = 0;
@@ -83,26 +71,32 @@ girara_session_create()
   session->global.number_of_commands = 0;
   session->global.buffer             = NULL;
 
+  /* default values */
+  int window_width       = 800;
+  int window_height      = 600;
+  int n_completion_items = 15;
+
   /* add default settings */
-  girara_setting_add(session, "font",                     &(session->settings.font),                            STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "default-fg",               &(session->settings.default_foreground),              STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "default-bg",               &(session->settings.default_background),              STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "inputbar-fg",              &(session->settings.inputbar_foreground),             STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "inputbar-bg",              &(session->settings.inputbar_background),             STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "statusbar-fg",             &(session->settings.statusbar_foreground),            STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "statusbar-bg",             &(session->settings.statusbar_background),            STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-fg",            &(session->settings.completion_foreground),           STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-bg",            &(session->settings.completion_background),           STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-group-fg",      &(session->settings.completion_group_foreground),     STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-group-bg",      &(session->settings.completion_group_background),     STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-highlight-fg",  &(session->settings.completion_highlight_foreground), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "completion-highlight-bg",  &(session->settings.completion_highlight_background), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-error-fg",    &(session->settings.notification_error_foreground),   STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-error-bg",    &(session->settings.notification_error_background),   STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-warning-fg",  &(session->settings.notification_warning_foreground), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "notification-warning-bg",  &(session->settings.notification_warning_background), STRING, TRUE, NULL, NULL);
-  girara_setting_add(session, "width",                    &(session->settings.width),                           INT,    TRUE, NULL, NULL);
-  girara_setting_add(session, "height",                   &(session->settings.height),                          INT,    TRUE, NULL, NULL);
+  girara_setting_add(session, "font",                     "monospace normal 9", STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-bg",               "#000000",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-bg",              "#131313",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-fg",             "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-bg",             "#000000",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-bg",            "#232323",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-group-fg",      "#DEDEDE",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-group-bg",      "#000000",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-highlight-fg",  "#232323",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-highlight-bg",  "#9FBC00",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-error-fg",    "#FF1212",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-error-bg",    "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-warning-fg",  "#FFF712",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-warning-bg",  "#FFFFFF",            STRING, TRUE,  NULL, NULL);
+  girara_setting_add(session, "window-width",             &window_width,        INT,    TRUE,  NULL, NULL);
+  girara_setting_add(session, "window-height",            &window_height,       INT,    TRUE,  NULL, NULL);
+  girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,    FALSE, NULL, NULL);
 
   /* default shortcuts */
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           0, 0, NULL);
@@ -145,7 +139,20 @@ girara_session_init(girara_session_t* session)
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
 
   /* window */
-  GdkGeometry hints = {1, 1};
+  GdkGeometry hints =
+  {
+    .base_height = 1,
+    .base_width  = 1,
+    .height_inc  = 0,
+    .max_aspect  = 0,
+    .max_height  = 0,
+    .max_width   = 0,
+    .min_aspect  = 0,
+    .min_height  = 0,
+    .min_width   = 0,
+    .width_inc   = 0
+  };
+
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
 
   /* view */
@@ -173,24 +180,144 @@ girara_session_init(girara_session_t* session)
   gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),  FALSE, FALSE, 0);
 
   /* parse color values */
-  gdk_color_parse(session->settings.default_foreground,              &(session->style.default_foreground));
-  gdk_color_parse(session->settings.default_background,              &(session->style.default_background));
-  gdk_color_parse(session->settings.inputbar_foreground,             &(session->style.inputbar_foreground));
-  gdk_color_parse(session->settings.inputbar_background,             &(session->style.inputbar_background));
-  gdk_color_parse(session->settings.statusbar_foreground,            &(session->style.statusbar_foreground));
-  gdk_color_parse(session->settings.statusbar_background,            &(session->style.statusbar_background));
-  gdk_color_parse(session->settings.completion_foreground,           &(session->style.completion_foreground));
-  gdk_color_parse(session->settings.completion_background,           &(session->style.completion_background));
-  gdk_color_parse(session->settings.completion_group_foreground,     &(session->style.completion_group_foreground));
-  gdk_color_parse(session->settings.completion_group_background,     &(session->style.completion_group_background));
-  gdk_color_parse(session->settings.completion_highlight_foreground, &(session->style.completion_highlight_foreground));
-  gdk_color_parse(session->settings.completion_highlight_background, &(session->style.completion_highlight_background));
-  gdk_color_parse(session->settings.notification_error_foreground,   &(session->style.notification_error_foreground));
-  gdk_color_parse(session->settings.notification_error_background,   &(session->style.notification_error_background));
-  gdk_color_parse(session->settings.notification_warning_foreground, &(session->style.notification_warning_foreground));
-  gdk_color_parse(session->settings.notification_warning_background, &(session->style.notification_warning_background));
+  char* tmp_value = NULL;
 
-  session->style.font = pango_font_description_from_string(session->settings.font);
+  tmp_value = girara_setting_get(session, "default-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.default_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "default-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.default_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "inputbar-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.inputbar_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "inputbar-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.inputbar_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "statusbar-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.statusbar_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "statusbar-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.statusbar_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-group-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_group_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-group-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_group_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-highlight-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_highlight_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "completion-highlight-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.completion_highlight_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-error-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_error_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-error-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_error_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-warning-fg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_warning_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "notification-warning-bg");
+  if(tmp_value)
+  {
+    gdk_color_parse(tmp_value, &(session->style.notification_warning_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  /* parse font */
+  tmp_value = girara_setting_get(session, "font");
+  if(tmp_value)
+  {
+    session->style.font = pango_font_description_from_string(tmp_value);
+    free(tmp_value);
+    tmp_value = NULL;
+  }
 
   /* statusbar */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));
@@ -201,7 +328,16 @@ girara_session_init(girara_session_t* session)
   gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),                     session->style.font);
 
   /* set window size */
-  gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), session->settings.width, session->settings.height);
+  int* window_width  = girara_setting_get(session, "window-width");
+  int* window_height = girara_setting_get(session, "window-height");
+
+  if(window_width && window_height)
+    gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), *window_width, *window_height);
+
+  if(window_width)
+    free(window_width);
+  if(window_height)
+    free(window_height);
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
 
@@ -268,7 +404,7 @@ girara_session_destroy(girara_session_t* session)
   }
 
   /* clean up settings */
-  girara_setting_t* setting = session->settings.settings;
+  girara_setting_t* setting = session->settings;
   while(setting)
   {
     girara_setting_t* tmp = setting->next;
@@ -298,7 +434,9 @@ girara_session_destroy(girara_session_t* session)
   session->buffer.command = NULL;
   session->global.buffer  = NULL;
 
+  /* clean up session */
   g_slice_free(girara_session_t, session);
+
   return TRUE;
 }
 
@@ -309,13 +447,19 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   g_return_val_if_fail(name != NULL, FALSE);
 
   /* search for existing setting */
-  girara_setting_t* tmp = session->settings.settings;
-  while(tmp && tmp->next)
+  girara_setting_t* settings_it = session->settings;
+  if(settings_it)
   {
-    if(!g_strcmp0(name, tmp->name))
-      return FALSE;
+    if(!g_strcmp0(name, settings_it->name))
+        return FALSE;
 
-    tmp = tmp->next;
+    while(settings_it->next)
+    {
+      if(!g_strcmp0(name, settings_it->next->name))
+        return FALSE;
+
+      settings_it = settings_it->next;
+    }
   }
 
   /* add new setting */
@@ -344,10 +488,10 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
       break;
   }
 
-  if(tmp)
-    tmp->next = setting;
-  if(!session->settings.settings)
-    session->settings.settings = setting;
+  if(settings_it)
+    settings_it->next = setting;
+  else
+    session->settings = setting;
 
   return TRUE;
 }
@@ -358,7 +502,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
 
-  for (girara_setting_t* setting = session->settings.settings; setting != NULL; setting = setting->next)
+  for (girara_setting_t* setting = session->settings; setting != NULL; setting = setting->next)
   {
     if (g_strcmp0(setting->name, name) != 0)
       continue;
@@ -392,8 +536,59 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
   return FALSE;
 }
 
+void*
+girara_setting_get(girara_session_t* session, char* name)
+{
+  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(name != NULL, FALSE);
+
+  for(girara_setting_t* setting = session->settings; setting != NULL; setting = setting->next)
+  {
+    if(g_strcmp0(setting->name, name) != 0)
+      continue;
+
+    gboolean *bvalue = NULL;
+    float    *fvalue = NULL;
+    int      *ivalue = NULL;
+
+    switch(setting->type)
+    {
+      case BOOLEAN:
+        bvalue = malloc(sizeof(gboolean));
+
+        if(!bvalue)
+          return NULL;
+
+        *bvalue = setting->value.b;
+        return bvalue;
+      case FLOAT:
+        fvalue = malloc(sizeof(float));
+
+        if(!fvalue)
+          return NULL;
+
+        *fvalue = setting->value.f;
+        return fvalue;
+      case INT:
+        ivalue = malloc(sizeof(int));
+
+        if(!ivalue)
+          return NULL;
+
+        *ivalue = setting->value.i;
+        return ivalue;
+      case STRING:
+        return g_strdup(setting->value.s);
+      default:
+        return NULL;
+    }
+  }
+
+  return NULL;
+}
+
 gboolean
-girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
+girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(buffer || key || modifier, FALSE);
@@ -401,20 +596,22 @@ girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buff
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing binding */
-  girara_shortcut_t* tmp = session->bindings.shortcuts;
+  girara_shortcut_t* shortcuts_it = session->bindings.shortcuts;
+  girara_shortcut_t* last_shortcut = shortcuts_it;
 
-  while(tmp && tmp->next)
+  while(shortcuts_it)
   {
-    if(((tmp->mask == modifier && tmp->key == key) ||
-       (buffer && tmp->buffered_command && !strcmp(tmp->buffered_command, buffer)))
-        && tmp->mode == mode)
+    if(((shortcuts_it->mask == modifier && shortcuts_it->key == key) ||
+       (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
+        && shortcuts_it->mode == mode)
     {
-      tmp->function = function;
-      tmp->argument = argument;
+      shortcuts_it->function = function;
+      shortcuts_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_shortcut = shortcuts_it;
+    shortcuts_it = shortcuts_it->next;
   }
 
   /* add new shortcut */
@@ -428,9 +625,9 @@ girara_shortcut_add(girara_session_t* session, int modifier, int key, char* buff
   shortcut->argument         = argument;
   shortcut->next             = NULL;
 
-  if(tmp)
-    tmp->next = shortcut;
-  if(!session->bindings.shortcuts)
+  if(last_shortcut)
+    last_shortcut->next = shortcut;
+  else
     session->bindings.shortcuts = shortcut;
 
   return TRUE;
@@ -444,25 +641,27 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   g_return_val_if_fail(function != NULL, FALSE);
 
   /* search for existing binding */
-  girara_command_t* tmp = session->bindings.commands;
+  girara_command_t* commands_it = session->bindings.commands;
+  girara_command_t* last_command = commands_it;
 
-  while(tmp && tmp->next)
+  while(commands_it)
   {
-    if(!g_strcmp0(tmp->command, command))
+    if(!g_strcmp0(commands_it->command, command))
     {
-      if(tmp->abbr)
-        free(tmp->abbr);
-      if(tmp->description)
-        free(tmp->description);
+      if(commands_it->abbr)
+        free(commands_it->abbr);
+      if(commands_it->description)
+        free(commands_it->description);
 
-      tmp->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
-      tmp->function    = function;
-      tmp->completion  = completion;
-      tmp->description = description ? g_strdup(description) : NULL;
+      commands_it->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
+      commands_it->function    = function;
+      commands_it->completion  = completion;
+      commands_it->description = description ? g_strdup(description) : NULL;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_command = commands_it;
+    commands_it = commands_it->next;
   }
 
   /* add new inputbar command */
@@ -475,9 +674,9 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   new_command->description = description ? g_strdup(description) : NULL;
   new_command->next        = NULL;
 
-  if(tmp)
-    tmp->next = new_command;
-  if(!session->bindings.commands)
+  if(last_command)
+    last_command->next = new_command;
+  else
     session->bindings.commands = new_command;
 
   session->global.number_of_commands++;
@@ -486,7 +685,7 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
 }
 
 gboolean
-girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, girara_shortcut_function_t function, int argument_n, void* argument_data)
+girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
@@ -494,18 +693,20 @@ girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, g
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing special command */
-  girara_inputbar_shortcut_t* tmp = session->bindings.inputbar_shortcuts;
+  girara_inputbar_shortcut_t* inp_sh_it = session->bindings.inputbar_shortcuts;
+  girara_inputbar_shortcut_t* last_inp_sh = inp_sh_it;
 
-  while(tmp && tmp->next)
+  while(inp_sh_it)
   {
-    if(tmp->mask == modifier && tmp->key == key)
+    if(inp_sh_it->mask == modifier && inp_sh_it->key == key)
     {
-      tmp->function = function;
-      tmp->argument = argument;
+      inp_sh_it->function = function;
+      inp_sh_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_inp_sh = inp_sh_it;
+    inp_sh_it = inp_sh_it->next;
   }
 
   /* create new inputbar shortcut */
@@ -517,13 +718,14 @@ girara_inputbar_shortcut_add(girara_session_t* session, int modifier, int key, g
   inputbar_shortcut->argument = argument;
   inputbar_shortcut->next     = NULL;
 
-  if(tmp)
-    tmp->next = inputbar_shortcut;
-  if(!session->bindings.inputbar_shortcuts)
+  if(last_inp_sh)
+    last_inp_sh->next = inputbar_shortcut;
+  else
     session->bindings.inputbar_shortcuts = inputbar_shortcut;
 
   return TRUE;
 }
+
 
 gboolean
 girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, int argument_n, void* argument_data)
@@ -534,19 +736,21 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing special command */
-  girara_special_command_t* tmp = session->bindings.special_commands;
+  girara_special_command_t* scommand_it = session->bindings.special_commands;
+  girara_special_command_t* last_scommand = scommand_it;
 
-  while(tmp && tmp->next)
+  while(scommand_it)
   {
-    if(tmp->identifier == identifier)
+    if(scommand_it->identifier == identifier)
     {
-      tmp->function = function;
-      tmp->always   = always;
-      tmp->argument = argument;
+      scommand_it->function = function;
+      scommand_it->always   = always;
+      scommand_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_scommand = scommand_it;
+    scommand_it = scommand_it->next;
   }
 
   /* create new special command */
@@ -557,16 +761,16 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   special_command->always     = always;
   special_command->argument   = argument;
 
-  if(tmp)
-    tmp->next = special_command;
-  if(session->bindings.special_commands)
+  if(last_scommand)
+    last_scommand->next = special_command;
+  else
     session->bindings.special_commands = special_command;
 
   return TRUE;
 }
 
 gboolean
-girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
+girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
@@ -574,19 +778,21 @@ girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_s
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing binding */
-  girara_mouse_event_t* tmp = session->bindings.mouse_events;
+  girara_mouse_event_t* me_it = session->bindings.mouse_events;
+  girara_mouse_event_t* last_me = me_it;
 
-  while(tmp && tmp->next)
+  while(me_it)
   {
-    if(tmp->mask == mask && tmp->button == button &&
-       tmp->mode == mode)
+    if(me_it->mask == mask && me_it->button == button &&
+       me_it->mode == mode)
     {
-      tmp->function = function;
-      tmp->argument = argument;
+      me_it->function = function;
+      me_it->argument = argument;
       return TRUE;
     }
 
-    tmp = tmp->next;
+    last_me = me_it;
+    me_it = me_it->next;
   }
 
   /* add new mouse event */
@@ -599,9 +805,9 @@ girara_mouse_event_add(girara_session_t* session, int mask, int button, girara_s
   mouse_event->argument = argument;
   mouse_event->next     = NULL;
 
-  if(tmp)
-    tmp->next = mouse_event;
-  if(!session->bindings.mouse_events)
+  if(last_me)
+    last_me->next = mouse_event;
+  else
     session->bindings.mouse_events = mouse_event;
 
   return TRUE;
@@ -680,7 +886,7 @@ girara_statusbar_set_background(girara_session_t* session, char* color)
 }
 
 gboolean
-girara_set_view(girara_session_t* session, GtkWidget* widget)
+girara_set_view(girara_session_t* session, GtkWidget* UNUSED(widget))
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
@@ -705,7 +911,7 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
 }
 
 void
-girara_sc_quit(girara_session_t* session, girara_argument_t* argument)
+girara_sc_quit(girara_session_t* UNUSED(session), girara_argument_t* UNUSED(argument))
 {
   girara_argument_t arg = { GIRARA_HIDE };
   girara_isc_completion(session, &arg);
@@ -715,13 +921,13 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* argument)
 
 /* default commands implementation */
 gboolean
-girara_cmd_map(girara_session_t* session, int argc, char** argv)
+girara_cmd_map(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   return TRUE;
 }
 
 gboolean
-girara_cmd_quit(girara_session_t* session, int argc, char** argv)
+girara_cmd_quit(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   girara_argument_t arg = { GIRARA_HIDE };
   girara_isc_completion(session, &arg);
@@ -731,14 +937,14 @@ girara_cmd_quit(girara_session_t* session, int argc, char** argv)
 }
 
 gboolean
-girara_cmd_set(girara_session_t* session, int argc, char** argv)
+girara_cmd_set(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   return TRUE;
 }
 
 /* callback implementation */
 gboolean
-girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
+girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
@@ -963,7 +1169,7 @@ girara_completion_init()
 }
 
 girara_completion_group_t*
-girara_completion_group_create(girara_session_t* session, char* name)
+girara_completion_group_create(girara_session_t* UNUSED(session), char* name)
 {
   girara_completion_group_t* group = g_slice_new(girara_completion_group_t);
 
@@ -1045,10 +1251,10 @@ girara_completion_group_add_element(girara_session_t* session, girara_completion
 }
 
 void
-girara_isc_abort(girara_session_t* session, girara_argument_t* argument)
+girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument))
 {
   /* hide completion */
-  girara_argument_t arg = { GIRARA_HIDE };
+  girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg);
 
   /* clear inputbar */
