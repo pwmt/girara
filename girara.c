@@ -911,9 +911,9 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
 }
 
 void
-girara_sc_quit(girara_session_t* UNUSED(session), girara_argument_t* UNUSED(argument))
+girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument))
 {
-  girara_argument_t arg = { GIRARA_HIDE };
+  girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg);
 
   gtk_main_quit();
@@ -927,9 +927,9 @@ girara_cmd_map(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSE
 }
 
 gboolean
-girara_cmd_quit(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
+girara_cmd_quit(girara_session_t* session, int UNUSED(argc), char** UNUSED(argv))
 {
-  girara_argument_t arg = { GIRARA_HIDE };
+  girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg);
 
   gtk_main_quit();
@@ -1536,11 +1536,12 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     girara_completion_row_set_color(session, ((girara_internal_completion_entry_t *) entries_current->data)->widget, GIRARA_HIGHLIGHT);
 
     /* hide other items */
-    unsigned int n_completion_items = 15;
-    int uh = ceil( n_completion_items / 2);
-    int lh = floor(n_completion_items / 2);
+    int* tmp  = girara_setting_get(session, "n-completion-items");
+    unsigned int n_completion_items = tmp ? *tmp : 15;
+    unsigned int uh = ceil( n_completion_items / 2);
+    unsigned int lh = floor(n_completion_items / 2);
 
-    int current_item = g_list_position(entries, entries_current);
+    unsigned int current_item = g_list_position(entries, entries_current);
 
     for(unsigned int i = 0; i < n_elements; i++)
     {
@@ -1636,9 +1637,9 @@ girara_cc_set(girara_session_t* session, char* input)
   girara_completion_group_t* group = girara_completion_group_create(session, NULL);
   girara_completion_add_group(completion, group);
 
-  int input_length = input ? strlen(input) : 0;
+  unsigned int input_length = input ? strlen(input) : 0;
 
-  girara_setting_t* setting = session->settings.settings;
+  girara_setting_t* setting = session->settings;
   while(setting && setting->next)
   {
     if((input_length <= strlen(setting->name)) && !strncmp(input, setting->name, input_length))
