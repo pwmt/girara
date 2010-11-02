@@ -1287,11 +1287,14 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   }
 
   /* update entries */
-  if(entries)
+  if(entries && g_list_length(entries) > 1)
   {
     girara_completion_row_set_color(session, ((girara_internal_completion_entry_t *) entries_current->data)->widget, GIRARA_NORMAL);
 
-    if(g_list_length(entries) > 1)
+    unsigned int n_elements = g_list_length(entries);
+    gboolean next_group     = FALSE;
+
+    for(unsigned int i = 0; i < n_elements; i++)
     {
       if(argument->n == GIRARA_NEXT || argument->n == GIRARA_NEXT_GROUP)
       {
@@ -1308,6 +1311,19 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
           entry = g_list_last(entries);
 
         entries_current = entry;
+      }
+
+      if(((girara_internal_completion_entry_t*) entries_current->data)->group)
+      {
+        if(!command_mode && (argument->n == GIRARA_NEXT_GROUP || argument->n == GIRARA_PREVIOUS_GROUP))
+          next_group = TRUE;
+        continue;
+      }
+      else
+      {
+        if(!command_mode && (next_group == 0) && (argument->n == GIRARA_NEXT_GROUP || argument->n == GIRARA_PREVIOUS_GROUP))
+          continue;
+        break;
       }
     }
 
