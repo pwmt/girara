@@ -142,8 +142,9 @@ typedef struct girara_completion_s
 /**
  * Function declaration of a function that generates a completion group
  *
- * @session The current girara session
- * @input The current input
+ * @param session The current girara session
+ * @param input The current input
+ * @return The completion group
  */
 typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* session, char* input);
 
@@ -249,110 +250,409 @@ struct girara_session_s
 
   struct
   {
-    GdkColor default_foreground;
-    GdkColor default_background;
-    GdkColor inputbar_foreground;
-    GdkColor inputbar_background;
-    GdkColor statusbar_foreground;
-    GdkColor statusbar_background;
-    GdkColor completion_foreground;
-    GdkColor completion_background;
-    GdkColor completion_group_background;
-    GdkColor completion_group_foreground;
-    GdkColor completion_highlight_foreground;
-    GdkColor completion_highlight_background;
-    GdkColor notification_error_foreground;
-    GdkColor notification_error_background;
-    GdkColor notification_warning_foreground;
-    GdkColor notification_warning_background;
-    PangoFontDescription *font;
+    GdkColor default_foreground; /**< The default foreground color */
+    GdkColor default_background; /**< The default background color */
+    GdkColor inputbar_foreground; /**< The foreground color of the inputbar */
+    GdkColor inputbar_background; /**< The background color of the inputbar */
+    GdkColor statusbar_foreground; /**< The foreground color of the statusbar */
+    GdkColor statusbar_background; /**< The background color of the statusbar */
+    GdkColor completion_foreground; /**< The foreground color of a completion item */
+    GdkColor completion_background; /**< The background color of a completion item */
+    GdkColor completion_group_foreground; /**< The foreground color of a completion group entry */
+    GdkColor completion_group_background; /**< The background color of a completion group entry */
+    GdkColor completion_highlight_foreground; /**< The foreground color of a highlighted completion item */
+    GdkColor completion_highlight_background; /**< The background color of a highlighted completion item */
+    GdkColor notification_error_foreground; /**< The foreground color of an error notification */
+    GdkColor notification_error_background; /**< The background color of an error notification */
+    GdkColor notification_warning_foreground; /**< The foreground color of a warning notification */
+    GdkColor notification_warning_background; /**< The background color of a warning notification */
+    PangoFontDescription *font; /**< The used font */
   } style;
 
   struct
   {
-    girara_mouse_event_t* mouse_events;
-    girara_command_t* commands;
-    girara_shortcut_t* shortcuts;
-    girara_special_command_t* special_commands;
-    girara_inputbar_shortcut_t* inputbar_shortcuts;
+    girara_mouse_event_t* mouse_events; /**< List of mouse events */
+    girara_command_t* commands; /**< List of commands */
+    girara_shortcut_t* shortcuts; /**< List of shortcuts */
+    girara_special_command_t* special_commands; /**< List of special commands */
+    girara_inputbar_shortcut_t* inputbar_shortcuts; /**< List of inputbar shortcuts */
   } bindings;
 
   struct
   {
-    girara_statusbar_item_t* statusbar_items;
+    girara_statusbar_item_t* statusbar_items; /**< List of statusbar items */
   } elements;
 
+  /**
+   * List of settings
+   */
   girara_setting_t* settings;
 
   struct
   {
-    int inputbar_activate;
-    int inputbar_key_pressed;
-    int view_key_pressed;
+    int inputbar_activate; /**< Inputbar activation */
+    int inputbar_key_pressed; /**< Pressed key in inputbar */
+    int view_key_pressed; /**< Pressed key in view */
   } signals;
 
   struct
   {
-    GString *buffer;
-    int current_mode;
-    int number_of_commands;
+    GString *buffer; /**< Buffer */
+    int current_mode; /**< Current mode */
   } global;
 
   struct
   {
-    int n;
-    GString *command;
+    int n; /**< Numeric buffer */
+    GString *command; /**< Command in buffer */
   } buffer;
 };
 
+/**
+ * Creates a girara session
+ *
+ * @return A valid session object
+ * @return NULL when an error occured
+ */
 girara_session_t* girara_session_create();
+
+/**
+ * Initializes an girara session
+ *
+ * @param session The used girara session
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_session_init(girara_session_t* session);
+
+/**
+ * Destroys an girara session
+ *
+ * @param session The used girara session
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_session_destroy(girara_session_t* session);
 
+/**
+ * Adds an additional entry in the settings list
+ *
+ * @param session The used girara session
+ * @param name The name of the setting
+ * @param value The value of the setting
+ * @param type The type of the setting
+ * @param init_only Will only available on initialization
+ * @param description Description of the setting
+ * @param callback Function that is called when the setting changes
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback);
+
+/**
+ * Sets the value of a setting
+ *
+ * @param session The used girara session
+ * @param name The name of the setting
+ * @param value The new value of the setting
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_setting_set(girara_session_t* session, char* name, void* value);
+
+/**
+ * Retreives the value of a setting
+ *
+ * @param session The used girara session
+ * @param name The name of the setting
+ * @return Value of the setting
+ * @return NULL An error occured
+ */
 void* girara_setting_get(girara_session_t* session, char* name);
 
+/**
+ * Adds an shortcut
+ *
+ * @param session The used girara session
+ * @param modifier The modifier
+ * @param key The key
+ * @param buffer Buffer command
+ * @param function Executed function
+ * @param mode Available modes
+ * @param argument_n Argument identifier
+ * @param argument_data Argument data
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+
+/**
+ * Adds an inputbar command
+ *
+ * @param session The used girara session
+ * @param command The name of the command
+ * @param abbreviation The abbreviation of the command
+ * @param function Executed function
+ * @param completion Completion function
+ * @param description Description of the command
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description);
+
+/**
+ * Adds an inputbar shortcut
+ *
+ * @param session The used girara session
+ * @param modifier The modifier
+ * @param key The key
+ * @param function Executed function
+ * @param argument_n Argument identifier
+ * @param argument_data Argument data
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data);
+
+/**
+ * Adds a special command
+ *
+ * @param session The used girara session
+ * @param identifier Char identifier
+ * @param function Executed function
+ * @param always If the function should executed on every change of the input
+ *        (e.g.: incremental search)
+ * @param argument_n Argument identifier
+ * @param argument_data Argument data
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, int argument_n, void* argument_data);
+
+/**
+ * Adds a mouse event
+ *
+ * @param session The used girara session
+ * @param mask The mask
+ * @param button Pressed button
+ * @param function Executed function
+ * @param mode Available mode
+ * @param argument_n Argument identifier
+ * @param argument_data Argument data
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
 
+/**
+ * Creates an statusbar item
+ *
+ * @param session The used girara session
+ * @param expand Expand attribute
+ * @param fill Fill attribute
+ * @param left True if it should be aligned to the left
+ * @param callback Function that gets executed when an event occurs
+ * @return The created statusbar item
+ * @return NULL An error occured
+ */
 girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean fill, gboolean left, girara_statusbar_event_t callback);
+
+/**
+ * Sets the shown text of an statusbar item
+ *
+ * @param session The used girara session
+ * @param item The statusbar item
+ * @param text Text that should be displayed
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text);
+
+/**
+ * Sets the foreground color of an statusbar item
+ *
+ * @param session The used girara session
+ * @param item The statusbar item
+ * @param color The color code
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color);
+
+/**
+ * Sets the background color of the statusbar
+ *
+ * @param session The used girara session
+ * @param color The color code
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_statusbar_set_background(girara_session_t* session, char* color);
 
+/**
+ * Sets the view widget of girara
+ *
+ * @param session The used girara session
+ * @param widget The widget that should be displayed
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 gboolean girara_set_view(girara_session_t* session, GtkWidget* widget);
 
+/**
+ * Creates an girara completion object
+ *
+ * @return Completion object
+ * @return NULL An error occured
+ */
 girara_completion_t* girara_completion_init();
-girara_completion_group_t* girara_completion_group_create(girara_session_t*, char*);
-void girara_completion_add_group(girara_completion_t*, girara_completion_group_t*);
-void girara_completion_free(girara_completion_t*);
-void girara_completion_group_add_element(girara_session_t*, girara_completion_group_t*, char*, char*);
-void girara_isc_completion(girara_session_t*, girara_argument_t*);
 
-/* default shortcuts */
-void girara_sc_focus_inputbar(girara_session_t*, girara_argument_t*);
-void girara_sc_quit(girara_session_t*, girara_argument_t*);
+/**
+ * Creates an girara completion group
+ *
+ * @return Completion object
+ * @return NULL An error occured
+ */
+girara_completion_group_t* girara_completion_group_create(girara_session_t* session, char* name);
 
-/* default commands */
-gboolean girara_cmd_map(girara_session_t*, int, char**);
-gboolean girara_cmd_quit(girara_session_t*, int, char**);
-gboolean girara_cmd_set(girara_session_t*, int, char**);
+/**
+ * Adds an group to a completion object
+ *
+ * @param completion The completion object
+ * @param group The completion group
+ */
+void girara_completion_add_group(girara_completion_t* completion, girara_completion_group_t* group);
 
-/* callback declarations */
-gboolean girara_callback_view_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
-gboolean girara_callback_inputbar_activate(GtkEntry*, girara_session_t*);
-gboolean girara_callback_inputbar_key_press_event(GtkWidget*, GdkEventKey*, girara_session_t*);
+/**
+ * Frees an completion and all of its groups and elements
+ *
+ * @param completion The completion
+ */
+void girara_completion_free(girara_completion_t* completion);
 
-/* inputbar shortcuts */
+/**
+ * Adds an element to a completion group
+ *
+ * @param group The completion group
+ * @param value Value of the entry
+ * @param description Description of the entry
+ */
+void girara_completion_group_add_element(girara_completion_group_t* group, char* value, char* description);
+
+/**
+ * Default shortcut function to focus the inputbar
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ */
+void girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument);
+
+/**
+ * Default shortcut function to quit the application
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ */
+void girara_sc_quit(girara_session_t* session, girara_argument_t* argument);
+
+/**
+ * Default command to map sortcuts
+ *
+ * @param session The used girara session
+ * @param argc Number of arguments
+ * @param argv Arguments
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+gboolean girara_cmd_map(girara_session_t* session, int argc, char** argv);
+
+/**
+ * Default command to quit the application
+ *
+ * @param session The used girara session
+ * @param argc Number of arguments
+ * @param argv Arguments
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+gboolean girara_cmd_quit(girara_session_t* session, int argc, char** argv);
+
+/**
+ * Default command to set the value of settings
+ *
+ * @param session The used girara session
+ * @param argc Number of arguments
+ * @param argv Arguments
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+gboolean girara_cmd_set(girara_session_t* session, int argc, char** argv);
+
+/**
+ * Default callback for key press events in the view area
+ *
+ * @param widget The used widget
+ * @param event The occured event
+ * @param session The used girara session
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+
+/**
+ * Default callback if the inputbar gets activated
+ *
+ * @param entry The inputbar entry
+ * @param session The used girara session
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session);
+
+/**
+ * Default callback if an key in the input bar gets pressed
+ *
+ * @param widget The used widget
+ * @param event The occured event
+ * @param session The used girara session
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+gboolean girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+
+/**
+ * Default inputbar shortcut to abort
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
 void girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
+
+/**
+ * Default inputbar shortcut that completes the given input
+ * in the statusbar
+ *
+ * @param session The used girarasession
+ * @param argument The argument
+ */
 void girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
+
+/**
+ * Default inputbar shortcut to manipulate the inputbar string
+ *
+ * @param session The used girarasession
+ * @param argument The argument
+ */
 void girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
 
-/* completion functions */
+/**
+ * Default complection function for the settings
+ *
+ * @param session The used girarasession
+ * @param input The current input
+ */
 girara_completion_t* girara_cc_set(girara_session_t* session, char* input);
 
 #endif

@@ -12,7 +12,7 @@
 # define UNUSED(x) x
 #endif
 
-int setting_cb(girara_session_t* session, girara_setting_t* setting);
+void setting_cb(girara_session_t* session, girara_setting_t* setting);
 
 int main(int argc, char *argv[])
 {
@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-int setting_cb(girara_session_t* UNUSED(session), girara_setting_t* setting)
+void setting_cb(girara_session_t* UNUSED(session), girara_setting_t* setting)
 {
   printf("Changed setting '%s' (%c)!\n", setting->name, setting->type);
-  return 0;
+  return;
 }

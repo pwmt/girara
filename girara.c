@@ -68,7 +68,6 @@ girara_session_create()
   session->buffer.command = NULL;
 
   session->global.current_mode       = 0;
-  session->global.number_of_commands = 0;
   session->global.buffer             = NULL;
 
   /* default values */
@@ -679,8 +678,6 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   else
     session->bindings.commands = new_command;
 
-  session->global.number_of_commands++;
-
   return TRUE;
 }
 
@@ -1227,9 +1224,8 @@ girara_completion_free(girara_completion_t* completion)
 }
 
 void
-girara_completion_group_add_element(girara_session_t* session, girara_completion_group_t* group, char* name, char* description)
+girara_completion_group_add_element(girara_completion_group_t* group, char* name, char* description)
 {
-  g_return_if_fail(session != NULL);
   g_return_if_fail(group   != NULL);
   g_return_if_fail(name    != NULL);
 
@@ -1643,7 +1639,7 @@ girara_cc_set(girara_session_t* session, char* input)
   while(setting && setting->next)
   {
     if((input_length <= strlen(setting->name)) && !strncmp(input, setting->name, input_length))
-      girara_completion_group_add_element(session, group, setting->name, setting->description);
+      girara_completion_group_add_element(group, setting->name, setting->description);
 
     setting = setting->next;
   }
