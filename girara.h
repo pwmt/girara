@@ -4,156 +4,247 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-typedef enum girara_completion_arguments_e
+/**
+ * This structure defines the possible argument identifiers
+ */
+enum
 {
-  GIRARA_HIDE = 1,
-  GIRARA_NEXT,
-  GIRARA_PREVIOUS,
-  GIRARA_NEXT_GROUP,
-  GIRARA_PREVIOUS_GROUP,
-  GIRARA_HIGHLIGHT,
-  GIRARA_NORMAL,
-  GIRARA_DELETE_LAST_WORD,
-  GIRARA_DELETE_LAST_CHAR,
-  GIRARA_NEXT_CHAR,
-  GIRARA_PREVIOUS_CHAR,
-  GIRARA_DELETE_TO_LINE_START
-} girara_completion_argument_t;
-
-typedef enum girara_setting_type_e
-{
-  BOOLEAN,
-  FLOAT,
-  INT,
-  STRING
-} girara_setting_type_t;
-
-typedef int girara_mode_t;
-
-typedef struct girara_session_s girara_session_t;
-
-typedef struct girara_setting_s girara_setting_t;
-
-typedef gboolean (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
-
-typedef int (*girara_setting_callback_t)(girara_session_t* session, girara_setting_t* setting);
-
-struct girara_setting_s
-{
-  char* name;
-  union
-  {
-    gboolean b;
-    int i;
-    float f;
-    char *s;
-  } value;
-  int type;
-  gboolean init_only;
-  char* description;
-  girara_setting_callback_t callback;
-  struct girara_setting_s *next;
+  GIRARA_HIDE = 1, /**< Hide the completion list */
+  GIRARA_NEXT, /**< Next entry */
+  GIRARA_PREVIOUS, /**< Previous entry */
+  GIRARA_NEXT_GROUP, /**< Next group in the completion list */
+  GIRARA_PREVIOUS_GROUP, /**< Previous group in the completion list */
+  GIRARA_HIGHLIGHT, /**< Highlight the entry */
+  GIRARA_NORMAL, /**< Set to the normal state */
+  GIRARA_DELETE_LAST_WORD, /**< Delete the last word */
+  GIRARA_DELETE_LAST_CHAR, /**< Delete the last character */
+  GIRARA_NEXT_CHAR, /**< Go to the next character */
+  GIRARA_PREVIOUS_CHAR, /**< Go to the previous character */
+  GIRARA_DELETE_TO_LINE_START /** Delete the line until the start */
 };
 
+/**
+ * This structure defines the possible types that a setting value can have
+ */
+typedef enum girara_setting_type_e
+{
+  BOOLEAN, /**< Boolean type */
+  FLOAT, /**< Floating number */
+  INT, /**< Integer */
+  STRING /**< String */
+} girara_setting_type_t;
+
+/**
+ * Mode identifier
+ */
+typedef int girara_mode_t;
+
+/**
+ * Session typedef
+ */
+typedef struct girara_session_s girara_session_t;
+
+/**
+ * Setting typedef
+ */
+typedef struct girara_setting_s girara_setting_t;
+
+/**
+ * Function declaration for a statusbar event callback
+ *
+ * @param widget The statusbar item
+ * @param event The occured event
+ * @param session The current girara session
+ * @return TRUE No error occured
+ * @return FALSE Error occured (and forward event)
+ */
+typedef gboolean (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
+
+/**
+ * Function declaration for a settings callback
+ *
+ * @param session The current girara session
+ * @param setting The affected setting
+ */
+typedef void (*girara_setting_callback_t)(girara_session_t* session, girara_setting_t* setting);
+
+/**
+ * Structure of a settings entry
+ */
+struct girara_setting_s
+{
+  char* name; /**< Name of the setting */
+  union
+  {
+    gboolean b; /**< Boolean */
+    int i; /**< Integer */
+    float f; /**< Floating number */
+    char *s; /**< String */
+  } value; /**< Value of the setting */
+  int type; /**< Type identifier */
+  gboolean init_only; /**< Option can be set only before girara gets initialized */
+  char* description; /**< Description of this setting */
+  girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */
+  struct girara_setting_s *next; /**< Next settings entry (linked list) */
+};
+
+/**
+ * Structure of a statusbar item
+ */
 typedef struct girara_statusbar_item_s
 {
-  GtkLabel *text;
-  struct girara_statusbar_item_s *next;
+  GtkLabel *text; /**< Text label */
+  struct girara_statusbar_item_s *next; /**< Next statusbar item (linked list) */
 } girara_statusbar_item_t;
 
+/**
+ * Definition of an argument of a shortcut or buffered command
+ */
 typedef struct
 {
-  int   n;
-  void *data;
+  int   n; /**< Identifier */
+  void *data; /**< Data */
 } girara_argument_t;
 
+/**
+ * Function declaration of a shortcut function
+ */
 typedef void (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*);
 
+/**
+ * Structure of a completion element
+ */
 typedef struct girara_completion_element_s
 {
-  char *value;
-  char *description;
-  struct girara_completion_element_s *next;
+  char *value; /**> Name of the completion element */
+  char *description; /**> Description of the completion element */
+  struct girara_completion_element_s *next; /**> Next completion element (linked list) */
 } girara_completion_element_t;
 
+/**
+ * Structure of a completion group
+ */
 typedef struct girara_completion_group_s
 {
-  char *value;
-  girara_completion_element_t *elements;
-  struct girara_completion_group_s *next;
+  char *value; /**> Name of the completion element */
+  girara_completion_element_t *elements; /**> Elements of the completion group */
+  struct girara_completion_group_s *next; /**> Next group (linked list) */
 } girara_completion_group_t;
 
+/**
+ * Structure of a completion object
+ */
 typedef struct girara_completion_s
 {
-  girara_completion_group_t *groups;
+  girara_completion_group_t *groups; /**> Containing completion groups */
 } girara_completion_t;
 
-typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t*, char*);
+/**
+ * Function declaration of a function that generates a completion group
+ *
+ * @session The current girara session
+ * @input The current input
+ */
+typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* session, char* input);
 
+/**
+ * Structure of a shortcut
+ */
 typedef struct girara_shortcut_s
 {
-  guint mask;
-  guint key;
-  char* buffered_command;
-  girara_shortcut_function_t function;
-  int mode;
-  girara_argument_t argument;
-  struct girara_shortcut_s *next;
+  guint mask; /**< Mask */
+  guint key; /**< Key */
+  char* buffered_command; /**< Buffer command */
+  girara_shortcut_function_t function; /**< The correspondending function */
+  int mode; /**< Mode identifier */
+  girara_argument_t argument; /**< Given argument */
+  struct girara_shortcut_s *next; /**< Next shortcut (linked list) */
 } girara_shortcut_t;
 
+/**
+ * Structure of a inputbar shortcut
+ */
 typedef struct girara_inputbar_shortcut_s
 {
-  guint mask;
-  guint key;
-  girara_shortcut_function_t function;
-  girara_argument_t argument;
-  struct girara_inputbar_shortcut_s *next;
+  guint mask; /**< Mask */
+  guint key; /**< Key */
+  girara_shortcut_function_t function; /**< Function */
+  girara_argument_t argument; /**< Given argument */
+  struct girara_inputbar_shortcut_s *next; /**< Next inputbar shortcut (linked list) */
 } girara_inputbar_shortcut_t;
 
-typedef gboolean (*girara_inputbar_special_function_t)(girara_session_t*, char*, girara_argument_t*);
+/**
+ * Function declaration of a inputbar special function
+ *
+ * @param session The current girara session
+ * @param input The current input
+ * @param argument The given argument
+ * @return TRUE No error occured
+ * @return FALSE Error occured
+ */
+typedef gboolean (*girara_inputbar_special_function_t)(girara_session_t* session, char* input, girara_argument_t* argument);
 
+/**
+ * Structure of a special command
+ */
 typedef struct girara_special_command_s
 {
-  char identifier;
-  girara_inputbar_special_function_t function;
-  gboolean always;
-  girara_argument_t argument;
-  struct girara_special_command_s *next;
+  char identifier; /**< Identifier */
+  girara_inputbar_special_function_t function; /**< Function */
+  gboolean always; /**< Evalute on every change of the input */
+  girara_argument_t argument; /**< Argument */
+  struct girara_special_command_s *next; /**< Next special command (linked list) */
 } girara_special_command_t;
 
-typedef gboolean (*girara_command_function_t)(girara_session_t*, int, char**);
+/**
+ * Function declaration of a command function
+ *
+ * @param session The current girara session
+ * @param argc Number of arguments
+ * @param argv Arguments
+ */
+typedef gboolean (*girara_command_function_t)(girara_session_t* session, int argc, char** argv);
 
+/**
+ * Structure of a command
+ */
 typedef struct girara_command_s
 {
-  char* command;
-  char* abbr;
-  girara_command_function_t function;
-  girara_completion_function_t completion;
-  char* description;
-  struct girara_command_s *next;
+  char* command; /**< Name of the command */
+  char* abbr; /**< Abbreviation of the command */
+  girara_command_function_t function; /**< Function */
+  girara_completion_function_t completion; /**< Completion function of the command */
+  char* description; /**< Description of the command */
+  struct girara_command_s *next; /**< Next command (linked list) */
 } girara_command_t;
 
+/**
+ * Structure of a mouse event
+ */
 typedef struct girara_mouse_event_s
 {
-  guint mask;
-  guint button;
-  girara_shortcut_function_t function;
-  int mode;
-  girara_argument_t argument;
-  struct girara_mouse_event_s *next;
+  guint mask; /**< Mask */
+  guint button; /**< Button */
+  girara_shortcut_function_t function; /**< Function */
+  int mode; /**< Allowed modes */
+  girara_argument_t argument; /**< Given argument */
+  struct girara_mouse_event_s *next; /**< Next mouse event (linked list) */
 } girara_mouse_event_t;
 
+/**
+ * Structure of a girara session
+ */
 struct girara_session_s
 {
   struct
   {
-    GtkWidget       *window;
-    GtkBox          *box;
-    GtkWidget       *view;
-    GtkWidget       *statusbar;
-    GtkBox          *statusbar_entries;
-    GtkEntry        *inputbar;
-    GdkNativeWindow  embed;
+    GtkWidget       *window; /**< The main window of the application */
+    GtkBox          *box; /**< A box that contains all widgets */
+    GtkWidget       *view; /**< The view area of the applications widgets */
+    GtkWidget       *statusbar; /**< The statusbar */
+    GtkBox          *statusbar_entries; /**< Statusbar entry box */
+    GtkEntry        *inputbar; /**< The inputbar */
+    GdkNativeWindow  embed; /**< Embedded window */
   } gtk;
 
   struct
