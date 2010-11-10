@@ -1,3 +1,5 @@
+/* See LICENSE file for license and copyright information */
+
 #ifndef GIRARA_H
 #define GIRARA_H
 
