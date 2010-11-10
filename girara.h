@@ -3,6 +3,7 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <stdbool.h>
 
 /**
  * This structure defines the possible argument identifiers
@@ -58,7 +59,7 @@ typedef struct girara_setting_s girara_setting_t;
  * @return TRUE No error occured
  * @return FALSE Error occured (and forward event)
  */
-typedef gboolean (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
+typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
 
 /**
  * Function declaration for a settings callback
@@ -76,13 +77,13 @@ struct girara_setting_s
   char* name; /**< Name of the setting */
   union
   {
-    gboolean b; /**< Boolean */
+    bool b; /**< Boolean */
     int i; /**< Integer */
     float f; /**< Floating number */
     char *s; /**< String */
   } value; /**< Value of the setting */
   int type; /**< Type identifier */
-  gboolean init_only; /**< Option can be set only before girara gets initialized */
+  bool init_only; /**< Option can be set only before girara gets initialized */
   char* description; /**< Description of this setting */
   girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */
   struct girara_setting_s *next; /**< Next settings entry (linked list) */
@@ -183,7 +184,7 @@ typedef struct girara_inputbar_shortcut_s
  * @return TRUE No error occured
  * @return FALSE Error occured
  */
-typedef gboolean (*girara_inputbar_special_function_t)(girara_session_t* session, char* input, girara_argument_t* argument);
+typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session, char* input, girara_argument_t* argument);
 
 /**
  * Structure of a special command
@@ -192,7 +193,7 @@ typedef struct girara_special_command_s
 {
   char identifier; /**< Identifier */
   girara_inputbar_special_function_t function; /**< Function */
-  gboolean always; /**< Evalute on every change of the input */
+  bool always; /**< Evalute on every change of the input */
   girara_argument_t argument; /**< Argument */
   struct girara_special_command_s *next; /**< Next special command (linked list) */
 } girara_special_command_t;
@@ -204,7 +205,7 @@ typedef struct girara_special_command_s
  * @param argc Number of arguments
  * @param argv Arguments
  */
-typedef gboolean (*girara_command_function_t)(girara_session_t* session, int argc, char** argv);
+typedef bool (*girara_command_function_t)(girara_session_t* session, int argc, char** argv);
 
 /**
  * Structure of a command
@@ -323,7 +324,7 @@ girara_session_t* girara_session_create();
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_session_init(girara_session_t* session);
+bool girara_session_init(girara_session_t* session);
 
 /**
  * Destroys an girara session
@@ -332,7 +333,7 @@ gboolean girara_session_init(girara_session_t* session);
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_session_destroy(girara_session_t* session);
+bool girara_session_destroy(girara_session_t* session);
 
 /**
  * Adds an additional entry in the settings list
@@ -347,7 +348,7 @@ gboolean girara_session_destroy(girara_session_t* session);
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback);
+bool girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, bool init_only, char* description, girara_setting_callback_t callback);
 
 /**
  * Sets the value of a setting
@@ -358,7 +359,7 @@ gboolean girara_setting_add(girara_session_t* session, char* name, void* value, 
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_setting_set(girara_session_t* session, char* name, void* value);
+bool girara_setting_set(girara_session_t* session, char* name, void* value);
 
 /**
  * Retreives the value of a setting
@@ -384,7 +385,7 @@ void* girara_setting_get(girara_session_t* session, char* name);
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
 
 /**
  * Adds an inputbar command
@@ -398,7 +399,7 @@ gboolean girara_shortcut_add(girara_session_t* session, guint modifier, guint ke
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description);
+bool girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description);
 
 /**
  * Adds an inputbar shortcut
@@ -412,7 +413,7 @@ gboolean girara_inputbar_command_add(girara_session_t* session, char* command , 
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data);
+bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data);
 
 /**
  * Adds a special command
@@ -427,7 +428,7 @@ gboolean girara_inputbar_shortcut_add(girara_session_t* session, guint modifier,
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, int argument_n, void* argument_data);
+bool girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, bool always, int argument_n, void* argument_data);
 
 /**
  * Adds a mouse event
@@ -442,7 +443,7 @@ gboolean girara_special_command_add(girara_session_t* session, char identifier, 
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
 
 /**
  * Creates an statusbar item
@@ -455,7 +456,7 @@ gboolean girara_mouse_event_add(girara_session_t* session, guint mask, guint but
  * @return The created statusbar item
  * @return NULL An error occured
  */
-girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean fill, gboolean left, girara_statusbar_event_t callback);
+girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback);
 
 /**
  * Sets the shown text of an statusbar item
@@ -466,7 +467,7 @@ girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, gb
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text);
+bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text);
 
 /**
  * Sets the foreground color of an statusbar item
@@ -477,7 +478,7 @@ gboolean girara_statusbar_item_set_text(girara_session_t* session, girara_status
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color);
+bool girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color);
 
 /**
  * Sets the background color of the statusbar
@@ -487,7 +488,7 @@ gboolean girara_statusbar_item_set_foreground(girara_session_t* session, girara_
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_statusbar_set_background(girara_session_t* session, char* color);
+bool girara_statusbar_set_background(girara_session_t* session, char* color);
 
 /**
  * Sets the view widget of girara
@@ -497,7 +498,7 @@ gboolean girara_statusbar_set_background(girara_session_t* session, char* color)
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_set_view(girara_session_t* session, GtkWidget* widget);
+bool girara_set_view(girara_session_t* session, GtkWidget* widget);
 
 /**
  * Creates an girara completion object
@@ -564,7 +565,7 @@ void girara_sc_quit(girara_session_t* session, girara_argument_t* argument);
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_cmd_map(girara_session_t* session, int argc, char** argv);
+bool girara_cmd_map(girara_session_t* session, int argc, char** argv);
 
 /**
  * Default command to quit the application
@@ -575,7 +576,7 @@ gboolean girara_cmd_map(girara_session_t* session, int argc, char** argv);
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_cmd_quit(girara_session_t* session, int argc, char** argv);
+bool girara_cmd_quit(girara_session_t* session, int argc, char** argv);
 
 /**
  * Default command to set the value of settings
@@ -586,7 +587,7 @@ gboolean girara_cmd_quit(girara_session_t* session, int argc, char** argv);
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_cmd_set(girara_session_t* session, int argc, char** argv);
+bool girara_cmd_set(girara_session_t* session, int argc, char** argv);
 
 /**
  * Default callback for key press events in the view area
@@ -597,7 +598,7 @@ gboolean girara_cmd_set(girara_session_t* session, int argc, char** argv);
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
 
 /**
  * Default callback if the inputbar gets activated
@@ -607,7 +608,7 @@ gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* ev
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session);
+bool girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session);
 
 /**
  * Default callback if an key in the input bar gets pressed
@@ -618,7 +619,7 @@ gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* se
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-gboolean girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
 
 /**
  * Default inputbar shortcut to abort

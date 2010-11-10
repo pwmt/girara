@@ -21,13 +21,13 @@
 #endif
 
 /* header functions implementation */
-GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, gboolean);
+GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, bool);
 void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
 /* completion */
 struct girara_internal_completion_entry_s
 {
-  gboolean group;
+  bool group;
   char* value;
   GtkEventBox* widget;
 };
@@ -123,7 +123,7 @@ girara_session_create()
   return session;
 }
 
-gboolean
+bool
 girara_session_init(girara_session_t* session)
 {
   if(session->gtk.embed)
@@ -343,7 +343,7 @@ girara_session_init(girara_session_t* session)
   return TRUE;
 }
 
-gboolean
+bool
 girara_session_destroy(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -439,8 +439,8 @@ girara_session_destroy(girara_session_t* session)
   return TRUE;
 }
 
-gboolean
-girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, gboolean init_only, char* description, girara_setting_callback_t callback)
+bool
+girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, bool init_only, char* description, girara_setting_callback_t callback)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
@@ -474,7 +474,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   switch (type)
   {
     case BOOLEAN:
-      setting->value.b = *((gboolean *) value);
+      setting->value.b = *((bool *) value);
       break;
     case FLOAT:
       setting->value.f = *((float *) value);
@@ -495,7 +495,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   return TRUE;
 }
 
-gboolean
+bool
 girara_setting_set(girara_session_t* session, char* name, void* value)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -509,7 +509,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
     switch (setting->type)
     {
       case BOOLEAN:
-        setting->value.b = *((gboolean *) value);
+        setting->value.b = *((bool *) value);
         break;
       case FLOAT:
         setting->value.f = *((float *) value);
@@ -546,14 +546,14 @@ girara_setting_get(girara_session_t* session, char* name)
     if(g_strcmp0(setting->name, name) != 0)
       continue;
 
-    gboolean *bvalue = NULL;
+    bool *bvalue = NULL;
     float    *fvalue = NULL;
     int      *ivalue = NULL;
 
     switch(setting->type)
     {
       case BOOLEAN:
-        bvalue = malloc(sizeof(gboolean));
+        bvalue = malloc(sizeof(bool));
 
         if(!bvalue)
           return NULL;
@@ -586,7 +586,7 @@ girara_setting_get(girara_session_t* session, char* name)
   return NULL;
 }
 
-gboolean
+bool
 girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -632,7 +632,7 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   return TRUE;
 }
 
-gboolean
+bool
 girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
@@ -681,7 +681,7 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   return TRUE;
 }
 
-gboolean
+bool
 girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
@@ -724,8 +724,8 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
 }
 
 
-gboolean
-girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, gboolean always, int argument_n, void* argument_data)
+bool
+girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, bool always, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(function != NULL, FALSE);
@@ -766,7 +766,7 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   return TRUE;
 }
 
-gboolean
+bool
 girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
@@ -811,7 +811,7 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
 }
 
 girara_statusbar_item_t*
-girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean fill, gboolean left, girara_statusbar_event_t callback)
+girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
@@ -844,7 +844,7 @@ girara_statusbar_item_add(girara_session_t* session, gboolean expand, gboolean f
   return item;
 }
 
-gboolean
+bool
 girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -857,7 +857,7 @@ girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_
   return TRUE;
 }
 
-gboolean
+bool
 girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -870,7 +870,7 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
   return TRUE;
 }
 
-gboolean
+bool
 girara_statusbar_set_background(girara_session_t* session, char* color)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -882,7 +882,7 @@ girara_statusbar_set_background(girara_session_t* session, char* color)
   return TRUE;
 }
 
-gboolean
+bool
 girara_set_view(girara_session_t* session, GtkWidget* UNUSED(widget))
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -917,13 +917,13 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument))
 }
 
 /* default commands implementation */
-gboolean
+bool
 girara_cmd_map(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   return TRUE;
 }
 
-gboolean
+bool
 girara_cmd_quit(girara_session_t* session, int UNUSED(argc), char** UNUSED(argv))
 {
   girara_argument_t arg = { GIRARA_HIDE, NULL };
@@ -933,14 +933,14 @@ girara_cmd_quit(girara_session_t* session, int UNUSED(argc), char** UNUSED(argv)
   return TRUE;
 }
 
-gboolean
+bool
 girara_cmd_set(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
   return TRUE;
 }
 
 /* callback implementation */
-gboolean
+bool
 girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -992,7 +992,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
   /* check for buffer command */
   if(session->buffer.command)
   {
-    gboolean matching_command = FALSE;
+    bool matching_command = FALSE;
 
     shortcut = session->bindings.shortcuts;
     while(shortcut)
@@ -1034,7 +1034,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
   return FALSE;
 }
 
-gboolean
+bool
 girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -1115,7 +1115,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   return FALSE;
 }
 
-gboolean
+bool
 girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -1291,7 +1291,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   static GList* entries_current   = NULL;
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
-  static gboolean command_mode    = TRUE;
+  static bool command_mode    = TRUE;
   static int   previous_length    = 0;
 
   /* delete old list iff
@@ -1494,7 +1494,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
     girara_completion_row_set_color(session, ((girara_internal_completion_entry_t *) entries_current->data)->widget, GIRARA_NORMAL);
 
     unsigned int n_elements = g_list_length(entries);
-    gboolean next_group     = FALSE;
+    bool next_group     = FALSE;
 
     for(unsigned int i = 0; i < n_elements; i++)
     {
@@ -1648,7 +1648,7 @@ girara_cc_set(girara_session_t* session, char* input)
 }
 
 GtkEventBox*
-girara_completion_row_create(girara_session_t* session, char* command, char* description, gboolean group)
+girara_completion_row_create(girara_session_t* session, char* command, char* description, bool group)
 {
   GtkBox      *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
   GtkEventBox *row = GTK_EVENT_BOX(gtk_event_box_new());
