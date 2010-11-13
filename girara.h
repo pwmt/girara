@@ -53,6 +53,15 @@ typedef struct girara_session_s girara_session_t;
 typedef struct girara_setting_s girara_setting_t;
 
 /**
+ * Buffer typedef
+ */
+typedef struct
+{
+  int n; /**< Numeric buffer */
+  char* command; /**< Command in buffer */
+} girara_buffer_t;
+
+/**
  * Function declaration for a statusbar event callback
  *
  * @param widget The statusbar item
@@ -683,5 +692,21 @@ void girara_mode_set(girara_session_t* session, girara_mode_t mode);
  * @return The current mode
  */
 girara_mode_t girara_mode_get(girara_session_t* session);
+
+/**
+ * Returns an image of the buffer
+ *
+ * @param session The used girara session
+ * @return Image of the current buffer
+ */
+girara_buffer_t* girara_buffer_get(girara_session_t* session);
+
+/**
+ * Frees the buffer image
+ *
+ * @param buffer The buffer image
+ * @return true on success
+ */
+bool girara_buffer_free(girara_buffer_t* buffer);
 
 #endif
