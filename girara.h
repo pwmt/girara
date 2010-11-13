@@ -164,7 +164,7 @@ typedef struct girara_shortcut_s
   guint key; /**< Key */
   char* buffered_command; /**< Buffer command */
   girara_shortcut_function_t function; /**< The correspondending function */
-  int mode; /**< Mode identifier */
+  girara_mode_t mode; /**< Mode identifier */
   girara_argument_t argument; /**< Given argument */
   struct girara_shortcut_s *next; /**< Next shortcut (linked list) */
 } girara_shortcut_t;
@@ -234,7 +234,7 @@ typedef struct girara_mouse_event_s
   guint mask; /**< Mask */
   guint button; /**< Button */
   girara_shortcut_function_t function; /**< Function */
-  int mode; /**< Allowed modes */
+  girara_mode_t mode; /**< Allowed modes */
   girara_argument_t argument; /**< Given argument */
   struct girara_mouse_event_s *next; /**< Next mouse event (linked list) */
 } girara_mouse_event_t;
@@ -305,7 +305,7 @@ struct girara_session_s
   struct
   {
     GString *buffer; /**< Buffer */
-    int current_mode; /**< Current mode */
+    girara_mode_t current_mode; /**< Current mode */
   } global;
 
   struct
@@ -641,7 +641,7 @@ bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
  * Default inputbar shortcut that completes the given input
  * in the statusbar
  *
- * @param session The used girarasession
+ * @param session The used girara session
  * @param argument The argument
  */
 bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
@@ -649,7 +649,7 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
 /**
  * Default inputbar shortcut to manipulate the inputbar string
  *
- * @param session The used girarasession
+ * @param session The used girara session
  * @param argument The argument
  */
 bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
@@ -657,9 +657,25 @@ bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t
 /**
  * Default complection function for the settings
  *
- * @param session The used girarasession
+ * @param session The used girara session
  * @param input The current input
  */
 girara_completion_t* girara_cc_set(girara_session_t* session, char* input);
+
+/**
+ * Sets the current mode
+ *
+ * @param session The used girara session
+ * @param mode The new mode
+ */
+void girara_mode_set(girara_session_t* session, girara_mode_t mode); 
+
+/**
+ * Returns the current mode
+ *
+ * @param session The used girara session
+ * @return The current mode
+ */
+girara_mode_t girara_mode_get(girara_session_t* session);
 
 #endif

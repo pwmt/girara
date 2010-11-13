@@ -1742,3 +1742,18 @@ girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int
 
   g_list_free(items);
 }
+
+void
+girara_mode_set(girara_session_t* session, girara_mode_t mode)
+{
+  g_return_if_fail(session != NULL);
+
+  session->global.current_mode = mode;
+}
+
+girara_mode_t girara_mode_get(girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, 0);
+
+  return session->global.current_mode;
+}
