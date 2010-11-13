@@ -64,6 +64,8 @@ girara_session_create()
   session->signals.inputbar_key_pressed = 0;
   session->signals.inputbar_activate    = 0;
 
+  session->events.buffer_changed        = NULL;
+
   session->buffer.n       = 0;
   session->buffer.command = NULL;
 
@@ -992,6 +994,9 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
 
       session->buffer.command = g_string_append_c(session->buffer.command, event->keyval);
     }
+
+    if(session->events.buffer_changed)
+      session->events.buffer_changed(session);
   }
 
   /* check for buffer command */

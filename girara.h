@@ -304,8 +304,14 @@ struct girara_session_s
 
   struct
   {
+    void (*buffer_changed)(girara_session_t* session);
+  } events;
+
+  struct
+  {
     GString *buffer; /**< Buffer */
     girara_mode_t current_mode; /**< Current mode */
+    void* data; /**< User data */
   } global;
 
   struct
