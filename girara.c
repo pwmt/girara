@@ -345,7 +345,7 @@ girara_session_init(girara_session_t* session)
 
 bool
 girara_session_destroy(girara_session_t* session)
-{
+{;
   g_return_val_if_fail(session != NULL, FALSE);
 
   /* clean up style */
@@ -891,10 +891,10 @@ girara_set_view(girara_session_t* session, GtkWidget* UNUSED(widget))
 }
 
 /* default shortcut implementation */
-void
+bool
 girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
 {
-  g_return_if_fail(session != NULL);
+  g_return_val_if_fail(session != NULL, false);
 
   if(!(GTK_WIDGET_VISIBLE(GTK_WIDGET(session->gtk.inputbar))))
     gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
@@ -905,22 +905,26 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
     gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar));
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
   }
+
+  return true;
 }
 
-void
+bool
 girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument))
 {
   girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg);
 
   gtk_main_quit();
+
+  return true;
 }
 
 /* default commands implementation */
 bool
 girara_cmd_map(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
-  return TRUE;
+  return true;
 }
 
 bool
@@ -930,13 +934,14 @@ girara_cmd_quit(girara_session_t* session, int UNUSED(argc), char** UNUSED(argv)
   girara_isc_completion(session, &arg);
 
   gtk_main_quit();
-  return TRUE;
+
+  return true;
 }
 
 bool
 girara_cmd_set(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
-  return TRUE;
+  return true;
 }
 
 /* callback implementation */
@@ -1246,7 +1251,7 @@ girara_completion_group_add_element(girara_completion_group_t* group, char* name
     group->elements = new_element;
 }
 
-void
+bool
 girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument))
 {
   /* hide completion */
@@ -1258,12 +1263,14 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument))
 
   /* grab view */
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
+
+  return true;
 }
 
-void
+bool
 girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 {
-  g_return_if_fail(session != NULL);
+  g_return_val_if_fail(session != NULL, false);
 
   /* get current text */
   gchar *input     = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
@@ -1272,7 +1279,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   if(input_length == 0 || input[0] != ':')
   {
     g_free(input);
-    return;
+    return false;
   }
 
   gchar **elements = g_strsplit(input + 1, " ", 2);
@@ -1291,7 +1298,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   static GList* entries_current   = NULL;
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
-  static bool command_mode    = TRUE;
+  static bool command_mode        = true;
   static int   previous_length    = 0;
 
   /* delete old list iff
@@ -1344,7 +1351,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       g_free(current_command);
       g_free(current_parameter);
 
-      return;
+      return false;
     }
   }
 
@@ -1360,7 +1367,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       g_free(current_parameter);
 
       g_strfreev(elements);
-      return;
+      return false;
     }
 
     /* based on parameters */
@@ -1385,7 +1392,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
             g_free(current_parameter);
 
             g_strfreev(elements);
-            return;
+            return false;
           }
         }
       }
@@ -1396,7 +1403,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         g_free(current_parameter);
 
         g_strfreev(elements);
-        return;
+        return false;
       }
 
       /* generate completion result */
@@ -1408,7 +1415,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         g_free(current_parameter);
 
         g_strfreev(elements);
-        return;
+        return false;
       }
 
       girara_completion_group_t* group     = result->groups;
@@ -1574,9 +1581,11 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
   g_free(current_parameter);
 
   g_strfreev(elements);
+
+  return false;
 }
 
-void
+bool
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument)
 {
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
@@ -1590,7 +1599,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       i = pos - 1;
 
       if(!pos)
-        return;
+        return false;
 
       /* remove trailing spaces */
       for(; i >= 0 && input[i] == ' '; i--);
@@ -1624,6 +1633,8 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
   }
 
   g_free(input);
+
+  return false;
 }
 
 girara_completion_t*

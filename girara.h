@@ -111,8 +111,12 @@ typedef struct
 
 /**
  * Function declaration of a shortcut function
+ *
+ * If a numeric value has been written into the buffer, this function gets as
+ * often executed as the value defines or until the function returns false the
+ * first time.
  */
-typedef void (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*);
+typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*);
 
 /**
  * Structure of a completion element
@@ -548,7 +552,7 @@ void girara_completion_group_add_element(girara_completion_group_t* group, char*
  * @param session The used girara session
  * @param argument The argument
  */
-void girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument);
+bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument);
 
 /**
  * Default shortcut function to quit the application
@@ -556,7 +560,7 @@ void girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argu
  * @param session The used girara session
  * @param argument The argument
  */
-void girara_sc_quit(girara_session_t* session, girara_argument_t* argument);
+bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument);
 
 /**
  * Default command to map sortcuts
@@ -631,7 +635,7 @@ bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* ev
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-void girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
+bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
 
 /**
  * Default inputbar shortcut that completes the given input
@@ -640,7 +644,7 @@ void girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
  * @param session The used girarasession
  * @param argument The argument
  */
-void girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
+bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
 
 /**
  * Default inputbar shortcut to manipulate the inputbar string
@@ -648,7 +652,7 @@ void girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
  * @param session The used girarasession
  * @param argument The argument
  */
-void girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
+bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
 
 /**
  * Default complection function for the settings
