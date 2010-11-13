@@ -1764,26 +1764,10 @@ girara_mode_get(girara_session_t* session)
   return session->global.current_mode;
 }
 
-girara_buffer_t*
+char*
 girara_buffer_get(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, NULL);
 
-  girara_buffer_t* buffer = g_slice_new(girara_buffer_t);
-
-  buffer->n       = session->buffer.n;
-  buffer->command = (session->buffer.command) ? g_strdup(session->buffer.command->str) : NULL;
-
-  return buffer;
-}
-
-bool
-girara_buffer_free(girara_buffer_t* buffer)
-{
-  g_return_val_if_fail(buffer != NULL, false);
-
-  free(buffer->command);
-  g_slice_free(girara_buffer_t, buffer);
-
-  return true;
+  return (session->global.buffer) ? g_strdup(session->global.buffer->str) : NULL;
 }
