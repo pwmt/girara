@@ -76,28 +76,30 @@ girara_session_create()
   int window_width       = 800;
   int window_height      = 600;
   int n_completion_items = 15;
+  bool show_scrollbars   = false;
 
   /* add default settings */
-  girara_setting_add(session, "font",                     "monospace normal 9", STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "default-bg",               "#000000",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "inputbar-bg",              "#131313",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "statusbar-fg",             "#FFFFFF",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "statusbar-bg",             "#000000",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "completion-bg",            "#232323",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "completion-group-fg",      "#DEDEDE",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "completion-group-bg",      "#000000",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "completion-highlight-fg",  "#232323",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "completion-highlight-bg",  "#9FBC00",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "notification-error-fg",    "#FF1212",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "notification-error-bg",    "#FFFFFF",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "notification-warning-fg",  "#FFF712",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "notification-warning-bg",  "#FFFFFF",            STRING, TRUE,  NULL, NULL);
-  girara_setting_add(session, "window-width",             &window_width,        INT,    TRUE,  NULL, NULL);
-  girara_setting_add(session, "window-height",            &window_height,       INT,    TRUE,  NULL, NULL);
-  girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,    FALSE, NULL, NULL);
+  girara_setting_add(session, "font",                     "monospace normal 9", STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "default-bg",               "#000000",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "inputbar-bg",              "#131313",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-fg",             "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "statusbar-bg",             "#000000",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-bg",            "#232323",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-group-fg",      "#DEDEDE",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-group-bg",      "#000000",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-highlight-fg",  "#232323",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "completion-highlight-bg",  "#9FBC00",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-error-fg",    "#FF1212",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-error-bg",    "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-warning-fg",  "#FFF712",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "notification-warning-bg",  "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  NULL, NULL);
+  girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  NULL, NULL);
+  girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  NULL, NULL);
+  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  NULL, NULL);
 
   /* default shortcuts */
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           0, 0, NULL);
@@ -159,6 +161,17 @@ girara_session_init(girara_session_t* session)
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
       G_CALLBACK(girara_callback_view_key_press_event), session);
+
+  bool* tmp_bool_value = girara_setting_get(session, "show-scrollbars");
+  if(tmp_bool_value) {
+    if(!*tmp_bool_value) {
+      gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+          GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    }
+  }
+  else
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 
   /* box */
   gtk_box_set_spacing(session->gtk.box, 0);
