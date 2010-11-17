@@ -36,7 +36,7 @@ ${PROJECT}: ${OBJECTS}
 
 clean:
 	@rm -rf ${PROJECT} ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
-		${DOBJECTS} ${PROJECT}-debug lib${PROJECT}.a
+		${DOBJECTS} ${PROJECT}-debug lib${PROJECT}.a ${PROJECT}.pc
 	@make -C examples clean
 
 ${PROJECT}-debug: ${DOBJECTS}
@@ -50,13 +50,20 @@ debug: ${PROJECT}-debug
 
 dist: clean
 	@mkdir -p ${PROJECT}-${VERSION}
-	@cp -R LICENSE Makefile config.mk README \
+	@cp -R LICENSE Makefile config.mk README ${PROJECT}.pc.in \
 			girara.h ${SOURCE} examples/ ${PROJECT}-${VERSION}
 	@tar -cf ${PROJECT}-${VERSION}.tar ${PROJECT}-${VERSION}
 	@gzip ${PROJECT}-${VERSION}.tar
 	@rm -rf ${PROJECT}-${VERSION}
 
-install: all
+${PROJECT}.pc: ${PROJECT}.pc.in config.mk
+	@echo project=${PROJECT} > ${PROJECT}.pc
+	@echo version=${VERSION} >> ${PROJECT}.pc
+	@echo includedir=${PREFIX}/include >> ${PROJECT}.pc
+	@echo libdir=${PREFIX}/lib >> ${PROJECT}.pc
+	@cat ${PROJECT}.pc.in >> ${PROJECT}.pc
+
+install: all ${PROJECT}.pc
 	@echo installing library file
 	@mkdir -p ${DESTDIR}${PREFIX}/lib
 	@cp -f lib${PROJECT}.a ${DESTDIR}${PREFIX}/lib
@@ -64,6 +71,9 @@ install: all
 	@echo installing header file
 	@mkdir -p ${DESTDIR}${PREFIX}/include
 	@cp -f girara.h ${DESTDIR}${PREFIX}/include
+	@echo installing pkgconfig file
+	@mkdir -p ${DESTDIR}${PREFIX}/pkgconfig
+	@cp -f ${PROJECT}.pc ${DESTDIR}${PREFIX}/pkgconfig
 
 uninstall:
 	@echo removing library file
@@ -71,3 +81,5 @@ uninstall:
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.so
 	@echo removing include file
 	@rm -f ${PREFIX}/include/girara.h
+	@echo removing pkgconfig file
+	@rm -f ${PREFIX}/pkgconfig/${PROJECT}.pc
