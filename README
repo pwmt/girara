@@ -1,2 +1,24 @@
-girara
-======
+girara - user interface library
+===============================
+girara is a library that implements a user interface that focuses on simplicity
+and minimalism. It consists of three main components: The view is a widget that
+represents the actual application (e.g.: a web site or a document). The input
+bar is used to execute commands of the application, while the status bar
+notifies the user with current information. It is designed to replace and the
+enhance the user interface that is used by zathura and jumanji.
+
+Requirements
+------------
+gtk2 (>= 2.18.6)
+
+Installation
+------------
+Run the following command to build and install girara to your system:
+
+  make install
+
+Uninstall
+---------
+To delete girara from your system, type:
+
+  make uninstall
