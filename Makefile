@@ -36,7 +36,8 @@ ${PROJECT}: ${OBJECTS}
 
 clean:
 	@rm -rf ${PROJECT} ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
-		${DOBJECTS} ${PROJECT}-debug lib${PROJECT}.a ${PROJECT}.pc
+		${DOBJECTS} ${PROJECT}-debug lib${PROJECT}.a ${PROJECT}.pc \
+		lib$(PROJECT).so
 	@make -C examples clean
 
 ${PROJECT}-debug: ${DOBJECTS}
