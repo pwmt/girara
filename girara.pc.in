@@ -1,0 +1,10 @@
+
+LIB_PATH=-L${libdir}
+INC_PATH=-I${includedir}
+
+Name: ${project}
+Description: User interface libray
+Version: ${version}
+URL: http://pwmt.org/projects/girara
+Cflags: ${INC_PATH}
+Libs: -l${project} ${LIB_PATH}
