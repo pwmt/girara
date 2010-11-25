@@ -675,7 +675,7 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
     }
 
     last_command = commands_it;
-    commands_it = commands_it->next;
+    commands_it  = commands_it->next;
   }
 
   /* add new inputbar command */
@@ -1034,6 +1034,17 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
             session->global.buffer  = NULL;
 
             shortcut->function(session, &(shortcut->argument));
+            if(session->events.buffer_changed)
+            {
+              printf("now\n");
+              session->events.buffer_changed(session);
+            }
+
+            int t = (session->buffer.n > 0) ? session->buffer.n : 1;
+            for(int i = 0; i < t; i++)
+              shortcut->function(session, &(shortcut->argument));
+
+            session->buffer.n = 0;
             return TRUE;
           }
 
@@ -1051,6 +1062,10 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
       g_string_free(session->global.buffer,  TRUE);
       session->buffer.command = NULL;
       session->global.buffer  = NULL;
+      session->buffer.n       = 0;
+
+      if(session->events.buffer_changed)
+        session->events.buffer_changed(session);
     }
   }
 
@@ -1395,8 +1410,9 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       girara_command_t* command = NULL;
       for(command = session->bindings.commands; command != NULL; command = command->next)
       {
-        if( !strncmp(current_command, command->command, current_command_length) ||
-            !strncmp(current_command, command->abbr,    current_command_length) )
+        if( (current_command && command && command->command && !strncmp(current_command, command->command, current_command_length)) ||
+            (current_command && command && command->abbr    && !strncmp(current_command, command->abbr,    current_command_length))
+          )
         {
           if(command->completion)
           {
@@ -1487,8 +1503,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         command != NULL; command = command->next)
       {
         if(!current_command ||
-            !strncmp(current_command, command->command, current_command_length) ||
-            !strncmp(current_command, command->abbr,    current_command_length)
+            (current_command && command && command->command && !strncmp(current_command, command->command, current_command_length)) ||
+            (current_command && command && command->abbr    && !strncmp(current_command, command->abbr,    current_command_length))
           )
         {
           /* create entry */
