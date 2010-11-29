@@ -1395,8 +1395,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
       girara_command_t* command = NULL;
       for(command = session->bindings.commands; command != NULL; command = command->next)
       {
-        if( !strncmp(current_command, command->command, current_command_length) ||
-            !strncmp(current_command, command->abbr,    current_command_length) )
+        if( (command->command && !strncmp(current_command, command->command, current_command_length)) ||
+            (command->abbr    && !strncmp(current_command, command->abbr,    current_command_length)) )
         {
           if(command->completion)
           {
@@ -1487,8 +1487,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
         command != NULL; command = command->next)
       {
         if(!current_command ||
-            !strncmp(current_command, command->command, current_command_length) ||
-            !strncmp(current_command, command->abbr,    current_command_length)
+            (command->command && !strncmp(current_command, command->command, current_command_length)) ||
+            (command->abbr && !strncmp(current_command, command->abbr,    current_command_length))
           )
         {
           /* create entry */
