@@ -932,7 +932,7 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument))
 
   gtk_main_quit();
 
-  return true;
+  return false;
 }
 
 /* default commands implementation */
@@ -979,7 +979,10 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
     {
       int t = (session->buffer.n > 0) ? session->buffer.n : 1;
       for(int i = 0; i < t; i++)
-        shortcut->function(session, &(shortcut->argument));
+      {
+        if(!shortcut->function(session, &(shortcut->argument)))
+          break;
+      }
       return TRUE;
     }
 
@@ -1042,7 +1045,10 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
 
             int t = (session->buffer.n > 0) ? session->buffer.n : 1;
             for(int i = 0; i < t; i++)
-              shortcut->function(session, &(shortcut->argument));
+            {
+              if(!shortcut->function(session, &(shortcut->argument)))
+                break;
+            }
 
             session->buffer.n = 0;
             return TRUE;
