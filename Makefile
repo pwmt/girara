@@ -1,7 +1,7 @@
 # See LICENSE file for license and copyright information
 
 PROJECT  = girara
-SOURCE   = girara.c
+SOURCE   = girara.c completion.c
 OBJECTS  = ${SOURCE:.c=.o}
 DOBJECTS = ${SOURCE:.c=.do}
 
