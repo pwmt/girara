@@ -8,7 +8,7 @@ DOBJECTS = ${SOURCE:.c=.do}
 include config.mk
 
 all: options ${PROJECT}
-	make -C examples
+	@make -C examples
 
 options:
 	@echo ${PROJECT} build options:
@@ -47,7 +47,7 @@ ${PROJECT}-debug: ${DOBJECTS}
 	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}.so $(DOBJECTS)
 
 debug: ${PROJECT}-debug
-	make -C examples
+	@make -C examples
 
 dist: clean
 	@mkdir -p ${PROJECT}-${VERSION}
