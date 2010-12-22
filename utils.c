@@ -1,12 +1,12 @@
 /* See LICENSE file for license and copyright information */
 
+#include <string.h>
 #include "girara-utils.h"
 
 gchar*
 girara_fix_path(const gchar* path)
 {
-  if (!path)
-    return NULL;
+  g_return_val_if_fail(path != NULL || !strlen(path), NULL);
 
   if (path[0] == '~')
   {
