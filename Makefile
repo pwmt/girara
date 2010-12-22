@@ -9,6 +9,7 @@ include config.mk
 
 all: options ${PROJECT}
 	@make -C examples
+	@make -C tests
 
 options:
 	@echo ${PROJECT} build options:
@@ -39,6 +40,7 @@ clean:
 		${DOBJECTS} ${PROJECT}-debug lib${PROJECT}.a ${PROJECT}.pc \
 		lib$(PROJECT).so
 	@make -C examples clean
+	@make -C tests clean
 
 ${PROJECT}-debug: ${DOBJECTS}
 	@echo AR rcs $@
@@ -48,6 +50,7 @@ ${PROJECT}-debug: ${DOBJECTS}
 
 debug: ${PROJECT}-debug
 	@make -C examples
+	@make -C tests
 
 dist: clean
 	@mkdir -p ${PROJECT}-${VERSION}
