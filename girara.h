@@ -692,4 +692,5 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  */
 char* girara_buffer_get(girara_session_t* session);
 
+#include "girara-utils.h"
 #endif
