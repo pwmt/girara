@@ -1,0 +1,114 @@
+/* See LICENSE file for license and copyright information */
+
+#ifndef GIRARA_DATASTRUCTURES_H
+#define GIRARA_DATASTRUCTURES_H
+
+#include <stddef.h>
+
+typedef struct girara_tree_node_s girara_tree_node_t;
+typedef struct girara_list_s girara_list_t;
+typedef struct girara_list_iterator_s girara_list_iterator_t;
+
+typedef enum
+{
+  GIRARA_NOFREE,
+  GIRARA_FREE
+} girara_free_t;
+
+/**
+ * Create a new list.
+ */
+girara_list_t* girara_list_new(girara_free_t freetype);
+
+/**
+ * Destroy list.
+ */
+void girara_list_free(girara_list_t* list);
+
+/**
+ * Append an element to the list.
+ */
+void girara_list_append(girara_list_t* list, void* data);
+
+/**
+ * Prepend an element to the list.
+ */
+void girara_list_append(girara_list_t* list, void* data);
+
+/**
+ * Get size of the list.
+ */
+size_t girara_list_size(girara_list_t* list);
+
+/**
+ * Create an iterator pointing at the start of list.
+ */
+girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
+
+/**
+ * Move iterator to next element.
+ */
+girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
+
+/**
+ * Get data from the element pointed to by the iterator.
+ */
+void* girara_list_iterator_data(girara_list_iterator_t* iter);
+
+/**
+ * Set data from the element pointed to by the iterator.
+ */
+void girara_list_iterator_set(girara_list_iterator_t* iter, void *data);
+
+/**
+ * Destroy the iterator.
+ */
+void girara_list_iterator_free(girara_list_iterator_t* iter);
+
+/**
+ * Create a new node.
+ */
+girara_tree_node_t* girara_node_new(void* data, girara_free_t freetype);
+
+/**
+ * Free a node. This will remove the node from its' parent and will destroy all
+ * its' children.
+ */
+void girara_node_free(girara_tree_node_t* node);
+
+/**
+ * Append a node to another node.
+ */
+void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child);
+
+/**
+ * Append data as new node to another node.
+ */
+void girara_node_append_data(girara_tree_node_t* parent, void* data, girara_free_t freetype);
+
+/**
+ * Get parent node.
+ */
+girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node);
+
+/**
+ * Get list of children.
+ */
+girara_list_t* girara_node_get_children(girara_tree_node_t* node);
+
+/**
+ * Get number of children.
+ */
+size_t girara_node_get_num_children(girara_tree_node_t* node);
+
+/**
+ * Get data.
+ */
+void* girara_node_get_data(girara_tree_node_t* node);
+
+/**
+ * Set data.
+ */
+void girara_node_set_data(girara_tree_node_t* node, void* data);
+
+#endif
