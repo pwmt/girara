@@ -26,7 +26,7 @@ girara_fix_path(const gchar* path)
     {
       while (path[idx] && path[idx] != '/')
         ++idx;
-      user = g_strndup(path + 1, idx - 2);
+      user = g_strndup(path + 1, idx - 1);
     }
 
     gchar* home_path = girara_get_home_directory(user);

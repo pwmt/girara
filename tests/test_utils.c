@@ -71,12 +71,16 @@ test_utils_fix_path()
   struct passwd* pw;
   while ((pw = getpwent()) != NULL)
   {
-    gchar* res = girara_get_home_directory(pw->pw_name);
-    g_assert_cmpstr(res, ==, pw->pw_dir);
+    gchar* path = g_strdup_printf("~%s/test", pw->pw_name);
+    gchar* eres = g_build_filename(pw->pw_dir, "test", NULL);
+
+    gchar* res = girara_fix_path(path);
+    g_assert_cmpstr(res, ==, eres);
     g_free(res);
+    g_free(eres);
+    g_free(path);
   }
   endpwent();
-
 }
 
 static void
