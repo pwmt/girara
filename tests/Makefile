@@ -6,6 +6,8 @@ SOURCE   = tests.c test_utils.c
 OBJECTS  = ${SOURCE:.c=.o}
 
 all: options girara_test
+	@echo "running tests ..."
+	@./girara_test
 
 options:
 	@echo ${PROJECT} build options:
