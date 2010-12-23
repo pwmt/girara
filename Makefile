@@ -9,7 +9,6 @@ include config.mk
 
 all: options ${PROJECT}
 	@make -C examples
-	@make -C tests
 
 options:
 	@echo ${PROJECT} build options:
@@ -36,20 +35,22 @@ ${PROJECT}: ${OBJECTS}
 	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}.so $(OBJECTS)
 
 clean:
-	@rm -rf ${PROJECT} ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
-		${DOBJECTS} ${PROJECT}-debug lib${PROJECT}.a ${PROJECT}.pc \
-		lib$(PROJECT).so
+	@rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
+		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
+		lib$(PROJECT).so lib${PROJECT}-debug.so
 	@make -C examples clean
 	@make -C tests clean
 
 ${PROJECT}-debug: ${DOBJECTS}
 	@echo AR rcs $@
-	@ar rc lib${PROJECT}.a $(DOBJECTS)
+	@ar rc lib${PROJECT}-debug.a $(DOBJECTS)
 	@echo LD $@
-	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}.so $(DOBJECTS)
+	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so $(DOBJECTS)
 
-debug: ${PROJECT}-debug
+debug: options ${PROJECT}-debug
 	@make -C examples
+
+test: debug
 	@make -C tests
 
 dist: clean

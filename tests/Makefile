@@ -20,7 +20,7 @@ options:
 
 girara_test: ${OBJECTS}
 	@echo LD $@
-	@${CC} ${LDFLAGS} ${LIBS} -o $@ ${OBJECTS} ../libgirara.a
+	@${CC} ${LDFLAGS} ${LIBS} -o $@ ${OBJECTS} ../libgirara-debug.a
 
 ${OBJECTS}: ../config.mk
 
