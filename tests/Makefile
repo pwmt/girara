@@ -18,7 +18,7 @@ options:
 	@echo CC $<
 	@${CC} -c -I.. ${CFLAGS} ${DFLAGS} -o $@ $<
 
-girara_test: ${OBJECTS}
+girara_test: ${OBJECTS} ../libgirara-debug.a
 	@echo LD $@
 	@${CC} ${LDFLAGS} ${LIBS} -o $@ ${OBJECTS} ../libgirara-debug.a
 
