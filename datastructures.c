@@ -5,7 +5,7 @@
 
 struct girara_tree_node_s
 {
-  girara_free_t free;
+  girara_free_function_t free;
   GNode* node;
 };
 
@@ -17,7 +17,7 @@ typedef struct girara_tree_node_data_s
 
 struct girara_list_s
 {
-  girara_free_t free;
+  girara_free_function_t free;
   GList* start;
   GList* end;
 };
@@ -28,14 +28,19 @@ struct girara_list_iterator_s
   GList* element;
 };
 
-girara_list_t* girara_list_new(girara_free_t freetype)
+girara_list_t* girara_list_new(void)
 {
   girara_list_t* list = g_malloc0(sizeof(girara_list_t));
   if (!list)
     return NULL;
 
-  list->free = freetype;
   return list;
+}
+
+void girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree)
+{
+  g_return_if_fail(list);
+  list->free = gfree;
 }
 
 void girara_list_free(girara_list_t* list)
@@ -43,12 +48,12 @@ void girara_list_free(girara_list_t* list)
   if (!list)
     return;
 
-  if (list->free == GIRARA_FREE)
+  if (list->free)
   {
     GList* start = list->start;
     while (start)
     {
-      g_free(start->data);
+      (*list->free)(start->data);
       start = g_list_next(start);
     }
   }
@@ -99,8 +104,8 @@ void* girara_list_iterator_data(girara_list_iterator_t* iter)
 void girara_list_iterator_set(girara_list_iterator_t* iter, void *data)
 {
   g_return_if_fail(!iter || !iter->element || !iter->list);
-  if (iter->list->free == GIRARA_FREE)
-    g_free(iter->element->data);
+  if (iter->list->free)
+    (*iter->list->free)(iter->element->data);
   iter->element->data = data;
 }
 
@@ -120,11 +125,10 @@ size_t girara_list_size(girara_list_t* list)
 }
 
 
-girara_tree_node_t* girara_node_new(void* data, girara_free_t freetype)
+girara_tree_node_t* girara_node_new(void* data)
 {
   girara_tree_node_t* node = g_malloc0(sizeof(girara_tree_node_t));
   g_return_val_if_fail(node, NULL);
-  node->free = freetype;
 
   girara_tree_node_data_t* nodedata = g_malloc0(sizeof(girara_tree_node_data_t));
   if (!nodedata)
@@ -146,6 +150,12 @@ girara_tree_node_t* girara_node_new(void* data, girara_free_t freetype)
   return node;
 }
 
+void girara_node_set_free_function(girara_tree_node_t* node, girara_free_function_t gfree)
+{
+  g_return_if_fail(node);
+  node->free = gfree;
+}
+
 void girara_node_free(girara_tree_node_t* node)
 {
   if (!node)
@@ -154,8 +164,8 @@ void girara_node_free(girara_tree_node_t* node)
   g_return_if_fail(node->node);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
   g_return_if_fail(nodedata);
-  if (node->free == GIRARA_FREE)
-    g_free(nodedata->data);
+  if (node->free)
+    (*node->free)(nodedata->data);
   g_free(nodedata);
 
   GNode* childnode = node->node->children;
@@ -176,12 +186,13 @@ void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child)
   g_node_append(parent->node, child->node);
 }
 
-void girara_node_append_data(girara_tree_node_t* parent, void* data, girara_free_t freetype)
+girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* data)
 {
-  g_return_if_fail(parent);
-  girara_tree_node_t* child = girara_node_new(data, freetype);
-  g_return_if_fail(child);
+  g_return_val_if_fail(parent, NULL);
+  girara_tree_node_t* child = girara_node_new(data);
+  g_return_val_if_fail(child, NULL);
   girara_node_append(parent, child);
+  return child;
 }
 
 girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node)
@@ -198,7 +209,7 @@ girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node)
 girara_list_t* girara_node_get_children(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node, NULL);
-  girara_list_t* list = girara_list_new(GIRARA_NOFREE);
+  girara_list_t* list = girara_list_new();
   g_return_val_if_fail(list, NULL);
 
   GNode* childnode = node->node->children;
@@ -231,8 +242,7 @@ void girara_node_set_data(girara_tree_node_t* node, void* data)
   g_return_if_fail(node && node->node);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
   g_return_if_fail(nodedata);
-  if (node->free == GIRARA_FREE)
-    g_free(nodedata->data);
+  if (node->free)
+    (*node->free)(nodedata->data);
   nodedata->data = data;
 }
-

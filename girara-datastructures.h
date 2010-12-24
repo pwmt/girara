@@ -9,16 +9,17 @@ typedef struct girara_tree_node_s girara_tree_node_t;
 typedef struct girara_list_s girara_list_t;
 typedef struct girara_list_iterator_s girara_list_iterator_t;
 
-typedef enum
-{
-  GIRARA_NOFREE,
-  GIRARA_FREE
-} girara_free_t;
+typedef void (*girara_free_function_t)(void*);
 
 /**
  * Create a new list.
  */
-girara_list_t* girara_list_new(girara_free_t freetype);
+girara_list_t* girara_list_new(void);
+
+/**
+ * Set the function which should be called if the stored data should be freed.
+ */
+void girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree);
 
 /**
  * Destroy list.
@@ -68,7 +69,12 @@ void girara_list_iterator_free(girara_list_iterator_t* iter);
 /**
  * Create a new node.
  */
-girara_tree_node_t* girara_node_new(void* data, girara_free_t freetype);
+girara_tree_node_t* girara_node_new(void* data);
+
+/**
+ * Set the function which should be called if the stored data should be freed.
+ */
+void girara_node_set_free_function(girara_tree_node_t* node, girara_free_function_t gfree);
 
 /**
  * Free a node. This will remove the node from its' parent and will destroy all
@@ -84,7 +90,7 @@ void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child);
 /**
  * Append data as new node to another node.
  */
-void girara_node_append_data(girara_tree_node_t* parent, void* data, girara_free_t freetype);
+girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* data);
 
 /**
  * Get parent node.
