@@ -3,6 +3,7 @@
 #include "girara-datastructures.h"
 
 static unsigned int list_free_called = 0;
+static unsigned int node_free_called = 0;
 
 static void
 list_free(void* data)
@@ -41,6 +42,19 @@ test_datastructures_list()
   g_assert_cmpuint(list_free_called, ==, 1);
 }
 
+static void
+node_free(void* data)
+{
+  if (g_strcmp0((char*)data, "root") == 0)
+    g_assert_cmpuint(node_free_called, ==, 0);
+  else if (g_strcmp0((char*)data, "child") == 0)
+    g_assert_cmpuint(node_free_called, ==, 1);
+  else
+    g_assert_not_reached();
+
+  ++node_free_called;
+}
+
 void
 test_datastructures_node()
 {
@@ -48,4 +62,12 @@ test_datastructures_node()
   g_assert_cmpuint(girara_node_get_num_children(root), ==, 0);
   g_assert_cmpstr((char*)girara_node_get_data(root), ==, "root");
   girara_node_free(root);
+
+  root = girara_node_new("root");
+  girara_node_set_free_function(root, node_free);
+  girara_node_append_data(root, "child");
+  g_assert_cmpuint(girara_node_get_num_children(root), ==, 1);
+  g_assert_cmpuint(node_free_called, ==, 0);
+  girara_node_free(root);
+  g_assert_cmpuint(node_free_called, ==, 2);
 }
