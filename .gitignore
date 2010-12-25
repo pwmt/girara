@@ -1,2 +1,6 @@
 *.o
+*.do
 *.a
+*.so
+examples/example_1
+tests/girara_test
