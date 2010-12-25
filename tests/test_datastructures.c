@@ -61,7 +61,12 @@ test_datastructures_node()
   girara_tree_node_t* root = girara_node_new("root");
   g_assert_cmpuint(girara_node_get_num_children(root), ==, 0);
   g_assert(girara_node_get_parent(root) == NULL);
+  g_assert(girara_node_get_root(root) == root);
   g_assert_cmpstr((char*)girara_node_get_data(root), ==, "root");
+  girara_list_t* rchildren = girara_node_get_children(root);
+  g_assert(rchildren);
+  g_assert_cmpuint(girara_list_size(rchildren), ==, 0);
+  girara_list_free(rchildren);
   girara_node_free(root);
 
   root = girara_node_new("root");
@@ -102,12 +107,31 @@ test_datastructures_node()
     girara_tree_node_t* child = (girara_tree_node_t*)girara_list_iterator_data(iter);
     g_assert_cmpstr((char*)girara_node_get_data(child), ==, expected);
     g_assert(girara_node_get_parent(child) == root);
-    // g_assert(girara_node_get_root(child) == root);
+    g_assert(girara_node_get_root(child) == root);
     g_free(expected);
+
+    girara_list_t* grandchildren = girara_node_get_children(child);
+    g_assert(grandchildren);
+    g_assert_cmpint(girara_list_size(grandchildren), ==, 10);
+    unsigned int j = 0;
+    girara_list_iterator_t* iter2 = girara_list_iterator(grandchildren);
+    do
+    {
+      char* expected = g_strdup_printf("child_%u_%u", i, j);
+      girara_tree_node_t* gchild = (girara_tree_node_t*)girara_list_iterator_data(iter2);
+      g_assert_cmpstr((char*)girara_node_get_data(gchild), ==, expected);
+      g_assert(girara_node_get_parent(gchild) == child);
+      g_assert(girara_node_get_root(gchild) == root);
+      g_free(expected);
+      ++j;
+    } while (girara_list_iterator_next(iter2));
+    girara_list_iterator_free(iter2);
+    girara_list_free(grandchildren);
 
     ++i;
   } while (girara_list_iterator_next(iter));
   girara_list_iterator_free(iter);
+  girara_list_free(children);
 
   girara_node_free(root);
 }

@@ -98,6 +98,11 @@ girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* da
 girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node);
 
 /**
+ * Get root node.
+ */
+girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node);
+
+/**
  * Get list of children.
  */
 girara_list_t* girara_node_get_children(girara_tree_node_t* node);

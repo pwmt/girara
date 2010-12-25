@@ -213,6 +213,19 @@ girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node)
   return nodedata->node;
 }
 
+girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node)
+{
+  g_return_val_if_fail(node && node->node, NULL);
+  if (!node->node->parent)
+    return node;
+
+  GNode* root = g_node_get_root(node->node);
+  g_return_val_if_fail(root, NULL);
+  girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) root->data;
+  g_return_val_if_fail(nodedata, NULL);
+  return nodedata->node;
+}
+
 girara_list_t* girara_node_get_children(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node, NULL);
