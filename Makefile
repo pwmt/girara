@@ -76,6 +76,9 @@ install: all ${PROJECT}.pc
 	@echo installing header file
 	@mkdir -p ${DESTDIR}${PREFIX}/include
 	@cp -f girara.h ${DESTDIR}${PREFIX}/include
+	@cp -f girara-utils.h ${DESTDIR}${PREFIX}/include
+	@cp -f girara-datastructures.h ${DESTDIR}${PREFIX}/include
+	@cp -f girara-internal.h ${DESTDIR}${PREFIX}/include
 	@echo installing pkgconfig file
 	@mkdir -p ${DESTDIR}${PREFIX}/pkgconfig
 	@cp -f ${PROJECT}.pc ${DESTDIR}${PREFIX}/pkgconfig
@@ -86,5 +89,8 @@ uninstall:
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.so
 	@echo removing include file
 	@rm -f ${PREFIX}/include/girara.h
+	@rm -f ${PREFIX}/include/girara-utils.h
+	@rm -f ${PREFIX}/include/girara-datastructures.h
+	@rm -f ${PREFIX}/include/girara-internal.h
 	@echo removing pkgconfig file
 	@rm -f ${PREFIX}/pkgconfig/${PROJECT}.pc
