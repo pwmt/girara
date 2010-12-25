@@ -48,7 +48,7 @@ ${PROJECT}-debug: ${DOBJECTS}
 	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so $(DOBJECTS)
 
 debug: options ${PROJECT}-debug
-	@make -C examples
+	@make -C examples debug
 
 test: debug
 	@make -C tests

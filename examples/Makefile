@@ -18,6 +18,12 @@ options:
 	@echo CC $<
 	@${CC} ${CFLAGS} -o $@ $< ../libgirara.a ${LIBS}
 
+%-debug: %.c
+	@echo CC $<
+	@${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-debug.a ${LIBS}
+
+debug: options ${SOURCE:.c=-debug}
+
 ${OBJECTS}:  ../config.mk
 
 clean:
