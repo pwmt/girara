@@ -725,9 +725,18 @@ girara_statusbar_set_background(girara_session_t* session, char* color)
 }
 
 bool
-girara_set_view(girara_session_t* session, GtkWidget* UNUSED(widget))
+girara_set_view(girara_session_t* session, GtkWidget* widget)
 {
   g_return_val_if_fail(session != NULL, FALSE);
+
+  GtkWidget* child = gtk_bin_get_child(GTK_BIN(session->gtk.view));
+
+  if(child) {
+    g_object_ref(child);
+    gtk_container_remove(GTK_CONTAINER(session->gtk.view), child);
+  }
+
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_WIDGET(widget));
 
   return TRUE;
 }
