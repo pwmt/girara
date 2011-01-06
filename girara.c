@@ -144,10 +144,13 @@ girara_session_init(girara_session_t* session)
       gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
           GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     }
+
+    free(tmp_bool_value);
   }
-  else
+  else {
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
         GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+  }
 
   /* viewport */
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
