@@ -249,6 +249,7 @@ struct girara_session_s
     GtkWidget       *window; /**< The main window of the application */
     GtkBox          *box; /**< A box that contains all widgets */
     GtkWidget       *view; /**< The view area of the applications widgets */
+    GtkWidget       *viewport; /**< The viewport of view */
     GtkWidget       *statusbar; /**< The statusbar */
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
     GtkEntry        *inputbar; /**< The inputbar */

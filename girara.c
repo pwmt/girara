@@ -17,6 +17,7 @@ girara_session_create()
   session->gtk.window            = NULL;
   session->gtk.box               = NULL;
   session->gtk.view              = NULL;
+  session->gtk.viewport          = NULL;
   session->gtk.statusbar         = NULL;
   session->gtk.statusbar_entries = NULL;
   session->gtk.inputbar          = NULL;
@@ -111,6 +112,7 @@ girara_session_init(girara_session_t* session)
 
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
+  session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
   session->gtk.statusbar         = gtk_event_box_new();
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
@@ -146,6 +148,10 @@ girara_session_init(girara_session_t* session)
   else
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
         GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+
+  /* viewport */
+  gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(session->gtk.viewport), GTK_SHADOW_NONE);
 
   /* box */
   gtk_box_set_spacing(session->gtk.box, 0);
@@ -306,6 +312,10 @@ girara_session_init(girara_session_t* session)
     free(tmp_value);
     tmp_value = NULL;
   }
+
+  /* view */
+  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.statusbar_background));
+
 
   /* statusbar */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));
@@ -729,14 +739,14 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
-  GtkWidget* child = gtk_bin_get_child(GTK_BIN(session->gtk.view));
+  GtkWidget* child = gtk_bin_get_child(GTK_BIN(session->gtk.viewport));
 
   if(child) {
     g_object_ref(child);
-    gtk_container_remove(GTK_CONTAINER(session->gtk.view), child);
+    gtk_container_remove(GTK_CONTAINER(session->gtk.viewport), child);
   }
 
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_WIDGET(widget));
+  gtk_container_add(GTK_CONTAINER(session->gtk.viewport), widget);
 
   return TRUE;
 }
