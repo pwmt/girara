@@ -34,7 +34,12 @@ void girara_list_append(girara_list_t* list, void* data);
 /**
  * Prepend an element to the list.
  */
-void girara_list_append(girara_list_t* list, void* data);
+void girara_list_prepend(girara_list_t* list, void* data);
+
+/**
+ * Remove an element of the list
+ */
+void girara_list_remove(girara_list_t* list, void* data);
 
 /**
  * Get size of the list.

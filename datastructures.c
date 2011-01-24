@@ -77,6 +77,14 @@ void girara_list_prepend(girara_list_t* list, void* data)
     list->end = list->start;
 }
 
+void girara_list_remove(girara_list_t* list, void* data)
+{
+  g_return_if_fail(list);
+  list->start = g_list_remove(list->start, data);
+  if (!list->end)
+    list->end = list->start;
+}
+
 girara_list_iterator_t* girara_list_iterator(girara_list_t* list)
 {
   g_return_val_if_fail(list, NULL);
