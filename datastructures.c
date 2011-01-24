@@ -81,8 +81,31 @@ void girara_list_remove(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
   list->start = g_list_remove(list->start, data);
-  if (!list->end)
-    list->end = list->start;
+  if (!list->start)
+    list->end = NULL;
+}
+
+void* girara_list_nth(girara_list_t* list, unsigned int n)
+{
+  g_return_val_if_fail(list, NULL);
+  GList* tmp = g_list_nth(list->start, n);
+  if(!tmp || !tmp) {
+    return NULL;
+  }
+
+  return tmp->data;
+}
+
+bool girara_list_contains(girara_list_t* list, void* data)
+{
+  g_return_val_if_fail(list, false);
+
+  GList* tmp = g_list_find(list->start, data);
+  if(tmp) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 girara_list_iterator_t* girara_list_iterator(girara_list_t* list)

@@ -4,6 +4,7 @@
 #define GIRARA_DATASTRUCTURES_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef struct girara_tree_node_s girara_tree_node_t;
 typedef struct girara_list_s girara_list_t;
@@ -40,6 +41,16 @@ void girara_list_prepend(girara_list_t* list, void* data);
  * Remove an element of the list
  */
 void girara_list_remove(girara_list_t* list, void* data);
+
+/**
+ * Returns nth entry
+ */
+void* girara_list_nth(girara_list_t* list, unsigned int n);
+
+/**
+ * Checks if the list contains the given element
+ */
+bool girara_list_contains(girara_list_t* list, void* data);
 
 /**
  * Get size of the list.
