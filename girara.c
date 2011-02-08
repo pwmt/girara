@@ -760,15 +760,27 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
 {
   g_return_val_if_fail(session != NULL, false);
 
-  if(!(GTK_WIDGET_VISIBLE(GTK_WIDGET(session->gtk.inputbar))))
-    gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
-
   if(argument->data)
   {
     gtk_entry_set_text(session->gtk.inputbar, (char*) argument->data);
+
+    /* we save the X clipboard that will be clear by "grab_focus" */
+    gchar* x_clipboard_text = gtk_clipboard_wait_for_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY));
+
     gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar));
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+
+    if(x_clipboard_text != NULL)
+    {
+      /* we reset the X clipboard with saved text */
+      gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY), x_clipboard_text, -1);
+
+      g_free(x_clipboard_text);
+    }
   }
+
+  if(!(GTK_WIDGET_VISIBLE(GTK_WIDGET(session->gtk.inputbar))))
+    gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
 
   return true;
 }
