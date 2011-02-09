@@ -834,7 +834,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
     {
       int t = (session->buffer.n > 0) ? session->buffer.n : 1;
       for (int i = 0; i < t; i++) {
-        if (!shortcut->function(session, &(shortcut->argument), t)) {
+        if (!shortcut->function(session, &(shortcut->argument), session->buffer.n)) {
           break;
         }
       }
@@ -893,7 +893,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
 
             int t = (session->buffer.n > 0) ? session->buffer.n : 1;
             for (int i = 0; i < t; i++) {
-              if (!shortcut->function(session, &(shortcut->argument), t)) {
+              if (!shortcut->function(session, &(shortcut->argument), session->buffer.n)) {
                 break;
               }
             }
