@@ -446,7 +446,7 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   girara_shortcut_t* last_shortcut = shortcuts_it;
 
   while (shortcuts_it) {
-    if (((shortcuts_it->mask == modifier && shortcuts_it->key == key) ||
+    if (((shortcuts_it->mask == modifier && shortcuts_it->key == key && (modifier != 0 || key != 0)) ||
        (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
         && shortcuts_it->mode == mode)
     {
@@ -887,7 +887,6 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
             session->buffer.command = NULL;
             session->global.buffer  = NULL;
 
-            shortcut->function(session, &(shortcut->argument));
             if (session->events.buffer_changed) {
               session->events.buffer_changed(session);
             }
