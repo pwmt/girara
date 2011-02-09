@@ -5,34 +5,36 @@
 
 struct girara_tree_node_s
 {
-  girara_free_function_t free;
-  GNode* node;
+  girara_free_function_t free; /**> The free function */
+  GNode* node; /* The node object */
 };
 
 typedef struct girara_tree_node_data_s
 {
-  girara_tree_node_t* node;
-  void* data;
+  girara_tree_node_t* node; /**> The node */
+  void* data; /**> The data */
 } girara_tree_node_data_t;
 
 struct girara_list_s
 {
-  girara_free_function_t free;
-  GList* start;
-  GList* end;
+  girara_free_function_t free; /**> The free function */
+  GList* start; /**> List start */
+  GList* end; /**> List end */
 };
 
 struct girara_list_iterator_s
 {
-  girara_list_t* list;
-  GList* element;
+  girara_list_t* list; /**> The list */
+  GList* element; /**> The list object */
 };
 
 girara_list_t* girara_list_new(void)
 {
   girara_list_t* list = g_malloc0(sizeof(girara_list_t));
-  if (!list)
+
+  if (!list) {
     return NULL;
+  }
 
   return list;
 }
@@ -45,18 +47,19 @@ void girara_list_set_free_function(girara_list_t* list, girara_free_function_t g
 
 void girara_list_free(girara_list_t* list)
 {
-  if (!list)
+  if (!list) {
     return;
+  }
 
-  if (list->free)
-  {
+  if (list->free) {
     GList* start = list->start;
-    while (start)
-    {
+
+    while (start) {
       (*list->free)(start->data);
       start = g_list_next(start);
     }
   }
+
   g_list_free(list->start);
   g_free(list);
 }
@@ -64,32 +67,43 @@ void girara_list_free(girara_list_t* list)
 void girara_list_append(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
+
   list->end = g_list_append(list->end, data);
-  if (!list->start)
+
+  if (!list->start) {
     list->start = list->end;
+  }
 }
 
 void girara_list_prepend(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
+
   list->start = g_list_prepend(list->start, data);
-  if (!list->end)
+
+  if (!list->end) {
     list->end = list->start;
+  }
 }
 
 void girara_list_remove(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
+
   list->start = g_list_remove(list->start, data);
-  if (!list->start)
+
+  if (!list->start) {
     list->end = NULL;
+  }
 }
 
 void* girara_list_nth(girara_list_t* list, unsigned int n)
 {
   g_return_val_if_fail(list, NULL);
+
   GList* tmp = g_list_nth(list->start, n);
-  if(!tmp || !tmp) {
+
+  if (!tmp || !tmp) {
     return NULL;
   }
 
@@ -101,63 +115,80 @@ bool girara_list_contains(girara_list_t* list, void* data)
   g_return_val_if_fail(list, false);
 
   GList* tmp = g_list_find(list->start, data);
-  if(tmp) {
-    return true;
-  } else {
+
+  if (!tmp) {
     return false;
   }
+
+  return true;
 }
 
 girara_list_iterator_t* girara_list_iterator(girara_list_t* list)
 {
   g_return_val_if_fail(list, NULL);
-  if (!list->start)
+
+  if (!list->start) {
     return NULL;
+  }
 
   girara_list_iterator_t* iter = g_malloc0(sizeof(girara_list_iterator_t));
   g_return_val_if_fail(iter, NULL);
   iter->list = list;
   iter->element = list->start;
+
   return iter;
 }
 
 girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter)
 {
-  if (!iter || !iter->element)
+  if (!iter || !iter->element) {
     return NULL;
+  }
 
   iter->element = g_list_next(iter->element);
-  if (!iter->element)
+
+  if (!iter->element) {
     return NULL;
+  }
+
   return iter;
 }
 
 void* girara_list_iterator_data(girara_list_iterator_t* iter)
 {
   g_return_val_if_fail(iter && iter->element, NULL);
+
   return iter->element->data;
 }
 
 void girara_list_iterator_set(girara_list_iterator_t* iter, void *data)
 {
   g_return_if_fail(iter && iter->element && iter->list);
-  if (iter->list->free)
+
+  if (iter->list->free) {
     (*iter->list->free)(iter->element->data);
+  }
+
   iter->element->data = data;
 }
 
 void girara_list_iterator_free(girara_list_iterator_t* iter)
 {
-  if (!iter)
+  if (!iter) {
     return;
+  }
+
   g_free(iter);
 }
 
 size_t girara_list_size(girara_list_t* list)
 {
   g_return_val_if_fail(list, 0);
-  if (!list->start)
+
+  if (!list->start) {
     return 0;
+  }
+
   return g_list_length(list->start);
 }
 
@@ -168,8 +199,8 @@ girara_tree_node_t* girara_node_new(void* data)
   g_return_val_if_fail(node, NULL);
 
   girara_tree_node_data_t* nodedata = g_malloc0(sizeof(girara_tree_node_data_t));
-  if (!nodedata)
-  {
+
+  if (!nodedata) {
     g_free(node);
     return NULL;
   }
@@ -177,8 +208,8 @@ girara_tree_node_t* girara_node_new(void* data)
   nodedata->data = data;
   nodedata->node = node;
   node->node = g_node_new(nodedata);
-  if (!node->node)
-  {
+
+  if (!node->node) {
     g_free(node);
     g_free(nodedata);
     return NULL;
@@ -195,19 +226,22 @@ void girara_node_set_free_function(girara_tree_node_t* node, girara_free_functio
 
 void girara_node_free(girara_tree_node_t* node)
 {
-  if (!node)
+  if (!node) {
     return;
+  }
 
   g_return_if_fail(node->node);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
   g_return_if_fail(nodedata);
-  if (node->free)
+
+  if (node->free) {
     (*node->free)(nodedata->data);
+  }
+
   g_free(nodedata);
 
   GNode* childnode = node->node->children;
-  while (childnode)
-  {
+  while (childnode) {
     girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) childnode->data;
     girara_node_free(nodedata->node);
     childnode = childnode->next;
@@ -230,30 +264,37 @@ girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* da
   g_return_val_if_fail(child, NULL);
   child->free = parent->free;
   girara_node_append(parent, child);
+
   return child;
 }
 
 girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, NULL);
-  if (!node->node->parent)
+
+  if (!node->node->parent) {
     return NULL;
+  }
 
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->parent->data;
   g_return_val_if_fail(nodedata, NULL);
+
   return nodedata->node;
 }
 
 girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, NULL);
-  if (!node->node->parent)
+
+  if (!node->node->parent) {
     return node;
+  }
 
   GNode* root = g_node_get_root(node->node);
   g_return_val_if_fail(root, NULL);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) root->data;
   g_return_val_if_fail(nodedata, NULL);
+
   return nodedata->node;
 }
 
@@ -264,8 +305,7 @@ girara_list_t* girara_node_get_children(girara_tree_node_t* node)
   g_return_val_if_fail(list, NULL);
 
   GNode* childnode = node->node->children;
-  while (childnode)
-  {
+  while (childnode) {
     girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) childnode->data;
     girara_list_append(list, nodedata->node);
     childnode = childnode->next;
@@ -277,6 +317,7 @@ girara_list_t* girara_node_get_children(girara_tree_node_t* node)
 size_t girara_node_get_num_children(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, 0);
+
   return g_node_n_children(node->node);
 }
 
@@ -285,6 +326,7 @@ void* girara_node_get_data(girara_tree_node_t* node)
   g_return_val_if_fail(node && node->node, NULL);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
   g_return_val_if_fail(nodedata, NULL);
+
   return nodedata->data;
 }
 
@@ -293,7 +335,10 @@ void girara_node_set_data(girara_tree_node_t* node, void* data)
   g_return_if_fail(node && node->node);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
   g_return_if_fail(nodedata);
-  if (node->free)
+
+  if (node->free) {
     (*node->free)(nodedata->data);
+  }
+
   nodedata->data = data;
 }

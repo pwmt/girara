@@ -105,10 +105,11 @@ girara_session_create()
 bool
 girara_session_init(girara_session_t* session)
 {
-  if(session->gtk.embed)
+  if (session->gtk.embed){
     session->gtk.window = gtk_plug_new(session->gtk.embed);
-  else
+  } else {
     session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  }
 
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
@@ -118,8 +119,7 @@ girara_session_init(girara_session_t* session)
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
 
   /* window */
-  GdkGeometry hints =
-  {
+  GdkGeometry hints = {
     .base_height = 1,
     .base_width  = 1,
     .height_inc  = 0,
@@ -139,15 +139,14 @@ girara_session_init(girara_session_t* session)
       G_CALLBACK(girara_callback_view_key_press_event), session);
 
   bool* tmp_bool_value = girara_setting_get(session, "show-scrollbars");
-  if(tmp_bool_value) {
-    if(!*tmp_bool_value) {
+  if (tmp_bool_value) {
+    if (!*tmp_bool_value) {
       gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
           GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     }
 
     free(tmp_bool_value);
-  }
-  else {
+  } else {
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
         GTK_POLICY_NEVER, GTK_POLICY_NEVER);
   }
@@ -180,128 +179,112 @@ girara_session_init(girara_session_t* session)
   char* tmp_value = NULL;
 
   tmp_value = girara_setting_get(session, "default-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.default_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "default-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.default_background));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "inputbar-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.inputbar_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "inputbar-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.inputbar_background));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "statusbar-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.statusbar_background));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "statusbar-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.statusbar_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "completion-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.completion_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "completion-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.completion_background));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "completion-group-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.completion_group_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "completion-group-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.completion_group_background));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "completion-highlight-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.completion_highlight_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "completion-highlight-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.completion_highlight_background));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "notification-error-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.notification_error_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "notification-error-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.notification_error_background));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "notification-warning-fg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.notification_warning_foreground));
     free(tmp_value);
     tmp_value = NULL;
   }
 
   tmp_value = girara_setting_get(session, "notification-warning-bg");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.notification_warning_background));
     free(tmp_value);
     tmp_value = NULL;
@@ -309,8 +292,7 @@ girara_session_init(girara_session_t* session)
 
   /* parse font */
   tmp_value = girara_setting_get(session, "font");
-  if(tmp_value)
-  {
+  if (tmp_value) {
     session->style.font = pango_font_description_from_string(tmp_value);
     free(tmp_value);
     tmp_value = NULL;
@@ -318,7 +300,6 @@ girara_session_init(girara_session_t* session)
 
   /* view */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.statusbar_background));
-
 
   /* statusbar */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));
@@ -332,13 +313,17 @@ girara_session_init(girara_session_t* session)
   int* window_width  = girara_setting_get(session, "window-width");
   int* window_height = girara_setting_get(session, "window-height");
 
-  if(window_width && window_height)
+  if (window_width && window_height) {
     gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), *window_width, *window_height);
+  }
 
-  if(window_width)
+  if (window_width) {
     free(window_width);
-  if(window_height)
+  }
+
+  if (window_height) {
     free(window_height);
+  }
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
 
@@ -355,8 +340,8 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up shortcuts */
   girara_shortcut_t* shortcut = session->bindings.shortcuts;
-  while(shortcut)
-  {
+
+  while (shortcut) {
     girara_shortcut_t* tmp = shortcut->next;
     g_slice_free(girara_shortcut_t, shortcut);
     shortcut = tmp;
@@ -364,8 +349,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up inputbar shortcuts */
   girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
-  while(inputbar_shortcut)
-  {
+  while (inputbar_shortcut) {
     girara_inputbar_shortcut_t* tmp = inputbar_shortcut->next;
     g_slice_free(girara_inputbar_shortcut_t, inputbar_shortcut);
     inputbar_shortcut = tmp;
@@ -373,47 +357,49 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up commands */
   girara_command_t* command = session->bindings.commands;
-  while(command)
-  {
+  while (command) {
     girara_command_t* tmp = command->next;
-    if(command->command)
+    if (command->command) {
       g_free(command->command);
-    if(command->abbr)
+    }
+    if (command->abbr) {
       g_free(command->abbr);
-    if(command->description)
+    }
+    if (command->description) {
       g_free(command->description);
+    }
     g_slice_free(girara_command_t, command);
+
     command = tmp;
   }
 
   /* clean up special commands */
   girara_special_command_t* special_command = session->bindings.special_commands;
-  while(special_command)
-  {
+  while (special_command) {
     girara_special_command_t* tmp = special_command->next;
     g_slice_free(girara_special_command_t, special_command);
+
     special_command = tmp;
   }
 
   /* clean up mouse events */
   girara_mouse_event_t* mouse_event = session->bindings.mouse_events;
-  while(mouse_event)
-  {
+  while (mouse_event) {
     girara_mouse_event_t* tmp = mouse_event->next;
     g_slice_free(girara_mouse_event_t, mouse_event);
+
     mouse_event = tmp;
   }
 
   /* clean up settings */
   girara_setting_t* setting = session->settings;
-  while(setting)
-  {
+  while (setting) {
     girara_setting_t* tmp = setting->next;
 
     g_free(setting->name);
-    if(setting->description)
+    if (setting->description)
       g_free(setting->description);
-    if(setting->type == STRING && setting->value.s != NULL)
+    if (setting->type == STRING && setting->value.s != NULL)
       g_free(setting->value.s);
     g_slice_free(girara_setting_t, setting);
 
@@ -422,16 +408,22 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up statusbar items */
   girara_statusbar_item_t* item = session->elements.statusbar_items;
-  while(item)
-  {
+  while (item) {
     girara_statusbar_item_t* tmp = item->next;
     g_slice_free(girara_statusbar_item_t, item);
+
     item = tmp;
   }
 
   /* clean up buffer */
-  if(session->buffer.command) g_string_free(session->buffer.command, TRUE);
-  if(session->global.buffer)  g_string_free(session->global.buffer,  TRUE);
+  if (session->buffer.command) {
+    g_string_free(session->buffer.command, TRUE);
+  }
+
+  if (session->global.buffer) {
+    g_string_free(session->global.buffer,  TRUE);
+  }
+
   session->buffer.command = NULL;
   session->global.buffer  = NULL;
 
@@ -453,9 +445,8 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   girara_shortcut_t* shortcuts_it = session->bindings.shortcuts;
   girara_shortcut_t* last_shortcut = shortcuts_it;
 
-  while(shortcuts_it)
-  {
-    if(((shortcuts_it->mask == modifier && shortcuts_it->key == key) ||
+  while (shortcuts_it) {
+    if (((shortcuts_it->mask == modifier && shortcuts_it->key == key) ||
        (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
         && shortcuts_it->mode == mode)
     {
@@ -479,10 +470,11 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   shortcut->argument         = argument;
   shortcut->next             = NULL;
 
-  if(last_shortcut)
+  if (last_shortcut) {
     last_shortcut->next = shortcut;
-  else
+  } else {
     session->bindings.shortcuts = shortcut;
+  }
 
   return TRUE;
 }
@@ -498,19 +490,21 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   girara_command_t* commands_it = session->bindings.commands;
   girara_command_t* last_command = commands_it;
 
-  while(commands_it)
-  {
-    if(!g_strcmp0(commands_it->command, command))
-    {
-      if(commands_it->abbr)
+  while (commands_it) {
+    if (!g_strcmp0(commands_it->command, command)) {
+      if (commands_it->abbr) {
         free(commands_it->abbr);
-      if(commands_it->description)
+      }
+
+      if (commands_it->description) {
         free(commands_it->description);
+      }
 
       commands_it->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
       commands_it->function    = function;
       commands_it->completion  = completion;
       commands_it->description = description ? g_strdup(description) : NULL;
+
       return TRUE;
     }
 
@@ -528,10 +522,11 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   new_command->description = description ? g_strdup(description) : NULL;
   new_command->next        = NULL;
 
-  if(last_command)
+  if (last_command) {
     last_command->next = new_command;
-  else
+  } else {
     session->bindings.commands = new_command;
+  }
 
   return TRUE;
 }
@@ -548,12 +543,11 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   girara_inputbar_shortcut_t* inp_sh_it = session->bindings.inputbar_shortcuts;
   girara_inputbar_shortcut_t* last_inp_sh = inp_sh_it;
 
-  while(inp_sh_it)
-  {
-    if(inp_sh_it->mask == modifier && inp_sh_it->key == key)
-    {
+  while (inp_sh_it) {
+    if (inp_sh_it->mask == modifier && inp_sh_it->key == key) {
       inp_sh_it->function = function;
       inp_sh_it->argument = argument;
+
       return TRUE;
     }
 
@@ -570,14 +564,14 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   inputbar_shortcut->argument = argument;
   inputbar_shortcut->next     = NULL;
 
-  if(last_inp_sh)
+  if (last_inp_sh) {
     last_inp_sh->next = inputbar_shortcut;
-  else
+  } else {
     session->bindings.inputbar_shortcuts = inputbar_shortcut;
+  }
 
   return TRUE;
 }
-
 
 bool
 girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, bool always, int argument_n, void* argument_data)
@@ -591,10 +585,8 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   girara_special_command_t* scommand_it = session->bindings.special_commands;
   girara_special_command_t* last_scommand = scommand_it;
 
-  while(scommand_it)
-  {
-    if(scommand_it->identifier == identifier)
-    {
+  while (scommand_it) {
+    if (scommand_it->identifier == identifier) {
       scommand_it->function = function;
       scommand_it->always   = always;
       scommand_it->argument = argument;
@@ -613,10 +605,11 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   special_command->always     = always;
   special_command->argument   = argument;
 
-  if(last_scommand)
+  if (last_scommand) {
     last_scommand->next = special_command;
-  else
+  } else {
     session->bindings.special_commands = special_command;
+  }
 
   return TRUE;
 }
@@ -633,9 +626,8 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   girara_mouse_event_t* me_it = session->bindings.mouse_events;
   girara_mouse_event_t* last_me = me_it;
 
-  while(me_it)
-  {
-    if(me_it->mask == mask && me_it->button == button &&
+  while (me_it) {
+    if (me_it->mask == mask && me_it->button == button &&
        me_it->mode == mode)
     {
       me_it->function = function;
@@ -657,10 +649,11 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   mouse_event->argument = argument;
   mouse_event->next     = NULL;
 
-  if(last_me)
+  if (last_me) {
     last_me->next = mouse_event;
-  else
+  } else {
     session->bindings.mouse_events = mouse_event;
+  }
 
   return TRUE;
 }
@@ -684,15 +677,17 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_misc_set_padding(GTK_MISC(item->text),       2.0, 4.0);
   gtk_label_set_use_markup(item->text,             TRUE);
 
-  if(callback)
+  if (callback) {
     g_signal_connect(G_OBJECT(item->text), "event", G_CALLBACK(callback), NULL);
+  }
 
   /* add it to the list */
   gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->text), expand, fill, 2);
   gtk_widget_show_all(GTK_WIDGET(item->text));
 
-  if(session->elements.statusbar_items)
+  if (session->elements.statusbar_items) {
     item->next = session->elements.statusbar_items;
+  }
 
   session->elements.statusbar_items = item;
 
@@ -744,7 +739,7 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
 
   GtkWidget* child = gtk_bin_get_child(GTK_BIN(session->gtk.viewport));
 
-  if(child) {
+  if (child) {
     g_object_ref(child);
     gtk_container_remove(GTK_CONTAINER(session->gtk.viewport), child);
   }
@@ -760,8 +755,7 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
 {
   g_return_val_if_fail(session != NULL, false);
 
-  if(argument->data)
-  {
+  if (argument->data) {
     gtk_entry_set_text(session->gtk.inputbar, (char*) argument->data);
 
     /* we save the X clipboard that will be clear by "grab_focus" */
@@ -770,17 +764,16 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument)
     gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar));
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
 
-    if(x_clipboard_text != NULL)
-    {
+    if (x_clipboard_text != NULL) {
       /* we reset the X clipboard with saved text */
       gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY), x_clipboard_text, -1);
-
       g_free(x_clipboard_text);
     }
   }
 
-  if(!(GTK_WIDGET_VISIBLE(GTK_WIDGET(session->gtk.inputbar))))
+  if (!(GTK_WIDGET_VISIBLE(GTK_WIDGET(session->gtk.inputbar)))) {
     gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
+  }
 
   return true;
 }
@@ -800,6 +793,7 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument))
 bool
 girara_cmd_map(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
+  // TODO: Implement
   return true;
 }
 
@@ -817,6 +811,7 @@ girara_cmd_quit(girara_session_t* session, int UNUSED(argc), char** UNUSED(argv)
 bool
 girara_cmd_set(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
 {
+  // TODO: Implement
   return true;
 }
 
@@ -828,9 +823,8 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
 
   /* check for existing shortcut */
   girara_shortcut_t* shortcut = session->bindings.shortcuts;
-  while(!session->buffer.command && shortcut)
-  {
-    if(
+  while (!session->buffer.command && shortcut) {
+    if (
        event->keyval == shortcut->key
        && (CLEAN(event->state) == shortcut->mask || (shortcut->key >= 0x21
        && shortcut->key <= 0x7E && CLEAN(event->state) == GDK_SHIFT_MASK))
@@ -839,11 +833,12 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
       )
     {
       int t = (session->buffer.n > 0) ? session->buffer.n : 1;
-      for(int i = 0; i < t; i++)
-      {
-        if(!shortcut->function(session, &(shortcut->argument)))
+      for (int i = 0; i < t; i++) {
+        if (!shortcut->function(session, &(shortcut->argument))) {
           break;
+        }
       }
+
       return TRUE;
     }
 
@@ -851,64 +846,57 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
   }
 
   /* update buffer */
-  if(event->keyval >= 0x21 && event->keyval <= 0x7E)
-  {
+  if (event->keyval >= 0x21 && event->keyval <= 0x7E) {
     /* overall buffer */
-    if(!session->global.buffer)
+    if (!session->global.buffer) {
       session->global.buffer = g_string_new("");
+    }
 
     session->global.buffer = g_string_append_c(session->global.buffer, event->keyval);
 
-    if(!session->buffer.command && event->keyval >= 0x30 && event->keyval <= 0x39)
-    {
-      if(((session->buffer.n * 10) + (event->keyval - '0')) < INT_MAX)
+    if (!session->buffer.command && event->keyval >= 0x30 && event->keyval <= 0x39) {
+      if (((session->buffer.n * 10) + (event->keyval - '0')) < INT_MAX) {
         session->buffer.n = (session->buffer.n * 10) + (event->keyval - '0');
-    }
-    else
-    {
-      if(!session->buffer.command)
+      }
+    } else {
+      if (!session->buffer.command) {
         session->buffer.command = g_string_new("");
+      }
 
       session->buffer.command = g_string_append_c(session->buffer.command, event->keyval);
     }
 
-    if(session->events.buffer_changed)
+    if (session->events.buffer_changed) {
       session->events.buffer_changed(session);
+    }
   }
 
   /* check for buffer command */
-  if(session->buffer.command)
-  {
+  if (session->buffer.command) {
     bool matching_command = FALSE;
 
     shortcut = session->bindings.shortcuts;
-    while(shortcut)
-    {
-      if(shortcut->buffered_command)
-      {
+    while (shortcut) {
+      if (shortcut->buffered_command) {
         /* buffer could match a command */
-        if(!strncmp(session->buffer.command->str, shortcut->buffered_command, session->buffer.command->len))
-        {
+        if (!strncmp(session->buffer.command->str, shortcut->buffered_command, session->buffer.command->len)) {
           /* command matches buffer exactly */
-          if(!strcmp(session->buffer.command->str, shortcut->buffered_command))
-          {
+          if (!strcmp(session->buffer.command->str, shortcut->buffered_command)) {
             g_string_free(session->buffer.command, TRUE);
             g_string_free(session->global.buffer,  TRUE);
             session->buffer.command = NULL;
             session->global.buffer  = NULL;
 
             shortcut->function(session, &(shortcut->argument));
-            if(session->events.buffer_changed)
-            {
-              printf("now\n");
+            if (session->events.buffer_changed) {
               session->events.buffer_changed(session);
             }
 
             int t = (session->buffer.n > 0) ? session->buffer.n : 1;
-            for(int i = 0; i < t; i++)
-            {
-              if(!shortcut->function(session, &(shortcut->argument)))
+            for (int i = 0; i < t; i++) {
+              if (!shortcut->function(session, &(shortcut->argument))) {
                 break;
+              }
             }
 
             session->buffer.n = 0;
@@ -923,16 +911,16 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
     }
 
     /* free buffer if buffer will never match a command */
-    if(!matching_command)
-    {
+    if (!matching_command) {
       g_string_free(session->buffer.command, TRUE);
       g_string_free(session->global.buffer,  TRUE);
       session->buffer.command = NULL;
       session->global.buffer  = NULL;
       session->buffer.n       = 0;
 
-      if(session->events.buffer_changed)
+      if (session->events.buffer_changed) {
         session->events.buffer_changed(session);
+      }
     }
   }
 
@@ -945,12 +933,12 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   g_return_val_if_fail(session != NULL, FALSE);
 
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
-  if(!input)
+  if (!input) {
     return FALSE;
+  }
 
   gchar **tokens = g_strsplit(input, " ", -1);
-  if(!tokens)
-  {
+  if (!tokens) {
     g_free(input);
     return FALSE;
   }
@@ -958,8 +946,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   gchar *cmd = tokens[0];
   int length = g_strv_length(tokens);
 
-  if(length < 1)
-  {
+  if (length < 1) {
     g_free(input);
     g_strfreev(tokens);
     return FALSE;
@@ -971,12 +958,9 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   g_free(identifier_s);
 
   girara_special_command_t* special_command = session->bindings.special_commands;
-  while(special_command)
-  {
-    if(special_command->identifier == identifier)
-    {
-      if(special_command->always == 1)
-      {
+  while (special_command) {
+    if (special_command->identifier == identifier) {
+      if (special_command->always == 1) {
         g_free(input);
         g_strfreev(tokens);
         return FALSE;
@@ -997,9 +981,8 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
   /* search commands */
   girara_command_t* command = session->bindings.commands;
-  while(command)
-  {
-    if((g_strcmp0(cmd, command->command) == 0) ||
+  while (command) {
+    if ((g_strcmp0(cmd, command->command) == 0) ||
        (g_strcmp0(cmd, command->abbr)    == 0))
     {
       command->function(session, length - 1, tokens + 1);
@@ -1026,9 +1009,8 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   g_return_val_if_fail(session != NULL, FALSE);
 
   girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
-  while(inputbar_shortcut)
-  {
-    if(inputbar_shortcut->key == event->keyval
+  while (inputbar_shortcut) {
+    if (inputbar_shortcut->key == event->keyval
      && inputbar_shortcut->mask == CLEAN(event->state))
     {
       inputbar_shortcut->function(session, &(inputbar_shortcut->argument));
@@ -1044,9 +1026,8 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   g_free(identifier_s);
 
   girara_special_command_t* special_command = session->bindings.special_commands;
-  while(special_command)
-  {
-    if((special_command->identifier == identifier) &&
+  while (special_command) {
+    if ((special_command->identifier == identifier) &&
        (special_command->always == TRUE))
     {
       gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);

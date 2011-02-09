@@ -14,8 +14,7 @@ test_utils_home_directory()
   const gchar* user = g_get_home_dir();
   gchar* oldenv = g_getenv("HOME") ? g_strdup(g_getenv("HOME")) : NULL;
 
-  if (oldenv)
-  {
+  if (oldenv) {
     gchar* res = girara_get_home_directory(NULL);
     g_assert_cmpstr(res, ==, oldenv);
     g_free(res);
@@ -27,8 +26,7 @@ test_utils_home_directory()
   g_free(res);
 
   struct passwd* pw;
-  while ((pw = getpwent()) != NULL)
-  {
+  while ((pw = getpwent()) != NULL) {
     gchar* res = girara_get_home_directory(pw->pw_name);
     g_assert_cmpstr(res, ==, pw->pw_dir);
     g_free(res);
@@ -40,8 +38,7 @@ test_utils_home_directory()
   g_assert_cmpstr(res, ==, "/home/test");
   g_free(res);
 
-  if (oldenv)
-  {
+  if (oldenv) {
     g_setenv("HOME", oldenv, TRUE);
     g_free(oldenv);
   }
@@ -69,8 +66,7 @@ test_utils_fix_path()
   */
 
   struct passwd* pw;
-  while ((pw = getpwent()) != NULL)
-  {
+  while ((pw = getpwent()) != NULL) {
     gchar* path = g_strdup_printf("~%s/test", pw->pw_name);
     gchar* eres = g_build_filename(pw->pw_dir, "test", NULL);
 
@@ -106,8 +102,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   g_assert_cmpstr(res, ==, expected);
   g_free(res);
 
-  if (oldenv)
-  {
+  if (oldenv) {
     g_setenv(envvar, oldenv, TRUE);
     g_free(oldenv);
   }
