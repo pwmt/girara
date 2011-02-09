@@ -125,11 +125,11 @@ girara_completion_group_add_element(girara_completion_group_t* group, char* name
 }
 
 bool
-girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument))
+girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
 {
   /* hide completion */
   girara_argument_t arg = { GIRARA_HIDE, NULL };
-  girara_isc_completion(session, &arg);
+  girara_isc_completion(session, &arg, 0);
 
   /* clear inputbar */
   gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
@@ -141,7 +141,7 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument))
 }
 
 bool
-girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
+girara_isc_completion(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session != NULL, false);
 
@@ -441,7 +441,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument)
 }
 
 bool
-girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument)
+girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
   int    length = strlen(input);
@@ -474,7 +474,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       break;
     case GIRARA_DELETE_LAST_CHAR:
       if ((length - 1) <= 0) {
-        girara_isc_abort(session, argument);
+        girara_isc_abort(session, argument, 0);
       }
       gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos - 1, pos);
       break;

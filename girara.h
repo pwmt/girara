@@ -116,7 +116,7 @@ typedef struct
  * often executed as the value defines or until the function returns false the
  * first time.
  */
-typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*);
+typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, unsigned int);
 
 /**
  * Structure of a completion element
@@ -558,16 +558,22 @@ void girara_completion_group_add_element(girara_completion_group_t* group, char*
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
  */
-bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument);
+bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
  * Default shortcut function to quit the application
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
  */
-bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument);
+bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
  * Default command to map sortcuts
@@ -639,10 +645,11 @@ bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* ev
  *
  * @param session The used girara session
  * @param argument The argument
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
  */
-bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
+bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
  * Default inputbar shortcut that completes the given input
@@ -650,16 +657,22 @@ bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument);
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
  */
-bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument);
+bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
  * Default inputbar shortcut to manipulate the inputbar string
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
  */
-bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument);
+bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
  * Default complection function for the settings
