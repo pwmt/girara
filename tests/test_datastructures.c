@@ -1,5 +1,6 @@
 
 #include <glib.h>
+#include <stdint.h>
 #include "girara-datastructures.h"
 
 static unsigned int list_free_called = 0;
@@ -8,8 +9,8 @@ static unsigned int node_free_called = 0;
 static void
 list_free(void* data)
 {
-  g_assert_cmpuint(list_free_called, ==, 0);
-  g_assert_cmpuint((unsigned int) data, ==, 0xDEAD);
+  g_assert_cmpuint(list_free_called, ==, 0u);
+  g_assert_cmpuint((intptr_t)data, ==, 0xDEAD);
 
   ++list_free_called;
 }
@@ -20,17 +21,17 @@ test_datastructures_list()
   girara_list_t* list = girara_list_new();
   g_assert_cmpuint(girara_list_size(list), ==, 0);
 
-  for (int i = 0; i != 10; ++i) {
+  for (intptr_t i = 0; i != 10; ++i) {
     girara_list_append(list, (void*)i);
   }
 
   g_assert_cmpuint(girara_list_size(list), ==, 10);
 
   girara_list_iterator_t* iter = girara_list_iterator(list);
-  g_assert_cmpuint(iter, !=, NULL);
+  g_assert_cmpuint((intptr_t)iter, !=, (intptr_t)NULL);
 
-  for (int i = 0; i != 10; ++i) {
-    g_assert_cmpint((int)girara_list_iterator_data(iter), ==, i);
+  for (intptr_t i = 0; i != 10; ++i) {
+    g_assert_cmpint((intptr_t)girara_list_iterator_data(iter), ==, i);
     if (i < 9) {
       g_assert(girara_list_iterator_next(iter));
     } else {
