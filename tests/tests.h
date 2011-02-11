@@ -12,4 +12,7 @@ void test_utils_xdg_path();
 void test_datastructures_list();
 void test_datastructures_node();
 
+// session tests
+void test_session_basic();
+
 #endif

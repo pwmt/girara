@@ -2,7 +2,7 @@
 
 include ../config.mk
 
-SOURCE   = tests.c test_utils.c test_datastructures.c
+SOURCE   = tests.c test_utils.c test_datastructures.c test_session.c
 OBJECTS  = ${SOURCE:.c=.o}
 
 all: options girara_test

@@ -1,6 +1,8 @@
+/* See LICENSE file for license and copyright information */
 
 #include <glib.h>
 #include <stdint.h>
+#include "helpers.h"
 #include "girara-datastructures.h"
 
 static unsigned int list_free_called = 0;
@@ -28,10 +30,10 @@ test_datastructures_list()
   g_assert_cmpuint(girara_list_size(list), ==, 10);
 
   girara_list_iterator_t* iter = girara_list_iterator(list);
-  g_assert_cmpuint((intptr_t)iter, !=, (intptr_t)NULL);
+  g_assert_cmpptr(iter, !=, NULL);
 
   for (intptr_t i = 0; i != 10; ++i) {
-    g_assert_cmpint((intptr_t)girara_list_iterator_data(iter), ==, i);
+    g_assert_cmpuint((intptr_t)girara_list_iterator_data(iter), ==, i);
     if (i < 9) {
       g_assert(girara_list_iterator_next(iter));
     } else {
