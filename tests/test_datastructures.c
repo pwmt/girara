@@ -21,14 +21,18 @@ void
 test_datastructures_list()
 {
   girara_list_t* list = girara_list_new();
+  // size of empty list
   g_assert_cmpuint(girara_list_size(list), ==, 0);
 
+  // append
   for (intptr_t i = 0; i != 10; ++i) {
     girara_list_append(list, (void*)i);
   }
 
+  // size of list
   g_assert_cmpuint(girara_list_size(list), ==, 10);
 
+  // iterator tests
   girara_list_iterator_t* iter = girara_list_iterator(list);
   g_assert_cmpptr(iter, !=, NULL);
 
@@ -44,9 +48,51 @@ test_datastructures_list()
   girara_list_iterator_free(iter);
   girara_list_free(list);
 
+  // free function
   list = girara_list_new();
   girara_list_set_free_function(list, list_free);
   girara_list_append(list, (void*)0xDEAD);
+  girara_list_free(list);
+  g_assert_cmpuint(list_free_called, ==, 1);
+
+  // contains
+  list = girara_list_new();
+  for (intptr_t i = 0; i != 10; ++i) {
+    g_assert_cmpuint(girara_list_contains(list, (void*)i), ==, false);
+    girara_list_append(list, (void*)i);
+    g_assert_cmpuint(girara_list_contains(list, (void*)i), ==, true);
+  }
+
+  // remove
+  for (intptr_t i = 9; i >= 0; --i) {
+    g_assert_cmpuint(girara_list_contains(list, (void*)i), ==, true);
+    girara_list_remove(list, (void*)i);
+    g_assert_cmpuint(girara_list_contains(list, (void*)i), ==, false);
+    girara_list_append(list, (void*)i);
+  }
+
+  iter = girara_list_iterator(list);
+  g_assert_cmpptr(iter, !=, NULL);
+
+  for (intptr_t i = 9; i >= 0; --i) {
+    g_assert_cmpuint((intptr_t)girara_list_iterator_data(iter), ==, i);
+    if (i > 0) {
+      g_assert(girara_list_iterator_next(iter));
+    } else {
+      g_assert(!girara_list_iterator_next(iter));
+    }
+  }
+
+  girara_list_iterator_free(iter);
+  girara_list_free(list);
+  
+  // remove with free function
+  list_free_called = 0;
+  list = girara_list_new();
+  girara_list_set_free_function(list, list_free);
+  girara_list_append(list, (void*)0xDEAD);
+  girara_list_remove(list, (void*)0xDEAD);
+  g_assert_cmpuint(girara_list_size(list), ==, 0);
   girara_list_free(list);
   g_assert_cmpuint(list_free_called, ==, 1);
 }
