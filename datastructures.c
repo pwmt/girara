@@ -19,7 +19,6 @@ struct girara_list_s
 {
   girara_free_function_t free; /**> The free function */
   GList* start; /**> List start */
-  GList* end; /**> List end */
 };
 
 struct girara_list_iterator_s
@@ -68,11 +67,7 @@ void girara_list_append(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
 
-  list->end = g_list_append(list->end, data);
-
-  if (!list->start) {
-    list->start = list->end;
-  }
+  list->start = g_list_append(list->start, data);
 }
 
 void girara_list_prepend(girara_list_t* list, void* data)
@@ -80,10 +75,6 @@ void girara_list_prepend(girara_list_t* list, void* data)
   g_return_if_fail(list);
 
   list->start = g_list_prepend(list->start, data);
-
-  if (!list->end) {
-    list->end = list->start;
-  }
 }
 
 void girara_list_remove(girara_list_t* list, void* data)
@@ -98,9 +89,6 @@ void girara_list_remove(girara_list_t* list, void* data)
     return;
   }
 
-  if (tmp == list->end) {
-    list->end = g_list_previous(list->end);
-  }
   if (list->free) {
     (list->free)(tmp->data);
   }
