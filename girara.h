@@ -42,6 +42,13 @@ typedef enum girara_setting_type_e
  */
 typedef int girara_mode_t;
 
+typedef struct girara_mode_string_s
+{
+    girara_mode_t index;
+    char* name;
+    struct girara_mode_string_s* next;
+} girara_mode_string_t;
+
 /**
  * Session typedef
  */
@@ -311,9 +318,15 @@ struct girara_session_s
   struct
   {
     GString *buffer; /**< Buffer */
-    girara_mode_t current_mode; /**< Current mode */
     void* data; /**< User data */
   } global;
+
+  struct
+  {
+    girara_mode_t current_mode; /**< Current mode */
+    girara_mode_string_t *identifiers; /**< List of modes with its string identifiers */
+    girara_mode_t normal; /**< The normal mode */
+  } modes;
 
   struct
   {
@@ -681,6 +694,15 @@ bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t
  * @param input The current input
  */
 girara_completion_t* girara_cc_set(girara_session_t* session, char* input);
+
+/**
+ * Adds a new mode by its string identifier
+ *
+ * @param session The used girara session
+ * @param name The string identifier used in configs/inputbar etc to refer by
+ * @return A newly defined girara_mode_t associated with name
+ */
+girara_mode_t girara_mode_add(girara_session_t* session, const char* name);
 
 /**
  * Sets the current mode

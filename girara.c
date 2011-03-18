@@ -44,8 +44,11 @@ girara_session_create()
   session->buffer.n       = 0;
   session->buffer.command = NULL;
 
-  session->global.current_mode       = 0;
   session->global.buffer             = NULL;
+
+  girara_mode_t normal_mode   = girara_mode_add(session, "normal");
+  session->modes.normal       = normal_mode;
+  session->modes.current_mode = normal_mode;
 
   /* default values */
   int window_width       = 800;
@@ -77,8 +80,8 @@ girara_session_create()
   girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  NULL, NULL);
 
   /* default shortcuts */
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           0, 0, NULL);
-  girara_shortcut_add(session, 0,                GDK_colon, NULL, girara_sc_focus_inputbar, 0, 0, ":");
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           normal_mode, 0, NULL);
+  girara_shortcut_add(session, 0,                GDK_colon, NULL, girara_sc_focus_inputbar, normal_mode, 0, ":");
 
   /* default inputbar shortcuts */
   girara_inputbar_shortcut_add(session, 0,                GDK_Escape,       girara_isc_abort,               0,                           NULL);
@@ -828,7 +831,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
        event->keyval == shortcut->key
        && (CLEAN(event->state) == shortcut->mask || (shortcut->key >= 0x21
        && shortcut->key <= 0x7E && CLEAN(event->state) == GDK_SHIFT_MASK))
-       && (session->global.current_mode & shortcut->mode || shortcut->mode == 0)
+       && (session->modes.current_mode & shortcut->mode || shortcut->mode == 0)
        && shortcut->function
       )
     {
@@ -1046,7 +1049,35 @@ girara_mode_set(girara_session_t* session, girara_mode_t mode)
 {
   g_return_if_fail(session != NULL);
 
-  session->global.current_mode = mode;
+  session->modes.current_mode = mode;
+}
+
+girara_mode_t
+girara_mode_add(girara_session_t* session, const char* name)
+{
+  g_return_val_if_fail(session  != NULL, FALSE);
+  g_return_val_if_fail(name != NULL && name[0] != 0x0, FALSE);
+
+  girara_mode_string_t *last_mode = NULL;
+  girara_mode_t last_index = 0;
+
+  for (last_mode = session->modes.identifiers; last_mode->next != NULL; last_mode = last_mode->next)
+    if (last_mode->index > last_index)
+      last_index = last_mode->index;
+
+  /* create new mode identifier */
+  girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);
+  mode->index = last_index + 1;
+  mode->name = g_strdup(name);
+  mode->next = NULL;
+
+  if (last_mode != NULL) {
+    last_mode->next = mode;
+  } else {
+    session->modes.identifiers = mode;
+  }
+
+  return mode->index;
 }
 
 girara_mode_t
@@ -1054,7 +1085,7 @@ girara_mode_get(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, 0);
 
-  return session->global.current_mode;
+  return session->modes.current_mode;
 }
 
 char*
