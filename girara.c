@@ -1061,9 +1061,11 @@ girara_mode_add(girara_session_t* session, const char* name)
   girara_mode_string_t *last_mode = NULL;
   girara_mode_t last_index = 0;
 
-  for (last_mode = session->modes.identifiers; last_mode->next != NULL; last_mode = last_mode->next)
-    if (last_mode->index > last_index)
+  for (last_mode = session->modes.identifiers; last_mode && last_mode->next != NULL; last_mode = last_mode->next) {
+    if (last_mode->index > last_index) {
       last_index = last_mode->index;
+    }
+  }
 
   /* create new mode identifier */
   girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);
