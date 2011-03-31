@@ -9,7 +9,11 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <unistd.h>
+#include <fcntl.h>
+
 #include "girara-utils.h"
+
+#define BLOCK_SIZE 64
 
 gchar*
 girara_fix_path(const gchar* path)
@@ -87,6 +91,118 @@ girara_get_xdg_path(girara_xdg_path_t path)
     case XDG_CONFIG:
       return g_strdup(g_get_user_config_dir());
   }
+
+  return NULL;
+}
+
+FILE*
+girara_file_open(const char* path, char* mode)
+{
+  char* fixed_path = girara_fix_path(path);
+
+  if (fixed_path == NULL) {
+    return NULL;
+  }
+
+  FILE* fp;
+  if ((fp = fopen(fixed_path, mode)) == NULL) {
+    g_free(fixed_path);
+    return NULL;
+  }
+
+  g_free(fixed_path);
+
+  return fp;
+
+  /* TODO */
+  /*FILE* fp;*/
+  /*struct stat lstat;*/
+  /*struct stat fstat;*/
+  /*int fd;*/
+  /*char* mode = "rb+";*/
+
+  /*if (lstat(path, &lstat) == -1) {*/
+    /*if (errno != ENOENT) {*/
+      /*return NULL;*/
+    /*}*/
+
+    /*if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR, 0600)) == -1) {*/
+      /*return NULL;*/
+    /*}*/
+
+    /*mode = "wb";*/
+  /*} else {*/
+    /*if ((fd = open(path, O_RDONLY)) == -1) {*/
+      /*return NULL;*/
+    /*}*/
+
+    /*if (fstat(fd, &fstat) == -1) {*/
+      /*if (lstat.st_mode != fstat.st_mode ||*/
+          /*lstat.st_ino  != fstat.st_ino ||*/
+          /*lstat.st_dev  != fstat.st_dev) {*/
+        /*close(fd);*/
+        /*return NULL;*/
+      /*}*/
+    /*}*/
+
+    /*ftruncate(fd, 0);*/
+  /*}*/
+
+  /*if ((fp = fdopen(fd, mode)) == NULL) {*/
+    /*close(fd);*/
+    /*unlink(path);*/
+    /*return NULL;*/
+  /*}*/
+
+  /*return fp;*/
+}
+
+char*
+girara_file_read_line(FILE* file)
+{
+  unsigned int bc = BLOCK_SIZE;
+  unsigned int i  = 0;
+  char* buffer    = malloc(sizeof(char) * bc);
+
+  if (!buffer) {
+    goto error_ret;
+  }
+
+  char c;
+  while ((c = fgetc(file)) != EOF && c != '\n') {
+    buffer[i++] = c;
+
+    if (i == bc) {
+      bc += BLOCK_SIZE;
+      char* tmp = realloc(buffer, sizeof(char) * bc);
+
+      if (!tmp) {
+        goto error_free;
+      }
+
+      buffer = tmp;
+    }
+  }
+
+  if (i == 0) {
+    goto error_free;
+  }
+
+  char* tmp = realloc(buffer, sizeof(char) * (bc + 1));
+  if (!tmp) {
+    goto error_free;
+  }
+
+  buffer = tmp;
+  buffer[i] = '\0';
+
+  return buffer;
+
+error_free:
+
+  free(buffer);
+
+error_ret:
 
   return NULL;
 }

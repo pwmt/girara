@@ -40,4 +40,21 @@ gchar* girara_get_xdg_path(girara_xdg_path_t path);
  */
 gchar* girara_fix_path(const gchar* path);
 
+/**
+ * Open a file in a safe way
+ *
+ * @param path Path of the file
+ * @param mode Mode that the file should be opened
+ * @return NULL if an error occured
+ */
+FILE* girara_file_open(const char* path, char* mode);
+
+/**
+ * Reads a line from the file. Returned string has to be freed.
+ *
+ * @param file The file stream
+ * @return Read line or NULL if an error occured
+ */
+char* girara_file_read_line(FILE* file);
+
 #endif

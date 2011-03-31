@@ -728,6 +728,13 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  */
 char* girara_buffer_get(girara_session_t* session);
 
+/**
+ * Parses and evaluates a configuration file
+ *
+ * @param path Path to the configuration file
+ */
+void girara_config_parse(const char* path);
+
 #include "girara-utils.h"
 #include "girara-datastructures.h"
 

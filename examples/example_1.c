@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
   girara_statusbar_item_t* item = girara_statusbar_item_add(session, TRUE, TRUE, TRUE, NULL);
   girara_statusbar_item_set_text(session, item, "girara-left");
 
+  girara_config_parse("~/.config/girara/config");
+
   int* x = girara_setting_get(session, "window-width");
   if(x) {
     printf("%d\n", *x);
