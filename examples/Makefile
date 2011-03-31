@@ -27,4 +27,4 @@ debug: options ${SOURCE:.c=-debug}
 ${OBJECTS}:  ../config.mk
 
 clean:
-	@rm -rf ${OBJECTS}
+	@rm -rf ${OBJECTS} example_1 example_1-debug
