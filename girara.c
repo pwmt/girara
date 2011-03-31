@@ -607,6 +607,7 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   special_command->function   = function;
   special_command->always     = always;
   special_command->argument   = argument;
+  special_command->next       = NULL;
 
   if (last_scommand) {
     last_scommand->next = special_command;
