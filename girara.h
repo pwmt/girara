@@ -247,6 +247,16 @@ typedef struct girara_mouse_event_s
 } girara_mouse_event_t;
 
 /**
+ * Config handle
+ */
+typedef struct girara_config_handle_s
+{
+  char* identifier;
+  girara_command_function_t handle;
+  struct girara_config_handle_s* next;
+} girara_config_handle_t;
+
+/**
  * Structure of a girara session
  */
 struct girara_session_s
@@ -333,6 +343,11 @@ struct girara_session_s
     int n; /**< Numeric buffer */
     GString *command; /**< Command in buffer */
   } buffer;
+
+  struct
+  {
+    girara_config_handle_t* handles;
+  } config;
 };
 
 /**
@@ -731,9 +746,20 @@ char* girara_buffer_get(girara_session_t* session);
 /**
  * Parses and evaluates a configuration file
  *
+ * @param session The used girara session
  * @param path Path to the configuration file
  */
-void girara_config_parse(const char* path);
+void girara_config_parse(girara_session_t* session, const char* path);
+
+/**
+ * Adds an additional config handler
+ *
+ * @param session The girara session
+ * @param identifier Identifier of the handle
+ * @param handle Handle
+ * @return true if no error occured, otherwise false
+ */
+bool girara_config_handle_add(girara_session_t* session, const char* identifier, girara_command_function_t handle);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"

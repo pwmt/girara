@@ -3,13 +3,15 @@
 #define _BSD_SOURCE
 #define _XOPEN_SOURCE 500
 
+#include <ctype.h>
+#include <fcntl.h>
 #include <limits.h>
+#include <pwd.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#include <pwd.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 #include "girara-utils.h"
 
@@ -205,4 +207,32 @@ error_free:
 error_ret:
 
   return NULL;
+}
+
+void
+girara_clean_line(char* line)
+{
+  if (line == NULL) {
+    return;
+  }
+
+  unsigned int i = 0;
+  unsigned int j = 0;
+  bool ws_mode   = true;
+
+  for(i = 0; i < strlen(line); i++) {
+    if (isspace(line[i]) != 0) {
+      if (ws_mode) {
+        continue;
+      }
+
+      line[j++] = ' ';
+      ws_mode = true;
+    } else {
+      line[j++] = line[i];
+      ws_mode = false;
+    }
+  }
+
+  line[j] = '\0';
 }

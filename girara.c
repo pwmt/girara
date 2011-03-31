@@ -14,26 +14,25 @@ girara_session_create()
   girara_session_t* session = g_slice_new(girara_session_t);
 
   /* init values */
-  session->gtk.window            = NULL;
-  session->gtk.box               = NULL;
-  session->gtk.view              = NULL;
-  session->gtk.viewport          = NULL;
-  session->gtk.statusbar         = NULL;
-  session->gtk.statusbar_entries = NULL;
-  session->gtk.inputbar          = NULL;
-  session->gtk.embed             = 0;
+  session->gtk.window                  = NULL;
+  session->gtk.box                     = NULL;
+  session->gtk.view                    = NULL;
+  session->gtk.viewport                = NULL;
+  session->gtk.statusbar               = NULL;
+  session->gtk.statusbar_entries       = NULL;
+  session->gtk.inputbar                = NULL;
 
-  session->style.font            = NULL;
+  session->gtk.embed                   = 0;
 
+  session->style.font                  = NULL;
   session->bindings.mouse_events       = NULL;
   session->bindings.commands           = NULL;
   session->bindings.special_commands   = NULL;
   session->bindings.shortcuts          = NULL;
   session->bindings.inputbar_shortcuts = NULL;
-
   session->elements.statusbar_items    = NULL;
 
-  session->settings = NULL;
+  session->settings                    = NULL;
 
   session->signals.view_key_pressed     = 0;
   session->signals.inputbar_key_pressed = 0;
@@ -44,11 +43,13 @@ girara_session_create()
   session->buffer.n       = 0;
   session->buffer.command = NULL;
 
-  session->global.buffer             = NULL;
+  session->global.buffer  = NULL;
 
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   session->modes.normal       = normal_mode;
   session->modes.current_mode = normal_mode;
+
+  session->config.handles     = NULL;
 
   /* default values */
   int window_width       = 800;
@@ -416,6 +417,16 @@ girara_session_destroy(girara_session_t* session)
     g_slice_free(girara_statusbar_item_t, item);
 
     item = tmp;
+  }
+
+  /* clean up config handles */
+  girara_config_handle_t* handle = session->config.handles;
+  while (handle) {
+    girara_config_handle_t* tmp = handle->next;
+    free(handle->identifier);
+    g_slice_free(girara_config_handle_t, handle);
+
+    handle = tmp;
   }
 
   /* clean up buffer */

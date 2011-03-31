@@ -57,4 +57,11 @@ FILE* girara_file_open(const char* path, char* mode);
  */
 char* girara_file_read_line(FILE* file);
 
+/**
+ * Trims and cleans a line from multiple whitespaces
+ *
+ * @param line
+ */
+void girara_clean_line(char* line);
+
 #endif
