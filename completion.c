@@ -505,7 +505,8 @@ girara_cc_set(girara_session_t* session, char* input)
 
   girara_setting_t* setting = session->settings;
   while (setting && setting->next) {
-    if ((input_length <= strlen(setting->name)) && !strncmp(input, setting->name, input_length)) {
+    if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
+        !strncmp(input, setting->name, input_length)) {
       girara_completion_group_add_element(group, setting->name, setting->description);
     }
 
