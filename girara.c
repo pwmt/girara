@@ -103,6 +103,10 @@ girara_session_create()
   girara_inputbar_command_add(session, "quit", "q", girara_cmd_quit, NULL,          "Quit the program");
   girara_inputbar_command_add(session, "set",  "s", girara_cmd_set,  girara_cc_set, "Set an option");
 
+  /* default config handle */
+  girara_config_handle_add(session, "map", girara_cmd_map);
+  girara_config_handle_add(session, "set", girara_cmd_set);
+
   return session;
 }
 
