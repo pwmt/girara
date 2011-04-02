@@ -243,16 +243,16 @@ _girara_debug(const char* function, int line, girara_debug_level_t level, const 
   switch (level)
   {
     case GIRARA_WARNING:
-      fprintf(stderr, "[ warning ] ");
+      fprintf(stderr, "warning: ");
       break;
     case GIRARA_ERROR:
-      fprintf(stderr, "[ error ] ");
+      fprintf(stderr, "error: ");
       break;
     case GIRARA_INFO:
-      fprintf(stderr, "[ info ] ");
+      fprintf(stderr, "info: ");
       break;
     case GIRARA_DEBUG:
-      fprintf(stderr, "[ debug ] (%s:%d) ", function, line);
+      fprintf(stderr, "debug: (%s:%d) ", function, line);
     default:
       return;
   }
