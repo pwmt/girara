@@ -236,3 +236,31 @@ girara_clean_line(char* line)
 
   line[j] = '\0';
 }
+
+void
+_girara_debug(const char* function, int line, girara_debug_level_t level, const char* format, ...)
+{
+  switch (level)
+  {
+    case GIRARA_WARNING:
+      fprintf(stderr, "[ warning ] ");
+      break;
+    case GIRARA_ERROR:
+      fprintf(stderr, "[ error ] ");
+      break;
+    case GIRARA_INFO:
+      fprintf(stderr, "[ info ] ");
+      break;
+    case GIRARA_DEBUG:
+      fprintf(stderr, "[ debug ] (%s:%d) ", function, line);
+    default:
+      return;
+  }
+
+  va_list ap;
+  va_start(ap, format);
+  fprintf(stderr, format, ap);
+  va_end(ap);
+
+  fprintf(stderr, "\n");
+}

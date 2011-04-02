@@ -64,4 +64,31 @@ char* girara_file_read_line(FILE* file);
  */
 void girara_clean_line(char* line);
 
+/**
+ * Debug levels
+ */
+typedef enum girara_debug_level_e
+{
+  GIRARA_INFO, /**> Information debug output */
+  GIRARA_WARNING, /**> Warning level */
+  GIRARA_DEBUG, /**> Debug messages */
+  GIRARA_ERROR /**> Error */
+} girara_debug_level_t;
+
+/**
+ * Prints a debug message
+ *
+ * @param function Name of the function
+ * @param line Line number
+ * @param level Debug level
+ * @param format Debug message
+ * @param ... Additional parameters
+ */
+#define girara_debug(format, ...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_DEBUG,   format, __VA_ARGS__)
+#define girara_info(format, ...)    _girara_debug(__FUNCTION__, __LINE__, GIRARA_INFO,    format, __VA_ARGS__)
+#define girara_warning(format, ...) _girara_debug(__FUNCTION__, __LINE__, GIRARA_WARNING, format, __VA_ARGS__)
+#define girara_error(format, ...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_ERROR,   format, __VA_ARGS__)
+
+void _girara_debug(const char* function, int line, girara_debug_level_t level, const char* format, ...);
+
 #endif

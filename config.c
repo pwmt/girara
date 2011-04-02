@@ -50,12 +50,13 @@ girara_config_parse(girara_session_t* session, const char* path)
   FILE* file = girara_file_open(path, "r+");
 
   if (file == NULL) {
-    fprintf(stderr, "error: could not open config file (%s)\n", path);
+    girara_error("Could not open configuration file '%s'", path);
     return;
   }
 
   /* read lines */
   char* line = NULL;
+  unsigned int line_number = 1;
   while ((line = girara_file_read_line(file)) != NULL) {
     /* skip empty lines and comments */
     if (strlen(line) == 0 || line[0] == COMMENT_PREFIX) {
@@ -81,8 +82,10 @@ girara_config_parse(girara_session_t* session, const char* path)
     }
 
     if (handle == NULL) {
-      fprintf(stderr, "config: unknown line: %s\n", line);
+      girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line, path, tokens[0]);
     }
+
+    line_number++;
 
     g_strfreev(tokens);
     free(line);
