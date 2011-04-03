@@ -259,7 +259,7 @@ _girara_debug(const char* function, int line, girara_debug_level_t level, const 
 
   va_list ap;
   va_start(ap, format);
-  fprintf(stderr, format, ap);
+  vfprintf(stderr, format, ap);
   va_end(ap);
 
   fprintf(stderr, "\n");
