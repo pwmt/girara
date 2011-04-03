@@ -82,7 +82,7 @@ girara_config_parse(girara_session_t* session, const char* path)
     }
 
     if (handle == NULL) {
-      girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line, path, tokens[0]);
+      girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, tokens[0]);
     }
 
     line_number++;
