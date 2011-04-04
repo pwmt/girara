@@ -63,10 +63,14 @@ girara_get_home_directory(const gchar* user)
   // XXX: The following code is very unportable.
   struct passwd pwd;
   struct passwd* result;
+#ifdef _SC_GETPW_R_SIZE_MAX
   int bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
   if (bufsize < 0) {
     bufsize = 4096;
   }
+#else
+  int bufsize = 4096;
+#endif
 
   gchar* buffer = g_malloc0(sizeof(gchar) * bufsize);
   if (!buffer) {

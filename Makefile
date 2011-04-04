@@ -8,7 +8,7 @@ DOBJECTS = ${SOURCE:.c=.do}
 include config.mk
 
 all: options ${PROJECT}
-	@make -C examples
+	@${MAKE} -C examples
 
 options:
 	@echo ${PROJECT} build options:
@@ -38,8 +38,8 @@ clean:
 	@rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
 		lib$(PROJECT).so lib${PROJECT}-debug.so
-	@make -C examples clean
-	@make -C tests clean
+	@${MAKE} -C examples clean
+	@${MAKE} -C tests clean
 
 ${PROJECT}-debug: ${DOBJECTS}
 	@echo AR rcs $@
@@ -48,10 +48,10 @@ ${PROJECT}-debug: ${DOBJECTS}
 	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so $(DOBJECTS)
 
 debug: options ${PROJECT}-debug
-	@make -C examples debug
+	@${MAKE} -C examples debug
 
 test: debug
-	@make -C tests
+	@${MAKE} -C tests
 
 dist: clean
 	@mkdir -p ${PROJECT}-${VERSION}
