@@ -5,6 +5,6 @@ INC_PATH=-I${includedir}
 Name: ${project}
 Description: User interface libray
 Version: ${version}
-URL: http://pwmt.org/projects/girara
+URL: http://pwmt.org/projects/libgirara
 Cflags: ${INC_PATH}
 Libs: -l${project} ${LIB_PATH}
