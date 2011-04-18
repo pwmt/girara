@@ -32,12 +32,12 @@ ${PROJECT}: ${OBJECTS}
 	@echo AR rcs $@
 	@ar rcs lib${PROJECT}.a $(OBJECTS)
 	@echo LD $@
-	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}.so $(OBJECTS)
+	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o lib${PROJECT}.so.${SOVERSION} $(OBJECTS)
 
 clean:
 	@rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
-		lib$(PROJECT).so lib${PROJECT}-debug.so
+		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION}
 	@${MAKE} -C examples clean
 	@${MAKE} -C tests clean
 
@@ -45,7 +45,7 @@ ${PROJECT}-debug: ${DOBJECTS}
 	@echo AR rcs $@
 	@ar rc lib${PROJECT}-debug.a $(DOBJECTS)
 	@echo LD $@
-	@${CC} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so $(DOBJECTS)
+	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so.${SOVERSION} $(OBJECTS)
 
 debug: options ${PROJECT}-debug
 	@${MAKE} -C examples debug
@@ -72,7 +72,7 @@ install: all ${PROJECT}.pc
 	@echo installing library file
 	@mkdir -p ${DESTDIR}${PREFIX}/lib
 	@cp -f lib${PROJECT}.a ${DESTDIR}${PREFIX}/lib
-	@cp -f lib${PROJECT}.so ${DESTDIR}${PREFIX}/lib
+	@cp -f lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib
 	@echo installing header file
 	@mkdir -p ${DESTDIR}${PREFIX}/include
 	@cp -f girara.h ${DESTDIR}${PREFIX}/include
@@ -86,7 +86,7 @@ install: all ${PROJECT}.pc
 uninstall:
 	@echo removing library file
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.a
-	@rm -f ${PREFIX}/lib/lib${PROJECT}.so
+	@rm -f ${PREFIX}/lib/lib${PROJECT}.so.${SOVERSION}
 	@echo removing include file
 	@rm -f ${PREFIX}/include/girara.h
 	@rm -f ${PREFIX}/include/girara-utils.h
@@ -95,4 +95,4 @@ uninstall:
 	@echo removing pkgconfig file
 	@rm -f ${PREFIX}/pkgconfig/${PROJECT}.pc
 
-.PHONY: all options clean debug test dist install uninstall
+.PHONY: all options clean debug test dist install uninstall ${PROJECT} ${PROJECT}-debu

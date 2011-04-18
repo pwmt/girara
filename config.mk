@@ -1,6 +1,9 @@
 # See LICENSE file for license and copyright information
 
 VERSION = 0.0.0
+SOMAJOR = 0
+SOMINOR = 0
+SOVERSION = ${SOMAJOR}.${SOMINOR}
 
 # paths
 PREFIX ?= /usr
