@@ -72,7 +72,7 @@ install: all ${PROJECT}.pc
 	@echo installing library file
 	@mkdir -p ${DESTDIR}${PREFIX}/lib
 	@cp -f lib${PROJECT}.a ${DESTDIR}${PREFIX}/lib
-	@cp -f lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib
+	@install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib
 	@echo installing header file
 	@mkdir -p ${DESTDIR}${PREFIX}/include
 	@cp -f girara.h ${DESTDIR}${PREFIX}/include
