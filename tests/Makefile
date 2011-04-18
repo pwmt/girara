@@ -28,3 +28,5 @@ ${OBJECTS}: ../config.mk
 
 clean:
 	@rm -rf ${OBJECTS} girara_test
+
+.PHONY: all options clean

@@ -28,3 +28,5 @@ ${OBJECTS}:  ../config.mk
 
 clean:
 	@rm -rf ${OBJECTS} example_1 example_1-debug
+
+.PHONY: all options debug clean

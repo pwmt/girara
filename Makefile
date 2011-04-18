@@ -94,3 +94,5 @@ uninstall:
 	@rm -f ${PREFIX}/include/girara-internal.h
 	@echo removing pkgconfig file
 	@rm -f ${PREFIX}/pkgconfig/${PROJECT}.pc
+
+.PHONY: all options clean debug test dist install uninstall
