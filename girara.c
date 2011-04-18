@@ -45,6 +45,7 @@ girara_session_create()
 
   session->global.buffer  = NULL;
 
+  session->modes.identifiers  = NULL;
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   session->modes.normal       = normal_mode;
   session->modes.current_mode = normal_mode;
