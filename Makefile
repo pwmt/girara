@@ -56,7 +56,8 @@ test: debug
 dist: clean
 	@mkdir -p ${PROJECT}-${VERSION}
 	@cp -R LICENSE Makefile config.mk README ${PROJECT}.pc.in \
-			girara.h ${SOURCE} examples/ ${PROJECT}-${VERSION}
+			girara.h girara-settings.h girara-types.h girara-datastructures.h \
+			${SOURCE} examples/ ${PROJECT}-${VERSION}
 	@tar -cf ${PROJECT}-${VERSION}.tar ${PROJECT}-${VERSION}
 	@gzip ${PROJECT}-${VERSION}.tar
 	@rm -rf ${PROJECT}-${VERSION}
@@ -78,7 +79,7 @@ install: all ${PROJECT}.pc
 	@cp -f girara.h ${DESTDIR}${PREFIX}/include
 	@cp -f girara-utils.h ${DESTDIR}${PREFIX}/include
 	@cp -f girara-datastructures.h ${DESTDIR}${PREFIX}/include
-	@cp -f girara-internal.h ${DESTDIR}${PREFIX}/include
+	@cp -f girara-types.h ${DESTDIR}${PREFIX}/include
 	@echo installing pkgconfig file
 	@mkdir -p ${DESTDIR}${PREFIX}/pkgconfig
 	@cp -f ${PROJECT}.pc ${DESTDIR}${PREFIX}/pkgconfig
@@ -91,7 +92,7 @@ uninstall:
 	@rm -f ${PREFIX}/include/girara.h
 	@rm -f ${PREFIX}/include/girara-utils.h
 	@rm -f ${PREFIX}/include/girara-datastructures.h
-	@rm -f ${PREFIX}/include/girara-internal.h
+	@rm -f ${PREFIX}/include/girara-types.h
 	@echo removing pkgconfig file
 	@rm -f ${PREFIX}/pkgconfig/${PROJECT}.pc
 

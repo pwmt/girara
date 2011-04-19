@@ -7,8 +7,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <stdbool.h>
 
-/* forward declaration */
-typedef struct girara_list_s girara_list_t;
+#include "girara-types.h"
 
 /**
  * This structure defines the possible argument identifiers
