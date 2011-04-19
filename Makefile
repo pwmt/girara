@@ -95,4 +95,4 @@ uninstall:
 	@echo removing pkgconfig file
 	@rm -f ${PREFIX}/pkgconfig/${PROJECT}.pc
 
-.PHONY: all options clean debug test dist install uninstall ${PROJECT} ${PROJECT}-debu
+.PHONY: all options clean debug test dist install uninstall ${PROJECT} ${PROJECT}-debug
