@@ -16,17 +16,21 @@ options:
 
 %: %.c
 	@echo CC $<
-	@${CC} ${CFLAGS} -o $@ $< ../libgirara.a ${LIBS}
+	@mkdir -p .depend
+	@${CC} ${CFLAGS} -o $@ $< ../libgirara.a ${LIBS} -MMD -MF .depend/$@.dep
 
 %-debug: %.c
 	@echo CC $<
-	@${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-debug.a ${LIBS}
+	@mkdir -p .depend
+	@${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-debug.a ${LIBS} -MMD -MF .depend/$@.dep
 
 debug: options ${SOURCE:.c=-debug}
 
 ${OBJECTS}:  ../config.mk
 
 clean:
-	@rm -rf ${OBJECTS} example_1 example_1-debug
+	@rm -rf ${OBJECTS} example_1 example_1-debug .depend
 
 .PHONY: all options debug clean
+
+-include $(wildcard .depend/*.dep)

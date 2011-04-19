@@ -19,11 +19,13 @@ options:
 
 %.o: %.c
 	@echo CC $<
-	@${CC} -c ${CFLAGS} -o $@ $<
+	@mkdir -p .depend
+	@${CC} -c ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 %.do: %.c
 	@echo CC $<
-	@${CC} -c ${CFLAGS} ${DFLAGS} -o $@ $<
+	@mkdir -p .depend
+	@${CC} -c ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 ${OBJECTS}:  girara.c config.mk
 ${DOBJECTS}: girara.c config.mk
@@ -37,7 +39,7 @@ ${PROJECT}: ${OBJECTS}
 clean:
 	@rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
-		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION}
+		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend
 	@${MAKE} -C examples clean
 	@${MAKE} -C tests clean
 
@@ -97,3 +99,5 @@ uninstall:
 	@rm -f ${PREFIX}/pkgconfig/${PROJECT}.pc
 
 .PHONY: all options clean debug test dist install uninstall ${PROJECT} ${PROJECT}-debug
+
+-include $(wildcard .depend/*.dep)

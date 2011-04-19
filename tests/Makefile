@@ -18,7 +18,8 @@ options:
 
 %.o: %.c
 	@echo CC $<
-	@${CC} -c -I.. ${CFLAGS} ${DFLAGS} -o $@ $<
+	@mkdir -p .depend
+	@${CC} -c -I.. ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 girara_test: ${OBJECTS} ../libgirara-debug.a
 	@echo LD $@
@@ -27,6 +28,8 @@ girara_test: ${OBJECTS} ../libgirara-debug.a
 ${OBJECTS}: ../config.mk
 
 clean:
-	@rm -rf ${OBJECTS} girara_test
+	@rm -rf ${OBJECTS} girara_test .depend
 
 .PHONY: all options clean
+
+-include $(wildcard .depend/*.dep)
