@@ -63,18 +63,28 @@ girara_config_parse(girara_session_t* session, const char* path)
       continue;
     }
 
-    /* trim and clean line from multiple white spaces */
-    girara_clean_line(line);
+    gchar** argv = NULL;
+    gint    argc = 0;
 
-    /* split line into tokens */
-    gchar **tokens = g_strsplit(line, " ", -1);
-    int n_tokens   = g_strv_length(tokens);
+    girara_list_t* argument_list = girara_list_new();
+    if (argument_list == NULL) {
+      return;
+    }
+
+    if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
+      for(int i = 1; i < argc; i++) {
+        girara_list_append(argument_list, (void*) g_strdup(argv[i]));
+      }
+    } else {
+      girara_list_free(argument_list);
+      return;
+    }
 
     /* search for handle */
     girara_config_handle_t* handle = session->config.handles;
     while (handle) {
-      if (strcmp(handle->identifier, tokens[0]) == 0) {
-        handle->handle(session, n_tokens - 1, tokens + 1);
+      if (strcmp(handle->identifier, argv[0]) == 0) {
+        handle->handle(session, argument_list);
         break;
       }
 
@@ -82,12 +92,12 @@ girara_config_parse(girara_session_t* session, const char* path)
     }
 
     if (handle == NULL) {
-      girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, tokens[0]);
+      girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);
     }
 
     line_number++;
-
-    g_strfreev(tokens);
+    girara_list_free(argument_list);
+    g_strfreev(argv);
     free(line);
   }
 }

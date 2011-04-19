@@ -7,6 +7,9 @@
 #include <gdk/gdkkeysyms.h>
 #include <stdbool.h>
 
+/* forward declaration */
+typedef struct girara_list_s girara_list_t;
+
 /**
  * This structure defines the possible argument identifiers
  */
@@ -218,7 +221,7 @@ typedef struct girara_special_command_s
  * @param argc Number of arguments
  * @param argv Arguments
  */
-typedef bool (*girara_command_function_t)(girara_session_t* session, int argc, char** argv);
+typedef bool (*girara_command_function_t)(girara_session_t* session, girara_list_t* argument_list);
 
 /**
  * Structure of a command
@@ -607,34 +610,31 @@ bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument, unsi
  * Default command to map sortcuts
  *
  * @param session The used girara session
- * @param argc Number of arguments
- * @param argv Arguments
+ * @param argument_list List of passed arguments
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_cmd_map(girara_session_t* session, int argc, char** argv);
+bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_list);
 
 /**
  * Default command to quit the application
  *
  * @param session The used girara session
- * @param argc Number of arguments
- * @param argv Arguments
+ * @param argument_list List of passed arguments
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_cmd_quit(girara_session_t* session, int argc, char** argv);
+bool girara_cmd_quit(girara_session_t* session, girara_list_t* argument_list);
 
 /**
  * Default command to set the value of settings
  *
  * @param session The used girara session
- * @param argc Number of arguments
- * @param argv Arguments
+ * @param argument_list List of passed arguments
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_cmd_set(girara_session_t* session, int argc, char** argv);
+bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list);
 
 /**
  * Default callback for key press events in the view area

@@ -5,9 +5,9 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "girara.h"
 
 typedef struct girara_tree_node_s girara_tree_node_t;
-typedef struct girara_list_s girara_list_t;
 typedef struct girara_list_iterator_s girara_list_iterator_t;
 
 typedef void (*girara_free_function_t)(void*);

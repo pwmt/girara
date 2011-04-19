@@ -811,14 +811,14 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), u
 
 /* default commands implementation */
 bool
-girara_cmd_map(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
+girara_cmd_map(girara_session_t* UNUSED(session), girara_list_t* UNUSED(argument_list))
 {
   // TODO: Implement
   return true;
 }
 
 bool
-girara_cmd_quit(girara_session_t* session, int UNUSED(argc), char** UNUSED(argv))
+girara_cmd_quit(girara_session_t* session, girara_list_t* UNUSED(argument_list))
 {
   girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg, 0);
@@ -829,7 +829,7 @@ girara_cmd_quit(girara_session_t* session, int UNUSED(argc), char** UNUSED(argv)
 }
 
 bool
-girara_cmd_set(girara_session_t* UNUSED(session), int UNUSED(argc), char** UNUSED(argv))
+girara_cmd_set(girara_session_t* UNUSED(session), girara_list_t* UNUSED(argument_list))
 {
   // TODO: Implement
   return true;
@@ -956,20 +956,19 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     return FALSE;
   }
 
-  gchar **tokens = g_strsplit(input, " ", -1);
-  if (!tokens) {
+  if (strlen(input) == 0) {
+    return FALSE;
+  }
+
+  gchar** argv = NULL;
+  gint    argc = 0;
+
+  if (g_shell_parse_argv(input, &argc, &argv, NULL) == FALSE) {
     g_free(input);
     return FALSE;
   }
 
-  gchar *cmd = tokens[0];
-  int length = g_strv_length(tokens);
-
-  if (length < 1) {
-    g_free(input);
-    g_strfreev(tokens);
-    return FALSE;
-  }
+  gchar *cmd = argv[0];
 
   /* special commands */
   char *identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
@@ -981,14 +980,14 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     if (special_command->identifier == identifier) {
       if (special_command->always == 1) {
         g_free(input);
-        g_strfreev(tokens);
+        g_strfreev(argv);
         return FALSE;
       }
 
       special_command->function(session, input, &(special_command->argument));
 
       g_free(input);
-      g_strfreev(tokens);
+      g_strfreev(argv);
 
       girara_isc_abort(session, NULL, 0);
 
@@ -1004,9 +1003,22 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     if ((g_strcmp0(cmd, command->command) == 0) ||
        (g_strcmp0(cmd, command->abbr)    == 0))
     {
-      command->function(session, length - 1, tokens + 1);
+      girara_list_t* argument_list = girara_list_new();
+      if (argument_list == NULL) {
+        g_free(input);
+        g_strfreev(argv);
+        return FALSE;
+      }
+
+      for(int i = 1; i < argc; i++) {
+        girara_list_append(argument_list, (void*) g_strdup(argv[i]));
+      }
+
+      command->function(session, argument_list);
+
+      girara_list_free(argument_list);
       g_free(input);
-      g_strfreev(tokens);
+      g_strfreev(argv);
 
       girara_isc_abort(session, NULL, 0);
 
