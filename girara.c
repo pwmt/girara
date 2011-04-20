@@ -829,9 +829,73 @@ girara_cmd_quit(girara_session_t* session, girara_list_t* UNUSED(argument_list))
 }
 
 bool
-girara_cmd_set(girara_session_t* UNUSED(session), girara_list_t* UNUSED(argument_list))
+girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
 {
-  // TODO: Implement
+  int number_of_arguments = girara_list_size(argument_list);
+
+  if (number_of_arguments <= 0) {
+    return false;
+  }
+
+  char* name  = (char*) girara_list_nth(argument_list, 0);
+  char* value = (char*) girara_list_nth(argument_list, 1);
+
+  /* search for existing setting */
+  girara_setting_t* setting = session->settings;
+  bool setting_exists       = false;
+
+  while (setting) {
+    if (!g_strcmp0(name, setting->name)) {
+      setting_exists = true;
+      break;
+    }
+
+    setting = setting->next;
+  }
+
+  if (setting_exists == false) {
+    girara_warning("Unknown option: %s", name);
+    return false;
+  }
+
+  /* update value */
+  switch (setting->type) {
+    case BOOLEAN:
+      if (value) {
+        if (!g_strcmp0(value, "false")) {
+          setting->value.b = false;
+        } else if (!g_strcmp0(value, "true")) {
+          setting->value.b = true;
+        } else {
+          girara_warning("Unknown value for option: %s", name);
+        }
+      } else {
+        setting->value.b = !setting->value.b;
+      }
+      break;
+    case FLOAT:
+      if (value) {
+        setting->value.f = strtof(value, NULL);
+      } else {
+        girara_warning("No value defined for option: %s", name);
+      }
+      break;
+    case INT:
+      if (value) {
+        setting->value.i = atoi(value);
+      } else {
+        girara_warning("No value defined for option: %s", name);
+      }
+      break;
+    case STRING:
+      if (value) {
+        setting->value.s = g_strdup(value);
+      } else {
+        girara_warning("No value defined for option: %s", name);
+      }
+      break;
+  }
+
   return true;
 }
 
