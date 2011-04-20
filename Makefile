@@ -47,7 +47,7 @@ ${PROJECT}-debug: ${DOBJECTS}
 	@echo AR rcs $@
 	@ar rc lib${PROJECT}-debug.a $(DOBJECTS)
 	@echo LD $@
-	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so.${SOVERSION} $(OBJECTS)
+	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so.${SOVERSION} $(DOBJECTS)
 
 debug: options ${PROJECT}-debug
 	@${MAKE} -C examples debug
