@@ -838,7 +838,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
   }
 
   char* name  = (char*) girara_list_nth(argument_list, 0);
-  char* value = (char*) girara_list_nth(argument_list, 1);
+  char* value = (number_of_arguments >= 2) ? ((char*) girara_list_nth(argument_list, 1)) : NULL;
 
   /* search for existing setting */
   girara_setting_t* setting = session->settings;
