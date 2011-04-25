@@ -190,8 +190,7 @@ girara_file_read_line(FILE* file)
     }
   }
 
-  if (i == 0) {
-    fprintf(stderr, "empty line\n");
+  if (i == 0 && c == EOF) {
     goto error_free;
   }
 
