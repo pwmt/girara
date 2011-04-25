@@ -149,15 +149,15 @@ girara_session_init(girara_session_t* session)
 
   bool* tmp_bool_value = girara_setting_get(session, "show-scrollbars");
   if (tmp_bool_value) {
-    if (!*tmp_bool_value) {
+    if (*tmp_bool_value == true) {
       gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
           GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    } else {
+      gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+          GTK_POLICY_NEVER, GTK_POLICY_NEVER);
     }
 
     free(tmp_bool_value);
-  } else {
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
   }
 
   /* viewport */
