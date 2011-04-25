@@ -191,10 +191,11 @@ girara_file_read_line(FILE* file)
   }
 
   if (i == 0) {
+    fprintf(stderr, "empty line\n");
     goto error_free;
   }
 
-  char* tmp = realloc(buffer, sizeof(char) * (bc + 1));
+  char* tmp = realloc(buffer, sizeof(char) * (i + 1));
   if (!tmp) {
     goto error_free;
   }
