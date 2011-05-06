@@ -46,9 +46,9 @@ typedef int girara_mode_t;
 
 typedef struct girara_mode_string_s
 {
-    girara_mode_t index;
-    char* name;
-    struct girara_mode_string_s* next;
+	girara_mode_t index; /**> Index */
+	char* name; /**> Name of the mode object */
+	struct girara_mode_string_s* next; /**> Next item */
 } girara_mode_string_t;
 
 /**
@@ -126,6 +126,16 @@ typedef struct
  * first time.
  */
 typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, unsigned int);
+
+/**
+ * Shortcut mapping
+ */
+typedef struct girara_shortcut_mapping_s
+{
+	char* identifier; /**> Identifier string */
+	girara_shortcut_function_t function; /** Shortcut function */
+	struct girara_shortcut_mapping_s* next; /**> Next entry */
+} girara_shortcut_mapping_t;
 
 /**
  * Structure of a completion element
@@ -349,6 +359,7 @@ struct girara_session_s
   struct
   {
     girara_config_handle_t* handles;
+		girara_shortcut_mapping_t* shortcut_mappings;
   } config;
 };
 
@@ -724,7 +735,7 @@ girara_mode_t girara_mode_add(girara_session_t* session, const char* name);
  * @param session The used girara session
  * @param mode The new mode
  */
-void girara_mode_set(girara_session_t* session, girara_mode_t mode); 
+void girara_mode_set(girara_session_t* session, girara_mode_t mode);
 
 /**
  * Returns the current mode
@@ -758,7 +769,20 @@ void girara_config_parse(girara_session_t* session, const char* path);
  * @param handle Handle
  * @return true if no error occured, otherwise false
  */
-bool girara_config_handle_add(girara_session_t* session, const char* identifier, girara_command_function_t handle);
+bool girara_config_handle_add(girara_session_t* session, const char* identifier,
+		girara_command_function_t handle);
+
+/**
+ * Creates a mapping between a shortcut function and an identifier and is used
+ * to evaluate the mapping command
+ *
+ * @param session The girara session
+ * @param identifier Optional identifier
+ * @param function The function that should be mapped
+ * @return
+ */
+bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
+		girara_shortcut_function_t function);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"

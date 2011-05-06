@@ -52,7 +52,8 @@ girara_session_create()
   session->modes.normal       = normal_mode;
   session->modes.current_mode = normal_mode;
 
-  session->config.handles     = NULL;
+  session->config.handles           = NULL;
+  session->config.shortcut_mappings = NULL;
 
   /* default values */
   int window_width       = 800;
@@ -109,6 +110,10 @@ girara_session_create()
   /* default config handle */
   girara_config_handle_add(session, "map", girara_cmd_map);
   girara_config_handle_add(session, "set", girara_cmd_set);
+
+  /* default shortcut mappings */
+  girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
+  girara_shortcut_mapping_add(session, "focus_inputbar", girara_sc_focus_inputbar);
 
   return session;
 }
@@ -434,6 +439,16 @@ girara_session_destroy(girara_session_t* session)
     g_slice_free(girara_config_handle_t, handle);
 
     handle = tmp;
+  }
+
+  /* clean up shortcut mappings */
+  girara_shortcut_mapping_t* mapping = session->config.shortcut_mappings;
+  while (mapping) {
+    girara_shortcut_mapping_t* tmp = mapping->next;
+    free(mapping->identifier);
+    g_slice_free(girara_shortcut_mapping_t, mapping);
+
+    mapping = tmp;
   }
 
   /* clean up buffer */
@@ -855,9 +870,11 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     return false;
   }
 
-  int shortcut_mask            = 0;
-  int shortcut_key             = 0;
-  girara_mode_t shortcut_mode  = session->modes.normal;
+  int shortcut_mask                            = 0;
+  int shortcut_key                             = 0;
+  girara_mode_t shortcut_mode                  = session->modes.normal;
+  char* shortcut_argument                      = NULL;
+  girara_shortcut_function_t shortcut_function = NULL;
 
   int current_command = 0;
   char* tmp      = girara_list_nth(argument_list, current_command);
@@ -962,6 +979,38 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     girara_warning("Invalid shortcut: %s", tmp);
     return false;
   }
+
+  /* Check for passed shortcut command */
+  if (++current_command < number_of_arguments) {
+    tmp = girara_list_nth(argument_list, current_command);
+
+    girara_shortcut_mapping_t* mapping = session->config.shortcut_mappings;
+    bool found_mapping = false;
+    while (mapping) {
+      if (!g_strcmp0(tmp, mapping->identifier)) {
+        shortcut_function = mapping->function;
+        found_mapping = true;
+        break;
+      }
+
+      mapping = mapping->next;
+    }
+
+    if (found_mapping == false) {
+      girara_warning("Not a valid shortcut function: %s", tmp);
+      return false;
+    }
+  } else {
+    return false;
+  }
+
+  /* Check for passed argument */
+  if (++current_command < number_of_arguments) {
+    shortcut_argument = girara_list_nth(argument_list, current_command);
+  }
+
+  girara_shortcut_add(session, shortcut_mask, shortcut_key, NULL,
+      shortcut_function, shortcut_mode, 0, shortcut_argument);
 
   return true;
 }
@@ -1330,6 +1379,43 @@ girara_mode_get(girara_session_t* session)
   g_return_val_if_fail(session != NULL, 0);
 
   return session->modes.current_mode;
+}
+
+bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier, girara_shortcut_function_t function)
+{
+  g_return_val_if_fail(session  != NULL, FALSE);
+
+  if (function == NULL || identifier == NULL) {
+    return false;
+  }
+
+  girara_shortcut_mapping_t* mapping_it   = session->config.shortcut_mappings;
+  girara_shortcut_mapping_t* last_mapping = mapping_it;
+
+  while (mapping_it) {
+    if (strcmp(mapping_it->identifier, identifier) == 0) {
+      mapping_it->function = function;
+      return true;
+    }
+
+    last_mapping = mapping_it;
+    mapping_it = mapping_it->next;
+  }
+
+  /* add new config handle */
+  girara_shortcut_mapping_t* mapping = g_slice_new(girara_shortcut_mapping_t);
+
+  mapping->identifier = g_strdup(identifier);
+  mapping->function   = function;
+  mapping->next       = NULL;
+
+  if (last_mapping) {
+    last_mapping->next = mapping;
+  } else {
+    session->config.shortcut_mappings = mapping;
+  }
+
+  return true;
 }
 
 char*
