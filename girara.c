@@ -8,6 +8,8 @@
 #include "girara.h"
 #include "girara-internal.h"
 
+#define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
+
 girara_session_t*
 girara_session_create()
 {
@@ -811,9 +813,156 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), u
 
 /* default commands implementation */
 bool
-girara_cmd_map(girara_session_t* UNUSED(session), girara_list_t* UNUSED(argument_list))
+girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 {
-  // TODO: Implement
+  typedef struct gdk_key_s
+  {
+    char* identifier;
+    int keyval;
+  } gdk_key_t;
+
+  static const gdk_key_t gdk_keys[] = {
+    {"BackSpace", GDK_BackSpace},
+    {"CapsLock",  GDK_Caps_Lock},
+    {"Down",      GDK_Down},
+    {"Esc",       GDK_Escape},
+    {"F10",       GDK_F10},
+    {"F11",       GDK_F11},
+    {"F12",       GDK_F12},
+    {"F1",        GDK_F1},
+    {"F2",        GDK_F2},
+    {"F3",        GDK_F3},
+    {"F4",        GDK_F4},
+    {"F5",        GDK_F5},
+    {"F6",        GDK_F6},
+    {"F7",        GDK_F7},
+    {"F8",        GDK_F8},
+    {"F9",        GDK_F9},
+    {"Left",      GDK_Left},
+    {"PageDown",  GDK_Page_Down},
+    {"PageUp",    GDK_Page_Up},
+    {"Return",    GDK_Return},
+    {"Right",     GDK_Right},
+    {"Space",     GDK_space},
+    {"Super",     GDK_Super_L},
+    {"Tab",       GDK_Tab},
+    {"Up",        GDK_Up},
+  };
+
+  int number_of_arguments = girara_list_size(argument_list);
+
+  if (number_of_arguments < 2) {
+    return false;
+  }
+
+  int shortcut_mask            = 0;
+  int shortcut_key             = 0;
+  girara_mode_t shortcut_mode  = session->modes.normal;
+
+  int current_command = 0;
+  char* tmp      = girara_list_nth(argument_list, current_command);
+  int tmp_length = strlen(tmp);
+
+  /* Check first argument for mode */
+  bool is_mode = false;
+  if (tmp[0] == '<' && tmp[tmp_length - 1] == '>') {
+    if (tmp_length < 3) {
+      girara_warning("Invalid mode or shortcut: %s", tmp);
+      return false;
+    }
+
+    char* tmp_inner            = g_strndup(tmp + 1, tmp_length - 2);
+    girara_mode_string_t* mode = session->modes.identifiers;
+
+    while (mode) {
+      if (!g_strcmp0(tmp_inner, mode->name)) {
+        shortcut_mode = mode->index;
+        is_mode       = true;
+        break;
+      }
+
+      mode = mode->next;
+    }
+
+    free(tmp_inner);
+  }
+
+  /* If the first argument is a defined mode parse the second argument as the
+   * keyboard binding definition */
+  if (is_mode == true) {
+    tmp = girara_list_nth(argument_list, ++current_command);
+    tmp_length = strlen(tmp);
+  }
+
+  /* Check for multi key shortcut */
+  if (tmp[0] == '<' && tmp[tmp_length - 1] == '>') {
+    tmp        = g_strndup(tmp + 1, tmp_length - 2);
+    tmp_length = strlen(tmp);
+
+    /* Multi key shortcut */
+    if (strchr(tmp, '-') != NULL && tmp_length > 2) {
+      switch (tmp[0]) {
+        case 'S':
+          shortcut_mask = GDK_SHIFT_MASK;
+          break;
+        case 'A':
+          shortcut_mask = GDK_MOD1_MASK;
+          break;
+        case 'C':
+          shortcut_mask = GDK_CONTROL_MASK;
+          break;
+        default:
+          girara_warning("Invalid modifier in %s", tmp);
+          free(tmp);
+          return false;
+      }
+
+      /* Single key */
+      if (tmp_length == 3) {
+        shortcut_key = tmp[2];
+      /* Possible special key */
+      } else {
+        bool found = false;
+        for (unsigned int i = 0; i < LENGTH(gdk_keys); i++) {
+          if (!g_strcmp0(tmp + 2, gdk_keys[i].identifier)) {
+            shortcut_key = gdk_keys[i].keyval;
+            found = true;
+            break;
+          }
+        }
+
+        if (found == false) {
+          girara_warning("Invalid special key value or mode: %s", tmp);
+          free(tmp);
+          return false;
+        }
+      }
+    /* Possible special key */
+    } else {
+      bool found = false;
+      for (unsigned int i = 0; i < LENGTH(gdk_keys); i++) {
+        if (!g_strcmp0(tmp, gdk_keys[i].identifier)) {
+          shortcut_key = gdk_keys[i].keyval;
+          found = true;
+          break;
+        }
+      }
+
+      if (found == false) {
+        girara_warning("Invalid special key value or mode: %s", tmp);
+        free(tmp);
+        return false;
+      }
+    }
+
+    free(tmp);
+  } else if (tmp_length == 1) {
+    shortcut_key = tmp[0];
+  } else {
+    girara_warning("Invalid shortcut: %s", tmp);
+    return false;
+  }
+
   return true;
 }
 
