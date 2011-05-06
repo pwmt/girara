@@ -83,8 +83,8 @@ install: all ${PROJECT}.pc
 	@cp -f girara-datastructures.h ${DESTDIR}${PREFIX}/include
 	@cp -f girara-types.h ${DESTDIR}${PREFIX}/include
 	@echo installing pkgconfig file
-	@mkdir -p ${DESTDIR}${PREFIX}/share/pkgconfig
-	@cp -f ${PROJECT}.pc ${DESTDIR}${PREFIX}/share/pkgconfig
+	@mkdir -p ${DESTDIR}${PREFIX}/lib/pkgconfig
+	@cp -f ${PROJECT}.pc ${DESTDIR}${PREFIX}/lib/pkgconfig
 
 uninstall:
 	@echo removing library file
@@ -96,7 +96,7 @@ uninstall:
 	@rm -f ${PREFIX}/include/girara-datastructures.h
 	@rm -f ${PREFIX}/include/girara-types.h
 	@echo removing pkgconfig file
-	@rm -f ${PREFIX}/share/pkgconfig/${PROJECT}.pc
+	@rm -f ${PREFIX}/lib/pkgconfig/${PROJECT}.pc
 
 .PHONY: all options clean debug test dist install uninstall ${PROJECT} ${PROJECT}-debug
 
