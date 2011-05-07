@@ -1016,8 +1016,6 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     shortcut_argument = girara_list_nth(argument_list, current_command);
   }
 
-  fprintf(stderr, "(shortcut) %d %d %s %d\n", shortcut_mask, shortcut_key, shortcut_buffer_command, shortcut_mode);
-
   girara_shortcut_add(session, shortcut_mask, shortcut_key, shortcut_buffer_command,
       shortcut_function, shortcut_mode, 0, shortcut_argument);
 
