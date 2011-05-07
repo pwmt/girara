@@ -874,6 +874,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   int shortcut_key                             = 0;
   girara_mode_t shortcut_mode                  = session->modes.normal;
   char* shortcut_argument                      = NULL;
+  char* shortcut_buffer_command                = NULL;
   girara_shortcut_function_t shortcut_function = NULL;
 
   int current_command = 0;
@@ -882,12 +883,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
   /* Check first argument for mode */
   bool is_mode = false;
-  if (tmp[0] == '<' && tmp[tmp_length - 1] == '>') {
-    if (tmp_length < 3) {
-      girara_warning("Invalid mode or shortcut: %s", tmp);
-      return false;
-    }
-
+  if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_length - 1] == ']') {
     char* tmp_inner            = g_strndup(tmp + 1, tmp_length - 2);
     girara_mode_string_t* mode = session->modes.identifiers;
 
@@ -902,17 +898,24 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     }
 
     free(tmp_inner);
+
+    if (is_mode == false) {
+      girara_warning("Unregistered mode specified");
+      return false;
+    }
   }
 
-  /* If the first argument is a defined mode parse the second argument as the
-   * keyboard binding definition */
   if (is_mode == true) {
+    if (number_of_arguments < 3) {
+      girara_warning("Invalid number of arguments");
+      return false;
+    }
     tmp = girara_list_nth(argument_list, ++current_command);
     tmp_length = strlen(tmp);
   }
 
   /* Check for multi key shortcut */
-  if (tmp[0] == '<' && tmp[tmp_length - 1] == '>') {
+  if (tmp_length >= 3 && tmp[0] == '<' && tmp[tmp_length - 1] == '>') {
     tmp        = g_strndup(tmp + 1, tmp_length - 2);
     tmp_length = strlen(tmp);
 
@@ -973,11 +976,12 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     }
 
     free(tmp);
+  /* Single key shortcut */
   } else if (tmp_length == 1) {
     shortcut_key = tmp[0];
+  /* Buffer command */
   } else {
-    girara_warning("Invalid shortcut: %s", tmp);
-    return false;
+    shortcut_buffer_command = tmp;
   }
 
   /* Check for passed shortcut command */
@@ -998,6 +1002,9 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
     if (found_mapping == false) {
       girara_warning("Not a valid shortcut function: %s", tmp);
+      if (shortcut_buffer_command) {
+        g_free(shortcut_buffer_command);
+      }
       return false;
     }
   } else {
@@ -1009,8 +1016,14 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     shortcut_argument = girara_list_nth(argument_list, current_command);
   }
 
-  girara_shortcut_add(session, shortcut_mask, shortcut_key, NULL,
+  fprintf(stderr, "(shortcut) %d %d %s %d\n", shortcut_mask, shortcut_key, shortcut_buffer_command, shortcut_mode);
+
+  girara_shortcut_add(session, shortcut_mask, shortcut_key, shortcut_buffer_command,
       shortcut_function, shortcut_mode, 0, shortcut_argument);
+
+  if (shortcut_buffer_command) {
+    g_free(shortcut_buffer_command);
+  }
 
   return true;
 }
@@ -1110,7 +1123,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
        event->keyval == shortcut->key
        && (CLEAN(event->state) == shortcut->mask || (shortcut->key >= 0x21
        && shortcut->key <= 0x7E && CLEAN(event->state) == GDK_SHIFT_MASK))
-       && (session->modes.current_mode & shortcut->mode || shortcut->mode == 0)
+       && (session->modes.current_mode == shortcut->mode || shortcut->mode == 0)
        && shortcut->function
       )
     {
