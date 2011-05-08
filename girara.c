@@ -830,13 +830,13 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), u
 bool
 girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 {
-  typedef struct gdk_key_s
+  typedef struct gdk_keyboard_button_s
   {
     char* identifier;
     int keyval;
-  } gdk_key_t;
+  } gdk_keyboard_button_t;
 
-  static const gdk_key_t gdk_keys[] = {
+  static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
     {"BackSpace", GDK_BackSpace},
     {"CapsLock",  GDK_Caps_Lock},
     {"Down",      GDK_Down},
@@ -864,6 +864,20 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     {"Up",        GDK_Up},
   };
 
+  typedef struct gdk_mouse_button_s
+  {
+    char* identifier;
+    int button;
+  } gdk_mouse_button_t;
+
+  static const gdk_mouse_button_t gdk_mouse_buttons[] = {
+    {"Button1", 1},
+    {"Button2", 2},
+    {"Button3", 3},
+    {"Button4", 4},
+    {"Button5", 5},
+  };
+
   int number_of_arguments = girara_list_size(argument_list);
 
   if (number_of_arguments < 2) {
@@ -872,6 +886,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
   int shortcut_mask                            = 0;
   int shortcut_key                             = 0;
+  int shortcut_mouse_button                    = 0;
   girara_mode_t shortcut_mode                  = session->modes.normal;
   char* shortcut_argument                      = NULL;
   char* shortcut_buffer_command                = NULL;
@@ -943,9 +958,17 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
       /* Possible special key */
       } else {
         bool found = false;
-        for (unsigned int i = 0; i < LENGTH(gdk_keys); i++) {
-          if (!g_strcmp0(tmp + 2, gdk_keys[i].identifier)) {
-            shortcut_key = gdk_keys[i].keyval;
+        for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
+          if (!g_strcmp0(tmp + 2, gdk_keyboard_buttons[i].identifier)) {
+            shortcut_key = gdk_keyboard_buttons[i].keyval;
+            found = true;
+            break;
+          }
+        }
+
+        for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
+          if (!g_strcmp0(tmp + 2, gdk_mouse_buttons[i].identifier)) {
+            shortcut_mouse_button = gdk_mouse_buttons[i].button;
             found = true;
             break;
           }
@@ -960,9 +983,17 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     /* Possible special key */
     } else {
       bool found = false;
-      for (unsigned int i = 0; i < LENGTH(gdk_keys); i++) {
-        if (!g_strcmp0(tmp, gdk_keys[i].identifier)) {
-          shortcut_key = gdk_keys[i].keyval;
+      for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
+        if (!g_strcmp0(tmp, gdk_keyboard_buttons[i].identifier)) {
+          shortcut_key = gdk_keyboard_buttons[i].keyval;
+          found = true;
+          break;
+        }
+      }
+
+      for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
+        if (!g_strcmp0(tmp, gdk_mouse_buttons[i].identifier)) {
+          shortcut_mouse_button = gdk_mouse_buttons[i].button;
           found = true;
           break;
         }
@@ -1016,8 +1047,13 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     shortcut_argument = girara_list_nth(argument_list, current_command);
   }
 
-  girara_shortcut_add(session, shortcut_mask, shortcut_key, shortcut_buffer_command,
-      shortcut_function, shortcut_mode, 0, shortcut_argument);
+  if (shortcut_mouse_button == 0) {
+    girara_shortcut_add(session, shortcut_mask, shortcut_key, shortcut_buffer_command,
+        shortcut_function, shortcut_mode, 0, shortcut_argument);
+  } else {
+    girara_mouse_event_add(session, shortcut_mask, shortcut_mouse_button,
+        shortcut_function, shortcut_mode, 0, shortcut_argument);
+  }
 
   if (shortcut_buffer_command) {
     g_free(shortcut_buffer_command);
