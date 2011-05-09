@@ -912,7 +912,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
       mode = mode->next;
     }
 
-    free(tmp_inner);
+    g_free(tmp_inner);
 
     if (is_mode == false) {
       girara_warning("Unregistered mode specified");
@@ -948,7 +948,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
           break;
         default:
           girara_warning("Invalid modifier in %s", tmp);
-          free(tmp);
+          g_free(tmp);
           return false;
       }
 
@@ -976,7 +976,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
         if (found == false) {
           girara_warning("Invalid special key value or mode: %s", tmp);
-          free(tmp);
+          g_free(tmp);
           return false;
         }
       }
@@ -1001,12 +1001,12 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
       if (found == false) {
         girara_warning("Invalid special key value or mode: %s", tmp);
-        free(tmp);
+        g_free(tmp);
         return false;
       }
     }
 
-    free(tmp);
+    g_free(tmp);
   /* Single key shortcut */
   } else if (tmp_length == 1) {
     shortcut_key = tmp[0];
