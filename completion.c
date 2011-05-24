@@ -62,6 +62,20 @@ girara_completion_add_group(girara_completion_t* completion, girara_completion_g
 }
 
 void
+girara_completion_group_free(girara_completion_group_t* group)
+{
+  if (group == NULL) {
+    return;
+  }
+
+  if (group->value) {
+    g_free(group->value);
+  }
+
+  g_slice_free(girara_completion_group_t, group);
+}
+
+void
 girara_completion_free(girara_completion_t* completion)
 {
   g_return_if_fail(completion != NULL);
@@ -87,11 +101,7 @@ girara_completion_free(girara_completion_t* completion)
 
     /* free group */
     girara_completion_group_t *ng = group->next;
-    if (group->value) {
-      g_free(group->value);
-    }
-    g_slice_free(girara_completion_group_t, group);
-
+    girara_completion_group_free(group);
     group = ng;
   }
 

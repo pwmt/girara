@@ -571,6 +571,13 @@ girara_completion_t* girara_completion_init();
 girara_completion_group_t* girara_completion_group_create(girara_session_t* session, char* name);
 
 /**
+ * Frees a completion group
+ *
+ * @param group The group
+ */
+void girara_completion_group_free(girara_completion_group_t* group);
+
+/**
  * Adds an group to a completion object
  *
  * @param completion The completion object
