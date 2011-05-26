@@ -483,8 +483,8 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
         i--;
       }
 
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar),  i, pos);
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), i);
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar),  i + 1, pos);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), i + 1);
       break;
     case GIRARA_DELETE_LAST_CHAR:
       if ((length - 1) <= 0) {
