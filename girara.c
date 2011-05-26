@@ -915,14 +915,14 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     g_free(tmp_inner);
 
     if (is_mode == false) {
-      girara_warning("Unregistered mode specified");
+      girara_warning("Unregistered mode specified: %s", tmp_inner);
       return false;
     }
   }
 
   if (is_mode == true) {
     if (number_of_arguments < 3) {
-      girara_warning("Invalid number of arguments");
+      girara_warning("Invalid number of arguments passed: %d instead of at least 3", number_of_arguments);
       return false;
     }
     tmp = girara_list_nth(argument_list, ++current_command);
