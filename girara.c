@@ -1157,7 +1157,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
        event->keyval == shortcut->key
        && (CLEAN(event->state) == shortcut->mask || (shortcut->key >= 0x21
        && shortcut->key <= 0x7E && CLEAN(event->state) == GDK_SHIFT_MASK))
-       && (session->modes.current_mode == shortcut->mode || shortcut->mode == 0)
+       && (session->modes.current_mode & shortcut->mode || shortcut->mode == 0)
        && shortcut->function
       )
     {
@@ -1417,7 +1417,7 @@ girara_mode_add(girara_session_t* session, const char* name)
     session->modes.identifiers = mode;
   }
 
-  return mode->index;
+  return (1 << mode->index);
 }
 
 girara_mode_t
