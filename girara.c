@@ -1484,7 +1484,7 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget, 
 
   girara_tab_t* tab = g_slice_new(girara_tab_t);
 
-  tab->title  = title;
+  tab->title  = title ? g_strdup(title) : g_strdup("untitled");
   tab->widget = widget;
   tab->data   = data;
 
@@ -1498,16 +1498,27 @@ girara_tab_remove(girara_session_t* session, girara_tab_t* tab)
     return;
   }
 
+  g_free(tab->title);
+  g_slice_free(girara_tab_t, tab);
 }
 
 void
 girara_tab_title_set(girara_tab_t* tab, const char* title)
 {
+  if (tab == NULL) {
+    return;
+  }
 
+  g_free(tab->title);
+  tab->title = title ? g_strdup(title) : g_strdup("untitled");
 }
 
 const char*
 girara_tab_title_get(girara_tab_t* tab)
 {
-  return NULL;
+  if (tab == NULL) {
+    return NULL;
+  }
+
+  return tab->title;
 }

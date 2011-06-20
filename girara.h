@@ -66,7 +66,7 @@ typedef struct girara_setting_s girara_setting_t;
  */
 typedef struct girara_tab_s
 {
-  const char* title; /* The title of the tab */
+  char* title; /* The title of the tab */
   GtkWidget* widget; /* The displayed widget of the tab */
   void* data; /* Custom data */
 } girara_tab_t;
