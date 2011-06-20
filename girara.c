@@ -22,6 +22,7 @@ girara_session_create()
   session->gtk.viewport                = NULL;
   session->gtk.statusbar               = NULL;
   session->gtk.statusbar_entries       = NULL;
+  session->gtk.tabbar                  = NULL;
   session->gtk.inputbar                = NULL;
 
   session->gtk.embed                   = 0;
@@ -132,6 +133,7 @@ girara_session_init(girara_session_t* session)
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
   session->gtk.statusbar         = gtk_event_box_new();
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
 
   /* window */
@@ -1471,4 +1473,41 @@ girara_buffer_get(girara_session_t* session)
   g_return_val_if_fail(session != NULL, NULL);
 
   return (session->global.buffer) ? g_strdup(session->global.buffer->str) : NULL;
+}
+
+girara_tab_t*
+girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget, void* data)
+{
+  if (session == NULL || widget == NULL) {
+    return NULL;
+  }
+
+  girara_tab_t* tab = g_slice_new(girara_tab_t);
+
+  tab->title  = title;
+  tab->widget = widget;
+  tab->data   = data;
+
+  return tab;
+}
+
+void
+girara_tab_remove(girara_session_t* session, girara_tab_t* tab)
+{
+  if (session == NULL || tab == NULL) {
+    return;
+  }
+
+}
+
+void
+girara_tab_title_set(girara_tab_t* tab, const char* title)
+{
+
+}
+
+const char*
+girara_tab_title_get(girara_tab_t* tab)
+{
+  return NULL;
 }

@@ -62,6 +62,16 @@ typedef struct girara_session_s girara_session_t;
 typedef struct girara_setting_s girara_setting_t;
 
 /**
+ * Structure of a tab
+ */
+typedef struct girara_tab_s
+{
+  const char* title; /* The title of the tab */
+  GtkWidget* widget; /* The displayed widget of the tab */
+  void* data; /* Custom data */
+} girara_tab_t;
+
+/**
  * Function declaration for a statusbar event callback
  *
  * @param widget The statusbar item
@@ -281,6 +291,7 @@ struct girara_session_s
     GtkWidget       *viewport; /**< The viewport of view */
     GtkWidget       *statusbar; /**< The statusbar */
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
+    GtkWidget       *tabbar; /**< The tabbar */
     GtkEntry        *inputbar; /**< The inputbar */
     GdkNativeWindow  embed; /**< Embedded window */
   } gtk;
@@ -790,6 +801,42 @@ bool girara_config_handle_add(girara_session_t* session, const char* identifier,
  */
 bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
 		girara_shortcut_function_t function);
+
+/**
+ * Creates and adds a new tab to the tab view
+ *
+ * @param session The girara session
+ * @param title Title of the tab (optional)
+ * @param widget Displayed widget
+ * @param data Custom data
+ * @return A new tab object or NULL if an error occured
+ */
+girara_tab_t* girara_tab_new(girara_session_t* session, const char* title,
+    GtkWidget* widget, void* data);
+
+/**
+ * Removes and destroys a tab from the tab view
+ *
+ * @param session The girara session
+ * @param tab Tab
+ */
+void girara_tab_remove(girara_session_t* session, girara_tab_t* tab);
+
+/**
+ * Sets the shown title of the tab
+ *
+ * @param tab The tab
+ * @param title The new title
+ */
+void girara_tab_title_set(girara_tab_t* tab, const char* title);
+
+/**
+ * Returns the title of the tab
+ *
+ * @param tab The tab
+ * @return The title of the tab or NULL if an error occured
+ */
+const char* girara_tab_title_get(girara_tab_t* tab);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"
