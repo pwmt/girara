@@ -9,6 +9,7 @@
 #include "girara-internal.h"
 
 #define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
+#define UNTITLED_TAB_TITLE "untitled"
 
 girara_session_t*
 girara_session_create()
@@ -1484,7 +1485,7 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget, 
 
   girara_tab_t* tab = g_slice_new(girara_tab_t);
 
-  tab->title  = title ? g_strdup(title) : g_strdup("untitled");
+  tab->title  = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
   tab->widget = widget;
   tab->data   = data;
 
@@ -1510,7 +1511,7 @@ girara_tab_title_set(girara_tab_t* tab, const char* title)
   }
 
   g_free(tab->title);
-  tab->title = title ? g_strdup(title) : g_strdup("untitled");
+  tab->title = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
 }
 
 const char*
