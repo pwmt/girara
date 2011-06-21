@@ -293,6 +293,7 @@ struct girara_session_s
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
     GtkWidget       *tabbar; /**< The tabbar */
     GtkEntry        *inputbar; /**< The inputbar */
+    GtkNotebook     *tabs; /**< The tabs notebook */
     GdkNativeWindow  embed; /**< Embedded window */
   } gtk;
 
@@ -808,11 +809,12 @@ bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
  * @param session The girara session
  * @param title Title of the tab (optional)
  * @param widget Displayed widget
+ * @param next_to_current Tab should be created right next to the current one
  * @param data Custom data
  * @return A new tab object or NULL if an error occured
  */
 girara_tab_t* girara_tab_new(girara_session_t* session, const char* title,
-    GtkWidget* widget, void* data);
+    GtkWidget* widget, bool next_to_current, void* data);
 
 /**
  * Removes and destroys a tab from the tab view
@@ -821,6 +823,22 @@ girara_tab_t* girara_tab_new(girara_session_t* session, const char* title,
  * @param tab Tab
  */
 void girara_tab_remove(girara_session_t* session, girara_tab_t* tab);
+
+/**
+ * Returns the number of tabs
+ *
+ * @param session The girara session
+ * @return The number of tabs
+ */
+int girara_get_number_of_tabs(girara_session_t* session);
+
+/**
+ * Returns the current tab
+ *
+ * @param session The girara session
+ * @return The current tab or NULL if an error occured
+ */
+girara_tab_t* girara_tab_get_current(girara_sesion_t* session);
 
 /**
  * Sets the shown title of the tab
@@ -837,6 +855,25 @@ void girara_tab_title_set(girara_tab_t* tab, const char* title);
  * @return The title of the tab or NULL if an error occured
  */
 const char* girara_tab_title_get(girara_tab_t* tab);
+
+/**
+ * Returns the position of the tab
+ *
+ * @param session Girara session
+ * @param tab The tab
+ * @return The id of the tab or -1 if an error occured
+ */
+int girara_tab_position_get(girara_session_t* session, girara_tab_t* tab);
+
+/**
+ * Sets the new position of the tab
+ *
+ * @param session Girara session
+ * @param tab The tab
+ * @param position The new position
+ */
+void girara_tab_position_set(girara_session_t* session, girara_tab_t* tab,
+    unsigned int position);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"

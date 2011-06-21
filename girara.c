@@ -25,6 +25,7 @@ girara_session_create()
   session->gtk.statusbar_entries       = NULL;
   session->gtk.tabbar                  = NULL;
   session->gtk.inputbar                = NULL;
+  session->gtk.tabs                    = NULL;
 
   session->gtk.embed                   = 0;
 
@@ -136,6 +137,7 @@ girara_session_init(girara_session_t* session)
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
   session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
+  session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
   /* window */
   GdkGeometry hints = {
@@ -1477,13 +1479,22 @@ girara_buffer_get(girara_session_t* session)
 }
 
 girara_tab_t*
-girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget, void* data)
+girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
+    bool next_to_current, void* data)
 {
   if (session == NULL || widget == NULL) {
     return NULL;
   }
 
   girara_tab_t* tab = g_slice_new(girara_tab_t);
+  int position = (next_to_current) ?
+    (gtk_notebook_get_current_page(session->gtk.tabs) + 1) : -1;
+
+  /* insert tab into notebook */
+  if (gtk_notebook_insert_page(session->gtk.tabs, tab->widget, NULL, position) == -1) {
+    g_slice_free(girara_tab_t, tab);
+    return NULL;
+  }
 
   tab->title  = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
   tab->widget = widget;
@@ -1501,6 +1512,26 @@ girara_tab_remove(girara_session_t* session, girara_tab_t* tab)
 
   g_free(tab->title);
   g_slice_free(girara_tab_t, tab);
+}
+
+int
+girara_get_number_of_tabs(girara_session_t* session)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return 0;
+  }
+
+  return gtk_notebook_get_n_pages(session->gtk.tabs);
+}
+
+girara_tab_t*
+girara_tab_get_current(girara_sesion_t* session)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return NULL;
+  }
+
+  return NULL;
 }
 
 void
@@ -1522,4 +1553,26 @@ girara_tab_title_get(girara_tab_t* tab)
   }
 
   return tab->title;
+}
+
+int
+girara_tab_position_get(girara_session_t* session, girara_tab_t* tab)
+{
+  if (session == NULL || session->gtk.tabs == NULL
+      || tab == NULL || tab->widget == NULL) {
+    return -1;
+  }
+
+  return gtk_notebook_page_num(session->gtk.tabs, tab->widget);
+}
+
+void
+girara_tab_position_set(girara_session_t* session, girara_tab_t* tab, unsigned int position)
+{
+  if (session == NULL || session->gtk.tabs == NULL
+      || tab == NULL || tab->widget == NULL) {
+    return;
+  }
+
+  gtk_notebook_reorder_child(session->gtk.tabs, tab->widget, position);
 }
