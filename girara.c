@@ -196,6 +196,10 @@ girara_session_init(girara_session_t* session)
   session->signals.inputbar_key_pressed = g_signal_connect(G_OBJECT(session->gtk.inputbar), "key-press-event", G_CALLBACK(girara_callback_inputbar_key_press_event), session);
   session->signals.inputbar_activate    = g_signal_connect(G_OBJECT(session->gtk.inputbar), "activate",        G_CALLBACK(girara_callback_inputbar_activate),        session);
 
+  /* tabs */
+  gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
+  gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
+
   /* packing */
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),    FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),       TRUE,  TRUE, 0);
@@ -1545,20 +1549,37 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
   }
 
   girara_tab_t* tab = g_slice_new(girara_tab_t);
-  int position = (next_to_current) ?
-    (gtk_notebook_get_current_page(session->gtk.tabs) + 1) : -1;
-
-  /* insert tab into notebook */
-  if (gtk_notebook_insert_page(session->gtk.tabs, widget, NULL, position) == -1) {
-    g_slice_free(girara_tab_t, tab);
-    return NULL;
-  }
 
   tab->title  = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
   tab->widget = widget;
   tab->data   = data;
 
+  int position = (next_to_current) ?
+    (gtk_notebook_get_current_page(session->gtk.tabs) + 1) : -1;
+
+  /* insert tab into notebook */
+  if (gtk_notebook_insert_page(session->gtk.tabs, tab->widget, NULL, position) == -1) {
+    g_free(tab->title);
+    g_slice_free(girara_tab_t, tab);
+    return NULL;
+  }
+
+  /* create tab label */
+  GtkWidget *tab_label = gtk_label_new(tab->title);
+  GtkWidget *tab_event = gtk_event_box_new();
+
+  gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
+  gtk_misc_set_padding(GTK_MISC(tab_label),   4.0f, 4.0f);
+  gtk_widget_modify_font(tab_label, session->style.font);
+  gtk_widget_modify_bg(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_background));
+  gtk_widget_modify_fg(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_foreground));
+
+  gtk_container_add(GTK_CONTAINER(tab_event), tab_label);
+  gtk_box_pack_start(GTK_BOX(session->gtk.tabbar), tab_event, TRUE, TRUE, 0);
+  gtk_box_reorder_child(GTK_BOX(session->gtk.tabbar), tab_event, position);
+
   gtk_widget_show_all(widget);
+  gtk_widget_show_all(tab_event);
 
   return tab;
 }
