@@ -82,6 +82,11 @@ girara_session_create()
   girara_setting_add(session, "notification-error-bg",    "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
   girara_setting_add(session, "notification-warning-fg",  "#FFF712",            STRING,  TRUE,  NULL, NULL);
   girara_setting_add(session, "notification-warning-bg",  "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-fg",                "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-separator-color",   "#575757",            STRING,  TRUE,  NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  NULL, NULL);
@@ -308,6 +313,41 @@ girara_session_init(girara_session_t* session)
   tmp_value = girara_setting_get(session, "notification-warning-bg");
   if (tmp_value) {
     gdk_color_parse(tmp_value, &(session->style.notification_warning_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-fg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-bg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-focus-fg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_focus_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-focus-bg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_focus_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-separator-color");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_separator));
     free(tmp_value);
     tmp_value = NULL;
   }

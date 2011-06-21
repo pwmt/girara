@@ -315,6 +315,11 @@ struct girara_session_s
     GdkColor notification_error_background; /**< The background color of an error notification */
     GdkColor notification_warning_foreground; /**< The foreground color of a warning notification */
     GdkColor notification_warning_background; /**< The background color of a warning notification */
+    GdkColor tabbar_foreground; /**< The foreground color for a tab */
+    GdkColor tabbar_background; /**< The background color for a tab */
+    GdkColor tabbar_focus_foreground; /**< The foreground color for a focused tab */
+    GdkColor tabbar_focus_background; /**< The background color for a focused tab */
+    GdkColor tabbar_separator; /**< The color for the separator between tabs */
     PangoFontDescription *font; /**< The used font */
   } style;
 
