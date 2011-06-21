@@ -192,6 +192,7 @@ girara_session_init(girara_session_t* session)
   session->signals.inputbar_activate    = g_signal_connect(G_OBJECT(session->gtk.inputbar), "activate",        G_CALLBACK(girara_callback_inputbar_activate),        session);
 
   /* packing */
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),    FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),       TRUE,  TRUE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.statusbar), FALSE, FALSE, 0);
   gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),  FALSE, FALSE, 0);
@@ -1477,6 +1478,22 @@ girara_buffer_get(girara_session_t* session)
   g_return_val_if_fail(session != NULL, NULL);
 
   return (session->global.buffer) ? g_strdup(session->global.buffer->str) : NULL;
+}
+
+void
+girara_tabs_enable(girara_session_t* session)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return;
+  }
+
+  /* Display tab view */
+	girara_set_view(session, GTK_WIDGET(session->gtk.tabs));
+
+  /* Display tab bar */
+  if (session->gtk.tabbar) {
+    gtk_widget_show(session->gtk.tabbar);
+  }
 }
 
 girara_tab_t*

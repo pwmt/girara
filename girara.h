@@ -804,6 +804,15 @@ bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
 		girara_shortcut_function_t function);
 
 /**
+ * Enables the tab view. If girara_set_view is used, the tab bar will
+ * automatically vanish and girara_tabs_enable has to be called another time to
+ * re-enable it again.
+ *
+ * @param session The girara session
+ */
+void girara_tabs_enable(girara_session_t* session);
+
+/**
  * Creates and adds a new tab to the tab view
  *
  * @param session The girara session

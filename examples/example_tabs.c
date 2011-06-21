@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* enable tabs */
-	girara_set_view(session, GTK_WIDGET(session->gtk.tabs));
+	girara_tabs_enable(session);
 
 	GtkWidget* tab_1_widget = gtk_text_view_new();
 	GtkTextBuffer* buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab_1_widget));
