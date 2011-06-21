@@ -838,7 +838,7 @@ int girara_get_number_of_tabs(girara_session_t* session);
  * @param session The girara session
  * @return The current tab or NULL if an error occured
  */
-girara_tab_t* girara_tab_get_current(girara_sesion_t* session);
+girara_tab_t* girara_tab_get_current(girara_session_t* session);
 
 /**
  * Sets the shown title of the tab
