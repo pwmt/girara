@@ -2,7 +2,7 @@
 
 include ../config.mk
 
-SOURCE   = example_1.c
+SOURCE   = example_1.c example_tabs.c
 OBJECTS  = ${SOURCE:.c=}
 
 all: options ${OBJECTS}

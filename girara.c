@@ -787,6 +787,7 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
   }
 
   gtk_container_add(GTK_CONTAINER(session->gtk.viewport), widget);
+  gtk_widget_show_all(widget);
 
   return TRUE;
 }
@@ -1491,7 +1492,7 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
     (gtk_notebook_get_current_page(session->gtk.tabs) + 1) : -1;
 
   /* insert tab into notebook */
-  if (gtk_notebook_insert_page(session->gtk.tabs, tab->widget, NULL, position) == -1) {
+  if (gtk_notebook_insert_page(session->gtk.tabs, widget, NULL, position) == -1) {
     g_slice_free(girara_tab_t, tab);
     return NULL;
   }
@@ -1499,6 +1500,8 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
   tab->title  = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
   tab->widget = widget;
   tab->data   = data;
+
+  gtk_widget_show_all(widget);
 
   return tab;
 }
@@ -1525,7 +1528,7 @@ girara_get_number_of_tabs(girara_session_t* session)
 }
 
 girara_tab_t*
-girara_tab_get_current(girara_sesion_t* session)
+girara_tab_get_current(girara_session_t* session)
 {
   if (session == NULL || session->gtk.tabs == NULL) {
     return NULL;
