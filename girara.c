@@ -1643,6 +1643,8 @@ girara_tab_remove(girara_session_t* session, girara_tab_t* tab)
 
   g_free(tab->title);
   g_slice_free(girara_tab_t, tab);
+
+  girara_tab_update(session);
 }
 
 girara_tab_t*
