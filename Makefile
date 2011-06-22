@@ -30,11 +30,15 @@ options:
 ${OBJECTS}:  girara.c config.mk
 ${DOBJECTS}: girara.c config.mk
 
-${PROJECT}: ${OBJECTS}
+${PROJECT}: lib${PROJECT}.a lib${PROJECT}.so.${SOVERSION}
+
+lib${PROJECT}.a: ${OBJECTS}
 	@echo AR rcs $@
-	@ar rcs lib${PROJECT}.a $(OBJECTS)
+	@ar rcs $@ ${OBJECTS}
+
+lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
 	@echo LD $@
-	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o lib${PROJECT}.so.${SOVERSION} $(OBJECTS)
+	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${OBJECTS}
 
 clean:
 	@rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
@@ -43,11 +47,15 @@ clean:
 	@${MAKE} -C examples clean
 	@${MAKE} -C tests clean
 
-${PROJECT}-debug: ${DOBJECTS}
+${PROJECT}-debug: lib${PROJECT}-debug.a lib${PROJECT}-debug.so.${SOVERSION}
+
+lib${PROJECT}-debug.a: ${DOBJECTS}
 	@echo AR rcs $@
-	@ar rc lib${PROJECT}-debug.a $(DOBJECTS)
+	@ar rc $@ ${DOBJECTS}
+
+lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
 	@echo LD $@
-	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o lib${PROJECT}-debug.so.${SOVERSION} $(DOBJECTS)
+	@${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${DOBJECTS}
 
 debug: options ${PROJECT}-debug
 	@${MAKE} -C examples debug

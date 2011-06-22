@@ -14,12 +14,12 @@ options:
 	@echo "DFLAGS  = ${DFLAGS}"
 	@echo "CC      = ${CC}"
 
-%: %.c
+%: %.c ../libgirara.a
 	@echo CC $<
 	@mkdir -p .depend
-	@${CC} ${CFLAGS} -o $@ $< ../libgirara.a ${LIBS} -MMD -MF .depend/$@.dep
+	@${CC} ${CFLAGS} -o $@ $< ../libgirara.a  ${LIBS} -MMD -MF .depend/$@.dep
 
-%-debug: %.c
+%-debug: %.c ../libgirara-debug.a
 	@echo CC $<
 	@mkdir -p .depend
 	@${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-debug.a ${LIBS} -MMD -MF .depend/$@.dep
