@@ -24,11 +24,14 @@ int main(int argc, char *argv[])
 	girara_tabs_enable(session);
 
 	GtkWidget* tab_1_widget = gtk_text_view_new();
-	GtkTextBuffer* buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab_1_widget));
-	gtk_text_buffer_set_text (buffer, "Tab 1", -1);
-
+	GtkTextBuffer* buffer_1 = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab_1_widget));
+	gtk_text_buffer_set_text (buffer_1, "Tab 1", -1);
 	girara_tab_new(session, NULL, tab_1_widget, false, NULL);
-	girara_tab_new(session, "Tab 1", tab_1_widget, false, NULL);
+
+	GtkWidget* tab_2_widget = gtk_text_view_new();
+	GtkTextBuffer* buffer_2 = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab_2_widget));
+	gtk_text_buffer_set_text (buffer_2, "Tab 2", -1);
+	girara_tab_new(session, "Tab 2", tab_2_widget, false, NULL);
 
   gtk_main();
 

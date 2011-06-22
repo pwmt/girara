@@ -358,7 +358,6 @@ struct girara_session_s
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
-    girara_list_t* tabs; /**< Tabs */
   } global;
 
   struct
@@ -642,6 +641,17 @@ bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argu
 bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
+ * Default shortcut function to navigate through tabs
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Number of execution
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
  * Default command to map sortcuts
  *
  * @param session The used girara session
@@ -838,6 +848,15 @@ girara_tab_t* girara_tab_new(girara_session_t* session, const char* title,
  * @param tab Tab
  */
 void girara_tab_remove(girara_session_t* session, girara_tab_t* tab);
+
+/**
+ * Returns the tab at the given index
+ *
+ * @param session The girara session
+ * @param index Index of the tab
+ * @return The tab object or NULL if an error occured
+ */
+girara_tab_t* girara_tab_get(girara_session_t* session, unsigned int index);
 
 /**
  * Returns the number of tabs
