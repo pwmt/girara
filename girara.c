@@ -1634,7 +1634,7 @@ girara_tab_update(girara_session_t* session)
     return;
   }
 
-  int current_tab = girara_tab_position_get(session, girara_tab_get_current(session));
+  int current_tab = girara_tab_position_get(session, girara_tab_current_get(session));
   int tab_id      = 0;
 
   do {
@@ -1660,7 +1660,7 @@ girara_tab_update(girara_session_t* session)
 }
 
 girara_tab_t*
-girara_tab_get_current(girara_session_t* session)
+girara_tab_current_get(girara_session_t* session)
 {
   if (session == NULL || session->global.tabs == NULL) {
     return NULL;
@@ -1672,6 +1672,21 @@ girara_tab_get_current(girara_session_t* session)
     return girara_list_nth(session->global.tabs, current);
   } else {
     return NULL;
+  }
+}
+
+void
+girara_tab_current_set(girara_session_t* session, girara_tab_t* tab)
+{
+  if (session == NULL || session->gtk.tabs == NULL
+      || tab == NULL || tab->widget == NULL) {
+    return;
+  }
+
+  int index = gtk_notebook_page_num(session->gtk.tabs, tab->widget);
+
+  if (index != -1) {
+    gtk_notebook_set_current_page(session->gtk.tabs, index);
   }
 }
 

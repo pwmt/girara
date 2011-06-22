@@ -860,7 +860,15 @@ void girara_tab_update(girara_session_t* session);
  * @param session The girara session
  * @return The current tab or NULL if an error occured
  */
-girara_tab_t* girara_tab_get_current(girara_session_t* session);
+girara_tab_t* girara_tab_current_get(girara_session_t* session);
+
+/**
+ * Sets the current tab
+ *
+ * @param session The girara session
+ * @param tab The new current tab
+ */
+void girara_tab_current_set(girara_session_t* session, girara_tab_t* tab);
 
 /**
  * Sets the shown title of the tab
