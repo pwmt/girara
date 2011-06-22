@@ -1629,15 +1629,16 @@ girara_tab_remove(girara_session_t* session, girara_tab_t* tab)
 
   /* Remove page from notebook */
   int tab_id = girara_tab_position_get(session, tab);
-  if (tab_id != -1) {
-    gtk_notebook_remove_page(session->gtk.tabs, tab_id);
-  }
 
   /* Remove entry from tabbar */
   GtkWidget* tab_event = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "event"));
 
   if (tab_event != NULL) {
     gtk_container_remove(GTK_CONTAINER(session->gtk.tabbar), tab_event);
+  }
+
+  if (tab_id != -1) {
+    gtk_notebook_remove_page(session->gtk.tabs, tab_id);
   }
 
   g_free(tab->title);
