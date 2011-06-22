@@ -358,6 +358,7 @@ struct girara_session_s
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
+    girara_list_t* tabs; /**< Tabs */
   } global;
 
   struct
@@ -845,6 +846,13 @@ void girara_tab_remove(girara_session_t* session, girara_tab_t* tab);
  * @return The number of tabs
  */
 int girara_get_number_of_tabs(girara_session_t* session);
+
+/**
+ * Updates the color and states of all tabs
+ *
+ * @param session The girara session
+ */
+void girara_tab_update(girara_session_t* session);
 
 /**
  * Returns the current tab

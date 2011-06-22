@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 	gtk_text_buffer_set_text (buffer, "Tab 1", -1);
 
 	girara_tab_new(session, NULL, tab_1_widget, false, NULL);
+	girara_tab_new(session, "Tab 1", tab_1_widget, false, NULL);
 
   gtk_main();
 
