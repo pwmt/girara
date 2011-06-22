@@ -1576,9 +1576,10 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
 
   girara_tab_t* tab = g_slice_new(girara_tab_t);
 
-  tab->title  = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
-  tab->widget = widget;
-  tab->data   = data;
+  tab->title   = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
+  tab->widget  = widget;
+  tab->session = session;
+  tab->data    = data;
 
   int position = (next_to_current) ?
     gtk_notebook_get_current_page(session->gtk.tabs) : -1;
@@ -1597,6 +1598,9 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
   g_object_set_data(G_OBJECT(tab->widget), "event", (gpointer) tab_event);
   g_object_set_data(G_OBJECT(tab->widget), "label", (gpointer) tab_label);
   g_object_set_data(G_OBJECT(tab->widget), "tab",   (gpointer) tab);
+
+  g_signal_connect(G_OBJECT(tab_event), "button_press_event",
+      G_CALLBACK(girara_callback_tab_clicked), tab);
 
   gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
   gtk_misc_set_padding(GTK_MISC(tab_label),   4.0f, 4.0f);
@@ -1710,6 +1714,8 @@ girara_tab_current_set(girara_session_t* session, girara_tab_t* tab)
   if (index != -1) {
     gtk_notebook_set_current_page(session->gtk.tabs, index);
   }
+
+  girara_tab_update(session);
 }
 
 void
@@ -1753,4 +1759,26 @@ girara_tab_position_set(girara_session_t* session, girara_tab_t* tab, unsigned i
   }
 
   gtk_notebook_reorder_child(session->gtk.tabs, tab->widget, position);
+}
+
+bool
+girara_callback_tab_clicked(GtkWidget* UNUSED(widget), GdkEventButton* event, gpointer data)
+{
+  if (data == NULL) {
+    return false;
+  }
+
+  girara_tab_t* tab         = (girara_tab_t*) data;
+  girara_session_t* session = tab->session;
+
+  switch (event->button) {
+    case 1:
+      girara_tab_current_set(session, tab);
+      break;
+    case 2:
+      girara_tab_remove(session, tab);
+      break;
+  }
+
+  return true;
 }

@@ -46,9 +46,9 @@ typedef int girara_mode_t;
 
 typedef struct girara_mode_string_s
 {
-	girara_mode_t index; /**> Index */
-	char* name; /**> Name of the mode object */
-	struct girara_mode_string_s* next; /**> Next item */
+	girara_mode_t index; /**< Index */
+	char* name; /**< Name of the mode object */
+	struct girara_mode_string_s* next; /**< Next item */
 } girara_mode_string_t;
 
 /**
@@ -66,9 +66,10 @@ typedef struct girara_setting_s girara_setting_t;
  */
 typedef struct girara_tab_s
 {
-  char* title; /* The title of the tab */
-  GtkWidget* widget; /* The displayed widget of the tab */
-  void* data; /* Custom data */
+  char* title; /**< The title of the tab */
+  GtkWidget* widget; /**< The displayed widget of the tab */
+  void* data; /**< Custom data */
+  girara_session_t* session; /**< Girara session */
 } girara_tab_t;
 
 /**
@@ -923,6 +924,16 @@ int girara_tab_position_get(girara_session_t* session, girara_tab_t* tab);
  */
 void girara_tab_position_set(girara_session_t* session, girara_tab_t* tab,
     unsigned int position);
+
+/**
+ * Default implementation of the event that is executed if a tab is clicked
+ *
+ * @param widget The widget
+ * @param event The event
+ * @param data Additional data
+ * @return true if an error occured, otherwise false
+ */
+bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"
