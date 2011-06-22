@@ -875,14 +875,18 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), u
 }
 
 bool
-girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
+girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, unsigned int t)
 {
   g_return_val_if_fail(session != NULL, false);
 
-  int number_of_tabs = girara_get_number_of_tabs(session);
-  int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
-  int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
-  int new_tab        = (current_tab + step) % number_of_tabs;
+  unsigned int number_of_tabs = girara_get_number_of_tabs(session);
+  unsigned int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
+  unsigned int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
+  unsigned int new_tab        = (current_tab + step) % number_of_tabs;
+
+  if (t != 0 && t <= number_of_tabs) {
+    new_tab = t - 1;
+  }
 
   girara_tab_t* tab = girara_tab_get(session, new_tab);
 
@@ -892,7 +896,7 @@ girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, u
 
   girara_tab_update(session);
 
-  return true;
+  return false;
 }
 
 /* default commands implementation */
