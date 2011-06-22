@@ -46,9 +46,9 @@ typedef int girara_mode_t;
 
 typedef struct girara_mode_string_s
 {
-	girara_mode_t index; /**> Index */
-	char* name; /**> Name of the mode object */
-	struct girara_mode_string_s* next; /**> Next item */
+	girara_mode_t index; /**< Index */
+	char* name; /**< Name of the mode object */
+	struct girara_mode_string_s* next; /**< Next item */
 } girara_mode_string_t;
 
 /**
@@ -60,6 +60,17 @@ typedef struct girara_session_s girara_session_t;
  * Setting typedef
  */
 typedef struct girara_setting_s girara_setting_t;
+
+/**
+ * Structure of a tab
+ */
+typedef struct girara_tab_s
+{
+  char* title; /**< The title of the tab */
+  GtkWidget* widget; /**< The displayed widget of the tab */
+  void* data; /**< Custom data */
+  girara_session_t* session; /**< Girara session */
+} girara_tab_t;
 
 /**
  * Function declaration for a statusbar event callback
@@ -281,7 +292,9 @@ struct girara_session_s
     GtkWidget       *viewport; /**< The viewport of view */
     GtkWidget       *statusbar; /**< The statusbar */
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
+    GtkWidget       *tabbar; /**< The tabbar */
     GtkEntry        *inputbar; /**< The inputbar */
+    GtkNotebook     *tabs; /**< The tabs notebook */
     GdkNativeWindow  embed; /**< Embedded window */
   } gtk;
 
@@ -303,6 +316,10 @@ struct girara_session_s
     GdkColor notification_error_background; /**< The background color of an error notification */
     GdkColor notification_warning_foreground; /**< The foreground color of a warning notification */
     GdkColor notification_warning_background; /**< The background color of a warning notification */
+    GdkColor tabbar_foreground; /**< The foreground color for a tab */
+    GdkColor tabbar_background; /**< The background color for a tab */
+    GdkColor tabbar_focus_foreground; /**< The foreground color for a focused tab */
+    GdkColor tabbar_focus_background; /**< The background color for a focused tab */
     PangoFontDescription *font; /**< The used font */
   } style;
 
@@ -624,6 +641,28 @@ bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argu
 bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
+ * Closes the current tab
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_tab_close(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
+ * Default shortcut function to navigate through tabs
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Number of execution
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
  * Default command to map sortcuts
  *
  * @param session The used girara session
@@ -790,6 +829,121 @@ bool girara_config_handle_add(girara_session_t* session, const char* identifier,
  */
 bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
 		girara_shortcut_function_t function);
+
+/**
+ * Enables the tab view. If girara_set_view is used, the tab bar will
+ * automatically vanish and girara_tabs_enable has to be called another time to
+ * re-enable it again.
+ *
+ * @param session The girara session
+ */
+void girara_tabs_enable(girara_session_t* session);
+
+/**
+ * Creates and adds a new tab to the tab view
+ *
+ * @param session The girara session
+ * @param title Title of the tab (optional)
+ * @param widget Displayed widget
+ * @param next_to_current Tab should be created right next to the current one
+ * @param data Custom data
+ * @return A new tab object or NULL if an error occured
+ */
+girara_tab_t* girara_tab_new(girara_session_t* session, const char* title,
+    GtkWidget* widget, bool next_to_current, void* data);
+
+/**
+ * Removes and destroys a tab from the tab view
+ *
+ * @param session The girara session
+ * @param tab Tab
+ */
+void girara_tab_remove(girara_session_t* session, girara_tab_t* tab);
+
+/**
+ * Returns the tab at the given index
+ *
+ * @param session The girara session
+ * @param index Index of the tab
+ * @return The tab object or NULL if an error occured
+ */
+girara_tab_t* girara_tab_get(girara_session_t* session, unsigned int index);
+
+/**
+ * Returns the number of tabs
+ *
+ * @param session The girara session
+ * @return The number of tabs
+ */
+int girara_get_number_of_tabs(girara_session_t* session);
+
+/**
+ * Updates the color and states of all tabs
+ *
+ * @param session The girara session
+ */
+void girara_tab_update(girara_session_t* session);
+
+/**
+ * Returns the current tab
+ *
+ * @param session The girara session
+ * @return The current tab or NULL if an error occured
+ */
+girara_tab_t* girara_tab_current_get(girara_session_t* session);
+
+/**
+ * Sets the current tab
+ *
+ * @param session The girara session
+ * @param tab The new current tab
+ */
+void girara_tab_current_set(girara_session_t* session, girara_tab_t* tab);
+
+/**
+ * Sets the shown title of the tab
+ *
+ * @param tab The tab
+ * @param title The new title
+ */
+void girara_tab_title_set(girara_tab_t* tab, const char* title);
+
+/**
+ * Returns the title of the tab
+ *
+ * @param tab The tab
+ * @return The title of the tab or NULL if an error occured
+ */
+const char* girara_tab_title_get(girara_tab_t* tab);
+
+/**
+ * Returns the position of the tab
+ *
+ * @param session Girara session
+ * @param tab The tab
+ * @return The id of the tab or -1 if an error occured
+ */
+int girara_tab_position_get(girara_session_t* session, girara_tab_t* tab);
+
+/**
+ * Sets the new position of the tab
+ *
+ * @param session Girara session
+ * @param tab The tab
+ * @param position The new position
+ */
+void girara_tab_position_set(girara_session_t* session, girara_tab_t* tab,
+    unsigned int position);
+
+/**
+ * Default implementation of the event that is executed if a tab is clicked
+ *
+ * @param widget The widget
+ * @param event The event
+ * @param data Additional data
+ * @return true if an error occured, otherwise false
+ */
+bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"

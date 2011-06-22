@@ -9,6 +9,7 @@
 #include "girara-internal.h"
 
 #define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
+#define UNTITLED_TAB_TITLE "untitled"
 
 girara_session_t*
 girara_session_create()
@@ -22,7 +23,9 @@ girara_session_create()
   session->gtk.viewport                = NULL;
   session->gtk.statusbar               = NULL;
   session->gtk.statusbar_entries       = NULL;
+  session->gtk.tabbar                  = NULL;
   session->gtk.inputbar                = NULL;
+  session->gtk.tabs                    = NULL;
 
   session->gtk.embed                   = 0;
 
@@ -46,6 +49,7 @@ girara_session_create()
   session->buffer.command = NULL;
 
   session->global.buffer  = NULL;
+  session->global.data    = NULL;
 
   session->modes.identifiers  = NULL;
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
@@ -79,6 +83,10 @@ girara_session_create()
   girara_setting_add(session, "notification-error-bg",    "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
   girara_setting_add(session, "notification-warning-fg",  "#FFF712",            STRING,  TRUE,  NULL, NULL);
   girara_setting_add(session, "notification-warning-bg",  "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-fg",                "#FFFFFF",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  NULL, NULL);
+  girara_setting_add(session, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  NULL, NULL);
@@ -87,6 +95,9 @@ girara_session_create()
   /* default shortcuts */
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           normal_mode, 0, NULL);
   girara_shortcut_add(session, 0,                GDK_colon, NULL, girara_sc_focus_inputbar, normal_mode, 0, ":");
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_w,     NULL, girara_sc_tab_close,      normal_mode, 0, NULL);
+  girara_shortcut_add(session, 0,                0,         "gt", girara_sc_tab_navigate,   normal_mode, GIRARA_NEXT,     NULL);
+  girara_shortcut_add(session, 0,                0,         "gT", girara_sc_tab_navigate,   normal_mode, GIRARA_PREVIOUS, NULL);
 
   /* default inputbar shortcuts */
   girara_inputbar_shortcut_add(session, 0,                GDK_Escape,       girara_isc_abort,               0,                           NULL);
@@ -132,7 +143,9 @@ girara_session_init(girara_session_t* session)
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
   session->gtk.statusbar         = gtk_event_box_new();
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
   session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
+  session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
   /* window */
   GdkGeometry hints = {
@@ -186,7 +199,12 @@ girara_session_init(girara_session_t* session)
   session->signals.inputbar_key_pressed = g_signal_connect(G_OBJECT(session->gtk.inputbar), "key-press-event", G_CALLBACK(girara_callback_inputbar_key_press_event), session);
   session->signals.inputbar_activate    = g_signal_connect(G_OBJECT(session->gtk.inputbar), "activate",        G_CALLBACK(girara_callback_inputbar_activate),        session);
 
+  /* tabs */
+  gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
+  gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
+
   /* packing */
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),    FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),       TRUE,  TRUE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.statusbar), FALSE, FALSE, 0);
   gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),  FALSE, FALSE, 0);
@@ -306,6 +324,34 @@ girara_session_init(girara_session_t* session)
     tmp_value = NULL;
   }
 
+  tmp_value = girara_setting_get(session, "tabbar-fg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-bg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-focus-fg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_focus_foreground));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
+  tmp_value = girara_setting_get(session, "tabbar-focus-bg");
+  if (tmp_value) {
+    gdk_color_parse(tmp_value, &(session->style.tabbar_focus_background));
+    free(tmp_value);
+    tmp_value = NULL;
+  }
+
   /* parse font */
   tmp_value = girara_setting_get(session, "font");
   if (tmp_value) {
@@ -348,7 +394,7 @@ girara_session_init(girara_session_t* session)
 
 bool
 girara_session_destroy(girara_session_t* session)
-{;
+{
   g_return_val_if_fail(session != NULL, FALSE);
 
   /* clean up style */
@@ -782,6 +828,7 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
   }
 
   gtk_container_add(GTK_CONTAINER(session->gtk.viewport), widget);
+  gtk_widget_show_all(widget);
 
   return TRUE;
 }
@@ -818,10 +865,51 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
 bool
 girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
 {
+  g_return_val_if_fail(session != NULL, false);
+
   girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg, 0);
 
   gtk_main_quit();
+
+  return false;
+}
+
+bool
+girara_sc_tab_close(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  girara_tab_t* tab = girara_tab_current_get(session);
+
+  if (tab != NULL) {
+    girara_tab_remove(session, tab);
+  }
+
+  return false;
+}
+
+bool
+girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, unsigned int t)
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  unsigned int number_of_tabs = girara_get_number_of_tabs(session);
+  unsigned int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
+  unsigned int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
+  unsigned int new_tab        = (current_tab + step) % number_of_tabs;
+
+  if (t != 0 && t <= number_of_tabs) {
+    new_tab = t - 1;
+  }
+
+  girara_tab_t* tab = girara_tab_get(session, new_tab);
+
+  if (tab != NULL) {
+    girara_tab_current_set(session, tab);
+  }
+
+  girara_tab_update(session);
 
   return false;
 }
@@ -1471,4 +1559,253 @@ girara_buffer_get(girara_session_t* session)
   g_return_val_if_fail(session != NULL, NULL);
 
   return (session->global.buffer) ? g_strdup(session->global.buffer->str) : NULL;
+}
+
+void
+girara_tabs_enable(girara_session_t* session)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return;
+  }
+
+  /* Display tab view */
+	girara_set_view(session, GTK_WIDGET(session->gtk.tabs));
+
+  /* Display tab bar */
+  if (session->gtk.tabbar) {
+    gtk_widget_show(session->gtk.tabbar);
+  }
+}
+
+girara_tab_t*
+girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
+    bool next_to_current, void* data)
+{
+  if (session == NULL || widget == NULL) {
+    return NULL;
+  }
+
+  girara_tab_t* tab = g_slice_new(girara_tab_t);
+
+  tab->title   = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
+  tab->widget  = widget;
+  tab->session = session;
+  tab->data    = data;
+
+  int position = (next_to_current) ?
+    gtk_notebook_get_current_page(session->gtk.tabs) : -1;
+
+  /* insert tab into notebook */
+  if (gtk_notebook_insert_page(session->gtk.tabs, tab->widget, NULL, position) == -1) {
+    g_free(tab->title);
+    g_slice_free(girara_tab_t, tab);
+    return NULL;
+  }
+
+  /* create tab label */
+  GtkWidget *tab_label = gtk_label_new(tab->title);
+  GtkWidget *tab_event = gtk_event_box_new();
+
+  g_object_set_data(G_OBJECT(tab->widget), "event", (gpointer) tab_event);
+  g_object_set_data(G_OBJECT(tab->widget), "label", (gpointer) tab_label);
+  g_object_set_data(G_OBJECT(tab->widget), "tab",   (gpointer) tab);
+
+  g_signal_connect(G_OBJECT(tab_event), "button_press_event",
+      G_CALLBACK(girara_callback_tab_clicked), tab);
+
+  gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
+  gtk_misc_set_padding(GTK_MISC(tab_label),   4.0f, 4.0f);
+  gtk_widget_modify_font(tab_label, session->style.font);
+
+  gtk_container_add(GTK_CONTAINER(tab_event), tab_label);
+  gtk_box_pack_start(GTK_BOX(session->gtk.tabbar), tab_event, TRUE, TRUE, 0);
+  gtk_box_reorder_child(GTK_BOX(session->gtk.tabbar), tab_event, position);
+
+  gtk_widget_show_all(widget);
+  gtk_widget_show_all(tab_event);
+
+  gtk_notebook_set_current_page(session->gtk.tabs, position);
+
+  girara_tab_update(session);
+
+  return tab;
+}
+
+void
+girara_tab_remove(girara_session_t* session, girara_tab_t* tab)
+{
+  if (session == NULL || tab == NULL || session->gtk.tabbar == NULL) {
+    return;
+  }
+
+  /* Remove page from notebook */
+  int tab_id = girara_tab_position_get(session, tab);
+
+  /* Remove entry from tabbar */
+  GtkWidget* tab_event = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "event"));
+
+  if (tab_event != NULL) {
+    gtk_container_remove(GTK_CONTAINER(session->gtk.tabbar), tab_event);
+  }
+
+  if (tab_id != -1) {
+    gtk_notebook_remove_page(session->gtk.tabs, tab_id);
+  }
+
+  g_free(tab->title);
+  g_slice_free(girara_tab_t, tab);
+
+  girara_tab_update(session);
+}
+
+girara_tab_t*
+girara_tab_get(girara_session_t* session, unsigned int index)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return 0;
+  }
+
+  GtkWidget* widget = gtk_notebook_get_nth_page(session->gtk.tabs, index);
+
+  return (girara_tab_t*) g_object_get_data(G_OBJECT(widget), "tab");
+}
+
+int
+girara_get_number_of_tabs(girara_session_t* session)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return 0;
+  }
+
+  return gtk_notebook_get_n_pages(session->gtk.tabs);
+}
+
+void
+girara_tab_update(girara_session_t* session)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return;
+  }
+
+  int number_of_tabs = girara_get_number_of_tabs(session);
+  int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
+
+  for (int i = 0; i < number_of_tabs; i++) {
+    GtkWidget* widget = gtk_notebook_get_nth_page(session->gtk.tabs, i);
+    girara_tab_t* tab = (girara_tab_t*) g_object_get_data(G_OBJECT(widget), "tab");
+
+    if (tab == NULL) {
+      continue;
+    }
+
+    GtkWidget* tab_event = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "event"));
+    GtkWidget* tab_label = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "label"));
+
+    if (i == current_tab) {
+      gtk_widget_modify_bg(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_focus_background));
+      gtk_widget_modify_fg(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_focus_foreground));
+    } else {
+      gtk_widget_modify_bg(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_background));
+      gtk_widget_modify_fg(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_foreground));
+    }
+  }
+}
+
+girara_tab_t*
+girara_tab_current_get(girara_session_t* session)
+{
+  if (session == NULL || session->gtk.tabs == NULL) {
+    return NULL;
+  }
+
+  int current = gtk_notebook_get_current_page(session->gtk.tabs);
+
+  if (current != -1) {
+    GtkWidget* widget = gtk_notebook_get_nth_page(session->gtk.tabs, current);
+    return (girara_tab_t*) g_object_get_data(G_OBJECT(widget), "tab");
+  } else {
+    return NULL;
+  }
+}
+
+void
+girara_tab_current_set(girara_session_t* session, girara_tab_t* tab)
+{
+  if (session == NULL || session->gtk.tabs == NULL
+      || tab == NULL || tab->widget == NULL) {
+    return;
+  }
+
+  int index = gtk_notebook_page_num(session->gtk.tabs, tab->widget);
+
+  if (index != -1) {
+    gtk_notebook_set_current_page(session->gtk.tabs, index);
+  }
+
+  girara_tab_update(session);
+}
+
+void
+girara_tab_title_set(girara_tab_t* tab, const char* title)
+{
+  if (tab == NULL) {
+    return;
+  }
+
+  g_free(tab->title);
+  tab->title = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
+}
+
+const char*
+girara_tab_title_get(girara_tab_t* tab)
+{
+  if (tab == NULL) {
+    return NULL;
+  }
+
+  return tab->title;
+}
+
+int
+girara_tab_position_get(girara_session_t* session, girara_tab_t* tab)
+{
+  if (session == NULL || session->gtk.tabs == NULL
+      || tab == NULL || tab->widget == NULL) {
+    return -1;
+  }
+
+  return gtk_notebook_page_num(session->gtk.tabs, tab->widget);
+}
+
+void
+girara_tab_position_set(girara_session_t* session, girara_tab_t* tab, unsigned int position)
+{
+  if (session == NULL || session->gtk.tabs == NULL
+      || tab == NULL || tab->widget == NULL) {
+    return;
+  }
+
+  gtk_notebook_reorder_child(session->gtk.tabs, tab->widget, position);
+}
+
+bool
+girara_callback_tab_clicked(GtkWidget* UNUSED(widget), GdkEventButton* event, gpointer data)
+{
+  if (data == NULL) {
+    return false;
+  }
+
+  girara_tab_t* tab         = (girara_tab_t*) data;
+  girara_session_t* session = tab->session;
+
+  switch (event->button) {
+    case 1:
+      girara_tab_current_set(session, tab);
+      break;
+    case 2:
+      girara_tab_remove(session, tab);
+      break;
+  }
+
+  return true;
 }
