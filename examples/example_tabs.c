@@ -26,8 +26,10 @@ int main(int argc, char *argv[])
   for (unsigned i = 0; i < 5; i++) {
     GtkWidget* tab = gtk_text_view_new();
     GtkTextBuffer* buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab));
-    gtk_text_buffer_set_text(buffer, "Tab 1", -1);
-    girara_tab_new(session, NULL, tab, false, NULL);
+    gchar* text = g_strdup_printf("Tab %d", i + 1);
+    gtk_text_buffer_set_text(buffer, text, -1);
+    girara_tab_new(session, text, tab, false, NULL);
+    g_free(text);
   }
 
   gtk_main();
