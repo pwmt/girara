@@ -95,6 +95,7 @@ girara_session_create()
   /* default shortcuts */
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,     NULL, girara_sc_quit,           normal_mode, 0, NULL);
   girara_shortcut_add(session, 0,                GDK_colon, NULL, girara_sc_focus_inputbar, normal_mode, 0, ":");
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_w,     NULL, girara_sc_tab_close,      normal_mode, 0, NULL);
   girara_shortcut_add(session, 0,                0,         "gt", girara_sc_tab_navigate,   normal_mode, GIRARA_NEXT,     NULL);
   girara_shortcut_add(session, 0,                0,         "gT", girara_sc_tab_navigate,   normal_mode, GIRARA_PREVIOUS, NULL);
 
@@ -870,6 +871,20 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), u
   girara_isc_completion(session, &arg, 0);
 
   gtk_main_quit();
+
+  return false;
+}
+
+bool
+girara_sc_tab_close(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  girara_tab_t* tab = girara_tab_current_get(session);
+
+  if (tab != NULL) {
+    girara_tab_remove(session, tab);
+  }
 
   return false;
 }

@@ -641,6 +641,17 @@ bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argu
 bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
+ * Closes the current tab
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_tab_close(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
  * Default shortcut function to navigate through tabs
  *
  * @param session The used girara session
