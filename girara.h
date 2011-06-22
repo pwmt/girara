@@ -320,7 +320,6 @@ struct girara_session_s
     GdkColor tabbar_background; /**< The background color for a tab */
     GdkColor tabbar_focus_foreground; /**< The foreground color for a focused tab */
     GdkColor tabbar_focus_background; /**< The background color for a focused tab */
-    GdkColor tabbar_separator; /**< The color for the separator between tabs */
     PangoFontDescription *font; /**< The used font */
   } style;
 
