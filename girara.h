@@ -7,6 +7,10 @@
 #include <gdk/gdkkeysyms.h>
 #include <stdbool.h>
 
+#if (GTK_MAJOR_VERSION == 3)
+#include <gtk/gtkx.h>
+#endif
+
 #include "girara-types.h"
 
 /**
@@ -295,7 +299,12 @@ struct girara_session_s
     GtkWidget       *tabbar; /**< The tabbar */
     GtkEntry        *inputbar; /**< The inputbar */
     GtkNotebook     *tabs; /**< The tabs notebook */
-    GdkNativeWindow  embed; /**< Embedded window */
+
+#if (GTK_MAJOR_VERSION == 3)
+    Window embed; /**< Embedded window */
+#else
+    GdkNativeWindow embed; /**< Embedded window */
+#endif // (GTK_MAJOR_VERSION == 3)
   } gtk;
 
   struct
