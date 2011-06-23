@@ -663,6 +663,39 @@ bool girara_sc_tab_close(girara_session_t* session, girara_argument_t* argument,
 bool girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
+ * Toggles the visibility of the inputbar
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Numbr of execution
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_toggle_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
+ * Toggles the visibility of the statusbar
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Numbr of execution
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
+ * Toggles the visibility of the tabbar
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Numbr of execution
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
  * Default command to map sortcuts
  *
  * @param session The used girara session

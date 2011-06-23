@@ -914,6 +914,50 @@ girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, u
   return false;
 }
 
+void
+girara_toggle_widget_visibility(GtkWidget* widget)
+{
+  if (widget == NULL) {
+    return;
+  }
+
+  if (gtk_widget_get_visible(widget)) {
+    gtk_widget_hide(widget);
+  } else {
+    gtk_widget_show(widget);
+  }
+}
+
+bool
+girara_sc_toggle_inputbar(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.inputbar));
+
+  return true;
+}
+
+bool
+girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.statusbar));
+
+  return true;
+}
+
+bool
+girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.tabbar));
+
+  return true;
+}
+
 /* default commands implementation */
 bool
 girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)

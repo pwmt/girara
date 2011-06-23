@@ -16,4 +16,6 @@
 # define UNUSED(x) x
 #endif
 
+void girara_toggle_widget_visibility(GtkWidget* widget);
+
 #endif
