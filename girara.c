@@ -704,7 +704,7 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
 
   /* set properties */
   gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.0);
-  gtk_misc_set_padding(GTK_MISC(item->text),       2.0, 4.0);
+  gtk_misc_set_padding(GTK_MISC(item->text),       2, 4);
   gtk_label_set_use_markup(item->text,             TRUE);
 
   if (callback) {
@@ -1639,7 +1639,7 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
       G_CALLBACK(girara_callback_tab_clicked), tab);
 
   gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
-  gtk_misc_set_padding(GTK_MISC(tab_label),   4.0f, 4.0f);
+  gtk_misc_set_padding(GTK_MISC(tab_label),   4, 4);
   gtk_widget_modify_font(tab_label, session->style.font);
 
   gtk_container_add(GTK_CONTAINER(tab_event), tab_label);

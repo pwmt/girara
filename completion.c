@@ -543,11 +543,11 @@ girara_completion_row_create(girara_session_t* session, char* command, char* des
   gtk_misc_set_alignment(GTK_MISC(show_description), 0.0, 0.0);
 
   if (group) {
-    gtk_misc_set_padding(GTK_MISC(show_command),     2.0, 4.0);
-    gtk_misc_set_padding(GTK_MISC(show_description), 2.0, 4.0);
+    gtk_misc_set_padding(GTK_MISC(show_command),     2, 4);
+    gtk_misc_set_padding(GTK_MISC(show_description), 2, 4);
   } else {
-    gtk_misc_set_padding(GTK_MISC(show_command),     1.0, 1.0);
-    gtk_misc_set_padding(GTK_MISC(show_description), 1.0, 1.0);
+    gtk_misc_set_padding(GTK_MISC(show_command),     1, 1);
+    gtk_misc_set_padding(GTK_MISC(show_description), 1, 1);
   }
 
   gtk_label_set_use_markup(show_command,     TRUE);
