@@ -29,7 +29,7 @@ debug: options ${SOURCE:.c=-debug}
 ${OBJECTS}:  ../config.mk
 
 clean:
-	@rm -rf ${OBJECTS} example_1 example_1-debug .depend
+	@rm -rf ${OBJECTS} example_1 example_1-debug example_tabs example_tabs-debug .depend
 
 .PHONY: all options debug clean
 
