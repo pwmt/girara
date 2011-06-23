@@ -855,7 +855,7 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
     }
   }
 
-  if (!(GTK_WIDGET_VISIBLE(GTK_WIDGET(session->gtk.inputbar)))) {
+  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == FALSE) {
     gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
   }
 
