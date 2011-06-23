@@ -1789,6 +1789,11 @@ girara_tab_title_set(girara_tab_t* tab, const char* title)
 
   g_free(tab->title);
   tab->title = title ? g_strdup(title) : g_strdup(UNTITLED_TAB_TITLE);
+
+  GtkWidget* tab_label = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "label"));
+  if (tab_label) {
+    gtk_label_set_text(GTK_LABEL(tab_label), tab->title);
+  }
 }
 
 const char*
