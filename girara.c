@@ -235,144 +235,50 @@ girara_session_init(girara_session_t* session)
   /* parse color values */
   char* tmp_value = NULL;
 
-  tmp_value = girara_setting_get(session, "default-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.default_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
+  typedef struct color_setting_mapping_s
+  {
+    char* identifier;
+#if (GTK_MAJOR_VERSION == 3)
+    GdkRGBA *color;
+#else
+    GdkColor *color;
+#endif
+  } color_setting_mapping_t;
 
-  tmp_value = girara_setting_get(session, "default-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.default_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
+  const color_setting_mapping_t color_setting_mappings[] = {
+    {"default-fg",              &(session->style.default_foreground)},
+    {"default-bg",              &(session->style.default_background)},
+    {"inputbar-fg",             &(session->style.inputbar_foreground)},
+    {"inputbar-bg",             &(session->style.inputbar_background)},
+    {"statusbar-fg",            &(session->style.statusbar_foreground)},
+    {"statusbar-bg",            &(session->style.statusbar_background)},
+    {"completion-fg",           &(session->style.completion_foreground)},
+    {"completion-bg",           &(session->style.completion_background)},
+    {"completion-group-fg",     &(session->style.completion_group_foreground)},
+    {"completion-group-bg",     &(session->style.completion_group_background)},
+    {"completion-highlight-fg", &(session->style.completion_highlight_foreground)},
+    {"completion-highlight-bg", &(session->style.completion_highlight_background)},
+    {"notification-error-fg",   &(session->style.notification_error_foreground)},
+    {"notification-error-bg",   &(session->style.notification_error_background)},
+    {"notification-warning-fg", &(session->style.notification_warning_foreground)},
+    {"notification-warning-bg", &(session->style.notification_warning_background)},
+    {"tabbar-fg",               &(session->style.tabbar_foreground)},
+    {"tabbar-bg",               &(session->style.tabbar_background)},
+    {"tabbar-focus-fg",         &(session->style.tabbar_focus_foreground)},
+    {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
+  };
 
-  tmp_value = girara_setting_get(session, "inputbar-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.inputbar_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "inputbar-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.inputbar_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "statusbar-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.statusbar_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "statusbar-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.statusbar_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "completion-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.completion_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "completion-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.completion_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "completion-group-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.completion_group_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "completion-group-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.completion_group_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "completion-highlight-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.completion_highlight_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "completion-highlight-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.completion_highlight_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "notification-error-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.notification_error_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "notification-error-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.notification_error_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "notification-warning-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.notification_warning_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "notification-warning-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.notification_warning_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "tabbar-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.tabbar_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "tabbar-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.tabbar_background));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "tabbar-focus-fg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.tabbar_focus_foreground));
-    free(tmp_value);
-    tmp_value = NULL;
-  }
-
-  tmp_value = girara_setting_get(session, "tabbar-focus-bg");
-  if (tmp_value) {
-    gdk_color_parse(tmp_value, &(session->style.tabbar_focus_background));
-    free(tmp_value);
-    tmp_value = NULL;
+  for (unsigned i = 0; i < LENGTH(color_setting_mappings); i++) {
+    tmp_value = girara_setting_get(session, color_setting_mappings[i].identifier);
+    if (tmp_value) {
+#if (GTK_MAJOR_VERSION == 3)
+      gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
+#else
+      gdk_color_parse(tmp_value, color_setting_mappings[i].color);
+#endif
+      free(tmp_value);
+      tmp_value = NULL;
+    }
   }
 
   /* parse font */
@@ -383,6 +289,18 @@ girara_session_init(girara_session_t* session)
     tmp_value = NULL;
   }
 
+#if (GTK_MAJOR_VERSION == 3)
+  /* view */
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
+
+  /* statusbar */
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &(session->style.statusbar_background));
+
+  /* inputbar */
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_background));
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar),            GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+  gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), session->style.font);
+#else
   /* view */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
 
@@ -393,6 +311,7 @@ girara_session_init(girara_session_t* session)
   gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_background));
   gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
   gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),                     session->style.font);
+#endif
 
   /* set window size */
   int* window_width  = girara_setting_get(session, "window-width");
@@ -775,8 +694,13 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   item->next = NULL;
 
   /* set style */
+#if (GTK_MAJOR_VERSION == 3)
+  gtk_widget_override_color(GTK_WIDGET(item->text),  GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+  gtk_widget_override_font(GTK_WIDGET(item->text),   session->style.font);
+#else
   gtk_widget_modify_fg(GTK_WIDGET(item->text),     GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
   gtk_widget_modify_font(GTK_WIDGET(item->text),   session->style.font);
+#endif
 
   /* set properties */
   gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.0);
@@ -831,9 +755,15 @@ girara_statusbar_set_background(girara_session_t* session, char* color)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
+#if (GTK_MAJOR_VERSION == 3)
   GdkColor gdk_color;
   gdk_color_parse(color, &gdk_color);
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
+#else
+  GdkRGBA gdk_color;
+  gdk_rgba_parse(&gdk_color, color);
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
+#endif
 
   return TRUE;
 }
@@ -1796,6 +1726,15 @@ girara_tab_update(girara_session_t* session)
     GtkWidget* tab_event = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "event"));
     GtkWidget* tab_label = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "label"));
 
+#if (GTK_MAJOR_VERSION == 3)
+    if (i == current_tab) {
+      gtk_widget_override_background_color(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_focus_background));
+      gtk_widget_override_color(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_focus_foreground));
+    } else {
+      gtk_widget_override_background_color(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_background));
+      gtk_widget_override_color(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_foreground));
+    }
+#else
     if (i == current_tab) {
       gtk_widget_modify_bg(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_focus_background));
       gtk_widget_modify_fg(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_focus_foreground));
@@ -1803,6 +1742,7 @@ girara_tab_update(girara_session_t* session)
       gtk_widget_modify_bg(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_background));
       gtk_widget_modify_fg(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_foreground));
     }
+#endif
   }
 }
 
