@@ -8,9 +8,11 @@ SOVERSION = ${SOMAJOR}.${SOMINOR}
 # paths
 PREFIX ?= /usr
 
+GTK_VERSION ?= 2
+
 # libs
-GTK_INC = $(shell pkg-config --cflags gtk+-2.0)
-GTK_LIB = $(shell pkg-config --libs gtk+-2.0)
+GTK_INC = $(shell pkg-config --cflags gtk+-${GTK_VERSION}.0)
+GTK_LIB = $(shell pkg-config --libs gtk+-${GTK_VERSION}.0)
 
 INCS = -I. -I/usr/include ${GTK_INC}
 LIBS = -lc ${GTK_LIB}

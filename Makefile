@@ -1,11 +1,12 @@
 # See LICENSE file for license and copyright information
 
-PROJECT  = girara
-SOURCE   = girara.c completion.c config.c settings.c utils.c datastructures.c
-OBJECTS  = ${SOURCE:.c=.o}
-DOBJECTS = ${SOURCE:.c=.do}
-
 include config.mk
+
+PROJECTV = girara
+PROJECT  = girara-gtk${GTK_VERSION}
+SOURCE   = girara.c completion.c config.c settings.c utils.c datastructures.c
+OBJECTS  = ${SOURCE:.c=-gtk${GTK_VERSION}.o}
+DOBJECTS = ${SOURCE:.c=-gtk${GTK_VERSION}.do}
 
 all: options ${PROJECT}
 	@${MAKE} -C examples
@@ -17,12 +18,12 @@ options:
 	@echo "DFLAGS  = ${DFLAGS}"
 	@echo "CC      = ${CC}"
 
-%.o: %.c
+%-gtk${GTK_VERSION}.o: %.c
 	@echo CC $<
 	@mkdir -p .depend
 	@${CC} -c ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-%.do: %.c
+%-gtk${GTK_VERSION}.do: %.c
 	@echo CC $<
 	@mkdir -p .depend
 	@${CC} -c ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
@@ -65,19 +66,19 @@ test: debug
 
 dist: clean
 	@mkdir -p ${PROJECT}-${VERSION}
-	@cp -R LICENSE Makefile config.mk README ${PROJECT}.pc.in \
+	@cp -R LICENSE Makefile config.mk README ${PROJECTV}.pc.in \
 			girara.h girara-settings.h girara-types.h girara-datastructures.h \
 			${SOURCE} examples/ ${PROJECT}-${VERSION}
 	@tar -cf ${PROJECT}-${VERSION}.tar ${PROJECT}-${VERSION}
 	@gzip ${PROJECT}-${VERSION}.tar
 	@rm -rf ${PROJECT}-${VERSION}
 
-${PROJECT}.pc: ${PROJECT}.pc.in config.mk
+${PROJECT}.pc: ${PROJECTV}.pc.in config.mk
 	@echo project=${PROJECT} > ${PROJECT}.pc
 	@echo version=${VERSION} >> ${PROJECT}.pc
 	@echo includedir=${PREFIX}/include >> ${PROJECT}.pc
 	@echo libdir=${PREFIX}/lib >> ${PROJECT}.pc
-	@cat ${PROJECT}.pc.in >> ${PROJECT}.pc
+	@cat ${PROJECTV}.pc.in >> ${PROJECT}.pc
 
 install: all ${PROJECT}.pc
 	@echo installing library file

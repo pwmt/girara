@@ -3,7 +3,7 @@
 include ../config.mk
 
 SOURCE   = example_1.c example_tabs.c
-OBJECTS  = ${SOURCE:.c=}
+OBJECTS  = ${SOURCE:.c=-gtk${GTK_VERSION}}
 
 all: options ${OBJECTS}
 
@@ -14,22 +14,23 @@ options:
 	@echo "DFLAGS  = ${DFLAGS}"
 	@echo "CC      = ${CC}"
 
-%: %.c ../libgirara.a
+%-gtk${GTK_VERSION}: %.c ../libgirara-gtk${GTK_VERSION}.a
 	@echo CC $<
 	@mkdir -p .depend
-	@${CC} ${CFLAGS} -o $@ $< ../libgirara.a  ${LIBS} -MMD -MF .depend/$@.dep
+	@${CC} ${CFLAGS} -o $@ $< ../libgirara-gtk${GTK_VERSION}.a  ${LIBS} -MMD -MF .depend/$@.dep
 
-%-debug: %.c ../libgirara-debug.a
+%-gtk${GTK_VERSION}-debug: %.c ../libgirara-gtk${GTK_VERSION}-debug.a
 	@echo CC $<
 	@mkdir -p .depend
-	@${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-debug.a ${LIBS} -MMD -MF .depend/$@.dep
+	@${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-gtk${GTK_VERSION}-debug.a ${LIBS} -MMD -MF .depend/$@.dep
 
-debug: options ${SOURCE:.c=-debug}
+debug: options ${SOURCE:.c=-gtk${GTK_VERSION}-debug}
 
 ${OBJECTS}:  ../config.mk
 
 clean:
-	@rm -rf ${OBJECTS} example_1 example_1-debug example_tabs example_tabs-debug .depend
+	@rm -rf ${OBJECTS} example_1-gtk${GTK_VERSION} example_1-gtk${GTK_VERSION}-debug \
+		example_tabs-gtk${GTK_VERSION} example_tabs-gtk${GTK_VERSION}-debug .depend
 
 .PHONY: all options debug clean
 

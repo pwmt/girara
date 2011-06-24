@@ -3,11 +3,11 @@
 include ../config.mk
 
 SOURCE   = tests.c test_utils.c test_datastructures.c test_session.c
-OBJECTS  = ${SOURCE:.c=.o}
+OBJECTS  = ${SOURCE:.c=-gtk${GTK_VERSION}.o}
 
-all: options girara_test
+all: options girara_test-gtk${GTK_VERSION}
 	@echo "running tests ..."
-	@./girara_test
+	@./girara_test-gtk${GTK_VERSION}
 
 options:
 	@echo ${PROJECT} build options:
@@ -16,19 +16,19 @@ options:
 	@echo "DFLAGS  = ${DFLAGS}"
 	@echo "CC      = ${CC}"
 
-%.o: %.c
+%-gtk${GTK_VERSION}.o: %.c
 	@echo CC $<
 	@mkdir -p .depend
 	@${CC} -c -I.. ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-girara_test: ${OBJECTS} ../libgirara-debug.a
+girara_test-gtk${GTK_VERSION}: ${OBJECTS} ../libgirara-gtk${GTK_VERSION}-debug.a
 	@echo LD $@
-	@${CC} ${LDFLAGS} ${LIBS} -o $@ ${OBJECTS} ../libgirara-debug.a
+	@${CC} ${LDFLAGS} ${LIBS} -o $@ ${OBJECTS} ../libgirara-gtk${GTK_VERSION}-debug.a
 
 ${OBJECTS}: ../config.mk
 
 clean:
-	@rm -rf ${OBJECTS} girara_test .depend
+	@rm -rf ${OBJECTS} girara_test-gtk${GTK_VERSION} .depend
 
 .PHONY: all options clean
 
