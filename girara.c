@@ -1696,7 +1696,7 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
   tab->data    = data;
 
   int position = (next_to_current) ?
-    gtk_notebook_get_current_page(session->gtk.tabs) : -1;
+    (gtk_notebook_get_current_page(session->gtk.tabs) + 1) : -1;
 
   /* insert tab into notebook */
   if (gtk_notebook_insert_page(session->gtk.tabs, tab->widget, NULL, position) == -1) {
