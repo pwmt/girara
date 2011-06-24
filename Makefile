@@ -44,7 +44,8 @@ lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
 clean:
 	@rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
-		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend
+		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
+		${PROJECTNV}-${VERSION}.tar.gz
 	@${MAKE} -C examples clean
 	@${MAKE} -C tests clean
 
