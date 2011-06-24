@@ -1281,6 +1281,22 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
         }
       }
 
+      if (session->global.buffer) {
+        g_string_free(session->global.buffer, TRUE);
+        session->global.buffer = NULL;
+      }
+
+      if (session->buffer.command) {
+        g_string_free(session->buffer.command, TRUE);
+        session->buffer.command = NULL;
+      }
+
+      session->buffer.n = 0;
+
+      if (session->events.buffer_changed) {
+        session->events.buffer_changed(session);
+      }
+
       return TRUE;
     }
 
