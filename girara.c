@@ -58,6 +58,7 @@ girara_session_create()
 
   session->config.handles           = NULL;
   session->config.shortcut_mappings = NULL;
+  session->config.argument_mappings = NULL;
 
   /* default values */
   int window_width       = 800;
@@ -437,6 +438,14 @@ girara_session_destroy(girara_session_t* session)
     g_slice_free(girara_shortcut_mapping_t, mapping);
 
     mapping = tmp;
+  }
+
+  /* clean up argument mappings */
+  girara_argument_mapping_t* argument_mapping = session->config.argument_mappings;
+  while (argument_mapping) {
+    girara_argument_mapping_t* tmp = argument_mapping->next;
+    g_slice_free(girara_argument_mapping_t, argument_mapping);
+    argument_mapping = tmp;
   }
 
   /* clean up buffer */
@@ -1001,7 +1010,8 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   int shortcut_key                             = 0;
   int shortcut_mouse_button                    = 0;
   girara_mode_t shortcut_mode                  = session->modes.normal;
-  char* shortcut_argument                      = NULL;
+  char* shortcut_argument_data                 = NULL;
+  int shortcut_argument_n                      = 0;
   char* shortcut_buffer_command                = NULL;
   girara_shortcut_function_t shortcut_function = NULL;
 
@@ -1157,15 +1167,35 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
   /* Check for passed argument */
   if (++current_command < number_of_arguments) {
-    shortcut_argument = girara_list_nth(argument_list, current_command);
+    tmp = (char*) girara_list_nth(argument_list, current_command);
+
+    girara_argument_mapping_t* mapping = session->config.argument_mappings;
+    while (mapping) {
+      if (!g_strcmp0(tmp, mapping->identifier)) {
+        shortcut_argument_n = mapping->value;
+        break;
+      }
+
+      mapping = mapping->next;
+    }
+
+    /* If no known argument is passed we save it in the data field */
+    if (shortcut_argument_n == 0) {
+      shortcut_argument_data = tmp;
+    /* If a known argument is passed and there are still more arguments,
+     * we save the next one in the data field */
+    } else if (++current_command < number_of_arguments) {
+      tmp = (char*) girara_list_nth(argument_list, current_command);
+      shortcut_argument_data = tmp;
+    }
   }
 
   if (shortcut_mouse_button == 0) {
     girara_shortcut_add(session, shortcut_mask, shortcut_key, shortcut_buffer_command,
-        shortcut_function, shortcut_mode, 0, shortcut_argument);
+        shortcut_function, shortcut_mode, shortcut_argument_n, shortcut_argument_data);
   } else {
     girara_mouse_event_add(session, shortcut_mask, shortcut_mouse_button,
-        shortcut_function, shortcut_mode, 0, shortcut_argument);
+        shortcut_function, shortcut_mode, shortcut_argument_n, shortcut_argument_data);
   }
 
   if (shortcut_buffer_command) {
@@ -1584,6 +1614,43 @@ bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier, gi
     last_mapping->next = mapping;
   } else {
     session->config.shortcut_mappings = mapping;
+  }
+
+  return true;
+}
+
+bool girara_argument_mapping_add(girara_session_t* session, char* identifier, int value)
+{
+  g_return_val_if_fail(session  != NULL, FALSE);
+
+  if (identifier == NULL) {
+    return false;
+  }
+
+  girara_argument_mapping_t* mapping_it   = session->config.argument_mappings;
+  girara_argument_mapping_t* last_mapping = mapping_it;
+
+  while (mapping_it) {
+    if (strcmp(mapping_it->identifier, identifier) == 0) {
+      mapping_it->value = value;
+      return true;
+    }
+
+    last_mapping = mapping_it;
+    mapping_it = mapping_it->next;
+  }
+
+  /* add new config handle */
+  girara_argument_mapping_t* mapping = g_slice_new(girara_argument_mapping_t);
+
+  mapping->identifier = g_strdup(identifier);
+  mapping->value      = value;
+  mapping->next       = NULL;
+
+  if (last_mapping) {
+    last_mapping->next = mapping;
+  } else {
+    session->config.argument_mappings = mapping;
   }
 
   return true;

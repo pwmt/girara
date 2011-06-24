@@ -153,6 +153,16 @@ typedef struct girara_shortcut_mapping_s
 } girara_shortcut_mapping_t;
 
 /**
+ * Argument mapping
+ */
+typedef struct girara_argument_mapping_s
+{
+  char* identifier; /**> Identifier string */
+  int value; /**> Value */
+  struct girara_argument_mapping_s* next; /**> Next entry */
+} girara_argument_mapping_t;
+
+/**
  * Structure of a completion element
  */
 typedef struct girara_completion_element_s
@@ -409,6 +419,7 @@ struct girara_session_s
   {
     girara_config_handle_t* handles;
 		girara_shortcut_mapping_t* shortcut_mappings;
+		girara_argument_mapping_t* argument_mappings;
   } config;
 };
 
@@ -890,10 +901,22 @@ bool girara_config_handle_add(girara_session_t* session, const char* identifier,
  * @param session The girara session
  * @param identifier Optional identifier
  * @param function The function that should be mapped
- * @return
+ * @return true if no error occured
  */
 bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
 		girara_shortcut_function_t function);
+
+/**
+ * Creates a mapping between a shortcut argument and an identifier and is used
+ * to evalue the mapping command
+ *
+ * @param session The girara session
+ * @param identifier The identifier
+ * @param value The value that should be represented
+ * @return true if no error occured
+ */
+bool girara_argument_mapping_add(girara_session_t* session, char* identifier,
+    int value);
 
 /**
  * Enables the tab view. If girara_set_view is used, the tab bar will
