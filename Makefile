@@ -65,13 +65,13 @@ test: debug
 	@${MAKE} -C tests
 
 dist: clean
-	@mkdir -p ${PROJECT}-${VERSION}
+	@mkdir -p ${PROJECTNV}-${VERSION}
 	@cp -R LICENSE Makefile config.mk README ${PROJECTNV}.pc.in \
-			girara.h girara-settings.h girara-types.h girara-datastructures.h \
-			${SOURCE} examples/ ${PROJECT}-${VERSION}
-	@tar -cf ${PROJECT}-${VERSION}.tar ${PROJECT}-${VERSION}
-	@gzip ${PROJECT}-${VERSION}.tar
-	@rm -rf ${PROJECT}-${VERSION}
+		girara.h girara-utils.h girara-types.h girara-datastructures.h \
+		${SOURCE} examples/ ${PROJECTNV}-${VERSION}
+	@tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
+	@gzip ${PROJECTNV}-${VERSION}.tar
+	@rm -rf ${PROJECTNV}-${VERSION}
 
 ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	@echo project=${PROJECT} > ${PROJECT}.pc
