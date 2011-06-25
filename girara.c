@@ -1284,6 +1284,10 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
       break;
   }
 
+  if (setting->callback != NULL) {
+    setting->callback(session, setting);
+  }
+
   return true;
 }
 
