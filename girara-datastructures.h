@@ -80,6 +80,15 @@ bool girara_list_contains(girara_list_t* list, void* data);
 size_t girara_list_size(girara_list_t* list);
 
 /**
+ * Returns the position of the element in the list
+ *
+ * @param list The girara list object
+ * @param data The element
+ * @return The position or -1 if the data is not found
+ */
+int girara_list_position(girara_list_t* list, void* data);
+
+/**
  * Create an iterator pointing at the start of list.
  *
  * @param list The girara list object

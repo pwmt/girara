@@ -191,6 +191,25 @@ size_t girara_list_size(girara_list_t* list)
   return g_list_length(list->start);
 }
 
+int
+girara_list_position(girara_list_t* list, void* data)
+{
+  g_return_val_if_fail(list != NULL, -1);
+
+  if (list->start == NULL) {
+    return -1;
+  }
+
+  for (unsigned int i = 0; i < g_list_length(list->start); i++) {
+    GList* tmp = g_list_nth(list->start, i);
+
+    if (data == tmp->data) {
+      return i;
+    }
+  }
+
+  return -1;
+}
 
 girara_tree_node_t* girara_node_new(void* data)
 {
