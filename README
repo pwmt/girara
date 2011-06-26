@@ -9,7 +9,7 @@ enhance the user interface that is used by zathura and jumanji.
 
 Requirements
 ------------
-gtk2 (>= 2.18.6)
+gtk2 (>= 2.18.6) or gtk3 (>= 3.0.11)
 
 Please note that you need to have a working pkg-config installation
 and that the Makefile is only compatible with GNU make.
@@ -19,6 +19,11 @@ Installation
 Run the following command to build and install girara to your system:
 
   make install
+
+girara is built for gtk2 by default. If it should be build for gtk3
+pass GTK_VERSION to make:
+
+  make GTK_VERSION=3 install
 
 Uninstall
 ---------
