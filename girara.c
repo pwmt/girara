@@ -699,14 +699,17 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
 
   girara_statusbar_item_t* item = g_slice_new(girara_statusbar_item_t);
 
+  item->box  = gtk_event_box_new();
   item->text = GTK_LABEL(gtk_label_new(NULL));
   item->next = NULL;
 
   /* set style */
 #if (GTK_MAJOR_VERSION == 3)
-  gtk_widget_override_color(GTK_WIDGET(item->text),  GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
-  gtk_widget_override_font(GTK_WIDGET(item->text),   session->style.font);
+  gtk_widget_override_background_color(GTK_WIDGET(item->box),  GTK_STATE_NORMAL, &(session->style.statusbar_background));
+  gtk_widget_override_color(GTK_WIDGET(item->text),            GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+  gtk_widget_override_font(GTK_WIDGET(item->text),             session->style.font);
 #else
+  gtk_widget_modify_bg(GTK_WIDGET(item->box),      GTK_STATE_NORMAL, &(session->style.statusbar_background));
   gtk_widget_modify_fg(GTK_WIDGET(item->text),     GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
   gtk_widget_modify_font(GTK_WIDGET(item->text),   session->style.font);
 #endif
@@ -717,12 +720,13 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_label_set_use_markup(item->text,             TRUE);
 
   if (callback) {
-    g_signal_connect(G_OBJECT(item->text), "event", G_CALLBACK(callback), NULL);
+    g_signal_connect(G_OBJECT(item->box), "button-press-event", G_CALLBACK(callback), session);
   }
 
   /* add it to the list */
-  gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->text), expand, fill, 2);
-  gtk_widget_show_all(GTK_WIDGET(item->text));
+  gtk_container_add(GTK_CONTAINER(item->box), GTK_WIDGET(item->text));
+  gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->box), expand, fill, 2);
+  gtk_widget_show_all(GTK_WIDGET(item->box));
 
   if (session->elements.statusbar_items) {
     item->next = session->elements.statusbar_items;
