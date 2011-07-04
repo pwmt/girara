@@ -3,10 +3,10 @@
 include config.mk
 
 PROJECTNV = girara
-PROJECT   = girara-gtk${GTK_VERSION}
+PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 SOURCE    = girara.c completion.c config.c settings.c utils.c datastructures.c
-OBJECTS   = ${SOURCE:.c=-gtk${GTK_VERSION}.o}
-DOBJECTS  = ${SOURCE:.c=-gtk${GTK_VERSION}.do}
+OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
+DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
 
 all: options ${PROJECT}
 	@${MAKE} -C examples
@@ -18,12 +18,12 @@ options:
 	@echo "DFLAGS  = ${DFLAGS}"
 	@echo "CC      = ${CC}"
 
-%-gtk${GTK_VERSION}.o: %.c
+%-gtk${GIRARA_GTK_VERSION}.o: %.c
 	@echo CC $<
 	@mkdir -p .depend
 	@${CC} -c ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-%-gtk${GTK_VERSION}.do: %.c
+%-gtk${GIRARA_GTK_VERSION}.do: %.c
 	@echo CC $<
 	@mkdir -p .depend
 	@${CC} -c ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
