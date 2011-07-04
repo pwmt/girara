@@ -6,6 +6,7 @@
 #include <tests.h>
 #include <sys/types.h>
 #include <pwd.h>
+#include <errno.h>
 #include "girara-utils.h"
 
 void
@@ -26,11 +27,13 @@ test_utils_home_directory()
   g_free(res);
 
   struct passwd* pw;
+  errno = 0;
   while ((pw = getpwent()) != NULL) {
     gchar* res = girara_get_home_directory(pw->pw_name);
     g_assert_cmpstr(res, ==, pw->pw_dir);
     g_free(res);
   }
+  g_assert_cmpint(errno, ==, 0);
   endpwent();
 
   g_setenv("HOME", "/home/test", TRUE);
@@ -66,6 +69,7 @@ test_utils_fix_path()
   */
 
   struct passwd* pw;
+  errno = 0;
   while ((pw = getpwent()) != NULL) {
     gchar* path = g_strdup_printf("~%s/test", pw->pw_name);
     gchar* eres = g_build_filename(pw->pw_dir, "test", NULL);
@@ -76,6 +80,7 @@ test_utils_fix_path()
     g_free(eres);
     g_free(path);
   }
+  g_assert_cmpint(errno, ==, 0);
   endpwent();
 }
 
