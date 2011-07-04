@@ -8,6 +8,47 @@
 #include <pwd.h>
 #include <errno.h>
 #include "girara-utils.h"
+#include "girara-datastructures.h"
+#include "helpers.h"
+
+typedef struct
+{
+  gchar* name;
+  gchar* dir;
+} pwd_info_t;
+
+static void
+free_pwd_info(void* data)
+{
+  pwd_info_t* pwd = (pwd_info_t*) data;
+  if (!pwd) {
+    return;
+  }
+
+  g_free(pwd->name);
+  g_free(pwd->dir);
+  g_free(pwd);
+}
+
+static girara_list_t*
+read_pwd_info(void)
+{
+  girara_list_t* list = girara_list_new();
+  girara_list_set_free_function(list, &free_pwd_info);
+
+  struct passwd* pw;
+  errno = 0;
+  while ((pw = getpwent()) != NULL) {
+    pwd_info_t* pwdinfo = g_malloc0(sizeof(pwd_info_t));
+    pwdinfo->name = g_strdup(pw->pw_name);
+    pwdinfo->dir = g_strdup(pw->pw_dir);
+    girara_list_append(list, pwdinfo);
+  }
+  g_assert_cmpint(errno, ==, 0);
+  endpwent();
+
+  return list;
+}
 
 void
 test_utils_home_directory()
@@ -20,21 +61,24 @@ test_utils_home_directory()
     g_assert_cmpstr(res, ==, oldenv);
     g_free(res);
   }
-  
+
   g_unsetenv("HOME");
   gchar* res = girara_get_home_directory(NULL);
   g_assert_cmpstr(res, ==, user);
   g_free(res);
 
-  struct passwd* pw;
-  errno = 0;
-  while ((pw = getpwent()) != NULL) {
-    gchar* res = girara_get_home_directory(pw->pw_name);
-    g_assert_cmpstr(res, ==, pw->pw_dir);
+  girara_list_t* list = read_pwd_info();
+  girara_list_iterator_t* iter = girara_list_iterator(list);
+  g_assert_cmpptr(iter, !=, NULL);
+  do
+  {
+    pwd_info_t* pwdinfo = (pwd_info_t*) girara_list_iterator_data(iter);
+    gchar* res = girara_get_home_directory(pwdinfo->name);
+    g_assert_cmpstr(res, ==, pwdinfo->dir);
     g_free(res);
-  }
-  g_assert_cmpint(errno, ==, 0);
-  endpwent();
+  } while (girara_list_iterator_next(iter));
+  girara_list_iterator_free(iter);
+  girara_list_free(list);
 
   g_setenv("HOME", "/home/test", TRUE);
   res = girara_get_home_directory(NULL);
@@ -68,20 +112,23 @@ test_utils_fix_path()
   g_free(res);
   */
 
-  struct passwd* pw;
-  errno = 0;
-  while ((pw = getpwent()) != NULL) {
-    gchar* path = g_strdup_printf("~%s/test", pw->pw_name);
-    gchar* eres = g_build_filename(pw->pw_dir, "test", NULL);
+  girara_list_t* list = read_pwd_info();
+  girara_list_iterator_t* iter = girara_list_iterator(list);
+  g_assert_cmpptr(iter, !=, NULL);
+  do
+  {
+    pwd_info_t* pwdinfo = (pwd_info_t*) girara_list_iterator_data(iter);
+    gchar* path = g_strdup_printf("~%s/test", pwdinfo->name);
+    gchar* eres = g_build_filename(pwdinfo->dir, "test", NULL);
 
     gchar* res = girara_fix_path(path);
     g_assert_cmpstr(res, ==, eres);
     g_free(res);
     g_free(eres);
     g_free(path);
-  }
-  g_assert_cmpint(errno, ==, 0);
-  endpwent();
+  } while (girara_list_iterator_next(iter));
+  girara_list_iterator_free(iter);
+  girara_list_free(list);
 }
 
 static void

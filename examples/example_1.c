@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
   gtk_main();
 
   girara_session_destroy(session);
-  
+
   return 0;
 }
 

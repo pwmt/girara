@@ -3,7 +3,7 @@
 #include <girara.h>
 #include "helpers.h"
 
-void 
+void
 test_session_basic()
 {
   // just create and destroy

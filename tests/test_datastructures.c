@@ -85,7 +85,7 @@ test_datastructures_list()
 
   girara_list_iterator_free(iter);
   girara_list_free(list);
-  
+
   // remove with free function
   list_free_called = 0;
   list = girara_list_new();
