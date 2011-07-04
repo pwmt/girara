@@ -86,7 +86,10 @@ install: all ${PROJECT}.pc
 	@mkdir -p ${DESTDIR}${PREFIX}/lib
 	@cp -f lib${PROJECT}.a ${DESTDIR}${PREFIX}/lib
 	@install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib
-	@ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR}
+	@ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR} || \
+		echo "Failed to create lib${PROJECT}.so.${SOMAJOR}. Please check if it exists and points to the correct version of lib${PROJECT}.so."
+	@ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so || \
+		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 	@echo installing header file
 	@mkdir -p ${DESTDIR}${PREFIX}/include
 	@cp -f girara.h ${DESTDIR}${PREFIX}/include
@@ -102,6 +105,7 @@ uninstall:
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.a
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.so.${SOVERSION}
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR}
+	@rm -f ${PREFIX}/lib/lib${PROJECT}.so
 	@echo removing include file
 	@rm -f ${PREFIX}/include/girara.h
 	@rm -f ${PREFIX}/include/girara-utils.h
