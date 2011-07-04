@@ -86,6 +86,7 @@ install: all ${PROJECT}.pc
 	@mkdir -p ${DESTDIR}${PREFIX}/lib
 	@cp -f lib${PROJECT}.a ${DESTDIR}${PREFIX}/lib
 	@install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib
+	@ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR}
 	@echo installing header file
 	@mkdir -p ${DESTDIR}${PREFIX}/include
 	@cp -f girara.h ${DESTDIR}${PREFIX}/include
@@ -100,6 +101,7 @@ uninstall:
 	@echo removing library file
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.a
 	@rm -f ${PREFIX}/lib/lib${PROJECT}.so.${SOVERSION}
+	@rm -f ${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR}
 	@echo removing include file
 	@rm -f ${PREFIX}/include/girara.h
 	@rm -f ${PREFIX}/include/girara-utils.h
