@@ -23,7 +23,7 @@ options:
 
 girara_test-gtk${GTK_VERSION}: ${OBJECTS} ../libgirara-gtk${GTK_VERSION}-debug.a
 	@echo LD $@
-	@${CC} ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS} ../libgirara-gtk${GTK_VERSION}-debug.a
+	@${CC} ${LDFLAGS} -o $@ ${OBJECTS} ../libgirara-gtk${GTK_VERSION}-debug.a ${LIBS}
 
 ${OBJECTS}: ../config.mk
 
