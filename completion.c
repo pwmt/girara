@@ -147,6 +147,9 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   /* grab view */
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 
+  /* hide inputbar */
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+
   return true;
 }
 

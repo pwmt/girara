@@ -331,6 +331,7 @@ girara_session_init(girara_session_t* session)
   }
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
 
   return TRUE;
 }
@@ -804,6 +805,8 @@ bool
 girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session != NULL, false);
+
+  gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
 
   if (argument->data) {
     gtk_entry_set_text(session->gtk.inputbar, (char*) argument->data);
@@ -1493,6 +1496,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
       girara_isc_abort(session, NULL, 0);
 
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
       return TRUE;
     }
 
