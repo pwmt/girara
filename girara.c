@@ -1452,7 +1452,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   girara_special_command_t* special_command = session->bindings.special_commands;
   while (special_command) {
     if (special_command->identifier == identifier) {
-      if (special_command->always == 1) {
+      if (special_command->always == true) {
         g_free(input);
         g_strfreev(argv);
         return FALSE;
@@ -1512,7 +1512,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 bool
 girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(session != NULL, false);
 
   girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
   while (inputbar_shortcut) {
@@ -1520,7 +1520,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
      && inputbar_shortcut->mask == CLEAN(event->state))
     {
       inputbar_shortcut->function(session, &(inputbar_shortcut->argument), 0);
-      return TRUE;
+      return true;
     }
 
     inputbar_shortcut = inputbar_shortcut->next;
@@ -1534,18 +1534,18 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   girara_special_command_t* special_command = session->bindings.special_commands;
   while (special_command) {
     if ((special_command->identifier == identifier) &&
-       (special_command->always == TRUE))
+       (special_command->always == true))
     {
       gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
       special_command->function(session, input, &(special_command->argument));
       g_free(input);
-      return TRUE;
+      return false;
     }
 
     special_command = special_command->next;
   }
 
-  return FALSE;
+  return true;
 }
 
 void
