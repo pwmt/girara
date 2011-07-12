@@ -1545,7 +1545,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     special_command = special_command->next;
   }
 
-  return true;
+  return false;
 }
 
 void
