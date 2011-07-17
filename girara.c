@@ -1684,7 +1684,7 @@ girara_tabs_enable(girara_session_t* session)
   }
 
   /* Display tab view */
-	girara_set_view(session, GTK_WIDGET(session->gtk.tabs));
+  girara_set_view(session, GTK_WIDGET(session->gtk.tabs));
 
   /* Display tab bar */
   if (session->gtk.tabbar) {

@@ -50,9 +50,9 @@ typedef int girara_mode_t;
 
 typedef struct girara_mode_string_s
 {
-	girara_mode_t index; /**< Index */
-	char* name; /**< Name of the mode object */
-	struct girara_mode_string_s* next; /**< Next item */
+  girara_mode_t index; /**< Index */
+  char* name; /**< Name of the mode object */
+  struct girara_mode_string_s* next; /**< Next item */
 } girara_mode_string_t;
 
 /**
@@ -148,9 +148,9 @@ typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*
  */
 typedef struct girara_shortcut_mapping_s
 {
-	char* identifier; /**> Identifier string */
-	girara_shortcut_function_t function; /** Shortcut function */
-	struct girara_shortcut_mapping_s* next; /**> Next entry */
+  char* identifier; /**> Identifier string */
+  girara_shortcut_function_t function; /** Shortcut function */
+  struct girara_shortcut_mapping_s* next; /**> Next entry */
 } girara_shortcut_mapping_t;
 
 /**
@@ -419,8 +419,8 @@ struct girara_session_s
   struct
   {
     girara_config_handle_t* handles;
-		girara_shortcut_mapping_t* shortcut_mappings;
-		girara_argument_mapping_t* argument_mappings;
+    girara_shortcut_mapping_t* shortcut_mappings;
+    girara_argument_mapping_t* argument_mappings;
   } config;
 };
 
@@ -893,7 +893,7 @@ void girara_config_parse(girara_session_t* session, const char* path);
  * @return true if no error occured, otherwise false
  */
 bool girara_config_handle_add(girara_session_t* session, const char* identifier,
-		girara_command_function_t handle);
+    girara_command_function_t handle);
 
 /**
  * Creates a mapping between a shortcut function and an identifier and is used
@@ -905,7 +905,7 @@ bool girara_config_handle_add(girara_session_t* session, const char* identifier,
  * @return true if no error occured
  */
 bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
-		girara_shortcut_function_t function);
+    girara_shortcut_function_t function);
 
 /**
  * Creates a mapping between a shortcut argument and an identifier and is used

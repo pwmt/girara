@@ -213,6 +213,65 @@ error_ret:
   return NULL;
 }
 
+char*
+girara_file_read(const char* path)
+{
+  if (path == NULL) {
+    goto error_ret;
+  }
+
+  FILE* file = girara_file_open(path, "r");
+  if (file == NULL) {
+    goto error_ret;
+  }
+
+  unsigned int bc = BLOCK_SIZE;
+  unsigned int i  = 0;
+  char* buffer    = malloc(sizeof(char) * bc);
+
+  if (!buffer) {
+    goto error_ret;
+  }
+
+  char c;
+  while ((c = fgetc(file)) != EOF) {
+    buffer[i++] = c;
+
+    if (i == bc) {
+      bc += BLOCK_SIZE;
+      char* tmp = realloc(buffer, sizeof(char) * bc);
+
+      if (!tmp) {
+        goto error_free;
+      }
+
+      buffer = tmp;
+    }
+  }
+
+  if (i == 0 && c == EOF) {
+    goto error_free;
+  }
+
+  char* tmp = realloc(buffer, sizeof(char) * (i + 1));
+  if (!tmp) {
+    goto error_free;
+  }
+
+  buffer = tmp;
+  buffer[i] = '\0';
+
+  return buffer;
+
+error_free:
+
+  free(buffer);
+
+error_ret:
+
+  return NULL;
+}
+
 void
 girara_clean_line(char* line)
 {
