@@ -60,6 +60,7 @@ girara_config_parse(girara_session_t* session, const char* path)
   while ((line = girara_file_read_line(file)) != NULL) {
     /* skip empty lines and comments */
     if (strlen(line) == 0 || line[0] == COMMENT_PREFIX) {
+      free(line);
       continue;
     }
 
@@ -68,6 +69,7 @@ girara_config_parse(girara_session_t* session, const char* path)
 
     girara_list_t* argument_list = girara_list_new();
     if (argument_list == NULL) {
+      free(line);
       return;
     }
 
@@ -77,6 +79,7 @@ girara_config_parse(girara_session_t* session, const char* path)
       }
     } else {
       girara_list_free(argument_list);
+      free(line);
       return;
     }
 
