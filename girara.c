@@ -187,6 +187,10 @@ girara_session_init(girara_session_t* session)
 
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
 
+#if (GTK_MAJOR_VERSION == 3)
+  gtk_window_set_has_resize_grip(GTK_WINDOW(session->gtk.window), FALSE);
+#endif
+
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
       G_CALLBACK(girara_callback_view_key_press_event), session);
