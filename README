@@ -21,9 +21,9 @@ Run the following command to build and install girara to your system:
   make install
 
 girara is built for gtk2 by default. If it should be build for gtk3
-pass GTK_VERSION to make:
+pass GIRARA_GTK_VERSION to make:
 
-  make GTK_VERSION=3 install
+  make GIRARA_GTK_VERSION=3 install
 
 Uninstall
 ---------
