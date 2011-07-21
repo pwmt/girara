@@ -112,6 +112,7 @@ struct girara_setting_s
   bool init_only; /**< Option can be set only before girara gets initialized */
   char* description; /**< Description of this setting */
   girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */
+  void* data; /**< Arbitary data that can be used by callbacks */
   struct girara_setting_s *next; /**< Next settings entry (linked list) */
 };
 
@@ -460,10 +461,11 @@ bool girara_session_destroy(girara_session_t* session);
  * @param init_only Will only available on initialization
  * @param description Description of the setting
  * @param callback Function that is called when the setting changes
+ * @param data Arbitary data that can be used by callbacks
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, bool init_only, char* description, girara_setting_callback_t callback);
+bool girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, bool init_only, char* description, girara_setting_callback_t callback, void* data);
 
 /**
  * Sets the value of a setting

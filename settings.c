@@ -6,7 +6,7 @@
 #include "girara-internal.h"
 
 bool
-girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, bool init_only, char* description, girara_setting_callback_t callback)
+girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, bool init_only, char* description, girara_setting_callback_t callback, void* data)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
@@ -35,6 +35,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   setting->init_only   = init_only;
   setting->description = description ? g_strdup(description) : NULL;
   setting->callback    = callback;
+  setting->data        = data;
   setting->next        = NULL;
 
   switch (type) {

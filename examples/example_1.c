@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
   girara_session_init(session);
 
   int test_val_int = -1337;
-  girara_setting_add(session, "test-val-int", &test_val_int, INT, FALSE, NULL, setting_cb);
+  girara_setting_add(session, "test-val-int", &test_val_int, INT, FALSE, NULL, setting_cb, NULL);
   test_val_int = 42;
   girara_setting_set(session, "test-val-int", &test_val_int);
 
