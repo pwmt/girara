@@ -261,6 +261,8 @@ girara_file_read(const char* path)
   buffer = tmp;
   buffer[i] = '\0';
 
+  fclose(file);
+
   return buffer;
 
 error_free:
