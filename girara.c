@@ -1456,13 +1456,9 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   girara_special_command_t* special_command = session->bindings.special_commands;
   while (special_command) {
     if (special_command->identifier == identifier) {
-      if (special_command->always == true) {
-        g_free(input);
-        g_strfreev(argv);
-        return FALSE;
+      if (special_command->always != true) {
+        special_command->function(session, input, &(special_command->argument));
       }
-
-      special_command->function(session, input, &(special_command->argument));
 
       g_free(input);
       g_strfreev(argv);
@@ -1523,7 +1519,10 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     if (inputbar_shortcut->key == event->keyval
      && inputbar_shortcut->mask == CLEAN(event->state))
     {
-      inputbar_shortcut->function(session, &(inputbar_shortcut->argument), 0);
+      if (inputbar_shortcut->function != NULL) {
+        inputbar_shortcut->function(session, &(inputbar_shortcut->argument), 0);
+      }
+
       return true;
     }
 
