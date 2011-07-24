@@ -195,7 +195,7 @@ girara_file_read_line(FILE* file)
   }
 
   char* tmp = realloc(buffer, sizeof(char) * (i + 1));
-  if (!tmp) {
+  if (tmp == NULL) {
     goto error_free;
   }
 
