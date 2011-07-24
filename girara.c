@@ -359,7 +359,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up inputbar shortcuts */
   girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
-  while (inputbar_shortcut != NULLL) {
+  while (inputbar_shortcut != NULL) {
     girara_inputbar_shortcut_t* tmp = inputbar_shortcut->next;
     g_slice_free(girara_inputbar_shortcut_t, inputbar_shortcut);
     inputbar_shortcut = tmp;
