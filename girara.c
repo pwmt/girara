@@ -351,7 +351,7 @@ girara_session_destroy(girara_session_t* session)
   /* clean up shortcuts */
   girara_shortcut_t* shortcut = session->bindings.shortcuts;
 
-  while (shortcut) {
+  while (shortcut != NULL) {
     girara_shortcut_t* tmp = shortcut->next;
     g_slice_free(girara_shortcut_t, shortcut);
     shortcut = tmp;
@@ -359,7 +359,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up inputbar shortcuts */
   girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
-  while (inputbar_shortcut) {
+  while (inputbar_shortcut != NULLL) {
     girara_inputbar_shortcut_t* tmp = inputbar_shortcut->next;
     g_slice_free(girara_inputbar_shortcut_t, inputbar_shortcut);
     inputbar_shortcut = tmp;
@@ -367,15 +367,15 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up commands */
   girara_command_t* command = session->bindings.commands;
-  while (command) {
+  while (command != NULL) {
     girara_command_t* tmp = command->next;
-    if (command->command) {
+    if (command->command != NULL) {
       g_free(command->command);
     }
-    if (command->abbr) {
+    if (command->abbr != NULL) {
       g_free(command->abbr);
     }
-    if (command->description) {
+    if (command->description != NULL) {
       g_free(command->description);
     }
     g_slice_free(girara_command_t, command);
@@ -385,7 +385,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up special commands */
   girara_special_command_t* special_command = session->bindings.special_commands;
-  while (special_command) {
+  while (special_command != NULL) {
     girara_special_command_t* tmp = special_command->next;
     g_slice_free(girara_special_command_t, special_command);
 
@@ -394,7 +394,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up mouse events */
   girara_mouse_event_t* mouse_event = session->bindings.mouse_events;
-  while (mouse_event) {
+  while (mouse_event != NULL) {
     girara_mouse_event_t* tmp = mouse_event->next;
     g_slice_free(girara_mouse_event_t, mouse_event);
 
@@ -403,14 +403,16 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up settings */
   girara_setting_t* setting = session->settings;
-  while (setting) {
+  while (setting != NULL) {
     girara_setting_t* tmp = setting->next;
 
     g_free(setting->name);
-    if (setting->description)
+    if (setting->description != NULL) {
       g_free(setting->description);
-    if (setting->type == STRING && setting->value.s != NULL)
+    }
+    if (setting->type == STRING && setting->value.s != NULL) {
       g_free(setting->value.s);
+    }
     g_slice_free(girara_setting_t, setting);
 
     setting = tmp;
@@ -418,7 +420,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up statusbar items */
   girara_statusbar_item_t* item = session->elements.statusbar_items;
-  while (item) {
+  while (item != NULL) {
     girara_statusbar_item_t* tmp = item->next;
     g_slice_free(girara_statusbar_item_t, item);
 
@@ -427,7 +429,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up config handles */
   girara_config_handle_t* handle = session->config.handles;
-  while (handle) {
+  while (handle != NULL) {
     girara_config_handle_t* tmp = handle->next;
     free(handle->identifier);
     g_slice_free(girara_config_handle_t, handle);
@@ -437,7 +439,7 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up shortcut mappings */
   girara_shortcut_mapping_t* mapping = session->config.shortcut_mappings;
-  while (mapping) {
+  while (mapping != NULL) {
     girara_shortcut_mapping_t* tmp = mapping->next;
     free(mapping->identifier);
     g_slice_free(girara_shortcut_mapping_t, mapping);
@@ -447,11 +449,20 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up argument mappings */
   girara_argument_mapping_t* argument_mapping = session->config.argument_mappings;
-  while (argument_mapping) {
+  while (argument_mapping != NULL) {
     girara_argument_mapping_t* tmp = argument_mapping->next;
     g_free(argument_mapping->identifier);
     g_slice_free(girara_argument_mapping_t, argument_mapping);
     argument_mapping = tmp;
+  }
+
+  /* clean up modes */
+  girara_mode_string_t* mode = session->modes.identifiers;
+  while (mode != NULL) {
+    girara_mode_string_t* tmp = mode->next;
+    g_free(mode->name);
+    g_slice_free(girara_mode_string_t, mode);
+    mode = tmp;
   }
 
   /* clean up buffer */
