@@ -1299,6 +1299,10 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
       }
       break;
     case STRING:
+      if (setting->value.s != NULL) {
+        g_free(setting->value.s);
+        setting->value.s = NULL;
+      }
       if (value) {
         setting->value.s = g_strdup(value);
       } else {
