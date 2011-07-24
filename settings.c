@@ -49,7 +49,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
       setting->value.i = *((int *) value);
       break;
     case STRING:
-      setting->value.s = g_strdup(value);
+      setting->value.s = value ? g_strdup(value) : NULL;
       break;
   }
 
