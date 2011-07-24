@@ -88,7 +88,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
           g_free(setting->value.s);
         }
 
-        setting->value.s = g_strdup(value);
+        setting->value.s = value ? g_strdup(value) : NULL;
         break;
       default:
         return FALSE;
