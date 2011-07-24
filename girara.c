@@ -449,6 +449,7 @@ girara_session_destroy(girara_session_t* session)
   girara_argument_mapping_t* argument_mapping = session->config.argument_mappings;
   while (argument_mapping) {
     girara_argument_mapping_t* tmp = argument_mapping->next;
+    g_free(argument_mapping->identifier);
     g_slice_free(girara_argument_mapping_t, argument_mapping);
     argument_mapping = tmp;
   }
@@ -1483,6 +1484,8 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
         g_strfreev(argv);
         return FALSE;
       }
+
+      girara_list_set_free_function(argument_list, girara_list_free_data);
 
       for(int i = 1; i < argc; i++) {
         girara_list_append(argument_list, (void*) g_strdup(argv[i]));

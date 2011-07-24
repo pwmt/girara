@@ -128,6 +128,13 @@ void girara_list_iterator_set(girara_list_iterator_t* iter, void *data);
 void girara_list_iterator_free(girara_list_iterator_t* iter);
 
 /**
+ * Free function to just call free on the data
+ *
+ * @param data List data
+ */
+void girara_list_free_data(void* data);
+
+/**
  * Create a new node.
  *
  * @param data Data of the new node

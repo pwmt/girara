@@ -1,7 +1,9 @@
 /* See LICENSE file for license and copyright information */
 
-#include "girara-datastructures.h"
+#include <stdlib.h>
 #include <glib.h>
+
+#include "girara-datastructures.h"
 
 struct girara_tree_node_s
 {
@@ -330,6 +332,12 @@ girara_list_t* girara_node_get_children(girara_tree_node_t* node)
   }
 
   return list;
+}
+
+void
+girara_list_free_data(void* data)
+{
+  free(data);
 }
 
 size_t girara_node_get_num_children(girara_tree_node_t* node)
