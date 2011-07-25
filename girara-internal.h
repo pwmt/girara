@@ -18,4 +18,11 @@
 
 void girara_toggle_widget_visibility(GtkWidget* widget);
 
+/**
+ * Free girara_settings_t struct
+ *
+ * @param setting The setting to free.
+ */
+void girara_setting_free(girara_setting_t* setting);
+
 #endif

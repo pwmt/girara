@@ -488,15 +488,6 @@ bool girara_setting_set(girara_session_t* session, char* name, void* value);
 void* girara_setting_get(girara_session_t* session, char* name);
 
 /**
- * Free girara_settings_t struct
- *
- * This is for internal use only.
- *
- * @param setting The setting to free.
- */
-void girara_setting_free(girara_setting_t* setting);
-
-/**
  * Adds an shortcut
  *
  * @param session The used girara session
