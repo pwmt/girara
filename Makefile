@@ -28,8 +28,8 @@ options:
 	@mkdir -p .depend
 	@${CC} -c ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-${OBJECTS}:  girara.c config.mk
-${DOBJECTS}: girara.c config.mk
+${OBJECTS}:  config.mk
+${DOBJECTS}: config.mk
 
 ${PROJECT}: lib${PROJECT}.a lib${PROJECT}.so.${SOVERSION}
 
