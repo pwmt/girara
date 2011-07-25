@@ -113,7 +113,6 @@ struct girara_setting_s
   char* description; /**< Description of this setting */
   girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */
   void* data; /**< Arbitary data that can be used by callbacks */
-  struct girara_setting_s *next; /**< Next settings entry (linked list) */
 };
 
 /**
@@ -384,7 +383,7 @@ struct girara_session_s
   /**
    * List of settings
    */
-  girara_setting_t* settings;
+  girara_list_t* settings;
 
   struct
   {
@@ -487,6 +486,15 @@ bool girara_setting_set(girara_session_t* session, char* name, void* value);
  * @return NULL An error occured
  */
 void* girara_setting_get(girara_session_t* session, char* name);
+
+/**
+ * Free girara_settings_t struct
+ *
+ * This is for internal use only.
+ *
+ * @param setting The setting to free.
+ */
+void girara_setting_free(girara_setting_t* setting);
 
 /**
  * Adds an shortcut

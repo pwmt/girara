@@ -37,7 +37,8 @@ girara_session_create()
   session->bindings.inputbar_shortcuts = NULL;
   session->elements.statusbar_items    = NULL;
 
-  session->settings                    = NULL;
+  session->settings                    = girara_list_new();
+  girara_list_set_free_function(session->settings, (girara_free_function_t) girara_setting_free);
 
   session->signals.view_key_pressed     = 0;
   session->signals.inputbar_key_pressed = 0;
@@ -402,21 +403,8 @@ girara_session_destroy(girara_session_t* session)
   }
 
   /* clean up settings */
-  girara_setting_t* setting = session->settings;
-  while (setting != NULL) {
-    girara_setting_t* tmp = setting->next;
-
-    g_free(setting->name);
-    if (setting->description != NULL) {
-      g_free(setting->description);
-    }
-    if (setting->type == STRING && setting->value.s != NULL) {
-      g_free(setting->value.s);
-    }
-    g_slice_free(girara_setting_t, setting);
-
-    setting = tmp;
-  }
+  girara_list_free(session->settings);
+  session->settings = NULL;
 
   /* clean up statusbar items */
   girara_statusbar_item_t* item = session->elements.statusbar_items;
@@ -1252,19 +1240,19 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
   char* value = (number_of_arguments >= 2) ? ((char*) girara_list_nth(argument_list, 1)) : NULL;
 
   /* search for existing setting */
-  girara_setting_t* setting = session->settings;
-  bool setting_exists       = false;
-
-  while (setting) {
-    if (!g_strcmp0(name, setting->name)) {
-      setting_exists = true;
+  girara_setting_t*       setting = NULL;
+  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_setting_t* tmp = girara_list_iterator_data(iter);
+    if (!g_strcmp0(name, tmp->name)) {
+      setting = tmp;
       break;
     }
-
-    setting = setting->next;
+    girara_list_iterator_next(iter);
   }
+  girara_list_iterator_free(iter);
 
-  if (setting_exists == false) {
+  if (setting== NULL) {
     girara_warning("Unknown option: %s", name);
     return false;
   }

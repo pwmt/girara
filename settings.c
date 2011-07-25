@@ -12,20 +12,16 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   g_return_val_if_fail(name != NULL, FALSE);
 
   /* search for existing setting */
-  girara_setting_t* settings_it = session->settings;
-  if (settings_it) {
-    if (!g_strcmp0(name, settings_it->name)) {
+  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_setting_t* setting = girara_list_iterator_data(iter);
+    if (!g_strcmp0(name, setting->name)) {
+      girara_list_iterator_free(iter);
       return FALSE;
     }
-
-    while (settings_it->next) {
-      if (!g_strcmp0(name, settings_it->next->name)) {
-        return FALSE;
-      }
-
-      settings_it = settings_it->next;
-    }
+    girara_list_iterator_next(iter);
   }
+  girara_list_iterator_free(iter);
 
   /* add new setting */
   girara_setting_t* setting = g_slice_new(girara_setting_t);
@@ -36,7 +32,6 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   setting->description = description ? g_strdup(description) : NULL;
   setting->callback    = callback;
   setting->data        = data;
-  setting->next        = NULL;
 
   switch (type) {
     case BOOLEAN:
@@ -53,12 +48,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
       break;
   }
 
-  if (settings_it) {
-    settings_it->next = setting;
-  } else {
-    session->settings = setting;
-  }
-
+  girara_list_append(session->settings, setting);
   return TRUE;
 }
 
@@ -68,10 +58,14 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
 
-  for (girara_setting_t* setting = session->settings; setting != NULL; setting = setting->next) {
+  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_setting_t* setting = girara_list_iterator_data(iter);
     if (g_strcmp0(setting->name, name) != 0) {
+      girara_list_iterator_next(iter);
       continue;
     }
+    girara_list_iterator_free(iter);
 
     switch(setting->type) {
       case BOOLEAN:
@@ -91,6 +85,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
         setting->value.s = value ? g_strdup(value) : NULL;
         break;
       default:
+
         return FALSE;
     }
 
@@ -101,6 +96,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
     return TRUE;
   }
 
+  girara_list_iterator_free(iter);
   return FALSE;
 }
 
@@ -110,10 +106,14 @@ girara_setting_get(girara_session_t* session, char* name)
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
 
-  for (girara_setting_t* setting = session->settings; setting != NULL; setting = setting->next) {
+  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_setting_t* setting = girara_list_iterator_data(iter);
     if (g_strcmp0(setting->name, name) != 0) {
+      girara_list_iterator_next(iter);
       continue;
     }
+    girara_list_iterator_free(iter);
 
     bool *bvalue = NULL;
     float    *fvalue = NULL;
@@ -154,5 +154,22 @@ girara_setting_get(girara_session_t* session, char* name)
     }
   }
 
+  girara_list_iterator_free(iter);
   return NULL;
 }
+
+void
+girara_setting_free(girara_setting_t* setting)
+{
+  if (!setting) {
+    return;
+  }
+
+  g_free(setting->name);
+  g_free(setting->description);
+  if (setting->type == STRING) {
+    g_free(setting->value.s);
+  }
+  g_slice_free(girara_setting_t, setting);
+}
+

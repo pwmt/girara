@@ -70,13 +70,14 @@ test_utils_home_directory()
   girara_list_t* list = read_pwd_info();
   girara_list_iterator_t* iter = girara_list_iterator(list);
   g_assert_cmpptr(iter, !=, NULL);
-  do
+  while (girara_list_iterator_is_valid(iter))
   {
     pwd_info_t* pwdinfo = (pwd_info_t*) girara_list_iterator_data(iter);
     gchar* res = girara_get_home_directory(pwdinfo->name);
     g_assert_cmpstr(res, ==, pwdinfo->dir);
     g_free(res);
-  } while (girara_list_iterator_next(iter));
+    girara_list_iterator_next(iter);
+  }
   girara_list_iterator_free(iter);
   girara_list_free(list);
 
@@ -115,7 +116,7 @@ test_utils_fix_path()
   girara_list_t* list = read_pwd_info();
   girara_list_iterator_t* iter = girara_list_iterator(list);
   g_assert_cmpptr(iter, !=, NULL);
-  do
+  while (girara_list_iterator_is_valid(iter))
   {
     pwd_info_t* pwdinfo = (pwd_info_t*) girara_list_iterator_data(iter);
     gchar* path = g_strdup_printf("~%s/test", pwdinfo->name);
@@ -126,7 +127,8 @@ test_utils_fix_path()
     g_free(res);
     g_free(eres);
     g_free(path);
-  } while (girara_list_iterator_next(iter));
+    girara_list_iterator_next(iter);
+  }
   girara_list_iterator_free(iter);
   girara_list_free(list);
 }
