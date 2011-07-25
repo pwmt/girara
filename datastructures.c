@@ -160,6 +160,11 @@ gboolean girara_list_iterator_has_next(girara_list_iterator_t* iter)
   return iter && iter->element && g_list_next(iter->element);
 }
 
+gboolean girara_list_iterator_is_valid(girara_list_iterator_t* iter)
+{
+  return iter && iter->element;
+}
+
 void* girara_list_iterator_data(girara_list_iterator_t* iter)
 {
   g_return_val_if_fail(iter && iter->element, NULL);

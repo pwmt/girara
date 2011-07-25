@@ -39,11 +39,15 @@ test_datastructures_list()
   for (intptr_t i = 0; i != 10; ++i) {
     g_assert_cmpuint((intptr_t)girara_list_iterator_data(iter), ==, i);
     if (i < 9) {
+      g_assert(girara_list_iterator_is_valid(iter));
       g_assert(girara_list_iterator_has_next(iter));
       g_assert(girara_list_iterator_next(iter));
+      g_assert(girara_list_iterator_is_valid(iter));
     } else {
+      g_assert(girara_list_iterator_is_valid(iter));
       g_assert(!girara_list_iterator_has_next(iter));
       g_assert(!girara_list_iterator_next(iter));
+      g_assert(!girara_list_iterator_is_valid(iter));
     }
   }
 
@@ -79,11 +83,15 @@ test_datastructures_list()
   for (intptr_t i = 9; i >= 0; --i) {
     g_assert_cmpuint((intptr_t)girara_list_iterator_data(iter), ==, i);
     if (i > 0) {
+      g_assert(girara_list_iterator_is_valid(iter));
       g_assert(girara_list_iterator_has_next(iter));
       g_assert(girara_list_iterator_next(iter));
+      g_assert(girara_list_iterator_is_valid(iter));
     } else {
+      g_assert(girara_list_iterator_is_valid(iter));
       g_assert(!girara_list_iterator_has_next(iter));
       g_assert(!girara_list_iterator_next(iter));
+      g_assert(!girara_list_iterator_is_valid(iter));
     }
   }
 
@@ -161,7 +169,8 @@ test_datastructures_node()
   g_assert_cmpint(girara_list_size(children), ==, 5);
   unsigned int i = 0;
   girara_list_iterator_t* iter = girara_list_iterator(children);
-  do {
+  while (girara_list_iterator_is_valid(iter))
+  {
     char* expected = g_strdup_printf("child_%u", i);
     girara_tree_node_t* child = (girara_tree_node_t*)girara_list_iterator_data(iter);
     g_assert_cmpstr((char*)girara_node_get_data(child), ==, expected);
@@ -174,7 +183,8 @@ test_datastructures_node()
     g_assert_cmpint(girara_list_size(grandchildren), ==, 10);
     unsigned int j = 0;
     girara_list_iterator_t* iter2 = girara_list_iterator(grandchildren);
-    do {
+    while (girara_list_iterator_is_valid(iter2))
+    {
       char* expected = g_strdup_printf("child_%u_%u", i, j);
       girara_tree_node_t* gchild = (girara_tree_node_t*)girara_list_iterator_data(iter2);
       g_assert_cmpstr((char*)girara_node_get_data(gchild), ==, expected);
@@ -182,12 +192,15 @@ test_datastructures_node()
       g_assert(girara_node_get_root(gchild) == root);
       g_free(expected);
       ++j;
-    } while (girara_list_iterator_next(iter2));
+      girara_list_iterator_next(iter2);
+    }
+    g_assert_cmpuint(j, ==, 10);
     girara_list_iterator_free(iter2);
     girara_list_free(grandchildren);
-
+    girara_list_iterator_next(iter);
     ++i;
-  } while (girara_list_iterator_next(iter));
+  }
+  g_assert_cmpuint(i, ==, 5);
   girara_list_iterator_free(iter);
   girara_list_free(children);
 
