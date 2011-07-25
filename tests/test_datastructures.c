@@ -39,8 +39,10 @@ test_datastructures_list()
   for (intptr_t i = 0; i != 10; ++i) {
     g_assert_cmpuint((intptr_t)girara_list_iterator_data(iter), ==, i);
     if (i < 9) {
+      g_assert(girara_list_iterator_has_next(iter));
       g_assert(girara_list_iterator_next(iter));
     } else {
+      g_assert(!girara_list_iterator_has_next(iter));
       g_assert(!girara_list_iterator_next(iter));
     }
   }
@@ -77,8 +79,10 @@ test_datastructures_list()
   for (intptr_t i = 9; i >= 0; --i) {
     g_assert_cmpuint((intptr_t)girara_list_iterator_data(iter), ==, i);
     if (i > 0) {
+      g_assert(girara_list_iterator_has_next(iter));
       g_assert(girara_list_iterator_next(iter));
     } else {
+      g_assert(!girara_list_iterator_has_next(iter));
       g_assert(!girara_list_iterator_next(iter));
     }
   }

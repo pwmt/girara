@@ -155,6 +155,11 @@ girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter)
   return iter;
 }
 
+gboolean girara_list_iterator_has_next(girara_list_iterator_t* iter)
+{
+  return iter && iter->element && g_list_next(iter->element);
+}
+
 void* girara_list_iterator_data(girara_list_iterator_t* iter)
 {
   g_return_val_if_fail(iter && iter->element, NULL);

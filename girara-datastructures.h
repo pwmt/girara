@@ -105,6 +105,15 @@ girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
 girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
 
 /**
+ * Check if iterator has next element.
+ *
+ * @param list The list iterator
+ * @return true if iterator has a next element, false otherwise
+ */
+gboolean girara_list_iterator_has_next(girara_list_iterator_t* iter);
+
+
+/**
  * Get data from the element pointed to by the iterator.
  *
  * @param list The list iterator
