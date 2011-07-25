@@ -110,7 +110,7 @@ girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
  * @param list The list iterator
  * @return true if iterator has a next element, false otherwise
  */
-gboolean girara_list_iterator_has_next(girara_list_iterator_t* iter);
+bool girara_list_iterator_has_next(girara_list_iterator_t* iter);
 
 /**
  * Check if iterator is valid
@@ -118,7 +118,7 @@ gboolean girara_list_iterator_has_next(girara_list_iterator_t* iter);
  * @param list The list iterator
  * @return true if iterator is valid, false otherwise
  */
-gboolean girara_list_iterator_is_valid(girara_list_iterator_t* iter);
+bool girara_list_iterator_is_valid(girara_list_iterator_t* iter);
 
 /**
  * Get data from the element pointed to by the iterator.

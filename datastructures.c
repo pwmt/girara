@@ -155,12 +155,12 @@ girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter)
   return iter;
 }
 
-gboolean girara_list_iterator_has_next(girara_list_iterator_t* iter)
+bool girara_list_iterator_has_next(girara_list_iterator_t* iter)
 {
   return iter && iter->element && g_list_next(iter->element);
 }
 
-gboolean girara_list_iterator_is_valid(girara_list_iterator_t* iter)
+bool girara_list_iterator_is_valid(girara_list_iterator_t* iter)
 {
   return iter && iter->element;
 }
