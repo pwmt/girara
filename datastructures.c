@@ -223,6 +223,14 @@ girara_list_position(girara_list_t* list, void* data)
   return -1;
 }
 
+void
+girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data)
+{
+  g_return_if_fail(list && list->start && callback);
+
+  g_list_foreach(list->start, callback, data);
+}
+
 girara_tree_node_t* girara_node_new(void* data)
 {
   girara_tree_node_t* node = g_malloc0(sizeof(girara_tree_node_t));

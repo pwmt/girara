@@ -15,17 +15,13 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
   g_return_val_if_fail(identifier != NULL, false);
 
   /* search for existing config handle */
-  girara_list_iterator_t* iter = girara_list_iterator(session->config.handles);
-  while (girara_list_iterator_is_valid(iter)) {
-    girara_config_handle_t* data = girara_list_iterator_data(iter);
+  GIRARA_LIST_FOREACH(session->config.handles, girara_config_handle_t*, iter, data)
     if (strcmp(data->identifier, identifier) == 0) {
       data->handle = handle;
       girara_list_iterator_free(iter);
       return true;
     }
-    girara_list_iterator_next(iter);
-  }
-  girara_list_iterator_free(iter);
+  GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, data)
 
   /* add new config handle */
   girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
@@ -79,7 +75,7 @@ girara_config_parse(girara_session_t* session, const char* path)
       return;
     }
 
-    girara_list_set_free_function(argument_list, girara_list_free_data);
+    girara_list_set_free_function(argument_list, g_free);
     if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
       for(int i = 1; i < argc; i++) {
         girara_list_append(argument_list, (void*) g_strdup(argv[i]));
@@ -92,18 +88,15 @@ girara_config_parse(girara_session_t* session, const char* path)
     }
 
     /* search for config handle */
-    girara_list_iterator_t* iter = girara_list_iterator(session->config.handles);
     girara_config_handle_t* handle = NULL;
-    while (girara_list_iterator_is_valid(iter)) {
-      handle = girara_list_iterator_data(iter);
+    GIRARA_LIST_FOREACH(session->config.handles, girara_config_handle_t*, iter, tmp)
+      handle = tmp;
       if (strcmp(handle->identifier, argv[0]) == 0) {
         handle->handle(session, argument_list);
         girara_list_iterator_free(iter);
         break;
       }
-      girara_list_iterator_next(iter);
-    }
-    girara_list_iterator_free(iter);
+    GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, handle)
 
     if (handle == NULL) {
       girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);
