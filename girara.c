@@ -1283,7 +1283,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
   g_return_val_if_fail(session != NULL, FALSE);
 
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcut)
-    if (!session->buffer.command) {
+    if (session->buffer.command) {
       break;
     }
     if (
