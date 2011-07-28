@@ -57,7 +57,8 @@ girara_session_create()
   session->modes.normal       = normal_mode;
   session->modes.current_mode = normal_mode;
 
-  session->config.handles           = NULL;
+  session->config.handles           = girara_list_new();
+  girara_list_set_free_function(session->config.handles, (girara_free_function_t) girara_config_handle_free);
   session->config.shortcut_mappings = NULL;
   session->config.argument_mappings = NULL;
 
@@ -416,14 +417,8 @@ girara_session_destroy(girara_session_t* session)
   }
 
   /* clean up config handles */
-  girara_config_handle_t* handle = session->config.handles;
-  while (handle != NULL) {
-    girara_config_handle_t* tmp = handle->next;
-    free(handle->identifier);
-    g_slice_free(girara_config_handle_t, handle);
-
-    handle = tmp;
-  }
+  girara_list_free(session->config.handles);
+  session->config.handles = NULL;
 
   /* clean up shortcut mappings */
   girara_shortcut_mapping_t* mapping = session->config.shortcut_mappings;

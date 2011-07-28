@@ -291,7 +291,6 @@ typedef struct girara_config_handle_s
 {
   char* identifier;
   girara_command_function_t handle;
-  struct girara_config_handle_s* next;
 } girara_config_handle_t;
 
 /**
@@ -418,7 +417,7 @@ struct girara_session_s
 
   struct
   {
-    girara_config_handle_t* handles;
+    girara_list_t* handles;
     girara_shortcut_mapping_t* shortcut_mappings;
     girara_argument_mapping_t* argument_mappings;
   } config;

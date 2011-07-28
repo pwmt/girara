@@ -16,13 +16,23 @@
 # define UNUSED(x) x
 #endif
 
-void girara_toggle_widget_visibility(GtkWidget* widget);
+#ifdef HIDDEN
+#elif defined(__GNUC__) && (__GNUC__ >= 4)
+# define HIDDEN __attribute__((visibility("hidden")))
+#else
+# define HIDDEN
+#endif
+
+HIDDEN void girara_toggle_widget_visibility(GtkWidget* widget);
 
 /**
  * Free girara_settings_t struct
  *
  * @param setting The setting to free.
  */
-void girara_setting_free(girara_setting_t* setting);
+HIDDEN void girara_setting_free(girara_setting_t* setting);
+
+HIDDEN void girara_config_handle_free(girara_config_handle_t* handle);
+
 
 #endif
