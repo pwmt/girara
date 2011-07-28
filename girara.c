@@ -1135,7 +1135,6 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
       if (!g_strcmp0(tmp, mapping->identifier)) {
         shortcut_function = mapping->function;
         found_mapping = true;
-        girara_list_iterator_free(iter);
         break;
       }
     GIRARA_LIST_FOREACH_END(session->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, mapping)
@@ -1285,7 +1284,6 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
 
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcut)
     if (!session->buffer.command) {
-      girara_list_iterator_free(iter);
       break;
     }
     if (

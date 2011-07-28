@@ -93,7 +93,6 @@ girara_config_parse(girara_session_t* session, const char* path)
       handle = tmp;
       if (strcmp(handle->identifier, argv[0]) == 0) {
         handle->handle(session, argument_list);
-        girara_list_iterator_free(iter);
         break;
       }
     GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, handle)
