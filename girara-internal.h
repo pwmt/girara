@@ -34,5 +34,11 @@ HIDDEN void girara_setting_free(girara_setting_t* setting);
 
 HIDDEN void girara_config_handle_free(girara_config_handle_t* handle);
 
+HIDDEN void girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping);
+
+HIDDEN void girara_shortcut_free(girara_shortcut_t* shortcut);
+
+HIDDEN void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* shortcut);
+
 
 #endif

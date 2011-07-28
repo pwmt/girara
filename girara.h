@@ -150,7 +150,6 @@ typedef struct girara_shortcut_mapping_s
 {
   char* identifier; /**> Identifier string */
   girara_shortcut_function_t function; /** Shortcut function */
-  struct girara_shortcut_mapping_s* next; /**> Next entry */
 } girara_shortcut_mapping_t;
 
 /**
@@ -211,7 +210,6 @@ typedef struct girara_shortcut_s
   girara_shortcut_function_t function; /**< The correspondending function */
   girara_mode_t mode; /**< Mode identifier */
   girara_argument_t argument; /**< Given argument */
-  struct girara_shortcut_s *next; /**< Next shortcut (linked list) */
 } girara_shortcut_t;
 
 /**
@@ -223,7 +221,6 @@ typedef struct girara_inputbar_shortcut_s
   guint key; /**< Key */
   girara_shortcut_function_t function; /**< Function */
   girara_argument_t argument; /**< Given argument */
-  struct girara_inputbar_shortcut_s *next; /**< Next inputbar shortcut (linked list) */
 } girara_inputbar_shortcut_t;
 
 /**
@@ -369,9 +366,9 @@ struct girara_session_s
   {
     girara_mouse_event_t* mouse_events; /**< List of mouse events */
     girara_command_t* commands; /**< List of commands */
-    girara_shortcut_t* shortcuts; /**< List of shortcuts */
+    girara_list_t* shortcuts; /**< List of shortcuts */
     girara_special_command_t* special_commands; /**< List of special commands */
-    girara_inputbar_shortcut_t* inputbar_shortcuts; /**< List of inputbar shortcuts */
+    girara_list_t* inputbar_shortcuts; /**< List of inputbar shortcuts */
   } bindings;
 
   struct
@@ -418,7 +415,7 @@ struct girara_session_s
   struct
   {
     girara_list_t* handles;
-    girara_shortcut_mapping_t* shortcut_mappings;
+    girara_list_t* shortcut_mappings;
     girara_argument_mapping_t* argument_mappings;
   } config;
 };

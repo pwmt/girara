@@ -27,7 +27,6 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
   }
   girara_list_iterator_free(iter);
 
-
   /* add new config handle */
   girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
 

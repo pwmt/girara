@@ -33,8 +33,12 @@ girara_session_create()
   session->bindings.mouse_events       = NULL;
   session->bindings.commands           = NULL;
   session->bindings.special_commands   = NULL;
-  session->bindings.shortcuts          = NULL;
-  session->bindings.inputbar_shortcuts = NULL;
+  session->bindings.shortcuts          = girara_list_new();
+  girara_list_set_free_function(session->bindings.shortcuts,
+      (girara_free_function_t) girara_shortcut_free);
+  session->bindings.inputbar_shortcuts = girara_list_new();
+  girara_list_set_free_function(session->bindings.inputbar_shortcuts,
+      (girara_free_function_t) girara_inputbar_shortcut_free);
   session->elements.statusbar_items    = NULL;
 
   session->settings                    = girara_list_new();
@@ -58,8 +62,11 @@ girara_session_create()
   session->modes.current_mode = normal_mode;
 
   session->config.handles           = girara_list_new();
-  girara_list_set_free_function(session->config.handles, (girara_free_function_t) girara_config_handle_free);
-  session->config.shortcut_mappings = NULL;
+  girara_list_set_free_function(session->config.handles,
+      (girara_free_function_t) girara_config_handle_free);
+  session->config.shortcut_mappings = girara_list_new();
+  girara_list_set_free_function(session->config.shortcut_mappings,
+      (girara_free_function_t) girara_shortcut_mapping_free);
   session->config.argument_mappings = NULL;
 
   /* default values */
@@ -351,21 +358,12 @@ girara_session_destroy(girara_session_t* session)
   pango_font_description_free(session->style.font);
 
   /* clean up shortcuts */
-  girara_shortcut_t* shortcut = session->bindings.shortcuts;
-
-  while (shortcut != NULL) {
-    girara_shortcut_t* tmp = shortcut->next;
-    g_slice_free(girara_shortcut_t, shortcut);
-    shortcut = tmp;
-  }
+  girara_list_free(session->bindings.shortcuts);
+  session->bindings.shortcuts = NULL;
 
   /* clean up inputbar shortcuts */
-  girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
-  while (inputbar_shortcut != NULL) {
-    girara_inputbar_shortcut_t* tmp = inputbar_shortcut->next;
-    g_slice_free(girara_inputbar_shortcut_t, inputbar_shortcut);
-    inputbar_shortcut = tmp;
-  }
+  girara_list_free(session->bindings.inputbar_shortcuts);
+  session->bindings.inputbar_shortcuts = NULL;
 
   /* clean up commands */
   girara_command_t* command = session->bindings.commands;
@@ -421,14 +419,8 @@ girara_session_destroy(girara_session_t* session)
   session->config.handles = NULL;
 
   /* clean up shortcut mappings */
-  girara_shortcut_mapping_t* mapping = session->config.shortcut_mappings;
-  while (mapping != NULL) {
-    girara_shortcut_mapping_t* tmp = mapping->next;
-    free(mapping->identifier);
-    g_slice_free(girara_shortcut_mapping_t, mapping);
-
-    mapping = tmp;
-  }
+  girara_list_free(session->config.shortcut_mappings);
+  session->config.shortcut_mappings = NULL;
 
   /* clean up argument mappings */
   girara_argument_mapping_t* argument_mapping = session->config.argument_mappings;
@@ -475,22 +467,22 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing binding */
-  girara_shortcut_t* shortcuts_it = session->bindings.shortcuts;
-  girara_shortcut_t* last_shortcut = shortcuts_it;
-
-  while (shortcuts_it) {
+  girara_list_iterator_t* iter = girara_list_iterator(session->bindings.shortcuts);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_shortcut_t* shortcuts_it = girara_list_iterator_data(iter);
     if (((shortcuts_it->mask == modifier && shortcuts_it->key == key && (modifier != 0 || key != 0)) ||
        (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
         && shortcuts_it->mode == mode)
     {
       shortcuts_it->function = function;
       shortcuts_it->argument = argument;
+      girara_list_iterator_free(iter);
       return TRUE;
     }
 
-    last_shortcut = shortcuts_it;
-    shortcuts_it = shortcuts_it->next;
+    girara_list_iterator_next(iter);
   }
+  girara_list_iterator_free(iter);
 
   /* add new shortcut */
   girara_shortcut_t* shortcut = g_slice_new(girara_shortcut_t);
@@ -501,15 +493,15 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* 
   shortcut->function         = function;
   shortcut->mode             = mode;
   shortcut->argument         = argument;
-  shortcut->next             = NULL;
-
-  if (last_shortcut) {
-    last_shortcut->next = shortcut;
-  } else {
-    session->bindings.shortcuts = shortcut;
-  }
+  girara_list_append(session->bindings.shortcuts, shortcut);
 
   return TRUE;
+}
+
+void
+girara_shortcut_free(girara_shortcut_t* shortcut)
+{
+  g_slice_free(girara_shortcut_t, shortcut);
 }
 
 bool
@@ -573,20 +565,20 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing special command */
-  girara_inputbar_shortcut_t* inp_sh_it = session->bindings.inputbar_shortcuts;
-  girara_inputbar_shortcut_t* last_inp_sh = inp_sh_it;
-
-  while (inp_sh_it) {
+  girara_list_iterator_t* iter = girara_list_iterator(session->bindings.inputbar_shortcuts);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_inputbar_shortcut_t* inp_sh_it = girara_list_iterator_data(iter);
     if (inp_sh_it->mask == modifier && inp_sh_it->key == key) {
       inp_sh_it->function = function;
       inp_sh_it->argument = argument;
 
+      girara_list_iterator_free(iter);
       return TRUE;
     }
 
-    last_inp_sh = inp_sh_it;
-    inp_sh_it = inp_sh_it->next;
+    girara_list_iterator_next(iter);
   }
+  girara_list_iterator_free(iter);
 
   /* create new inputbar shortcut */
   girara_inputbar_shortcut_t* inputbar_shortcut = g_slice_new(girara_inputbar_shortcut_t);
@@ -595,15 +587,15 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   inputbar_shortcut->key      = key;
   inputbar_shortcut->function = function;
   inputbar_shortcut->argument = argument;
-  inputbar_shortcut->next     = NULL;
 
-  if (last_inp_sh) {
-    last_inp_sh->next = inputbar_shortcut;
-  } else {
-    session->bindings.inputbar_shortcuts = inputbar_shortcut;
-  }
-
+  girara_list_append(session->bindings.inputbar_shortcuts, inputbar_shortcut);
   return TRUE;
+}
+
+void
+girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut)
+{
+  g_slice_free(girara_inputbar_shortcut_t, inputbar_shortcut);
 }
 
 bool
@@ -1148,17 +1140,20 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   if (++current_command < number_of_arguments) {
     tmp = girara_list_nth(argument_list, current_command);
 
-    girara_shortcut_mapping_t* mapping = session->config.shortcut_mappings;
     bool found_mapping = false;
-    while (mapping) {
+    girara_list_iterator_t* iter = girara_list_iterator(session->config.shortcut_mappings);
+    while (girara_list_iterator_is_valid(iter)) {
+      girara_shortcut_mapping_t* mapping = girara_list_iterator_data(iter);
       if (!g_strcmp0(tmp, mapping->identifier)) {
         shortcut_function = mapping->function;
         found_mapping = true;
+        girara_list_iterator_free(iter);
         break;
       }
 
-      mapping = mapping->next;
+      girara_list_iterator_next(iter);
     }
+    girara_list_iterator_free(iter);
 
     if (found_mapping == false) {
       girara_warning("Not a valid shortcut function: %s", tmp);
@@ -1307,9 +1302,10 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
+  girara_list_iterator_t* iter = girara_list_iterator(session->bindings.shortcuts);
   /* check for existing shortcut */
-  girara_shortcut_t* shortcut = session->bindings.shortcuts;
-  while (!session->buffer.command && shortcut) {
+  while (!session->buffer.command && girara_list_iterator_is_valid(iter)) {
+    girara_shortcut_t* shortcut = girara_list_iterator_data(iter);
     if (
        event->keyval == shortcut->key
        && (CLEAN(event->state) == shortcut->mask || (shortcut->key >= 0x21
@@ -1336,11 +1332,13 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
         session->events.buffer_changed(session);
       }
 
+      girara_list_iterator_free(iter);
       return TRUE;
     }
 
-    shortcut = shortcut->next;
+    girara_list_iterator_next(iter);
   }
+  girara_list_iterator_free(iter);
 
   /* update buffer */
   if (event->keyval >= 0x21 && event->keyval <= 0x7E) {
@@ -1372,8 +1370,9 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
   if (session->buffer.command) {
     bool matching_command = FALSE;
 
-    shortcut = session->bindings.shortcuts;
-    while (shortcut) {
+    girara_list_iterator_t* iter = girara_list_iterator(session->bindings.shortcuts);
+    while (girara_list_iterator_is_valid(iter)) {
+      girara_shortcut_t* shortcut = girara_list_iterator_data(iter);
       if (shortcut->buffered_command) {
         /* buffer could match a command */
         if (!strncmp(session->buffer.command->str, shortcut->buffered_command, session->buffer.command->len)) {
@@ -1396,6 +1395,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
             }
 
             session->buffer.n = 0;
+            girara_list_iterator_free(iter);
             return TRUE;
           }
 
@@ -1403,8 +1403,9 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* eve
         }
       }
 
-      shortcut = shortcut->next;
+      girara_list_iterator_next(iter);
     }
+    girara_list_iterator_free(iter);
 
     /* free buffer if buffer will never match a command */
     if (!matching_command) {
@@ -1515,8 +1516,9 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 {
   g_return_val_if_fail(session != NULL, false);
 
-  girara_inputbar_shortcut_t* inputbar_shortcut = session->bindings.inputbar_shortcuts;
-  while (inputbar_shortcut) {
+  girara_list_iterator_t* iter = girara_list_iterator(session->bindings.inputbar_shortcuts);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_inputbar_shortcut_t* inputbar_shortcut = girara_list_iterator_data(iter);
     if (inputbar_shortcut->key == event->keyval
      && inputbar_shortcut->mask == CLEAN(event->state))
     {
@@ -1524,11 +1526,13 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
         inputbar_shortcut->function(session, &(inputbar_shortcut->argument), 0);
       }
 
+      girara_list_iterator_free(iter);
       return true;
     }
 
-    inputbar_shortcut = inputbar_shortcut->next;
+    girara_list_iterator_next(iter);
   }
+  girara_list_iterator_free(iter);
 
   /* special commands */
   char *identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
@@ -1606,33 +1610,38 @@ bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier, gi
     return false;
   }
 
-  girara_shortcut_mapping_t* mapping_it   = session->config.shortcut_mappings;
-  girara_shortcut_mapping_t* last_mapping = mapping_it;
-
-  while (mapping_it) {
-    if (strcmp(mapping_it->identifier, identifier) == 0) {
-      mapping_it->function = function;
+  girara_list_iterator_t* iter = girara_list_iterator(session->config.shortcut_mappings);
+  while (girara_list_iterator_is_valid(iter)) {
+    girara_shortcut_mapping_t* data = girara_list_iterator_data(iter);
+    if (strcmp(data->identifier, identifier) == 0) {
+      data->function = function;
+      girara_list_iterator_free(iter);
       return true;
     }
-
-    last_mapping = mapping_it;
-    mapping_it = mapping_it->next;
+    girara_list_iterator_next(iter);
   }
+  girara_list_iterator_free(iter);
+
 
   /* add new config handle */
   girara_shortcut_mapping_t* mapping = g_slice_new(girara_shortcut_mapping_t);
 
   mapping->identifier = g_strdup(identifier);
   mapping->function   = function;
-  mapping->next       = NULL;
-
-  if (last_mapping) {
-    last_mapping->next = mapping;
-  } else {
-    session->config.shortcut_mappings = mapping;
-  }
+  girara_list_append(session->config.shortcut_mappings, mapping);
 
   return true;
+}
+
+void
+girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping)
+{
+  if (mapping == NULL) {
+    return;
+  }
+
+  g_free(mapping->identifier);
+  g_slice_free(girara_shortcut_mapping_t, mapping);
 }
 
 bool girara_argument_mapping_add(girara_session_t* session, char* identifier, int value)
