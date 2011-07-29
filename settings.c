@@ -12,16 +12,12 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   g_return_val_if_fail(name != NULL, FALSE);
 
   /* search for existing setting */
-  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
-  while (girara_list_iterator_is_valid(iter)) {
-    girara_setting_t* setting = girara_list_iterator_data(iter);
+  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
     if (!g_strcmp0(name, setting->name)) {
       girara_list_iterator_free(iter);
       return FALSE;
     }
-    girara_list_iterator_next(iter);
-  }
-  girara_list_iterator_free(iter);
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
 
   /* add new setting */
   girara_setting_t* setting = g_slice_new(girara_setting_t);
@@ -58,45 +54,39 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
 
-  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
-  while (girara_list_iterator_is_valid(iter)) {
-    girara_setting_t* setting = girara_list_iterator_data(iter);
-    if (g_strcmp0(setting->name, name) != 0) {
-      girara_list_iterator_next(iter);
-      continue;
+  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
+    if (g_strcmp0(setting->name, name) == 0) {
+      girara_list_iterator_free(iter);
+      switch(setting->type) {
+        case BOOLEAN:
+          setting->value.b = *((bool *) value);
+          break;
+        case FLOAT:
+          setting->value.f = *((float *) value);
+          break;
+        case INT:
+          setting->value.i = *((int *) value);
+          break;
+        case STRING:
+          if (setting->value.s != NULL) {
+            g_free(setting->value.s);
+          }
+
+          setting->value.s = value ? g_strdup(value) : NULL;
+          break;
+        default:
+
+          return FALSE;
+      }
+
+      if (setting->callback != NULL) {
+        setting->callback(session, setting);
+      }
+
+      return TRUE;
     }
-    girara_list_iterator_free(iter);
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
 
-    switch(setting->type) {
-      case BOOLEAN:
-        setting->value.b = *((bool *) value);
-        break;
-      case FLOAT:
-        setting->value.f = *((float *) value);
-        break;
-      case INT:
-        setting->value.i = *((int *) value);
-        break;
-      case STRING:
-        if (setting->value.s != NULL) {
-          g_free(setting->value.s);
-        }
-
-        setting->value.s = value ? g_strdup(value) : NULL;
-        break;
-      default:
-
-        return FALSE;
-    }
-
-    if (setting->callback != NULL) {
-      setting->callback(session, setting);
-    }
-
-    return TRUE;
-  }
-
-  girara_list_iterator_free(iter);
   return FALSE;
 }
 
@@ -106,55 +96,50 @@ girara_setting_get(girara_session_t* session, char* name)
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
 
-  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
-  while (girara_list_iterator_is_valid(iter)) {
-    girara_setting_t* setting = girara_list_iterator_data(iter);
-    if (g_strcmp0(setting->name, name) != 0) {
+  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
+    if (g_strcmp0(setting->name, name) == 0) {
       girara_list_iterator_next(iter);
-      continue;
+
+      bool *bvalue = NULL;
+      float    *fvalue = NULL;
+      int      *ivalue = NULL;
+
+      switch(setting->type) {
+        case BOOLEAN:
+          bvalue = malloc(sizeof(bool));
+
+          if (!bvalue) {
+            return NULL;
+          }
+
+          *bvalue = setting->value.b;
+          return bvalue;
+        case FLOAT:
+          fvalue = malloc(sizeof(float));
+
+          if (!fvalue) {
+            return NULL;
+          }
+
+          *fvalue = setting->value.f;
+          return fvalue;
+        case INT:
+          ivalue = malloc(sizeof(int));
+
+          if (!ivalue) {
+            return NULL;
+          }
+
+          *ivalue = setting->value.i;
+          return ivalue;
+        case STRING:
+          return g_strdup(setting->value.s);
+        default:
+          return NULL;
+      }
     }
-    girara_list_iterator_free(iter);
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
 
-    bool *bvalue = NULL;
-    float    *fvalue = NULL;
-    int      *ivalue = NULL;
-
-    switch(setting->type) {
-      case BOOLEAN:
-        bvalue = malloc(sizeof(bool));
-
-        if (!bvalue) {
-          return NULL;
-        }
-
-        *bvalue = setting->value.b;
-        return bvalue;
-      case FLOAT:
-        fvalue = malloc(sizeof(float));
-
-        if (!fvalue) {
-          return NULL;
-        }
-
-        *fvalue = setting->value.f;
-        return fvalue;
-      case INT:
-        ivalue = malloc(sizeof(int));
-
-        if (!ivalue) {
-          return NULL;
-        }
-
-        *ivalue = setting->value.i;
-        return ivalue;
-      case STRING:
-        return g_strdup(setting->value.s);
-      default:
-        return NULL;
-    }
-  }
-
-  girara_list_iterator_free(iter);
   return NULL;
 }
 
