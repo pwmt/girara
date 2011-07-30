@@ -121,7 +121,6 @@ typedef struct girara_statusbar_item_s
 {
   GtkWidget* box; /**< Event box */
   GtkLabel *text; /**< Text label */
-  struct girara_statusbar_item_s *next; /**< Next statusbar item (linked list) */
 } girara_statusbar_item_t;
 
 /**
@@ -372,7 +371,7 @@ struct girara_session_s
 
   struct
   {
-    girara_statusbar_item_t* statusbar_items; /**< List of statusbar items */
+    girara_list_t* statusbar_items; /**< List of statusbar items */
   } elements;
 
   /**

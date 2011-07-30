@@ -40,6 +40,8 @@ HIDDEN void girara_shortcut_free(girara_shortcut_t* shortcut);
 
 HIDDEN void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* shortcut);
 
-HIDDEN void girara_mode_string_free(girara_mode_string_t* shortcut);
+HIDDEN void girara_mode_string_free(girara_mode_string_t* mode);
+
+HIDDEN void girara_statusbar_item_free(girara_statusbar_item_t* statusbaritem);
 
 #endif

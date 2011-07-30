@@ -39,7 +39,9 @@ girara_session_create()
   session->bindings.inputbar_shortcuts = girara_list_new();
   girara_list_set_free_function(session->bindings.inputbar_shortcuts,
       (girara_free_function_t) girara_inputbar_shortcut_free);
-  session->elements.statusbar_items    = NULL;
+  session->elements.statusbar_items    = girara_list_new();
+  girara_list_set_free_function(session->elements.statusbar_items,
+      (girara_free_function_t) girara_statusbar_item_free);
 
   session->settings                    = girara_list_new();
   girara_list_set_free_function(session->settings, (girara_free_function_t) girara_setting_free);
@@ -407,13 +409,8 @@ girara_session_destroy(girara_session_t* session)
   session->settings = NULL;
 
   /* clean up statusbar items */
-  girara_statusbar_item_t* item = session->elements.statusbar_items;
-  while (item != NULL) {
-    girara_statusbar_item_t* tmp = item->next;
-    g_slice_free(girara_statusbar_item_t, item);
-
-    item = tmp;
-  }
+  girara_list_free(session->elements.statusbar_items);
+  session->elements.statusbar_items = NULL;
 
   /* clean up config handles */
   girara_list_free(session->config.handles);
@@ -673,13 +670,12 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
 girara_statusbar_item_t*
 girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(session != NULL && session->elements.statusbar_items, FALSE);
 
   girara_statusbar_item_t* item = g_slice_new(girara_statusbar_item_t);
 
   item->box  = gtk_event_box_new();
   item->text = GTK_LABEL(gtk_label_new(NULL));
-  item->next = NULL;
 
   /* set style */
 #if (GTK_MAJOR_VERSION == 3)
@@ -706,13 +702,14 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->box), expand, fill, 2);
   gtk_widget_show_all(GTK_WIDGET(item->box));
 
-  if (session->elements.statusbar_items) {
-    item->next = session->elements.statusbar_items;
-  }
-
-  session->elements.statusbar_items = item;
-
+  girara_list_prepend(session->elements.statusbar_items, item);
   return item;
+}
+
+void
+girara_statusbar_item_free(girara_statusbar_item_t* item)
+{
+  g_slice_free(girara_statusbar_item_t, item);
 }
 
 bool
