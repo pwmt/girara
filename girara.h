@@ -52,7 +52,6 @@ typedef struct girara_mode_string_s
 {
   girara_mode_t index; /**< Index */
   char* name; /**< Name of the mode object */
-  struct girara_mode_string_s* next; /**< Next item */
 } girara_mode_string_t;
 
 /**
@@ -402,7 +401,7 @@ struct girara_session_s
   struct
   {
     girara_mode_t current_mode; /**< Current mode */
-    girara_mode_string_t *identifiers; /**< List of modes with its string identifiers */
+    girara_list_t *identifiers; /**< List of modes with its string identifiers */
     girara_mode_t normal; /**< The normal mode */
   } modes;
 
