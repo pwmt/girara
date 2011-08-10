@@ -521,16 +521,12 @@ girara_cc_set(girara_session_t* session, char* input)
 
   unsigned int input_length = input ? strlen(input) : 0;
 
-  girara_list_iterator_t* iter = girara_list_iterator(session->settings);
-  while (girara_list_iterator_is_valid(iter)) {
-    girara_setting_t* setting = girara_list_iterator_data(iter);
+  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
     if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
         !strncmp(input, setting->name, input_length)) {
       girara_completion_group_add_element(group, setting->name, setting->description);
     }
-    girara_list_iterator_next(iter);
-  }
-  girara_list_iterator_free(iter);
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
 
   return completion;
 }

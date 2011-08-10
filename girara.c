@@ -41,7 +41,9 @@ girara_session_create()
   session->bindings.inputbar_shortcuts = girara_list_new();
   girara_list_set_free_function(session->bindings.inputbar_shortcuts,
       (girara_free_function_t) girara_inputbar_shortcut_free);
-  session->elements.statusbar_items    = NULL;
+  session->elements.statusbar_items    = girara_list_new();
+  girara_list_set_free_function(session->elements.statusbar_items,
+      (girara_free_function_t) girara_statusbar_item_free);
 
   session->settings                    = girara_list_new();
   girara_list_set_free_function(session->settings, (girara_free_function_t) girara_setting_free);
@@ -58,7 +60,8 @@ girara_session_create()
   session->global.buffer  = NULL;
   session->global.data    = NULL;
 
-  session->modes.identifiers  = NULL;
+  session->modes.identifiers  = girara_list_new();
+  girara_list_set_free_function(session->modes.identifiers, (girara_free_function_t) girara_mode_string_free);
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   session->modes.normal       = normal_mode;
   session->modes.current_mode = normal_mode;
@@ -447,13 +450,8 @@ girara_session_destroy(girara_session_t* session)
   session->settings = NULL;
 
   /* clean up statusbar items */
-  girara_statusbar_item_t* item = session->elements.statusbar_items;
-  while (item != NULL) {
-    girara_statusbar_item_t* tmp = item->next;
-    g_slice_free(girara_statusbar_item_t, item);
-
-    item = tmp;
-  }
+  girara_list_free(session->elements.statusbar_items);
+  session->elements.statusbar_items = NULL;
 
   /* clean up config handles */
   girara_list_free(session->config.handles);
@@ -473,13 +471,8 @@ girara_session_destroy(girara_session_t* session)
   }
 
   /* clean up modes */
-  girara_mode_string_t* mode = session->modes.identifiers;
-  while (mode != NULL) {
-    girara_mode_string_t* tmp = mode->next;
-    g_free(mode->name);
-    g_slice_free(girara_mode_string_t, mode);
-    mode = tmp;
-  }
+  girara_list_free(session->modes.identifiers);
+  session->modes.identifiers = NULL;
 
   /* clean up buffer */
   if (session->buffer.command) {
@@ -718,13 +711,12 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
 girara_statusbar_item_t*
 girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(session != NULL && session->elements.statusbar_items, FALSE);
 
   girara_statusbar_item_t* item = g_slice_new(girara_statusbar_item_t);
 
   item->box  = gtk_event_box_new();
   item->text = GTK_LABEL(gtk_label_new(NULL));
-  item->next = NULL;
 
   /* set style */
 #if (GTK_MAJOR_VERSION == 3)
@@ -751,13 +743,14 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->box), expand, fill, 2);
   gtk_widget_show_all(GTK_WIDGET(item->box));
 
-  if (session->elements.statusbar_items) {
-    item->next = session->elements.statusbar_items;
-  }
-
-  session->elements.statusbar_items = item;
-
+  girara_list_prepend(session->elements.statusbar_items, item);
   return item;
+}
+
+void
+girara_statusbar_item_free(girara_statusbar_item_t* item)
+{
+  g_slice_free(girara_statusbar_item_t, item);
 }
 
 bool
@@ -1062,24 +1055,21 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   bool is_mode = false;
   if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_length - 1] == ']') {
     char* tmp_inner            = g_strndup(tmp + 1, tmp_length - 2);
-    girara_mode_string_t* mode = session->modes.identifiers;
 
-    while (mode) {
+    GIRARA_LIST_FOREACH(session->modes.identifiers, girara_mode_string_t*, iter, mode)
       if (!g_strcmp0(tmp_inner, mode->name)) {
         shortcut_mode = mode->index;
         is_mode       = true;
         break;
       }
-
-      mode = mode->next;
-    }
-
-    g_free(tmp_inner);
+    GIRARA_LIST_FOREACH_END(session->modes.identifiers, girara_mode_string_t*, iter, mode)
 
     if (is_mode == false) {
       girara_warning("Unregistered mode specified: %s", tmp_inner);
+      g_free(tmp_inner);
       return false;
     }
+    g_free(tmp_inner);
   }
 
   if (is_mode == true) {
@@ -1588,28 +1578,31 @@ girara_mode_add(girara_session_t* session, const char* name)
   g_return_val_if_fail(session  != NULL, FALSE);
   g_return_val_if_fail(name != NULL && name[0] != 0x0, FALSE);
 
-  girara_mode_string_t *last_mode = NULL;
   girara_mode_t last_index = 0;
-
-  for (last_mode = session->modes.identifiers; last_mode && last_mode->next != NULL; last_mode = last_mode->next) {
-    if (last_mode->index > last_index) {
-      last_index = last_mode->index;
+  GIRARA_LIST_FOREACH(session->modes.identifiers, girara_mode_string_t*, iter, mode)
+    if (mode->index > last_index) {
+      last_index = mode->index;
     }
-  }
+  GIRARA_LIST_FOREACH_END(session->modes.identifiers, girara_mode_string_t*, iter, mode)
 
   /* create new mode identifier */
   girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);
   mode->index = last_index + 1;
   mode->name = g_strdup(name);
-  mode->next = NULL;
-
-  if (last_mode != NULL) {
-    last_mode->next = mode;
-  } else {
-    session->modes.identifiers = mode;
-  }
+  girara_list_append(session->modes.identifiers, mode);
 
   return (1 << mode->index);
+}
+
+void
+girara_mode_string_free(girara_mode_string_t* mode)
+{
+  if (!mode) {
+    return;
+  }
+
+  g_free(mode->name);
+  g_slice_free(girara_mode_string_t, mode);
 }
 
 girara_mode_t
