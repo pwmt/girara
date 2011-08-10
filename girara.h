@@ -303,6 +303,8 @@ struct girara_session_s
     GtkWidget       *viewport; /**< The viewport of view */
     GtkWidget       *statusbar; /**< The statusbar */
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
+    GtkWidget       *notification_area; /**< The notification area */
+    GtkWidget       *notification_text; /**< The notification entry */
     GtkWidget       *tabbar; /**< The tabbar */
     GtkEntry        *inputbar; /**< The inputbar */
     GtkNotebook     *tabs; /**< The tabs notebook */
@@ -671,6 +673,17 @@ void girara_completion_group_add_element(girara_completion_group_t* group, char*
 bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
+ * Default shortcut function to abort
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_abort(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
  * Default shortcut function to quit the application
  *
  * @param session The used girara session
@@ -1030,6 +1043,17 @@ void girara_tab_position_set(girara_session_t* session, girara_tab_t* tab,
  * @return true if an error occured, otherwise false
  */
 bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
+
+/**
+ * Displays a notification for the user. It is possible to pass GIRARA_WARNING
+ * or GIRARA_ERROR as a notification level.
+ *
+ * @param session The girara session
+ * @param level The level
+ * @param format String format
+ * @param ...
+ */
+void girara_notify(girara_session_t* session, int level, const char* format, ...);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"
