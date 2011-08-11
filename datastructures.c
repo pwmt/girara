@@ -352,12 +352,6 @@ girara_list_t* girara_node_get_children(girara_tree_node_t* node)
   return list;
 }
 
-void
-girara_list_free_data(void* data)
-{
-  free(data);
-}
-
 size_t girara_node_get_num_children(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, 0);

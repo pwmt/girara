@@ -163,13 +163,6 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, v
   girara_list_iterator_free(iter);
 
 /**
- * Free function to just call free on the data
- *
- * @param data List data
- */
-void girara_list_free_data(void* data);
-
-/**
  * Create a new node.
  *
  * @param data Data of the new node
