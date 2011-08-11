@@ -1170,7 +1170,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     shortcut_key = tmp[0];
   /* Buffer command */
   } else {
-    shortcut_buffer_command = tmp;
+    shortcut_buffer_command = g_strdup(tmp);
   }
 
   /* Check for passed shortcut command */
@@ -1503,7 +1503,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
         return FALSE;
       }
 
-      girara_list_set_free_function(argument_list, girara_list_free_data);
+      girara_list_set_free_function(argument_list, g_free);
 
       for(int i = 1; i < argc; i++) {
         girara_list_append(argument_list, (void*) g_strdup(argv[i]));
