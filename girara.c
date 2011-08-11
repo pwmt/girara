@@ -98,6 +98,8 @@ girara_session_create()
   girara_setting_add(session, "notification-error-bg",    "#FF1212",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "notification-warning-fg",  "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  TRUE,  NULL, NULL, NULL);
+  girara_setting_add(session, "notification-fg",          "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
+  girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-fg",                "#00FF00",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  NULL, NULL, NULL);
@@ -293,6 +295,8 @@ girara_session_init(girara_session_t* session)
     {"notification-error-bg",   &(session->style.notification_error_background)},
     {"notification-warning-fg", &(session->style.notification_warning_foreground)},
     {"notification-warning-bg", &(session->style.notification_warning_background)},
+    {"notification-fg",         &(session->style.notification_default_foreground)},
+    {"notification-bg",         &(session->style.notification_default_background)},
     {"tabbar-fg",               &(session->style.tabbar_foreground)},
     {"tabbar-bg",               &(session->style.tabbar_background)},
     {"tabbar-focus-fg",         &(session->style.tabbar_focus_foreground)},
@@ -339,9 +343,9 @@ girara_session_init(girara_session_t* session)
 
   /* notification area */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-      GTK_STATE_NORMAL, &(session->style.notification_warning_background));
+      GTK_STATE_NORMAL, &(session->style.notification_default_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-      GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
+      GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
   gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text),
       session->style.font);
 #else
@@ -363,9 +367,9 @@ girara_session_init(girara_session_t* session)
 
   /* notification area */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
-      GTK_STATE_NORMAL, &(session->style.notification_warning_background));
+      GTK_STATE_NORMAL, &(session->style.notification_default_background));
   gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
-      GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
+      GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
   gtk_widget_modify_font(GTK_WIDGET(session->gtk.notification_text),
       session->style.font);
 #endif
@@ -1981,7 +1985,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
           GTK_STATE_NORMAL, &(session->style.notification_error_foreground));
 #endif
       break;
-    default:
+    case GIRARA_WARNING:
 #if (GTK_MAJOR_VERSION == 3)
       gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
           GTK_STATE_NORMAL, &(session->style.notification_warning_background));
@@ -1993,6 +1997,20 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
       gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
 #endif
+    case GIRARA_INFO:
+#if (GTK_MAJOR_VERSION == 3)
+      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_default_background));
+      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+#else
+      gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_default_background));
+      gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+#endif
+    default:
+      return;
   }
 
   /* prepare message */

@@ -333,6 +333,8 @@ struct girara_session_s
     GdkRGBA notification_error_background; /**< The background color of an error notification */
     GdkRGBA notification_warning_foreground; /**< The foreground color of a warning notification */
     GdkRGBA notification_warning_background; /**< The background color of a warning notification */
+    GdkRGBA notification_default_foreground; /**< The foreground color of a default notification */
+    GdkRGBA notification_default_background; /**< The background color of a default notification */
     GdkRGBA tabbar_foreground; /**< The foreground color for a tab */
     GdkRGBA tabbar_background; /**< The background color for a tab */
     GdkRGBA tabbar_focus_foreground; /**< The foreground color for a focused tab */
@@ -354,6 +356,8 @@ struct girara_session_s
     GdkColor notification_error_background; /**< The background color of an error notification */
     GdkColor notification_warning_foreground; /**< The foreground color of a warning notification */
     GdkColor notification_warning_background; /**< The background color of a warning notification */
+    GdkColor notification_default_foreground; /**< The foreground color of a default notification */
+    GdkColor notification_default_background; /**< The background color of a default notification */
     GdkColor tabbar_foreground; /**< The foreground color for a tab */
     GdkColor tabbar_background; /**< The background color for a tab */
     GdkColor tabbar_focus_foreground; /**< The foreground color for a focused tab */
@@ -1043,8 +1047,8 @@ void girara_tab_position_set(girara_session_t* session, girara_tab_t* tab,
 bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
 
 /**
- * Displays a notification for the user. It is possible to pass GIRARA_WARNING
- * or GIRARA_ERROR as a notification level.
+ * Displays a notification for the user. It is possible to pass GIRARA_INFO,
+ * GIRARA_WARNING or GIRARA_ERROR as a notification level.
  *
  * @param session The girara session
  * @param level The level
