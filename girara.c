@@ -825,7 +825,13 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
 {
   g_return_val_if_fail(session != NULL, false);
 
-  gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
+  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == FALSE) {
+    gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
+  }
+
+  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.notification_area)) == TRUE) {
+    gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
+  }
 
   if (argument->data) {
     gtk_entry_set_text(session->gtk.inputbar, (char*) argument->data);
@@ -841,10 +847,6 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
       gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY), x_clipboard_text, -1);
       g_free(x_clipboard_text);
     }
-  }
-
-  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == FALSE) {
-    gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
   }
 
   return true;
