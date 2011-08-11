@@ -858,6 +858,7 @@ girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), 
   g_return_val_if_fail(session != NULL, false);
 
   girara_isc_abort(session, NULL, 0);
+  gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
 
   return false;
 }
