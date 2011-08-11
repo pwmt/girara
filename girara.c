@@ -1041,6 +1041,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   int number_of_arguments = girara_list_size(argument_list);
 
   if (number_of_arguments < 2) {
+    girara_notify(session, GIRARA_WARNING, "Usage: map <binding> <function>");
     return false;
   }
 
@@ -1072,6 +1073,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
     if (is_mode == false) {
       girara_warning("Unregistered mode specified: %s", tmp_inner);
+      girara_notify(session, GIRARA_ERROR, "Unregistered mode specified: %s", tmp_inner);
       g_free(tmp_inner);
       return false;
     }
@@ -1081,6 +1083,8 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   if (is_mode == true) {
     if (number_of_arguments < 3) {
       girara_warning("Invalid number of arguments passed: %d instead of at least 3", number_of_arguments);
+      girara_notify(session, GIRARA_ERROR, "Invalid number of arguments passed: \
+          %d instead of at least 3", number_of_arguments);
       return false;
     }
     tmp = girara_list_nth(argument_list, ++current_command);
@@ -1106,6 +1110,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
           break;
         default:
           girara_warning("Invalid modifier in %s", tmp);
+          girara_notify(session, GIRARA_ERROR, "Invalid modifier in %s", tmp);
           g_free(tmp);
           return false;
       }
@@ -1134,6 +1139,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
         if (found == false) {
           girara_warning("Invalid special key value or mode: %s", tmp);
+          girara_notify(session, GIRARA_ERROR, "Invalid special key value for %s", tmp);
           g_free(tmp);
           return false;
         }
@@ -1159,6 +1165,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
       if (found == false) {
         girara_warning("Invalid special key value or mode: %s", tmp);
+        girara_notify(session, GIRARA_ERROR, "Invalid special key value or mode %s", tmp);
         g_free(tmp);
         return false;
       }
@@ -1188,6 +1195,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
     if (found_mapping == false) {
       girara_warning("Not a valid shortcut function: %s", tmp);
+      girara_notify(session, GIRARA_ERROR, "Not a valid shortcut function:  %s", tmp);
       if (shortcut_buffer_command) {
         g_free(shortcut_buffer_command);
       }
@@ -1269,8 +1277,9 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
     }
   GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, tmp)
 
-  if (setting== NULL) {
+  if (setting == NULL) {
     girara_warning("Unknown option: %s", name);
+    girara_notify(session, GIRARA_ERROR, "Unknown option: %s", name);
     return false;
   }
 
@@ -1284,6 +1293,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
           setting->value.b = true;
         } else {
           girara_warning("Unknown value for option: %s", name);
+          girara_notify(session, GIRARA_ERROR, "Unknown value for option: %s", name);
         }
       } else {
         setting->value.b = !setting->value.b;
@@ -1294,6 +1304,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
         setting->value.f = strtof(value, NULL);
       } else {
         girara_warning("No value defined for option: %s", name);
+        girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
       }
       break;
     case INT:
@@ -1301,6 +1312,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
         setting->value.i = atoi(value);
       } else {
         girara_warning("No value defined for option: %s", name);
+        girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
       }
       break;
     case STRING:
@@ -1312,6 +1324,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
         setting->value.s = g_strdup(value);
       } else {
         girara_warning("No value defined for option: %s", name);
+        girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
       }
       break;
   }
