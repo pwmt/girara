@@ -14,7 +14,7 @@ GIRARA_GTK_VERSION ?= 2
 GTK_INC = $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
 GTK_LIB = $(shell pkg-config --libs gtk+-${GIRARA_GTK_VERSION}.0)
 
-INCS = -I. -I/usr/include ${GTK_INC}
+INCS = ${GTK_INC}
 LIBS = -lc ${GTK_LIB}
 
 # flags

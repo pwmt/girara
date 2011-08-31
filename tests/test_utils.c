@@ -3,7 +3,7 @@
 #define _BSD_SOURCE
 
 #include <glib.h>
-#include <tests.h>
+#include "tests.h"
 #include <sys/types.h>
 #include <pwd.h>
 #include <errno.h>
