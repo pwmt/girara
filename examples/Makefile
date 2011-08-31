@@ -1,6 +1,7 @@
 # See LICENSE file for license and copyright information
 
 include ../config.mk
+include ../common.mk
 
 SOURCE   = example_1.c example_tabs.c
 OBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}}
@@ -15,21 +16,21 @@ options:
 	@echo "CC      = ${CC}"
 
 %-gtk${GIRARA_GTK_VERSION}: %.c ../libgirara-gtk${GIRARA_GTK_VERSION}.a
-	@echo CC $<
+	$(ECHO) CC $<
 	@mkdir -p .depend
-	@${CC} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a  ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a  ${LIBS} -MMD -MF .depend/$@.dep
 
 %-gtk${GIRARA_GTK_VERSION}-debug: %.c ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a
-	@echo CC $<
+	$(ECHO) CC $<
 	@mkdir -p .depend
-	@${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a ${LIBS} -MMD -MF .depend/$@.dep
 
 debug: options ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}-debug}
 
 ${OBJECTS}:  ../config.mk
 
 clean:
-	@rm -rf ${OBJECTS} example_1-gtk${GIRARA_GTK_VERSION} example_1-gtk${GIRARA_GTK_VERSION}-debug \
+	$(QUIET)rm -rf ${OBJECTS} example_1-gtk${GIRARA_GTK_VERSION} example_1-gtk${GIRARA_GTK_VERSION}-debug \
 		example_tabs-gtk${GIRARA_GTK_VERSION} example_tabs-gtk${GIRARA_GTK_VERSION}-debug .depend
 
 .PHONY: all options debug clean
