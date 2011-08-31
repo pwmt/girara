@@ -149,7 +149,6 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
 
   /* hide inputbar */
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
-  gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
 
   return true;
 }
