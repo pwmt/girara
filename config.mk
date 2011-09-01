@@ -11,8 +11,8 @@ PREFIX ?= /usr
 GIRARA_GTK_VERSION ?= 2
 
 # libs
-GTK_INC = $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
-GTK_LIB = $(shell pkg-config --libs gtk+-${GIRARA_GTK_VERSION}.0)
+GTK_INC ?= $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
+GTK_LIB ?= $(shell pkg-config --libs gtk+-${GIRARA_GTK_VERSION}.0)
 
 INCS = ${GTK_INC}
 LIBS = ${GTK_LIB}
