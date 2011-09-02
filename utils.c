@@ -20,7 +20,7 @@
 gchar*
 girara_fix_path(const gchar* path)
 {
-  g_return_val_if_fail(path != NULL || !strlen(path), NULL);
+  g_return_val_if_fail(path != NULL && strlen(path), NULL);
 
   gchar* rpath = NULL;
   if (path[0] == '~') {
