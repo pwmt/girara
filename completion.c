@@ -167,8 +167,12 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
     return false;
   }
 
-  gchar **elements = g_strsplit(input + 1, " ", 2);
-  int n_parameter  =  g_strv_length(elements);
+  gchar** elements = NULL;
+  gint    n_parameter = 0;
+  if (g_shell_parse_argv(input + 1, &n_parameter, &elements, NULL) == FALSE) {
+    g_free(input);
+    return FALSE;
+  }
   g_free(input);
 
   /* get current values */
