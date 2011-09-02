@@ -2013,6 +2013,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
       gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
 #endif
+      break;
     case GIRARA_INFO:
 #if (GTK_MAJOR_VERSION == 3)
       gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
@@ -2025,6 +2026,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
       gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
 #endif
+      break;
     default:
       return;
   }
