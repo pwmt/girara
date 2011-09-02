@@ -432,7 +432,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
     /* update text */
     char* temp;
     if (command_mode) {
-      temp = g_strconcat(":", ((girara_internal_completion_entry_t *) entries_current->data)->value, NULL);
+      char* space = (n_elements == 1) ? " " : "";
+      temp = g_strconcat(":", ((girara_internal_completion_entry_t *) entries_current->data)->value, space, NULL);
     } else {
       temp = g_strconcat(":", previous_command, " ", ((girara_internal_completion_entry_t *) entries_current->data)->value, NULL);
     }
