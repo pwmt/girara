@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "girara.h"
 #include "girara-internal.h"
@@ -414,6 +415,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       unsigned int n_completion_items = tmp ? *tmp : 15;
       unsigned int uh = ceil( n_completion_items / 2);
       unsigned int lh = floor(n_completion_items / 2);
+      free(tmp);
 
       unsigned int current_item = g_list_position(entries, entries_current);
 
