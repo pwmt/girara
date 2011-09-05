@@ -521,6 +521,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       break;
   }
 
+  g_free(separator);
   g_free(input);
 
   return false;
