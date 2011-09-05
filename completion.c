@@ -168,8 +168,21 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
     return false;
   }
 
-  gchar **elements = g_strsplit(input + 1, " ", 2);
-  int n_parameter  =  g_strv_length(elements);
+  gchar** elements = NULL;
+  gint    n_parameter = 0;
+  if (input_length > 1) {
+    if (g_shell_parse_argv(input + 1, &n_parameter, &elements, NULL) == FALSE) {
+      g_free(input);
+      return FALSE;
+    }
+  }
+  else {
+    elements = g_malloc0(2 * sizeof(char*));
+    elements[0] = g_strdup("");
+  }
+  if (n_parameter == 1 && input[input_length-1] == ' ') {
+    n_parameter += 1;
+  }
   g_free(input);
 
   /* get current values */
@@ -285,7 +298,10 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       }
 
       /* generate completion result */
-      girara_completion_t *result = command->completion(session, current_parameter);
+      /* XXX: the last argument should only be current_paramater ... but
+       * therefore the completion functions would need to handle NULL correctly
+       * (see cc_open in zathura). */
+      girara_completion_t *result = command->completion(session, current_parameter ? current_parameter : "");
 
       if (!result || !result->groups) {
         g_free(current_command);
