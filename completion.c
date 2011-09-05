@@ -479,6 +479,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 bool
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
+  gchar *separator = girara_setting_get(session, "word-separator");
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
   int    length = strlen(input);
   int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar));
@@ -496,12 +497,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       for (; i >= 0 && input[i] == ' '; i--);
 
       /* find the beginning of the word */
-      while ((i == (pos - 1)) || ((i > 0) && (input[i] != ' ')
-            && (input[i] != '/') && (input[i] != '.')
-            && (input[i] != '-') && (input[i] != '=')
-            && (input[i] != '&') && (input[i] != '#')
-            && (input[i] != '?')
-            )) {
+      while ((i == (pos - 1)) || ((i > 0) && !strchr(separator, input[i]))) {
         i--;
       }
 
