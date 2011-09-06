@@ -28,6 +28,7 @@ girara_session_create()
   session->gtk.tabbar                  = NULL;
   session->gtk.inputbar                = NULL;
   session->gtk.tabs                    = NULL;
+  session->gtk.results                 = NULL;
 
   session->gtk.embed                   = 0;
 
@@ -1579,6 +1580,17 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     }
 
     special_command = special_command->next;
+  }
+
+  if ((session->gtk.results != NULL) &&
+     (gtk_widget_get_visible(GTK_WIDGET(session->gtk.results)) == TRUE) &&
+#if (GTK_MAJOR_VERSION == 3)
+     (event->keyval == GDK_KEY_space))
+#else
+     (event->keyval == GDK_space))
+#endif
+  {
+    gtk_widget_hide(GTK_WIDGET(session->gtk.results));
   }
 
   return false;

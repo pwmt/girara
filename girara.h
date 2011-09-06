@@ -306,6 +306,7 @@ struct girara_session_s
     GtkWidget       *tabbar; /**< The tabbar */
     GtkEntry        *inputbar; /**< The inputbar */
     GtkNotebook     *tabs; /**< The tabs notebook */
+    GtkBox          *results; /**< Completion results */
 
 #if (GTK_MAJOR_VERSION == 3)
     Window embed; /**< Embedded window */

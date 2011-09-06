@@ -177,8 +177,6 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
   unsigned int current_command_length = current_command ? strlen(current_command) : 0;
 
-  /* create result box */
-  static GtkBox* results          = NULL;
   static GList* entries           = NULL;
   static GList* entries_current   = NULL;
   static char *previous_command   = NULL;
@@ -198,7 +196,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       input_length != previous_length
     )
   {
-    if (results) {
+    if (session->gtk.results) {
       /* destroy elements */
       for (GList* element = entries; element; element = g_list_next(element)) {
         girara_internal_completion_entry_t* entry = (girara_internal_completion_entry_t*) element->data;
@@ -215,8 +213,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       entries_current = NULL;
 
       /* delete row box */
-      gtk_widget_destroy(GTK_WIDGET(results));
-      results = NULL;
+      gtk_widget_destroy(GTK_WIDGET(session->gtk.results));
+      session->gtk.results = NULL;
     }
 
     command_mode = TRUE;
@@ -240,10 +238,10 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
   /* create new list iff
    *  there is no current list
    */
-  if (!results) {
-    results = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  if (!session->gtk.results) {
+    session->gtk.results = GTK_BOX(gtk_vbox_new(FALSE, 0));
 
-    if (!results) {
+    if (!session->gtk.results) {
       g_free(current_command);
       g_free(current_parameter);
 
@@ -309,7 +307,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
           entries = g_list_append(entries, entry);
 
-          gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+          gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
 
         while (element) {
@@ -320,7 +318,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
           entries = g_list_append(entries, entry);
 
-          gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+          gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
 
           element = element->next;
         }
@@ -353,15 +351,15 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
           entries = g_list_append(entries, entry);
 
           /* show entry row */
-          gtk_box_pack_start(results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+          gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
       }
     }
 
     if (entries) {
       entries_current = (argument->n == GIRARA_NEXT) ? g_list_last(entries) : entries;
-      gtk_box_pack_start(session->gtk.box, GTK_WIDGET(results), FALSE, FALSE, 0);
-      gtk_widget_show(GTK_WIDGET(results));
+      gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.results), FALSE, FALSE, 0);
+      gtk_widget_show(GTK_WIDGET(session->gtk.results));
     }
   }
 
