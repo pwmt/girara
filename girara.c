@@ -100,7 +100,7 @@ girara_session_create()
   girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "notification-fg",          "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  NULL, NULL, NULL);
-  girara_setting_add(session, "tabbar-fg",                "#00FF00",            STRING,  TRUE,  NULL, NULL, NULL);
+  girara_setting_add(session, "tabbar-fg",                "#939393",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
