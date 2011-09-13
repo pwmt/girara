@@ -101,10 +101,11 @@ girara_session_create()
   girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "notification-fg",          "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  NULL, NULL, NULL);
-  girara_setting_add(session, "tabbar-fg",                "#00FF00",            STRING,  TRUE,  NULL, NULL, NULL);
+  girara_setting_add(session, "tabbar-fg",                "#939393",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
+  girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  NULL, NULL, NULL);
@@ -2025,6 +2026,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
       gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
 #endif
+      break;
     case GIRARA_INFO:
 #if (GTK_MAJOR_VERSION == 3)
       gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
@@ -2037,6 +2039,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
       gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
 #endif
+      break;
     default:
       return;
   }

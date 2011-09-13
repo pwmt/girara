@@ -11,11 +11,11 @@ PREFIX ?= /usr
 GIRARA_GTK_VERSION ?= 2
 
 # libs
-GTK_INC = $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
-GTK_LIB = $(shell pkg-config --libs gtk+-${GIRARA_GTK_VERSION}.0)
+GTK_INC ?= $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
+GTK_LIB ?= $(shell pkg-config --libs gtk+-${GIRARA_GTK_VERSION}.0)
 
-INCS = -I. -I/usr/include ${GTK_INC}
-LIBS = -lc ${GTK_LIB}
+INCS = ${GTK_INC}
+LIBS = ${GTK_LIB}
 
 # flags
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)
@@ -30,4 +30,7 @@ DFLAGS = -O0 -g
 CC ?= gcc
 
 # strip
-SFLAGS = -s
+SFLAGS ?= -s
+
+# set to something != 0 if you want verbose build output
+VERBOSE ?= 0

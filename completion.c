@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "girara.h"
 #include "girara-internal.h"
@@ -167,8 +168,21 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
     return false;
   }
 
-  gchar **elements = g_strsplit(input + 1, " ", 2);
-  int n_parameter  =  g_strv_length(elements);
+  gchar** elements = NULL;
+  gint    n_parameter = 0;
+  if (input_length > 1) {
+    if (g_shell_parse_argv(input + 1, &n_parameter, &elements, NULL) == FALSE) {
+      g_free(input);
+      return FALSE;
+    }
+  }
+  else {
+    elements = g_malloc0(2 * sizeof(char*));
+    elements[0] = g_strdup("");
+  }
+  if (n_parameter == 1 && input[input_length-1] == ' ') {
+    n_parameter += 1;
+  }
   g_free(input);
 
   /* get current values */
@@ -282,7 +296,10 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       }
 
       /* generate completion result */
-      girara_completion_t *result = command->completion(session, current_parameter);
+      /* XXX: the last argument should only be current_paramater ... but
+       * therefore the completion functions would need to handle NULL correctly
+       * (see cc_open in zathura). */
+      girara_completion_t *result = command->completion(session, current_parameter ? current_parameter : "");
 
       if (!result || !result->groups) {
         g_free(current_command);
@@ -408,6 +425,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       unsigned int n_completion_items = tmp ? *tmp : 15;
       unsigned int uh = ceil( n_completion_items / 2);
       unsigned int lh = floor(n_completion_items / 2);
+      free(tmp);
 
       unsigned int current_item = g_list_position(entries, entries_current);
 
@@ -430,7 +448,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
     /* update text */
     char* temp;
     if (command_mode) {
-      temp = g_strconcat(":", ((girara_internal_completion_entry_t *) entries_current->data)->value, NULL);
+      char* space = (n_elements == 1) ? " " : "";
+      temp = g_strconcat(":", ((girara_internal_completion_entry_t *) entries_current->data)->value, space, NULL);
     } else {
       temp = g_strconcat(":", previous_command, " ", ((girara_internal_completion_entry_t *) entries_current->data)->value, NULL);
     }
@@ -458,6 +477,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 bool
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
+  gchar *separator = girara_setting_get(session, "word-separator");
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
   int    length = strlen(input);
   int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar));
@@ -475,12 +495,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       for (; i >= 0 && input[i] == ' '; i--);
 
       /* find the beginning of the word */
-      while ((i == (pos - 1)) || ((i > 0) && (input[i] != ' ')
-            && (input[i] != '/') && (input[i] != '.')
-            && (input[i] != '-') && (input[i] != '=')
-            && (input[i] != '&') && (input[i] != '#')
-            && (input[i] != '?')
-            )) {
+      while ((i == (pos - 1)) || ((i > 0) && !strchr(separator, input[i]))) {
         i--;
       }
 
@@ -504,6 +519,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       break;
   }
 
+  g_free(separator);
   g_free(input);
 
   return false;
