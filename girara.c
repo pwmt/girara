@@ -33,6 +33,7 @@ girara_session_create()
   session->gtk.embed                   = 0;
 
   session->style.font                  = NULL;
+
   session->bindings.mouse_events       = NULL;
   session->bindings.commands           = NULL;
   session->bindings.special_commands   = NULL;
@@ -47,7 +48,8 @@ girara_session_create()
       (girara_free_function_t) girara_statusbar_item_free);
 
   session->settings                    = girara_list_new();
-  girara_list_set_free_function(session->settings, (girara_free_function_t) girara_setting_free);
+  girara_list_set_free_function(session->settings, (girara_free_function_t)
+      girara_setting_free);
 
   session->signals.view_key_pressed     = 0;
   session->signals.inputbar_key_pressed = 0;
@@ -62,7 +64,8 @@ girara_session_create()
   session->global.data    = NULL;
 
   session->modes.identifiers  = girara_list_new();
-  girara_list_set_free_function(session->modes.identifiers, (girara_free_function_t) girara_mode_string_free);
+  girara_list_set_free_function(session->modes.identifiers,
+      (girara_free_function_t) girara_mode_string_free);
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   session->modes.normal       = normal_mode;
   session->modes.current_mode = normal_mode;
@@ -1205,6 +1208,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
       return false;
     }
   } else {
+    g_free(shortcut_buffer_command);
     return false;
   }
 
@@ -1522,7 +1526,15 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       girara_list_set_free_function(argument_list, g_free);
 
       for(int i = 1; i < argc; i++) {
-        girara_list_append(argument_list, (void*) g_strdup(argv[i]));
+        char* argument = g_strdup(argv[i]);
+        if (argument != NULL) {
+          girara_list_append(argument_list, (void*) argument);
+        } else {
+          girara_list_free(argument_list);
+          g_free(input);
+          g_strfreev(argv);
+          return FALSE;
+        }
       }
 
       command->function(session, argument_list);

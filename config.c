@@ -78,7 +78,15 @@ girara_config_parse(girara_session_t* session, const char* path)
     girara_list_set_free_function(argument_list, g_free);
     if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
       for(int i = 1; i < argc; i++) {
-        girara_list_append(argument_list, (void*) g_strdup(argv[i]));
+        char* argument = g_strdup(argv[i]);
+        if (argument != NULL) {
+          girara_list_append(argument_list, (void*) argument);
+        } else {
+          girara_list_free(argument_list);
+          free(line);
+          fclose(file);
+          return;
+        }
       }
     } else {
       girara_list_free(argument_list);
