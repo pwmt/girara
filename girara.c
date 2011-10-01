@@ -250,6 +250,7 @@ girara_session_init(girara_session_t* session)
   gtk_container_add(GTK_CONTAINER(session->gtk.notification_area), GTK_WIDGET(session->gtk.notification_text));
   gtk_misc_set_alignment(GTK_MISC(session->gtk.notification_text), 0.0, 0.0);
   gtk_misc_set_padding(GTK_MISC(session->gtk.notification_text), 2, 2);
+  gtk_label_set_use_markup(GTK_LABEL(session->gtk.notification_text), TRUE);
 
   /* inputbar */
   gtk_entry_set_inner_border(session->gtk.inputbar, NULL);
@@ -2062,9 +2063,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   char* message = g_strdup_vprintf(format, ap);
   va_end(ap);
 
-  char* escaped_text = g_markup_escape_text(message, -1);
-  gtk_label_set_markup(GTK_LABEL(session->gtk.notification_text), escaped_text);
-  g_free(escaped_text);
+  gtk_label_set_markup(GTK_LABEL(session->gtk.notification_text), message);
   g_free(message);
 
   /* update visibility */
