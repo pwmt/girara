@@ -526,7 +526,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
 }
 
 girara_completion_t*
-girara_cc_set(girara_session_t* session, char* input)
+girara_cc_set(girara_session_t* session, const char* input)
 {
   girara_completion_t* completion  = girara_completion_init();
   girara_completion_group_t* group = girara_completion_group_create(session, NULL);

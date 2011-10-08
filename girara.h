@@ -195,7 +195,7 @@ typedef struct girara_completion_s
  * @param input The current input
  * @return The completion group
  */
-typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* session, char* input);
+typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* session, const char* input);
 
 /**
  * Structure of a shortcut
@@ -854,7 +854,7 @@ bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t
  * @param session The used girara session
  * @param input The current input
  */
-girara_completion_t* girara_cc_set(girara_session_t* session, char* input);
+girara_completion_t* girara_cc_set(girara_session_t* session, const char* input);
 
 /**
  * Adds a new mode by its string identifier
