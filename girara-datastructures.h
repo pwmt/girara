@@ -60,7 +60,7 @@ void girara_list_remove(girara_list_t* list, void* data);
  * @param n Index of the entry
  * @return The nth element or NULL if an error occured
  */
-void* girara_list_nth(girara_list_t* list, unsigned int n);
+void* girara_list_nth(girara_list_t* list, size_t n);
 
 /**
  * Checks if the list contains the given element
@@ -87,6 +87,14 @@ size_t girara_list_size(girara_list_t* list);
  * @return The position or -1 if the data is not found
  */
 int girara_list_position(girara_list_t* list, void* data);
+
+/**
+ * Sort a list
+ *
+ * @param list The list to sort
+ * @param compare compare function
+ */
+void girara_list_sort(girara_list_t* list, girara_compare_function_t compare);
 
 /**
  * Create an iterator pointing at the start of list.

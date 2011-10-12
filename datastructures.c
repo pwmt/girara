@@ -97,7 +97,7 @@ void girara_list_remove(girara_list_t* list, void* data)
   list->start = g_list_delete_link(list->start, tmp);
 }
 
-void* girara_list_nth(girara_list_t* list, unsigned int n)
+void* girara_list_nth(girara_list_t* list, size_t n)
 {
   g_return_val_if_fail(list, NULL);
   g_return_val_if_fail(!list->start || (n < g_list_length(list->start)), NULL);
@@ -221,6 +221,16 @@ girara_list_position(girara_list_t* list, void* data)
   }
 
   return -1;
+}
+
+void girara_list_sort(girara_list_t* list, girara_compare_function_t compare)
+{
+  g_return_if_fail(list != NULL);
+  if (list->start == NULL) {
+    return;
+  }
+
+  list->start = g_list_sort(list->start, compare);
 }
 
 void
