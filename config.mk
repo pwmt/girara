@@ -1,6 +1,13 @@
 # See LICENSE file for license and copyright information
 
 VERSION = 0.0.0
+# Rules for the SOMAJOR and SOMINOR.
+# Before a release check perform the following checks against the last release:
+# * If a function has been removed or the paramaters of a function have changed
+#   bump SOMAJOR and set SOMINOR to 0.
+# * If any of the exported datastructures have changed in a incompatible way
+# 	bump SOMAJOR and set SOMINOR to 0.
+# * If a function has been added bump SOMINOR.
 SOMAJOR = 0
 SOMINOR = 0
 SOVERSION = ${SOMAJOR}.${SOMINOR}
