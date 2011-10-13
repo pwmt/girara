@@ -66,6 +66,14 @@ char* girara_file_read_line(FILE* file);
 char* girara_file_read(const char* path);
 
 /**
+ * Reads the whole file from a file descriptor. Returned string has to be freed
+ *
+ * @param fd The file descriptor
+ * @return Read content or NULL if an error occured
+ */
+char* girara_file_read_from_fd(int fd);
+
+/**
  * Trims and cleans a line from multiple whitespaces
  *
  * @param line
