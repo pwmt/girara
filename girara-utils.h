@@ -58,6 +58,15 @@ FILE* girara_file_open(const char* path, char* mode);
 char* girara_file_read_line(FILE* file);
 
 /**
+ * Reads a line from a file descriptor. Returned string has to be passed to the
+ * free function.
+ *
+ * @param fd File descriptor
+ * @return Read line or NULL if an error occured
+ */
+char* girara_file_read_line_from_fd(int fd);
+
+/**
  * Reads the whole content from a file. Returned string has to be freed.
  *
  * @param path Path to the file
