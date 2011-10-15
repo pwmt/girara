@@ -15,6 +15,32 @@
 girara_list_t* girara_list_new(void);
 
 /**
+ * Create a new list.
+ *
+ * @param gfree Pointer to the free function
+ * @return The girara list object or NULL if an error occured.
+ */
+girara_list_t* girara_list_new2(girara_free_function_t gfree);
+
+/**
+ * Create a new (sorted) list.
+ *
+ * @param cmp Pointer to the compare function.
+ * @return The girara list object or NULL if an error occured.
+ */
+girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp);
+
+/**
+ * Create a new (sorted) list.
+ *
+ * @param cmp Pointer to the compare function.
+ * @param gfree Pointer to the free function
+ * @return The girara list object or NULL if an error occured.
+ */
+
+girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gfree);
+
+/**
  * Set the function which should be called if the stored data should be freed.
  *
  * @param list The girara list object

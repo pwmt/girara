@@ -20,6 +20,7 @@ typedef struct girara_tree_node_data_s
 struct girara_list_s
 {
   girara_free_function_t free; /**> The free function */
+  girara_compare_function_t cmp; /**> The sort function */
   GList* start; /**> List start */
 };
 
@@ -29,7 +30,8 @@ struct girara_list_iterator_s
   GList* element; /**> The list object */
 };
 
-girara_list_t* girara_list_new(void)
+girara_list_t*
+girara_list_new(void)
 {
   girara_list_t* list = g_malloc0(sizeof(girara_list_t));
 
@@ -40,13 +42,51 @@ girara_list_t* girara_list_new(void)
   return list;
 }
 
-void girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree)
+girara_list_t*
+girara_list_new2(girara_free_function_t gfree)
+{
+  girara_list_t* list = girara_list_new();
+  if (list == NULL) {
+    return NULL;
+  }
+
+  girara_list_set_free_function(list, gfree);
+  return list;
+}
+
+girara_list_t*
+girara_sorted_list_new(girara_compare_function_t cmp)
+{
+  girara_list_t* list = girara_list_new();
+  if (list == NULL) {
+    return NULL;
+  }
+
+  list->cmp = cmp;
+  return list;
+}
+
+girara_list_t*
+girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gfree)
+{
+  girara_list_t* list = girara_list_new2(gfree);
+  if (list == NULL) {
+    return NULL;
+  }
+
+  list->cmp = cmp;
+  return list;
+}
+
+void
+girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree)
 {
   g_return_if_fail(list);
   list->free = gfree;
 }
 
-void girara_list_free(girara_list_t* list)
+void
+girara_list_free(girara_list_t* list)
 {
   if (!list) {
     return;
@@ -65,21 +105,30 @@ void girara_list_free(girara_list_t* list)
   g_free(list);
 }
 
-void girara_list_append(girara_list_t* list, void* data)
+void
+girara_list_append(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
 
   list->start = g_list_append(list->start, data);
+  if (list->cmp) {
+    girara_list_sort(list, list->cmp);
+  }
 }
 
-void girara_list_prepend(girara_list_t* list, void* data)
+void
+girara_list_prepend(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
 
   list->start = g_list_prepend(list->start, data);
+  if (list->cmp) {
+    girara_list_sort(list, list->cmp);
+  }
 }
 
-void girara_list_remove(girara_list_t* list, void* data)
+void
+girara_list_remove(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
   if (!list->start) {
@@ -97,7 +146,8 @@ void girara_list_remove(girara_list_t* list, void* data)
   list->start = g_list_delete_link(list->start, tmp);
 }
 
-void* girara_list_nth(girara_list_t* list, size_t n)
+void*
+girara_list_nth(girara_list_t* list, size_t n)
 {
   g_return_val_if_fail(list, NULL);
   g_return_val_if_fail(!list->start || (n < g_list_length(list->start)), NULL);
@@ -108,7 +158,8 @@ void* girara_list_nth(girara_list_t* list, size_t n)
   return tmp->data;
 }
 
-bool girara_list_contains(girara_list_t* list, void* data)
+bool
+girara_list_contains(girara_list_t* list, void* data)
 {
   g_return_val_if_fail(list, false);
   if (!list->start) {
@@ -124,7 +175,8 @@ bool girara_list_contains(girara_list_t* list, void* data)
   return true;
 }
 
-girara_list_iterator_t* girara_list_iterator(girara_list_t* list)
+girara_list_iterator_t*
+girara_list_iterator(girara_list_t* list)
 {
   g_return_val_if_fail(list, NULL);
 
@@ -140,7 +192,8 @@ girara_list_iterator_t* girara_list_iterator(girara_list_t* list)
   return iter;
 }
 
-girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter)
+girara_list_iterator_t*
+girara_list_iterator_next(girara_list_iterator_t* iter)
 {
   if (!iter || !iter->element) {
     return NULL;
@@ -155,26 +208,30 @@ girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter)
   return iter;
 }
 
-bool girara_list_iterator_has_next(girara_list_iterator_t* iter)
+bool
+girara_list_iterator_has_next(girara_list_iterator_t* iter)
 {
   return iter && iter->element && g_list_next(iter->element);
 }
 
-bool girara_list_iterator_is_valid(girara_list_iterator_t* iter)
+bool
+girara_list_iterator_is_valid(girara_list_iterator_t* iter)
 {
   return iter && iter->element;
 }
 
-void* girara_list_iterator_data(girara_list_iterator_t* iter)
+void*
+girara_list_iterator_data(girara_list_iterator_t* iter)
 {
   g_return_val_if_fail(iter && iter->element, NULL);
 
   return iter->element->data;
 }
 
-void girara_list_iterator_set(girara_list_iterator_t* iter, void *data)
+void
+girara_list_iterator_set(girara_list_iterator_t* iter, void *data)
 {
-  g_return_if_fail(iter && iter->element && iter->list);
+  g_return_if_fail(iter && iter->element && iter->list && !iter->list->cmp);
 
   if (iter->list->free) {
     (*iter->list->free)(iter->element->data);
@@ -183,7 +240,8 @@ void girara_list_iterator_set(girara_list_iterator_t* iter, void *data)
   iter->element->data = data;
 }
 
-void girara_list_iterator_free(girara_list_iterator_t* iter)
+void
+girara_list_iterator_free(girara_list_iterator_t* iter)
 {
   if (!iter) {
     return;
@@ -192,7 +250,8 @@ void girara_list_iterator_free(girara_list_iterator_t* iter)
   g_free(iter);
 }
 
-size_t girara_list_size(girara_list_t* list)
+size_t
+girara_list_size(girara_list_t* list)
 {
   g_return_val_if_fail(list, 0);
 
@@ -223,7 +282,8 @@ girara_list_position(girara_list_t* list, void* data)
   return -1;
 }
 
-void girara_list_sort(girara_list_t* list, girara_compare_function_t compare)
+void
+girara_list_sort(girara_list_t* list, girara_compare_function_t compare)
 {
   g_return_if_fail(list != NULL);
   if (list->start == NULL) {
@@ -241,7 +301,8 @@ girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* 
   g_list_foreach(list->start, callback, data);
 }
 
-girara_tree_node_t* girara_node_new(void* data)
+girara_tree_node_t*
+girara_node_new(void* data)
 {
   girara_tree_node_t* node = g_malloc0(sizeof(girara_tree_node_t));
   g_return_val_if_fail(node, NULL);
@@ -266,13 +327,15 @@ girara_tree_node_t* girara_node_new(void* data)
   return node;
 }
 
-void girara_node_set_free_function(girara_tree_node_t* node, girara_free_function_t gfree)
+void
+girara_node_set_free_function(girara_tree_node_t* node, girara_free_function_t gfree)
 {
   g_return_if_fail(node);
   node->free = gfree;
 }
 
-void girara_node_free(girara_tree_node_t* node)
+void
+girara_node_free(girara_tree_node_t* node)
 {
   if (!node) {
     return;
@@ -299,13 +362,15 @@ void girara_node_free(girara_tree_node_t* node)
   g_free(node);
 }
 
-void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child)
+void
+girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child)
 {
   g_return_if_fail(parent && child);
   g_node_append(parent->node, child->node);
 }
 
-girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* data)
+girara_tree_node_t*
+girara_node_append_data(girara_tree_node_t* parent, void* data)
 {
   g_return_val_if_fail(parent, NULL);
   girara_tree_node_t* child = girara_node_new(data);
@@ -316,7 +381,8 @@ girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* da
   return child;
 }
 
-girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node)
+girara_tree_node_t*
+girara_node_get_parent(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, NULL);
 
@@ -330,7 +396,8 @@ girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node)
   return nodedata->node;
 }
 
-girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node)
+girara_tree_node_t*
+girara_node_get_root(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, NULL);
 
@@ -346,7 +413,8 @@ girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node)
   return nodedata->node;
 }
 
-girara_list_t* girara_node_get_children(girara_tree_node_t* node)
+girara_list_t*
+girara_node_get_children(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node, NULL);
   girara_list_t* list = girara_list_new();
@@ -362,14 +430,16 @@ girara_list_t* girara_node_get_children(girara_tree_node_t* node)
   return list;
 }
 
-size_t girara_node_get_num_children(girara_tree_node_t* node)
+size_t
+girara_node_get_num_children(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, 0);
 
   return g_node_n_children(node->node);
 }
 
-void* girara_node_get_data(girara_tree_node_t* node)
+void*
+girara_node_get_data(girara_tree_node_t* node)
 {
   g_return_val_if_fail(node && node->node, NULL);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
@@ -378,7 +448,8 @@ void* girara_node_get_data(girara_tree_node_t* node)
   return nodedata->data;
 }
 
-void girara_node_set_data(girara_tree_node_t* node, void* data)
+void
+girara_node_set_data(girara_tree_node_t* node, void* data)
 {
   g_return_if_fail(node && node->node);
   girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
