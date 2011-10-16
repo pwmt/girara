@@ -286,7 +286,7 @@ void
 girara_list_sort(girara_list_t* list, girara_compare_function_t compare)
 {
   g_return_if_fail(list != NULL);
-  if (list->start == NULL) {
+  if (list->start == NULL || compare == NULL) {
     return;
   }
 
