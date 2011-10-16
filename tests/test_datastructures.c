@@ -109,6 +109,52 @@ test_datastructures_list()
   g_assert_cmpuint(list_free_called, ==, 1);
 }
 
+void
+test_datastructures_sorted_list()
+{
+  girara_list_t* list = girara_sorted_list_new(NULL);
+  g_assert_cmpptr(list, !=, NULL);
+  girara_list_free(list);
+
+  list = girara_sorted_list_new2((girara_compare_function_t) g_strcmp0,
+      (girara_free_function_t) g_free);
+  g_assert_cmpptr(list, !=, NULL);
+
+  static const char* test_strings[] = {
+    "A",
+    "C",
+    "Baa",
+    "Za",
+    "Bba",
+    "Bab",
+    NULL
+  };
+  static const char* test_strings_sorted[] = {
+    "A",
+    "Baa",
+    "Bab",
+    "Bba",
+    "C",
+    "Za",
+    NULL
+  };
+
+  // append
+  for (const char** p = test_strings; *p != NULL; ++p) {
+    girara_list_append(list, (void*)*p);
+  }
+
+  g_assert_cmpuint(girara_list_size(list), ==, sizeof(test_strings) / sizeof(char*) - 1);
+
+  // check sorting
+  const char** p = test_strings_sorted;
+  GIRARA_LIST_FOREACH(list, const char*, iter, value)
+    g_assert_cmpstr(value, ==, *p);
+    ++p;
+  GIRARA_LIST_FOREACH_END(list, const char*, iter, value)
+}
+
+
 static void
 node_free(void* data)
 {

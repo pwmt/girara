@@ -10,6 +10,7 @@ void test_utils_xdg_path();
 
 // datastructures tests
 void test_datastructures_list();
+void test_datastructures_sorted_list();
 void test_datastructures_node();
 
 // session tests
