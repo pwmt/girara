@@ -18,6 +18,32 @@ list_free(void* data)
 }
 
 void
+test_datastructures_list_free()
+{
+  // free function
+  girara_list_t* list = girara_list_new();
+  g_assert_cmpptr(list, !=, NULL);
+  girara_list_set_free_function(list, list_free);
+  girara_list_append(list, (void*)0xDEAD);
+  girara_list_free(list);
+  g_assert_cmpuint(list_free_called, ==, 1);
+
+  list = girara_list_new2(NULL);
+  g_assert_cmpptr(list, !=, NULL);
+  girara_list_free(list);
+
+  // remove with free function
+  list_free_called = 0;
+  list = girara_list_new2(list_free);
+  g_assert_cmpptr(list, !=, NULL);
+  girara_list_append(list, (void*)0xDEAD);
+  girara_list_remove(list, (void*)0xDEAD);
+  g_assert_cmpuint(girara_list_size(list), ==, 0);
+  girara_list_free(list);
+  g_assert_cmpuint(list_free_called, ==, 1);
+}
+
+void
 test_datastructures_list()
 {
   girara_list_t* list = girara_list_new();
@@ -53,13 +79,6 @@ test_datastructures_list()
 
   girara_list_iterator_free(iter);
   girara_list_free(list);
-
-  // free function
-  list = girara_list_new();
-  girara_list_set_free_function(list, list_free);
-  girara_list_append(list, (void*)0xDEAD);
-  girara_list_free(list);
-  g_assert_cmpuint(list_free_called, ==, 1);
 
   // contains
   list = girara_list_new();
@@ -97,16 +116,6 @@ test_datastructures_list()
 
   girara_list_iterator_free(iter);
   girara_list_free(list);
-
-  // remove with free function
-  list_free_called = 0;
-  list = girara_list_new();
-  girara_list_set_free_function(list, list_free);
-  girara_list_append(list, (void*)0xDEAD);
-  girara_list_remove(list, (void*)0xDEAD);
-  g_assert_cmpuint(girara_list_size(list), ==, 0);
-  girara_list_free(list);
-  g_assert_cmpuint(list_free_called, ==, 1);
 }
 
 void
@@ -119,6 +128,8 @@ test_datastructures_sorted_list()
   list = girara_sorted_list_new2((girara_compare_function_t) g_strcmp0,
       (girara_free_function_t) g_free);
   g_assert_cmpptr(list, !=, NULL);
+  girara_list_t* unsorted_list = girara_list_new2((girara_free_function_t) g_free);
+  g_assert_cmpptr(unsorted_list, !=, NULL);
 
   static const char* test_strings[] = {
     "A",
@@ -141,10 +152,12 @@ test_datastructures_sorted_list()
 
   // append
   for (const char** p = test_strings; *p != NULL; ++p) {
-    girara_list_append(list, (void*)*p);
+    girara_list_append(list, (void*)g_strdup(*p));
+    girara_list_append(unsorted_list, (void*)g_strdup(*p));
   }
 
   g_assert_cmpuint(girara_list_size(list), ==, sizeof(test_strings) / sizeof(char*) - 1);
+  g_assert_cmpuint(girara_list_size(unsorted_list), ==, sizeof(test_strings) / sizeof(char*) - 1);
 
   // check sorting
   const char** p = test_strings_sorted;
@@ -152,6 +165,17 @@ test_datastructures_sorted_list()
     g_assert_cmpstr(value, ==, *p);
     ++p;
   GIRARA_LIST_FOREACH_END(list, const char*, iter, value)
+
+  girara_list_sort(unsorted_list, (girara_compare_function_t) g_strcmp0);
+  p = test_strings_sorted;
+  GIRARA_LIST_FOREACH(unsorted_list, const char*, iter, value)
+    g_assert_cmpstr(value, ==, *p);
+    ++p;
+  GIRARA_LIST_FOREACH_END(unsorted_list, const char*, iter, value)
+
+
+  girara_list_free(list);
+  girara_list_free(unsorted_list);
 }
 
 

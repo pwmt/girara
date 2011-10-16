@@ -13,7 +13,8 @@ int main(int argc, char** argv)
   g_test_add_func("/utils/xdg_path", test_utils_xdg_path);
   // datastructures tests
   g_test_add_func("/datastructures/list", test_datastructures_list);
-  g_test_add_func("/datastructures/sorted_list", test_datastructures_sorted_list);
+  g_test_add_func("/datastructures/list/free", test_datastructures_list_free);
+  g_test_add_func("/datastructures/list/sorted", test_datastructures_sorted_list);
   g_test_add_func("/datastructures/node", test_datastructures_node);
 
   // session tests

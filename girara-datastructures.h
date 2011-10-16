@@ -187,14 +187,16 @@ void girara_list_iterator_free(girara_list_iterator_t* iter);
 void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data);
 
 #define GIRARA_LIST_FOREACH(list, type, iter, data) \
-  girara_list_iterator_t* iter = girara_list_iterator(list); \
-  while (girara_list_iterator_is_valid(iter)) { \
-    type data = girara_list_iterator_data(iter);
+  do { \
+    girara_list_iterator_t* iter = girara_list_iterator(list); \
+    while (girara_list_iterator_is_valid(iter)) { \
+      type data = girara_list_iterator_data(iter);
 
 #define GIRARA_LIST_FOREACH_END(list, type, iter, data) \
-    girara_list_iterator_next(iter); \
-  } \
-  girara_list_iterator_free(iter);
+      girara_list_iterator_next(iter); \
+    } \
+    girara_list_iterator_free(iter); \
+  } while(0);
 
 /**
  * Create a new node.
