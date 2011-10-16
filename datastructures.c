@@ -110,9 +110,10 @@ girara_list_append(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
 
-  list->start = g_list_append(list->start, data);
   if (list->cmp) {
-    girara_list_sort(list, list->cmp);
+    list->start = g_list_insert_sorted(list->start, data, list->cmp);
+  } else {
+    list->start = g_list_append(list->start, data);
   }
 }
 
@@ -121,9 +122,10 @@ girara_list_prepend(girara_list_t* list, void* data)
 {
   g_return_if_fail(list);
 
-  list->start = g_list_prepend(list->start, data);
   if (list->cmp) {
-    girara_list_sort(list, list->cmp);
+    girara_list_append(list, data);
+  } else {
+    list->start = g_list_prepend(list->start, data);
   }
 }
 
