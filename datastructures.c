@@ -93,15 +93,10 @@ girara_list_free(girara_list_t* list)
   }
 
   if (list->free) {
-    GList* start = list->start;
-
-    while (start) {
-      (*list->free)(start->data);
-      start = g_list_next(start);
-    }
+    g_list_free_full(list->start, list->free);
+  } else {
+    g_list_free(list->start);
   }
-
-  g_list_free(list->start);
   g_free(list);
 }
 
