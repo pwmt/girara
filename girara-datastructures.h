@@ -196,7 +196,7 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, v
       girara_list_iterator_next(iter); \
     } \
     girara_list_iterator_free(iter); \
-  } while(0);
+  } while(0)
 
 /**
  * Create a new node.

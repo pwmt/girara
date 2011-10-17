@@ -17,7 +17,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
       girara_list_iterator_free(iter);
       return FALSE;
     }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
 
   /* add new setting */
   girara_setting_t* setting = g_slice_new(girara_setting_t);
@@ -85,7 +85,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
 
       return TRUE;
     }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
 
   return FALSE;
 }
@@ -138,7 +138,7 @@ girara_setting_get(girara_session_t* session, char* name)
           return NULL;
       }
     }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
 
   return NULL;
 }

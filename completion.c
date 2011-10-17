@@ -539,7 +539,7 @@ girara_cc_set(girara_session_t* session, const char* input)
         !strncmp(input, setting->name, input_length)) {
       girara_completion_group_add_element(group, setting->name, setting->description);
     }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
 
   return completion;
 }

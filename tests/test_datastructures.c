@@ -164,14 +164,14 @@ test_datastructures_sorted_list()
   GIRARA_LIST_FOREACH(list, const char*, iter, value)
     g_assert_cmpstr(value, ==, *p);
     ++p;
-  GIRARA_LIST_FOREACH_END(list, const char*, iter, value)
+  GIRARA_LIST_FOREACH_END(list, const char*, iter, value);
 
   girara_list_sort(unsorted_list, (girara_compare_function_t) g_strcmp0);
   p = test_strings_sorted;
   GIRARA_LIST_FOREACH(unsorted_list, const char*, iter, value)
     g_assert_cmpstr(value, ==, *p);
     ++p;
-  GIRARA_LIST_FOREACH_END(unsorted_list, const char*, iter, value)
+  GIRARA_LIST_FOREACH_END(unsorted_list, const char*, iter, value);
 
 
   girara_list_free(list);

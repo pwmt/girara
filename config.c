@@ -21,7 +21,7 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, data)
+  GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, data);
 
   /* add new config handle */
   girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
@@ -103,7 +103,7 @@ girara_config_parse(girara_session_t* session, const char* path)
         handle->handle(session, argument_list);
         break;
       }
-    GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, handle)
+    GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, tmp);
 
     if (handle == NULL) {
       girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);
