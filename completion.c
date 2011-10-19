@@ -528,13 +528,20 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
 girara_completion_t*
 girara_cc_set(girara_session_t* session, const char* input)
 {
-  girara_completion_t* completion  = girara_completion_init();
-  girara_completion_group_t* group = girara_completion_group_create(session, NULL);
-  girara_completion_add_group(completion, group);
-
-  if (!input) {
-    return completion;
+  if (input == NULL) {
+    return NULL;
   }
+
+  girara_completion_t* completion  = girara_completion_init();
+  if (completion == NULL) {
+    return NULL;
+  }
+  girara_completion_group_t* group = girara_completion_group_create(session, NULL);
+  if (group == NULL) {
+    girara_completion_free(completion);
+    return NULL;
+  }
+  girara_completion_add_group(completion, group);
 
   unsigned int input_length = strlen(input);
 
