@@ -321,6 +321,10 @@ error_free:
 
 error_ret:
 
+  if (file) {
+    fclose(file);
+  }
+
   return NULL;
 }
 
