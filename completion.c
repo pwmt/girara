@@ -532,7 +532,11 @@ girara_cc_set(girara_session_t* session, const char* input)
   girara_completion_group_t* group = girara_completion_group_create(session, NULL);
   girara_completion_add_group(completion, group);
 
-  unsigned int input_length = input ? strlen(input) : 0;
+  if (!input) {
+    return completion;
+  }
+
+  unsigned int input_length = strlen(input);
 
   GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
     if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
