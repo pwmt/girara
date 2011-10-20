@@ -35,10 +35,6 @@ girara_list_new(void)
 {
   girara_list_t* list = g_malloc0(sizeof(girara_list_t));
 
-  if (!list) {
-    return NULL;
-  }
-
   return list;
 }
 
@@ -187,7 +183,6 @@ girara_list_iterator(girara_list_t* list)
   }
 
   girara_list_iterator_t* iter = g_malloc0(sizeof(girara_list_iterator_t));
-  g_return_val_if_fail(iter, NULL);
   iter->list = list;
   iter->element = list->start;
 
@@ -307,14 +302,7 @@ girara_tree_node_t*
 girara_node_new(void* data)
 {
   girara_tree_node_t* node = g_malloc0(sizeof(girara_tree_node_t));
-  g_return_val_if_fail(node, NULL);
-
   girara_tree_node_data_t* nodedata = g_malloc0(sizeof(girara_tree_node_data_t));
-
-  if (!nodedata) {
-    g_free(node);
-    return NULL;
-  }
 
   nodedata->data = data;
   nodedata->node = node;

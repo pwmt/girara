@@ -73,9 +73,6 @@ girara_get_home_directory(const gchar* user)
 #endif
 
   gchar* buffer = g_malloc0(sizeof(gchar) * bufsize);
-  if (!buffer) {
-    return NULL;
-  }
 
   getpwnam_r(user, &pwd, buffer, bufsize, &result);
   if (result == NULL) {
