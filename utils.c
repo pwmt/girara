@@ -166,6 +166,10 @@ girara_file_open(const char* path, char* mode)
 char*
 girara_file_read_line(FILE* file)
 {
+  if (file == NULL) {
+    return NULL;
+  }
+
   unsigned int bc = BLOCK_SIZE;
   unsigned int i  = 0;
   char* buffer    = malloc(sizeof(char) * bc);
@@ -266,15 +270,13 @@ error_ret:
 char*
 girara_file_read(const char* path)
 {
-  FILE *file = NULL;
-
   if (path == NULL) {
-    goto error_ret;
+    return NULL;
   }
 
-  file = girara_file_open(path, "r");
+  FILE* file = girara_file_open(path, "r");
   if (file == NULL) {
-    goto error_ret;
+    return NULL;
   }
 
   unsigned int bc = BLOCK_SIZE;
@@ -323,9 +325,7 @@ error_free:
 
 error_ret:
 
-  if (file) {
-    fclose(file);
-  }
+  fclose(file);
 
   return NULL;
 }
