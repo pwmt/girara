@@ -8,9 +8,11 @@ int main(int argc, char** argv)
 {
   g_test_init(&argc, &argv, NULL);
   // utils tests
-  g_test_add_func("/utils/home_directory", test_utils_home_directory);
-  g_test_add_func("/utils/fix_path", test_utils_fix_path);
-  g_test_add_func("/utils/xdg_path", test_utils_xdg_path);
+  g_test_add_func("/utils/path/home", test_utils_home_directory);
+  g_test_add_func("/utils/path/fix", test_utils_fix_path);
+  g_test_add_func("/utils/path/xdg", test_utils_xdg_path);
+  g_test_add_func("/utils/file/invariants", test_utils_xdg_path);
+
   // datastructures tests
   g_test_add_func("/datastructures/list", test_datastructures_list);
   g_test_add_func("/datastructures/list/free", test_datastructures_list_free);

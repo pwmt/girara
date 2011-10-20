@@ -168,3 +168,16 @@ test_utils_xdg_path()
   xdg_path_impl(XDG_CONFIG, "XDG_CONFIG_HOME", g_get_user_config_dir());
   xdg_path_impl(XDG_DATA, "XDG_DATA_HOME", g_get_user_data_dir());
 }
+
+void
+test_utils_file_invariants()
+{
+  g_assert_cmpptr(girara_file_open(NULL, NULL), ==, NULL);
+  g_assert_cmpptr(girara_file_open("somefile", NULL), ==, NULL);
+  g_assert_cmpptr(girara_file_open(NULL, "r"), ==, NULL);
+
+  g_assert_cmpptr(girara_file_read_line(NULL), ==, NULL);
+  g_assert_cmpptr(girara_file_read_line_from_fd(-1), ==, NULL);
+  g_assert_cmpptr(girara_file_read(NULL), ==, NULL);
+  g_assert_cmpptr(girara_file_read_from_fd(-1), ==, NULL);
+}

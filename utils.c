@@ -110,13 +110,11 @@ girara_file_open(const char* path, char* mode)
     return NULL;
   }
 
-  FILE* fp;
-  if ((fp = fopen(fixed_path, mode)) == NULL) {
-    g_free(fixed_path);
-    return NULL;
-  }
-
+  FILE* fp = fopen(fixed_path, mode);
   g_free(fixed_path);
+  if (fp  == NULL) {
+        return NULL;
+  }
 
   return fp;
 
