@@ -24,9 +24,9 @@ girara_fix_path(const gchar* path)
 
   gchar* rpath = NULL;
   if (path[0] == '~') {
-    int len = strlen(path);
+    const size_t len = strlen(path);
     gchar* user = NULL;
-    int idx = 1;
+    size_t idx = 1;
 
     if (len > 1 && path[1] != '/') {
       while (path[idx] && path[idx] != '/') {
