@@ -266,11 +266,13 @@ error_ret:
 char*
 girara_file_read(const char* path)
 {
+  FILE *file = NULL;
+
   if (path == NULL) {
     goto error_ret;
   }
 
-  FILE* file = girara_file_open(path, "r");
+  file = girara_file_open(path, "r");
   if (file == NULL) {
     goto error_ret;
   }
