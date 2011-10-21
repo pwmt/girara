@@ -3,6 +3,9 @@
 #ifndef GIRARA_INTERNAL_H
 #define GIRARA_INTERNAL_H
 
+#include "girara-types.h"
+#include <gtk/gtk.h>
+
 #define CLEAN(m) (m & ~(GDK_MOD2_MASK) & ~(GDK_MOD5_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
 #define FORMAT_COMMAND "<b>%s</b>"
 #define FORMAT_DESCRIPTION "<i>%s</i>"
