@@ -75,7 +75,6 @@ struct girara_command_s
   girara_command_function_t function; /**< Function */
   girara_completion_function_t completion; /**< Completion function of the command */
   char* description; /**< Description of the command */
-  struct girara_command_s *next; /**< Next command (linked list) */
 };
 
 /**
