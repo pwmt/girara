@@ -175,4 +175,15 @@ bool girara_session_init(girara_session_t* session);
  */
 bool girara_session_destroy(girara_session_t* session);
 
+/**
+ * Displays a notification for the user. It is possible to pass GIRARA_INFO,
+ * GIRARA_WARNING or GIRARA_ERROR as a notification level.
+ *
+ * @param session The girara session
+ * @param level The level
+ * @param format String format
+ * @param ...
+ */
+void girara_notify(girara_session_t* session, int level, const char* format, ...);
+
 #endif

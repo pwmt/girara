@@ -339,36 +339,6 @@ bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* ar
 bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
- * Default command to map sortcuts
- *
- * @param session The used girara session
- * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_list);
-
-/**
- * Default command to quit the application
- *
- * @param session The used girara session
- * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_cmd_quit(girara_session_t* session, girara_list_t* argument_list);
-
-/**
- * Default command to set the value of settings
- *
- * @param session The used girara session
- * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list);
-
-/**
  * Default callback for key press events in the view area
  *
  * @param widget The used widget
@@ -624,17 +594,6 @@ void girara_tab_position_set(girara_session_t* session, girara_tab_t* tab,
  * @return true if an error occured, otherwise false
  */
 bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
-
-/**
- * Displays a notification for the user. It is possible to pass GIRARA_INFO,
- * GIRARA_WARNING or GIRARA_ERROR as a notification level.
- *
- * @param session The girara session
- * @param level The level
- * @param format String format
- * @param ...
- */
-void girara_notify(girara_session_t* session, int level, const char* format, ...);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"

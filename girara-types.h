@@ -46,6 +46,17 @@ enum
 };
 
 /**
+ * Debug levels
+ */
+typedef enum girara_debug_level_e
+{
+  GIRARA_INFO, /**> Information debug output */
+  GIRARA_WARNING, /**> Warning level */
+  GIRARA_DEBUG, /**> Debug messages */
+  GIRARA_ERROR /**> Error */
+} girara_debug_level_t;
+
+/**
  * Mode identifier
  */
 typedef int girara_mode_t;
