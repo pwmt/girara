@@ -72,6 +72,97 @@ struct girara_command_s
   struct girara_command_s *next; /**< Next command (linked list) */
 };
 
+/**
+ * Structure of a statusbar item
+ */
+struct girara_statusbar_item_s
+{
+  GtkWidget* box; /**< Event box */
+  GtkLabel *text; /**< Text label */
+};
+
+struct girara_mode_string_s
+{
+  girara_mode_t index; /**< Index */
+  char* name; /**< Name of the mode object */
+};
+
+/**
+ * Shortcut mapping
+ */
+struct girara_shortcut_mapping_s
+{
+  char* identifier; /**> Identifier string */
+  girara_shortcut_function_t function; /** Shortcut function */
+};
+
+/**
+ * Argument mapping
+ */
+struct girara_argument_mapping_s
+{
+  char* identifier; /**> Identifier string */
+  int value; /**> Value */
+  struct girara_argument_mapping_s* next; /**> Next entry */
+};
+
+/**
+ * Structure of a shortcut
+ */
+struct girara_shortcut_s
+{
+  guint mask; /**< Mask */
+  guint key; /**< Key */
+  char* buffered_command; /**< Buffer command */
+  girara_shortcut_function_t function; /**< The correspondending function */
+  girara_mode_t mode; /**< Mode identifier */
+  girara_argument_t argument; /**< Given argument */
+};
+
+/**
+ * Structure of a inputbar shortcut
+ */
+struct girara_inputbar_shortcut_s
+{
+  guint mask; /**< Mask */
+  guint key; /**< Key */
+  girara_shortcut_function_t function; /**< Function */
+  girara_argument_t argument; /**< Given argument */
+};
+
+/**
+ * Structure of a special command
+ */
+struct girara_special_command_s
+{
+  char identifier; /**< Identifier */
+  girara_inputbar_special_function_t function; /**< Function */
+  bool always; /**< Evalute on every change of the input */
+  girara_argument_t argument; /**< Argument */
+  struct girara_special_command_s *next; /**< Next special command (linked list) */
+};
+
+/**
+ * Structure of a mouse event
+ */
+struct girara_mouse_event_s
+{
+  guint mask; /**< Mask */
+  guint button; /**< Button */
+  girara_shortcut_function_t function; /**< Function */
+  girara_mode_t mode; /**< Allowed modes */
+  girara_argument_t argument; /**< Given argument */
+  struct girara_mouse_event_s *next; /**< Next mouse event (linked list) */
+};
+
+/**
+ * Config handle
+ */
+struct girara_config_handle_s
+{
+  char* identifier;
+  girara_command_function_t handle;
+};
 
 
 #endif
