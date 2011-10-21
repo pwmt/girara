@@ -6,7 +6,7 @@
 #include "girara-internal.h"
 
 bool
-girara_setting_add(girara_session_t* session, char* name, void* value, girara_setting_type_t type, bool init_only, char* description, girara_setting_callback_t callback, void* data)
+girara_setting_add(girara_session_t* session, const char* name, void* value, girara_setting_type_t type, bool init_only, const char* description, girara_setting_callback_t callback, void* data)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
@@ -15,7 +15,7 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
     if (!g_strcmp0(name, setting->name)) {
       girara_list_iterator_free(iter);
-      return FALSE;
+      return false;
     }
   GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
 
@@ -29,27 +29,14 @@ girara_setting_add(girara_session_t* session, char* name, void* value, girara_se
   setting->callback    = callback;
   setting->data        = data;
 
-  switch (type) {
-    case BOOLEAN:
-      setting->value.b = *((bool *) value);
-      break;
-    case FLOAT:
-      setting->value.f = *((float *) value);
-      break;
-    case INT:
-      setting->value.i = *((int *) value);
-      break;
-    case STRING:
-      setting->value.s = value ? g_strdup(value) : NULL;
-      break;
-  }
-
   girara_list_append(session->settings, setting);
-  return TRUE;
+  girara_setting_set(session, name, value);
+
+  return true;
 }
 
 bool
-girara_setting_set(girara_session_t* session, char* name, void* value)
+girara_setting_set(girara_session_t* session, const char* name, void* value)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
@@ -91,7 +78,7 @@ girara_setting_set(girara_session_t* session, char* name, void* value)
 }
 
 void*
-girara_setting_get(girara_session_t* session, char* name)
+girara_setting_get(girara_session_t* session, const char* name)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(name != NULL, FALSE);
@@ -100,36 +87,21 @@ girara_setting_get(girara_session_t* session, char* name)
     if (g_strcmp0(setting->name, name) == 0) {
       girara_list_iterator_next(iter);
 
-      bool *bvalue = NULL;
-      float    *fvalue = NULL;
-      int      *ivalue = NULL;
+      bool  *bvalue = NULL;
+      float *fvalue = NULL;
+      int   *ivalue = NULL;
 
       switch(setting->type) {
         case BOOLEAN:
-          bvalue = malloc(sizeof(bool));
-
-          if (!bvalue) {
-            return NULL;
-          }
-
+          bvalue = g_malloc0(sizeof(bool));
           *bvalue = setting->value.b;
           return bvalue;
         case FLOAT:
-          fvalue = malloc(sizeof(float));
-
-          if (!fvalue) {
-            return NULL;
-          }
-
+          fvalue = g_malloc0(sizeof(float));
           *fvalue = setting->value.f;
           return fvalue;
         case INT:
-          ivalue = malloc(sizeof(int));
-
-          if (!ivalue) {
-            return NULL;
-          }
-
+          ivalue = g_malloc0(sizeof(int));
           *ivalue = setting->value.i;
           return ivalue;
         case STRING:
