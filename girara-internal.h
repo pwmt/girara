@@ -29,9 +29,6 @@
 #define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
 #define UNTITLED_TAB_TITLE "untitled"
 
-
-HIDDEN void girara_toggle_widget_visibility(GtkWidget* widget);
-
 /**
  * Free girara_settings_t struct
  *
@@ -50,6 +47,15 @@ HIDDEN void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* shortcut);
 HIDDEN void girara_mode_string_free(girara_mode_string_t* mode);
 
 HIDDEN void girara_statusbar_item_free(girara_statusbar_item_t* statusbaritem);
+
+HIDDEN void girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping);
+
+HIDDEN void girara_special_command_free(girara_special_command_t* special_command);
+
+HIDDEN void girara_command_free(girara_command_t* command);
+
+HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
+
 
 /**
  * Default complection function for the settings
@@ -103,7 +109,6 @@ struct girara_argument_mapping_s
 {
   char* identifier; /**> Identifier string */
   int value; /**> Value */
-  struct girara_argument_mapping_s* next; /**> Next entry */
 };
 
 /**
@@ -139,7 +144,6 @@ struct girara_special_command_s
   girara_inputbar_special_function_t function; /**< Function */
   bool always; /**< Evalute on every change of the input */
   girara_argument_t argument; /**< Argument */
-  struct girara_special_command_s *next; /**< Next special command (linked list) */
 };
 
 /**
@@ -152,7 +156,6 @@ struct girara_mouse_event_s
   girara_shortcut_function_t function; /**< Function */
   girara_mode_t mode; /**< Allowed modes */
   girara_argument_t argument; /**< Given argument */
-  struct girara_mouse_event_s *next; /**< Next mouse event (linked list) */
 };
 
 /**
@@ -163,6 +166,5 @@ struct girara_config_handle_s
   char* identifier;
   girara_command_function_t handle;
 };
-
 
 #endif

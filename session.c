@@ -33,9 +33,12 @@ girara_session_create()
 
   session->style.font                  = NULL;
 
-  session->bindings.mouse_events       = NULL;
-  session->bindings.commands           = NULL;
-  session->bindings.special_commands   = NULL;
+  session->bindings.mouse_events       = girara_list_new2(
+      (girara_free_function_t) girara_mouse_event_free);
+  session->bindings.commands           = girara_list_new2(
+      (girara_free_function_t) girara_command_free);
+  session->bindings.special_commands   = girara_list_new2(
+      (girara_free_function_t) girara_special_command_free);
   session->bindings.shortcuts          = girara_list_new2(
       (girara_free_function_t) girara_shortcut_free);
   session->bindings.inputbar_shortcuts = girara_list_new2(
@@ -411,40 +414,16 @@ girara_session_destroy(girara_session_t* session)
   session->bindings.inputbar_shortcuts = NULL;
 
   /* clean up commands */
-  girara_command_t* command = session->bindings.commands;
-  while (command != NULL) {
-    girara_command_t* tmp = command->next;
-    if (command->command != NULL) {
-      g_free(command->command);
-    }
-    if (command->abbr != NULL) {
-      g_free(command->abbr);
-    }
-    if (command->description != NULL) {
-      g_free(command->description);
-    }
-    g_slice_free(girara_command_t, command);
-
-    command = tmp;
-  }
+  girara_list_free(session->bindings.commands);
+  session->bindings.commands = NULL;
 
   /* clean up special commands */
-  girara_special_command_t* special_command = session->bindings.special_commands;
-  while (special_command != NULL) {
-    girara_special_command_t* tmp = special_command->next;
-    g_slice_free(girara_special_command_t, special_command);
-
-    special_command = tmp;
-  }
+  girara_list_free(session->bindings.special_commands);
+  session->bindings.special_commands = NULL;
 
   /* clean up mouse events */
-  girara_mouse_event_t* mouse_event = session->bindings.mouse_events;
-  while (mouse_event != NULL) {
-    girara_mouse_event_t* tmp = mouse_event->next;
-    g_slice_free(girara_mouse_event_t, mouse_event);
-
-    mouse_event = tmp;
-  }
+  girara_list_free(session->bindings.mouse_events);
+  session->bindings.mouse_events = NULL;
 
   /* clean up settings */
   girara_list_free(session->settings);
@@ -463,13 +442,8 @@ girara_session_destroy(girara_session_t* session)
   session->config.shortcut_mappings = NULL;
 
   /* clean up argument mappings */
-  girara_argument_mapping_t* argument_mapping = session->config.argument_mappings;
-  while (argument_mapping != NULL) {
-    girara_argument_mapping_t* tmp = argument_mapping->next;
-    g_free(argument_mapping->identifier);
-    g_slice_free(girara_argument_mapping_t, argument_mapping);
-    argument_mapping = tmp;
-  }
+  girara_list_free(session->config.argument_mappings);
+  session->config.argument_mappings = NULL;
 
   /* clean up modes */
   girara_list_free(session->modes.identifiers);

@@ -262,15 +262,12 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   if (++current_command < number_of_arguments) {
     tmp = (char*) girara_list_nth(argument_list, current_command);
 
-    girara_argument_mapping_t* mapping = session->config.argument_mappings;
-    while (mapping) {
+    GIRARA_LIST_FOREACH(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping)
       if (!g_strcmp0(tmp, mapping->identifier)) {
         shortcut_argument_n = mapping->value;
         break;
       }
-
-      mapping = mapping->next;
-    }
+    GIRARA_LIST_FOREACH_END(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
 
     /* If no known argument is passed we save it in the data field */
     if (shortcut_argument_n == 0) {

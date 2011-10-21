@@ -8,6 +8,9 @@
 #include "girara.h"
 #include "girara-internal.h"
 
+static void girara_toggle_widget_visibility(GtkWidget* widget);
+
+
 bool
 girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
@@ -52,35 +55,25 @@ girara_shortcut_free(girara_shortcut_t* shortcut)
 bool
 girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description)
 {
-  g_return_val_if_fail(session  != NULL, FALSE);
-  g_return_val_if_fail(command  != NULL, FALSE);
-  g_return_val_if_fail(function != NULL, FALSE);
+  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(command  != NULL, false);
+  g_return_val_if_fail(function != NULL, false);
 
   /* search for existing binding */
-  girara_command_t* commands_it = session->bindings.commands;
-  girara_command_t* last_command = commands_it;
-
-  while (commands_it) {
+  GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, commands_it)
     if (!g_strcmp0(commands_it->command, command)) {
-      if (commands_it->abbr) {
-        free(commands_it->abbr);
-      }
-
-      if (commands_it->description) {
-        free(commands_it->description);
-      }
+      g_free(commands_it->abbr);
+      g_free(commands_it->description);
 
       commands_it->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
       commands_it->function    = function;
       commands_it->completion  = completion;
       commands_it->description = description ? g_strdup(description) : NULL;
 
-      return TRUE;
+      girara_list_iterator_free(iter);
+      return true;
     }
-
-    last_command = commands_it;
-    commands_it  = commands_it->next;
-  }
+  GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, commands_it);
 
   /* add new inputbar command */
   girara_command_t* new_command = g_slice_new(girara_command_t);
@@ -90,22 +83,16 @@ girara_inputbar_command_add(girara_session_t* session, char* command , char* abb
   new_command->function    = function;
   new_command->completion  = completion;
   new_command->description = description ? g_strdup(description) : NULL;
-  new_command->next        = NULL;
+  girara_list_append(session->bindings.commands, new_command);
 
-  if (last_command) {
-    last_command->next = new_command;
-  } else {
-    session->bindings.commands = new_command;
-  }
-
-  return TRUE;
+  return true;
 }
 
 bool
 girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data)
 {
-  g_return_val_if_fail(session  != NULL, FALSE);
-  g_return_val_if_fail(function != NULL, FALSE);
+  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(function != NULL, false);
 
   girara_argument_t argument = {argument_n, argument_data};
 
@@ -141,26 +128,21 @@ girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut)
 bool
 girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, bool always, int argument_n, void* argument_data)
 {
-  g_return_val_if_fail(session  != NULL, FALSE);
-  g_return_val_if_fail(function != NULL, FALSE);
+  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(function != NULL, false);
 
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing special command */
-  girara_special_command_t* scommand_it = session->bindings.special_commands;
-  girara_special_command_t* last_scommand = scommand_it;
-
-  while (scommand_it) {
+  GIRARA_LIST_FOREACH(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it)
     if (scommand_it->identifier == identifier) {
       scommand_it->function = function;
       scommand_it->always   = always;
       scommand_it->argument = argument;
-      return TRUE;
+      girara_list_iterator_free(iter);
+      return true;
     }
-
-    last_scommand = scommand_it;
-    scommand_it = scommand_it->next;
-  }
+  GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it);
 
   /* create new special command */
   girara_special_command_t* special_command = g_slice_new(girara_special_command_t);
@@ -169,41 +151,31 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   special_command->function   = function;
   special_command->always     = always;
   special_command->argument   = argument;
-  special_command->next       = NULL;
 
-  if (last_scommand) {
-    last_scommand->next = special_command;
-  } else {
-    session->bindings.special_commands = special_command;
-  }
+  girara_list_append(session->bindings.special_commands, special_command);
 
-  return TRUE;
+  return true;
 }
 
 bool
 girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
-  g_return_val_if_fail(session  != NULL, FALSE);
-  g_return_val_if_fail(function != NULL, FALSE);
+  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(function != NULL, false);
 
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing binding */
-  girara_mouse_event_t* me_it = session->bindings.mouse_events;
-  girara_mouse_event_t* last_me = me_it;
-
-  while (me_it) {
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, me_it)
     if (me_it->mask == mask && me_it->button == button &&
        me_it->mode == mode)
     {
       me_it->function = function;
       me_it->argument = argument;
-      return TRUE;
+      girara_list_iterator_free(iter);
+      return true;
     }
-
-    last_me = me_it;
-    me_it = me_it->next;
-  }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, me_it);
 
   /* add new mouse event */
   girara_mouse_event_t* mouse_event = g_slice_new(girara_mouse_event_t);
@@ -213,15 +185,9 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   mouse_event->function = function;
   mouse_event->mode     = mode;
   mouse_event->argument = argument;
-  mouse_event->next     = NULL;
+  girara_list_append(session->bindings.mouse_events, mouse_event);
 
-  if (last_me) {
-    last_me->next = mouse_event;
-  } else {
-    session->bindings.mouse_events = mouse_event;
-  }
-
-  return TRUE;
+  return true;
 }
 
 girara_statusbar_item_t*
@@ -497,7 +463,7 @@ girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, u
   return false;
 }
 
-void
+static void
 girara_toggle_widget_visibility(GtkWidget* widget)
 {
   if (widget == NULL) {
@@ -668,11 +634,11 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
   if (!input) {
-    return FALSE;
+    return false;
   }
 
   if (strlen(input) == 0) {
-    return FALSE;
+    return false;
   }
 
   gchar** argv = NULL;
@@ -680,7 +646,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
   if (g_shell_parse_argv(input, &argc, &argv, NULL) == FALSE) {
     g_free(input);
-    return FALSE;
+    return false;
   }
 
   gchar *cmd = argv[0];
@@ -690,8 +656,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   char identifier    = identifier_s[0];
   g_free(identifier_s);
 
-  girara_special_command_t* special_command = session->bindings.special_commands;
-  while (special_command) {
+  GIRARA_LIST_FOREACH(session->bindings.special_commands, girara_special_command_t*, iter, special_command)
     if (special_command->identifier == identifier) {
       if (special_command->always != true) {
         special_command->function(session, input, &(special_command->argument));
@@ -702,15 +667,13 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
       girara_isc_abort(session, NULL, 0);
 
-      return TRUE;
+      girara_list_iterator_free(iter);
+      return true;
     }
-
-    special_command = special_command->next;
-  }
+  GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, special_command);
 
   /* search commands */
-  girara_command_t* command = session->bindings.commands;
-  while (command) {
+  GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command)
     if ((g_strcmp0(cmd, command->command) == 0) ||
        (g_strcmp0(cmd, command->abbr)    == 0))
     {
@@ -718,7 +681,8 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       if (argument_list == NULL) {
         g_free(input);
         g_strfreev(argv);
-        return FALSE;
+        girara_list_iterator_free(iter);
+        return false;
       }
 
       girara_list_set_free_function(argument_list, g_free);
@@ -731,7 +695,8 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
           girara_list_free(argument_list);
           g_free(input);
           g_strfreev(argv);
-          return FALSE;
+          girara_list_iterator_free(iter);
+          return false;
         }
       }
 
@@ -744,16 +709,15 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       girara_isc_abort(session, NULL, 0);
 
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
-      return TRUE;
+      girara_list_iterator_free(iter);
+      return true;
     }
-
-    command = command->next;
-  }
+  GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
 
   /* no known command */
   girara_isc_abort(session, NULL, 0);
 
-  return FALSE;
+  return false;
 }
 
 bool
@@ -779,19 +743,17 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   char identifier    = identifier_s[0];
   g_free(identifier_s);
 
-  girara_special_command_t* special_command = session->bindings.special_commands;
-  while (special_command) {
+  GIRARA_LIST_FOREACH(session->bindings.special_commands, girara_special_command_t*, iter, special_command)
     if ((special_command->identifier == identifier) &&
        (special_command->always == true))
     {
       gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
       special_command->function(session, input, &(special_command->argument));
       g_free(input);
+      girara_list_iterator_free(iter);
       return false;
     }
-
-    special_command = special_command->next;
-  }
+  GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, special_command);
 
   if ((session->gtk.results != NULL) &&
      (gtk_widget_get_visible(GTK_WIDGET(session->gtk.results)) == TRUE) &&
@@ -895,37 +857,26 @@ girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping)
 
 bool girara_argument_mapping_add(girara_session_t* session, char* identifier, int value)
 {
-  g_return_val_if_fail(session  != NULL, FALSE);
+  g_return_val_if_fail(session  != NULL, false);
 
   if (identifier == NULL) {
     return false;
   }
 
-  girara_argument_mapping_t* mapping_it   = session->config.argument_mappings;
-  girara_argument_mapping_t* last_mapping = mapping_it;
-
-  while (mapping_it) {
-    if (strcmp(mapping_it->identifier, identifier) == 0) {
-      mapping_it->value = value;
+  GIRARA_LIST_FOREACH(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
+    if (g_strcmp0(mapping->identifier, identifier) == 0) {
+      mapping->value = value;
+      girara_list_iterator_free(iter);
       return true;
     }
-
-    last_mapping = mapping_it;
-    mapping_it = mapping_it->next;
-  }
+  GIRARA_LIST_FOREACH_END(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
 
   /* add new config handle */
   girara_argument_mapping_t* mapping = g_slice_new(girara_argument_mapping_t);
 
   mapping->identifier = g_strdup(identifier);
   mapping->value      = value;
-  mapping->next       = NULL;
-
-  if (last_mapping) {
-    last_mapping->next = mapping;
-  } else {
-    session->config.argument_mappings = mapping;
-  }
+  girara_list_append(session->config.argument_mappings, mapping);
 
   return true;
 }
@@ -1002,4 +953,46 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   /* update visibility */
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+}
+
+void
+girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping)
+{
+  if (argument_mapping == NULL) {
+    return;
+  }
+  
+  g_free(argument_mapping->identifier);
+  g_slice_free(girara_argument_mapping_t, argument_mapping);
+}
+
+void
+girara_special_command_free(girara_special_command_t* special_command)
+{
+  if (special_command == NULL) {
+    return;
+  }
+  g_slice_free(girara_special_command_t, special_command);
+}
+
+void
+girara_command_free(girara_command_t* command)
+{
+  if (command == NULL) {
+    return;
+  }
+
+  g_free(command->command);
+  g_free(command->abbr);
+  g_free(command->description);
+  g_slice_free(girara_command_t, command);
+}
+
+void
+girara_mouse_event_free(girara_mouse_event_t* mouse_event)
+{
+  if (mouse_event == NULL) {
+    return;
+  }
+  g_slice_free(girara_mouse_event_t, mouse_event);
 }

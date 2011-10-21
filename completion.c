@@ -8,6 +8,7 @@
 #include "girara-internal.h"
 #include "girara-session.h"
 #include "girara-settings.h"
+#include "girara-datastructures.h"
 
 /* header functions implementation */
 static GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, bool);
@@ -251,24 +252,26 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
       /* search matching command */
       girara_command_t* command = NULL;
-      for (command = session->bindings.commands; command != NULL; command = command->next) {
-        if ( (command->command && !strncmp(current_command, command->command, current_command_length)) ||
-            (command->abbr    && !strncmp(current_command, command->abbr,    current_command_length))
+      GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command_it)
+        if ( (command_it->command && !strncmp(current_command, command_it->command, current_command_length)) ||
+            (command_it->abbr    && !strncmp(current_command, command_it->abbr,    current_command_length))
           )
         {
-          if (command->completion) {
+          if (command_it->completion) {
             g_free(previous_command);
-            previous_command = g_strdup(command->command);
+            previous_command = g_strdup(command_it->command);
+            command = command_it;
             break;
           } else {
             g_free(current_command);
             g_free(current_parameter);
 
             g_strfreev(elements);
+            girara_list_iterator_free(iter);
             return false;
           }
         }
-      }
+      GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command_it);
 
       if (!command) {
         g_free(current_command);
@@ -334,9 +337,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       command_mode = TRUE;
 
       /* create command rows */
-      for (girara_command_t* command = session->bindings.commands;
-        command != NULL; command = command->next) {
-
+      GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command)
         if (!current_command ||
             (command->command && !strncmp(current_command, command->command, current_command_length)) ||
             (command->abbr && !strncmp(current_command, command->abbr,    current_command_length))
@@ -353,7 +354,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
           /* show entry row */
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
-      }
+      GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
     }
 
     if (entries) {

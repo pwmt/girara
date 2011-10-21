@@ -93,10 +93,10 @@ struct girara_session_s
 
   struct
   {
-    girara_mouse_event_t* mouse_events; /**< List of mouse events */
-    girara_command_t* commands; /**< List of commands */
+    girara_list_t* mouse_events; /**< List of mouse events */
+    girara_list_t* commands; /**< List of commands */
     girara_list_t* shortcuts; /**< List of shortcuts */
-    girara_special_command_t* special_commands; /**< List of special commands */
+    girara_list_t* special_commands; /**< List of special commands */
     girara_list_t* inputbar_shortcuts; /**< List of inputbar shortcuts */
   } bindings;
 
@@ -145,7 +145,7 @@ struct girara_session_s
   {
     girara_list_t* handles;
     girara_list_t* shortcut_mappings;
-    girara_argument_mapping_t* argument_mappings;
+    girara_list_t* argument_mappings;
   } config;
 };
 
