@@ -2,10 +2,12 @@
 
 #include <stdlib.h>
 #include <glib.h>
+#include <string.h>
 
 #include "girara-settings.h"
 #include "girara-internal.h"
 #include "girara-datastructures.h"
+#include "girara-completion.h"
 #include "girara-session.h"
 
 static void
@@ -136,4 +138,34 @@ girara_setting_free(girara_setting_t* setting)
     g_free(setting->value.s);
   }
   g_slice_free(girara_setting_t, setting);
+}
+
+girara_completion_t*
+girara_cc_set(girara_session_t* session, const char* input)
+{
+  if (input == NULL) {
+    return NULL;
+  }
+
+  girara_completion_t* completion  = girara_completion_init();
+  if (completion == NULL) {
+    return NULL;
+  }
+  girara_completion_group_t* group = girara_completion_group_create(session, NULL);
+  if (group == NULL) {
+    girara_completion_free(completion);
+    return NULL;
+  }
+  girara_completion_add_group(completion, group);
+
+  unsigned int input_length = strlen(input);
+
+  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
+    if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
+        !strncmp(input, setting->name, input_length)) {
+      girara_completion_group_add_element(group, setting->name, setting->description);
+    }
+  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
+
+  return completion;
 }

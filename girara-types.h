@@ -130,4 +130,13 @@ typedef enum girara_setting_type_e
  */
 typedef void (*girara_setting_callback_t)(girara_session_t* session, girara_setting_t* setting);
 
+/**
+ * Definition of an argument of a shortcut or buffered command
+ */
+struct girara_argument_s
+{
+  int   n; /**< Identifier */
+  void *data; /**< Data */
+};
+
 #endif

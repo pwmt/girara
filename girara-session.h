@@ -12,7 +12,6 @@
 #include <gtk/gtkx.h>
 #endif
 
-
 /**
  * Structure of a girara session
  */

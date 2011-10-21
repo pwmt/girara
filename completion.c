@@ -4,12 +4,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "girara.h"
+#include "girara-completion.h"
 #include "girara-internal.h"
+#include "girara-session.h"
+#include "girara-settings.h"
 
 /* header functions implementation */
-GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, bool);
-void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
+static GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, bool);
+static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
 /* completion */
 struct girara_internal_completion_entry_s
@@ -133,25 +135,6 @@ girara_completion_group_add_element(girara_completion_group_t* group, char* name
   } else {
     group->elements = new_element;
   }
-}
-
-bool
-girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
-{
-  /* hide completion */
-  girara_argument_t arg = { GIRARA_HIDE, NULL };
-  girara_isc_completion(session, &arg, 0);
-
-  /* clear inputbar */
-  gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
-
-  /* grab view */
-  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
-
-  /* hide inputbar */
-  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
-
-  return true;
 }
 
 bool
@@ -474,88 +457,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
   return false;
 }
 
-bool
-girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
-{
-  gchar *separator = girara_setting_get(session, "word-separator");
-  gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
-  int    length = strlen(input);
-  int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar));
-  int i;
-
-  switch (argument->n) {
-    case GIRARA_DELETE_LAST_WORD:
-      i = pos - 1;
-
-      if (!pos) {
-        return false;
-      }
-
-      /* remove trailing spaces */
-      for (; i >= 0 && input[i] == ' '; i--);
-
-      /* find the beginning of the word */
-      while ((i == (pos - 1)) || ((i > 0) && !strchr(separator, input[i]))) {
-        i--;
-      }
-
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar),  i + 1, pos);
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), i + 1);
-      break;
-    case GIRARA_DELETE_LAST_CHAR:
-      if ((length - 1) <= 0) {
-        girara_isc_abort(session, argument, 0);
-      }
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos - 1, pos);
-      break;
-    case GIRARA_DELETE_TO_LINE_START:
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 1, pos);
-      break;
-    case GIRARA_NEXT_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), pos + 1);
-      break;
-    case GIRARA_PREVIOUS_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), (pos == 0) ? 0 : pos - 1);
-      break;
-  }
-
-  g_free(separator);
-  g_free(input);
-
-  return false;
-}
-
-girara_completion_t*
-girara_cc_set(girara_session_t* session, const char* input)
-{
-  if (input == NULL) {
-    return NULL;
-  }
-
-  girara_completion_t* completion  = girara_completion_init();
-  if (completion == NULL) {
-    return NULL;
-  }
-  girara_completion_group_t* group = girara_completion_group_create(session, NULL);
-  if (group == NULL) {
-    girara_completion_free(completion);
-    return NULL;
-  }
-  girara_completion_add_group(completion, group);
-
-  unsigned int input_length = strlen(input);
-
-  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
-    if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
-        !strncmp(input, setting->name, input_length)) {
-      girara_completion_group_add_element(group, setting->name, setting->description);
-    }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
-
-  return completion;
-}
-
-GtkEventBox*
+static GtkEventBox*
 girara_completion_row_create(girara_session_t* session, char* command, char* description, bool group)
 {
   GtkBox      *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
@@ -622,7 +524,7 @@ girara_completion_row_create(girara_session_t* session, char* command, char* des
   return row;
 }
 
-void
+static void
 girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int mode)
 {
   g_return_if_fail(session != NULL);

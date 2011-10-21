@@ -5,7 +5,7 @@ include common.mk
 
 PROJECTNV = girara
 PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
-SOURCE    = girara.c completion.c config.c settings.c utils.c datastructures.c
+SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
 

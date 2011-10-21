@@ -45,15 +45,6 @@ struct girara_statusbar_item_s
 };
 
 /**
- * Definition of an argument of a shortcut or buffered command
- */
-struct girara_argument_s
-{
-  int   n; /**< Identifier */
-  void *data; /**< Data */
-};
-
-/**
  * Shortcut mapping
  */
 struct girara_shortcut_mapping_s
@@ -70,34 +61,6 @@ struct girara_argument_mapping_s
   char* identifier; /**> Identifier string */
   int value; /**> Value */
   struct girara_argument_mapping_s* next; /**> Next entry */
-};
-
-/**
- * Structure of a completion element
- */
-struct girara_completion_element_s
-{
-  char *value; /**> Name of the completion element */
-  char *description; /**> Description of the completion element */
-  struct girara_completion_element_s *next; /**> Next completion element (linked list) */
-};
-
-/**
- * Structure of a completion group
- */
-struct girara_completion_group_s
-{
-  char *value; /**> Name of the completion element */
-  girara_completion_element_t *elements; /**> Elements of the completion group */
-  struct girara_completion_group_s *next; /**> Next group (linked list) */
-};
-
-/**
- * Structure of a completion object
- */
-struct girara_completion_s
-{
-  girara_completion_group_t *groups; /**> Containing completion groups */
 };
 
 /**
@@ -134,19 +97,6 @@ struct girara_special_command_s
   bool always; /**< Evalute on every change of the input */
   girara_argument_t argument; /**< Argument */
   struct girara_special_command_s *next; /**< Next special command (linked list) */
-};
-
-/**
- * Structure of a command
- */
-struct girara_command_s
-{
-  char* command; /**< Name of the command */
-  char* abbr; /**< Abbreviation of the command */
-  girara_command_function_t function; /**< Function */
-  girara_completion_function_t completion; /**< Completion function of the command */
-  char* description; /**< Description of the command */
-  struct girara_command_s *next; /**< Next command (linked list) */
 };
 
 /**
@@ -299,53 +249,6 @@ bool girara_statusbar_set_background(girara_session_t* session, char* color);
  * @return FALSE An error occured
  */
 bool girara_set_view(girara_session_t* session, GtkWidget* widget);
-
-/**
- * Creates an girara completion object
- *
- * @return Completion object
- * @return NULL An error occured
- */
-girara_completion_t* girara_completion_init();
-
-/**
- * Creates an girara completion group
- *
- * @return Completion object
- * @return NULL An error occured
- */
-girara_completion_group_t* girara_completion_group_create(girara_session_t* session, char* name);
-
-/**
- * Frees a completion group
- *
- * @param group The group
- */
-void girara_completion_group_free(girara_completion_group_t* group);
-
-/**
- * Adds an group to a completion object
- *
- * @param completion The completion object
- * @param group The completion group
- */
-void girara_completion_add_group(girara_completion_t* completion, girara_completion_group_t* group);
-
-/**
- * Frees an completion and all of its groups and elements
- *
- * @param completion The completion
- */
-void girara_completion_free(girara_completion_t* completion);
-
-/**
- * Adds an element to a completion group
- *
- * @param group The completion group
- * @param value Value of the entry
- * @param description Description of the entry
- */
-void girara_completion_group_add_element(girara_completion_group_t* group, char* value, char* description);
 
 /**
  * Default shortcut function to focus the inputbar
@@ -530,14 +433,6 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
  * @return false An error occured (abort execution)
  */
 bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int t);
-
-/**
- * Default complection function for the settings
- *
- * @param session The used girara session
- * @param input The current input
- */
-girara_completion_t* girara_cc_set(girara_session_t* session, const char* input);
 
 /**
  * Adds a new mode by its string identifier
@@ -744,5 +639,6 @@ void girara_notify(girara_session_t* session, int level, const char* format, ...
 #include "girara-utils.h"
 #include "girara-datastructures.h"
 #include "girara-settings.h"
+#include "girara-completion.h"
 
 #endif

@@ -26,6 +26,10 @@
 # define HIDDEN
 #endif
 
+#define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
+#define UNTITLED_TAB_TITLE "untitled"
+
+
 HIDDEN void girara_toggle_widget_visibility(GtkWidget* widget);
 
 /**
@@ -46,5 +50,28 @@ HIDDEN void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* shortcut);
 HIDDEN void girara_mode_string_free(girara_mode_string_t* mode);
 
 HIDDEN void girara_statusbar_item_free(girara_statusbar_item_t* statusbaritem);
+
+/**
+ * Default complection function for the settings
+ *
+ * @param session The used girara session
+ * @param input The current input
+ */
+HIDDEN girara_completion_t* girara_cc_set(girara_session_t* session, const char* input);
+
+/**
+ * Structure of a command
+ */
+struct girara_command_s
+{
+  char* command; /**< Name of the command */
+  char* abbr; /**< Abbreviation of the command */
+  girara_command_function_t function; /**< Function */
+  girara_completion_function_t completion; /**< Completion function of the command */
+  char* description; /**< Description of the command */
+  struct girara_command_s *next; /**< Next command (linked list) */
+};
+
+
 
 #endif
