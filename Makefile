@@ -63,8 +63,11 @@ lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
 debug: options ${PROJECT}-debug
 	$(QUIET)${MAKE} -C examples debug
 
-test: debug
+test: ${PROJECT}
 	$(QUIET)${MAKE} -C tests
+
+test-debug: debug
+	$(QUIET)${MAKE} -C tests debug
 
 dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
