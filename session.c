@@ -70,7 +70,8 @@ girara_session_create()
       (girara_free_function_t) girara_config_handle_free);
   session->config.shortcut_mappings = girara_list_new2(
       (girara_free_function_t) girara_shortcut_mapping_free);
-  session->config.argument_mappings = NULL;
+  session->config.argument_mappings = girara_list_new2(
+      (girara_free_function_t) girara_argument_mapping_free);
 
   /* default values */
   int window_width       = 800;
@@ -465,4 +466,96 @@ girara_session_destroy(girara_session_t* session)
   g_slice_free(girara_session_t, session);
 
   return TRUE;
+}
+
+char*
+girara_buffer_get(girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, NULL);
+
+  return (session->global.buffer) ? g_strdup(session->global.buffer->str) : NULL;
+}
+
+void
+girara_notify(girara_session_t* session, int level, const char* format, ...)
+{
+  if (session == NULL || session->gtk.notification_text == NULL ||
+      session->gtk.notification_area == NULL) {
+    return;
+  }
+
+  switch (level) {
+    case GIRARA_ERROR:
+#if (GTK_MAJOR_VERSION == 3)
+      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_error_background));
+      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_error_foreground));
+#else
+      gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_error_background));
+      gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_error_foreground));
+#endif
+      break;
+    case GIRARA_WARNING:
+#if (GTK_MAJOR_VERSION == 3)
+      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_warning_background));
+      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
+#else
+      gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_warning_background));
+      gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
+#endif
+      break;
+    case GIRARA_INFO:
+#if (GTK_MAJOR_VERSION == 3)
+      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_default_background));
+      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+#else
+      gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, &(session->style.notification_default_background));
+      gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+#endif
+      break;
+    default:
+      return;
+  }
+
+  /* prepare message */
+  va_list ap;
+  va_start(ap, format);
+  char* message = g_strdup_vprintf(format, ap);
+  va_end(ap);
+
+  gtk_label_set_markup(GTK_LABEL(session->gtk.notification_text), message);
+  g_free(message);
+
+  /* update visibility */
+  gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+}
+
+bool
+girara_set_view(girara_session_t* session, GtkWidget* widget)
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  GtkWidget* child = gtk_bin_get_child(GTK_BIN(session->gtk.viewport));
+
+  if (child) {
+    g_object_ref(child);
+    gtk_container_remove(GTK_CONTAINER(session->gtk.viewport), child);
+  }
+
+  gtk_container_add(GTK_CONTAINER(session->gtk.viewport), widget);
+  gtk_widget_show_all(widget);
+
+  return true;
 }

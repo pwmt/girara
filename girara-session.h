@@ -176,6 +176,24 @@ bool girara_session_init(girara_session_t* session);
 bool girara_session_destroy(girara_session_t* session);
 
 /**
+ * Sets the view widget of girara
+ *
+ * @param session The used girara session
+ * @param widget The widget that should be displayed
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+bool girara_set_view(girara_session_t* session, GtkWidget* widget);
+
+/**
+ * Returns a copy of the buffer
+ *
+ * @param session The used girara session
+ * @return Copy of the current buffer
+ */
+char* girara_buffer_get(girara_session_t* session);
+
+/**
  * Displays a notification for the user. It is possible to pass GIRARA_INFO,
  * GIRARA_WARNING or GIRARA_ERROR as a notification level.
  *

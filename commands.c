@@ -7,6 +7,7 @@
 #include "girara-datastructures.h"
 #include "girara-session.h"
 #include "girara-internal.h"
+#include "girara-utils.h"
 
 #include "girara.h"
 

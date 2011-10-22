@@ -137,16 +137,6 @@ bool girara_statusbar_item_set_foreground(girara_session_t* session, girara_stat
 bool girara_statusbar_set_background(girara_session_t* session, char* color);
 
 /**
- * Sets the view widget of girara
- *
- * @param session The used girara session
- * @param widget The widget that should be displayed
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_set_view(girara_session_t* session, GtkWidget* widget);
-
-/**
  * Default shortcut function to focus the inputbar
  *
  * @param session The used girara session
@@ -326,14 +316,6 @@ void girara_mode_set(girara_session_t* session, girara_mode_t mode);
 girara_mode_t girara_mode_get(girara_session_t* session);
 
 /**
- * Returns a copy of the buffer
- *
- * @param session The used girara session
- * @return Copy of the current buffer
- */
-char* girara_buffer_get(girara_session_t* session);
-
-/**
  * Parses and evaluates a configuration file
  *
  * @param session The used girara session
@@ -375,16 +357,6 @@ bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
  */
 bool girara_argument_mapping_add(girara_session_t* session, char* identifier,
     int value);
-
-/**
- * Default implementation of the event that is executed if a tab is clicked
- *
- * @param widget The widget
- * @param event The event
- * @param data Additional data
- * @return true if an error occured, otherwise false
- */
-bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
 
 #include "girara-utils.h"
 #include "girara-datastructures.h"

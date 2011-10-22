@@ -1,9 +1,21 @@
 /* See LICENSE file for license and copyright information */
 
 #include "girara-tabs.h"
-#include "girara.h"
+#include "girara-session.h"
+// #include "girara.h"
 #include "girara-internal.h"
-  
+
+/**
+ * Default implementation of the event that is executed if a tab is clicked
+ *
+ * @param widget The widget
+ * @param event The event
+ * @param data Additional data
+ * @return true if an error occured, otherwise false
+ */
+static bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
+
+
 void
 girara_tabs_enable(girara_session_t* session)
 {
@@ -246,7 +258,7 @@ girara_tab_position_set(girara_session_t* session, girara_tab_t* tab, unsigned i
   gtk_notebook_reorder_child(session->gtk.tabs, tab->widget, position);
 }
 
-bool
+static bool
 girara_callback_tab_clicked(GtkWidget* UNUSED(widget), GdkEventButton* event, gpointer data)
 {
   if (data == NULL) {
