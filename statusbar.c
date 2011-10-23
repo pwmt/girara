@@ -61,33 +61,33 @@ girara_statusbar_item_free(girara_statusbar_item_t* item)
 bool
 girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, const char* text)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
-  g_return_val_if_fail(item    != NULL, FALSE);
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(item    != NULL, false);
 
   char* escaped_text = g_markup_escape_text(text, -1);
   gtk_label_set_markup((GtkLabel*) item->text, escaped_text);
   g_free(escaped_text);
 
-  return TRUE;
+  return true;
 }
 
 bool
 girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, const char* color)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
-  g_return_val_if_fail(item    != NULL, FALSE);
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(item    != NULL, false);
 
   GdkColor gdk_color;
   gdk_color_parse(color, &gdk_color);
   gtk_widget_modify_fg(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &gdk_color);
 
-  return TRUE;
+  return true;
 }
 
 bool
 girara_statusbar_set_background(girara_session_t* session, const char* color)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(session != NULL, false);
 
 #if (GTK_MAJOR_VERSION == 3)
   GdkRGBA gdk_color;
@@ -99,6 +99,6 @@ girara_statusbar_set_background(girara_session_t* session, const char* color)
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
 #endif
 
-  return TRUE;
+  return true;
 }
 
