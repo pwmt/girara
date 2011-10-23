@@ -59,7 +59,7 @@ girara_statusbar_item_free(girara_statusbar_item_t* item)
 }
 
 bool
-girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text)
+girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, const char* text)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(item    != NULL, FALSE);
@@ -72,7 +72,7 @@ girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_
 }
 
 bool
-girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color)
+girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, const char* color)
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(item    != NULL, FALSE);
@@ -85,7 +85,7 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
 }
 
 bool
-girara_statusbar_set_background(girara_session_t* session, char* color)
+girara_statusbar_set_background(girara_session_t* session, const char* color)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 

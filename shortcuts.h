@@ -20,7 +20,7 @@
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
 
 /**
  * Adds an inputbar shortcut
@@ -167,7 +167,7 @@ bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t
  * @param function The function that should be mapped
  * @return true if no error occured
  */
-bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
+bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifier,
     girara_shortcut_function_t function);
 
 /**
@@ -179,7 +179,7 @@ bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
  * @param value The value that should be represented
  * @return true if no error occured
  */
-bool girara_argument_mapping_add(girara_session_t* session, char* identifier,
+bool girara_argument_mapping_add(girara_session_t* session, const char* identifier,
     int value);
 
 /**

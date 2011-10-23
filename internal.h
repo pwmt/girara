@@ -137,7 +137,7 @@ struct girara_shortcut_s
 {
   guint mask; /**< Mask */
   guint key; /**< Key */
-  char* buffered_command; /**< Buffer command */
+  const char* buffered_command; /**< Buffer command */
   girara_shortcut_function_t function; /**< The correspondending function */
   girara_mode_t mode; /**< Mode identifier */
   girara_argument_t argument; /**< Given argument */
