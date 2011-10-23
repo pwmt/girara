@@ -173,6 +173,23 @@ girara_list_contains(girara_list_t* list, void* data)
   return true;
 }
 
+void*
+girara_list_find(girara_list_t* list, girara_compare_function_t compare, const void* data)
+{
+  g_return_val_if_fail(list && compare, NULL);
+  if (list->start == NULL) {
+    return NULL;
+  }
+
+  GList* element = g_list_find_custom(list->start, data, compare);
+  if (element == NULL) {
+    return NULL;
+  }
+
+  return element->data;
+}
+
+
 girara_list_iterator_t*
 girara_list_iterator(girara_list_t* list)
 {
