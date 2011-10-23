@@ -3,7 +3,7 @@
 #ifndef GIRARA_INTERNAL_H
 #define GIRARA_INTERNAL_H
 
-#include "girara-types.h"
+#include "types.h"
 #include <gtk/gtk.h>
 
 #define CLEAN(m) (m & ~(GDK_MOD2_MASK) & ~(GDK_MOD5_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
@@ -27,7 +27,6 @@
 #endif
 
 #define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
-#define UNTITLED_TAB_TITLE "untitled"
 
 /**
  * Free girara_settings_t struct
@@ -75,15 +74,6 @@ struct girara_command_s
   girara_command_function_t function; /**< Function */
   girara_completion_function_t completion; /**< Completion function of the command */
   char* description; /**< Description of the command */
-};
-
-/**
- * Structure of a statusbar item
- */
-struct girara_statusbar_item_s
-{
-  GtkWidget* box; /**< Event box */
-  GtkLabel *text; /**< Text label */
 };
 
 struct girara_mode_string_s

@@ -3,7 +3,7 @@
 #ifndef GIRARA_COMPLETION_H
 #define GIRARA_COMPLETION_H
 
-#include "girara-types.h"
+#include "types.h"
 
 /**
  * Structure of a completion element

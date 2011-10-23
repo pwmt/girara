@@ -3,19 +3,8 @@
 #ifndef GIRARA_H
 #define GIRARA_H
 
-#include "girara-types.h"
-#include "girara-session.h"
-
-/**
- * Function declaration for a statusbar event callback
- *
- * @param widget The statusbar item
- * @param event The occured event
- * @param session The current girara session
- * @return TRUE No error occured
- * @return FALSE Error occured (and forward event)
- */
-typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
+#include "types.h"
+#include "session.h"
 
 /**
  * Adds an shortcut
@@ -90,51 +79,6 @@ bool girara_special_command_add(girara_session_t* session, char identifier, gira
  * @return FALSE An error occured
  */
 bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
-
-/**
- * Creates an statusbar item
- *
- * @param session The used girara session
- * @param expand Expand attribute
- * @param fill Fill attribute
- * @param left True if it should be aligned to the left
- * @param callback Function that gets executed when an event occurs
- * @return The created statusbar item
- * @return NULL An error occured
- */
-girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback);
-
-/**
- * Sets the shown text of an statusbar item
- *
- * @param session The used girara session
- * @param item The statusbar item
- * @param text Text that should be displayed
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, char* text);
-
-/**
- * Sets the foreground color of an statusbar item
- *
- * @param session The used girara session
- * @param item The statusbar item
- * @param color The color code
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, char* color);
-
-/**
- * Sets the background color of the statusbar
- *
- * @param session The used girara session
- * @param color The color code
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_statusbar_set_background(girara_session_t* session, char* color);
 
 /**
  * Default shortcut function to focus the inputbar
@@ -316,25 +260,6 @@ void girara_mode_set(girara_session_t* session, girara_mode_t mode);
 girara_mode_t girara_mode_get(girara_session_t* session);
 
 /**
- * Parses and evaluates a configuration file
- *
- * @param session The used girara session
- * @param path Path to the configuration file
- */
-void girara_config_parse(girara_session_t* session, const char* path);
-
-/**
- * Adds an additional config handler
- *
- * @param session The girara session
- * @param identifier Identifier of the handle
- * @param handle Handle
- * @return true if no error occured, otherwise false
- */
-bool girara_config_handle_add(girara_session_t* session, const char* identifier,
-    girara_command_function_t handle);
-
-/**
  * Creates a mapping between a shortcut function and an identifier and is used
  * to evaluate the mapping command
  *
@@ -358,10 +283,12 @@ bool girara_shortcut_mapping_add(girara_session_t* session, char* identifier,
 bool girara_argument_mapping_add(girara_session_t* session, char* identifier,
     int value);
 
-#include "girara-utils.h"
-#include "girara-datastructures.h"
-#include "girara-settings.h"
-#include "girara-completion.h"
-#include "girara-tabs.h"
+#include "utils.h"
+#include "datastructures.h"
+#include "settings.h"
+#include "completion.h"
+#include "tabs.h"
+#include "config.h"
+#include "statusbar.h"
 
 #endif

@@ -4,11 +4,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "girara-completion.h"
-#include "girara-internal.h"
-#include "girara-session.h"
-#include "girara-settings.h"
-#include "girara-datastructures.h"
+#include "completion.h"
+#include "internal.h"
+#include "session.h"
+#include "settings.h"
+#include "datastructures.h"
 
 /* header functions implementation */
 static GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, bool);

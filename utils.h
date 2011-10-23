@@ -5,7 +5,7 @@
 
 #include <glib.h>
 #include <stdio.h>
-#include "girara-types.h"
+#include "types.h"
 
 /**
  * Enum for directories specified in the XDG specification.

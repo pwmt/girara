@@ -3,7 +3,7 @@
 #ifndef GIRARA_SESSION_H
 #define GIRARA_SESSION_H
 
-#include "girara-types.h"
+#include "types.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>

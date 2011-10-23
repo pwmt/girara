@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <glib.h>
 
-#include "girara-datastructures.h"
+#include "datastructures.h"
 
 struct girara_tree_node_s
 {

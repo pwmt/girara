@@ -3,8 +3,8 @@
 #ifndef GIRARA_COMMANDS_H
 #define GIRARA_COMMANDS_H
 
-#include "girara-types.h"
-#include "girara-internal.h"
+#include "types.h"
+#include "internal.h"
 
 /**
  * Default command to map sortcuts

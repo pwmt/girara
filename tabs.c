@@ -1,9 +1,10 @@
 /* See LICENSE file for license and copyright information */
 
-#include "girara-tabs.h"
-#include "girara-session.h"
-// #include "girara.h"
-#include "girara-internal.h"
+#include "tabs.h"
+#include "session.h"
+#include "internal.h"
+
+#define UNTITLED_TAB_TITLE "untitled"
 
 /**
  * Default implementation of the event that is executed if a tab is clicked
@@ -14,7 +15,6 @@
  * @return true if an error occured, otherwise false
  */
 static bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
-
 
 void
 girara_tabs_enable(girara_session_t* session)

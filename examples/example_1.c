@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "../girara.h"
-#include "../girara-internal.h"
+#include "../internal.h"
 
 void setting_cb(girara_session_t* session, girara_setting_t* setting);
 

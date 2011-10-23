@@ -4,11 +4,11 @@
 #include <glib.h>
 #include <string.h>
 
-#include "girara-settings.h"
-#include "girara-internal.h"
-#include "girara-datastructures.h"
-#include "girara-completion.h"
-#include "girara-session.h"
+#include "settings.h"
+#include "internal.h"
+#include "datastructures.h"
+#include "completion.h"
+#include "session.h"
 
 static void
 set_value(girara_setting_t* setting, void* value)

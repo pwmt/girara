@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "girara-types.h"
+#include "types.h"
 
 /**
  * Create a new list.

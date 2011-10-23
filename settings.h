@@ -3,7 +3,7 @@
 #ifndef GIRARA_SETTINGS_H
 #define GIRARA_SETTINGS_H
 
-#include "girara-types.h"
+#include "types.h"
 
 /**
  * Adds an additional entry in the settings list

@@ -3,11 +3,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "girara-commands.h"
-#include "girara-datastructures.h"
-#include "girara-session.h"
-#include "girara-internal.h"
-#include "girara-utils.h"
+#include "commands.h"
+#include "datastructures.h"
+#include "session.h"
+#include "internal.h"
+#include "utils.h"
+#include "settings.h"
 
 #include "girara.h"
 

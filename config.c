@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "girara-datastructures.h"
-#include "girara-session.h"
-#include "girara-utils.h"
-#include "girara-internal.h"
+#include "datastructures.h"
+#include "session.h"
+#include "utils.h"
+#include "internal.h"
 
 #define COMMENT_PREFIX '#'
 

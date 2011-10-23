@@ -3,7 +3,7 @@
 #ifndef GIRARA_TABS_H
 #define GIRARA_TABS_H
 
-#include "girara-types.h"
+#include "types.h"
 #include <gtk/gtk.h>
 
 /**
