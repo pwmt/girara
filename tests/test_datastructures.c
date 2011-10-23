@@ -3,7 +3,7 @@
 #include <glib.h>
 #include <stdint.h>
 #include "helpers.h"
-#include "girara-datastructures.h"
+#include <datastructures.h>
 
 static unsigned int list_free_called = 0;
 static unsigned int node_free_called = 0;

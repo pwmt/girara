@@ -9,11 +9,11 @@ DOBJECTS = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
 
 all: options girara_test-gtk${GIRARA_GTK_VERSION}
 	$(ECHO) "running tests ..."
-	$(QUIET)./girara_test-gtk${GIRARA_GTK_VERSION}
+	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}
 
 debug: options girara_test-gtk${GIRARA_GTK_VERSION}-debug
 	$(ECHO) "running tests ..."
-	$(QUIET)./girara_test-gtk${GIRARA_GTK_VERSION}-debug
+	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}-debug
 
 options:
 	@echo ${PROJECT} build options:
