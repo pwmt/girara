@@ -107,7 +107,7 @@ uninstall:
 	$(QUIET)rm -f ${PREFIX}/lib/lib${PROJECT}.a ${PREFIX}/lib/lib${PROJECT}.so.${SOVERSION} \
 		${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR} ${PREFIX}/lib/lib${PROJECT}.so
 	$(ECHO) removing include file
-	$(QUIET)rm -f ${PREFIX}/include/girara
+	$(QUIET)rm -rf ${PREFIX}/include/girara
 	$(ECHO) removing pkgconfig file
 	$(QUIET)rm -f ${PREFIX}/lib/pkgconfig/${PROJECT}.pc
 
