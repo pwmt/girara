@@ -9,8 +9,7 @@
 #include "internal.h"
 #include "utils.h"
 #include "settings.h"
-
-#include "girara.h"
+#include "shortcuts.h"
 
 /* default commands implementation */
 bool
@@ -386,4 +385,94 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
   }
 
   return true;
+}
+
+bool
+girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description)
+{
+  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(command  != NULL, false);
+  g_return_val_if_fail(function != NULL, false);
+
+  /* search for existing binding */
+  GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, commands_it)
+    if (!g_strcmp0(commands_it->command, command)) {
+      g_free(commands_it->abbr);
+      g_free(commands_it->description);
+
+      commands_it->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
+      commands_it->function    = function;
+      commands_it->completion  = completion;
+      commands_it->description = description ? g_strdup(description) : NULL;
+
+      girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, commands_it);
+
+  /* add new inputbar command */
+  girara_command_t* new_command = g_slice_new(girara_command_t);
+
+  new_command->command     = g_strdup(command);
+  new_command->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
+  new_command->function    = function;
+  new_command->completion  = completion;
+  new_command->description = description ? g_strdup(description) : NULL;
+  girara_list_append(session->bindings.commands, new_command);
+
+  return true;
+}
+
+bool
+girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, bool always, int argument_n, void* argument_data)
+{
+  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(function != NULL, false);
+
+  girara_argument_t argument = {argument_n, argument_data};
+
+  /* search for existing special command */
+  GIRARA_LIST_FOREACH(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it)
+    if (scommand_it->identifier == identifier) {
+      scommand_it->function = function;
+      scommand_it->always   = always;
+      scommand_it->argument = argument;
+      girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it);
+
+  /* create new special command */
+  girara_special_command_t* special_command = g_slice_new(girara_special_command_t);
+
+  special_command->identifier = identifier;
+  special_command->function   = function;
+  special_command->always     = always;
+  special_command->argument   = argument;
+
+  girara_list_append(session->bindings.special_commands, special_command);
+
+  return true;
+}
+
+void
+girara_special_command_free(girara_special_command_t* special_command)
+{
+  if (special_command == NULL) {
+    return;
+  }
+  g_slice_free(girara_special_command_t, special_command);
+}
+
+void
+girara_command_free(girara_command_t* command)
+{
+  if (command == NULL) {
+    return;
+  }
+
+  g_free(command->command);
+  g_free(command->abbr);
+  g_free(command->description);
+  g_slice_free(girara_command_t, command);
 }

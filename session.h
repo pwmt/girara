@@ -204,4 +204,29 @@ char* girara_buffer_get(girara_session_t* session);
  */
 void girara_notify(girara_session_t* session, int level, const char* format, ...);
 
+/**
+ * Adds a new mode by its string identifier
+ *
+ * @param session The used girara session
+ * @param name The string identifier used in configs/inputbar etc to refer by
+ * @return A newly defined girara_mode_t associated with name
+ */
+girara_mode_t girara_mode_add(girara_session_t* session, const char* name);
+
+/**
+ * Sets the current mode
+ *
+ * @param session The used girara session
+ * @param mode The new mode
+ */
+void girara_mode_set(girara_session_t* session, girara_mode_t mode);
+
+/**
+ * Returns the current mode
+ *
+ * @param session The used girara session
+ * @return The current mode
+ */
+girara_mode_t girara_mode_get(girara_session_t* session);
+
 #endif

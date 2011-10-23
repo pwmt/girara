@@ -4,7 +4,7 @@
 #define GIRARA_INTERNAL_H
 
 #include "types.h"
-#include <gtk/gtk.h>
+#include <glib.h>
 
 #define CLEAN(m) (m & ~(GDK_MOD2_MASK) & ~(GDK_MOD5_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
 #define FORMAT_COMMAND "<b>%s</b>"
@@ -55,7 +55,6 @@ HIDDEN void girara_command_free(girara_command_t* command);
 
 HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
 
-
 /**
  * Default complection function for the settings
  *
@@ -65,36 +64,34 @@ HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
 HIDDEN girara_completion_t* girara_cc_set(girara_session_t* session, const char* input);
 
 /**
- * Default callback for key press events in the view area
+ * Default command to map sortcuts
  *
- * @param widget The used widget
- * @param event The occured event
  * @param session The used girara session
+ * @param argument_list List of passed arguments
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+HIDDEN bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_list);
 
 /**
- * Default callback if the inputbar gets activated
+ * Default command to quit the application
  *
- * @param entry The inputbar entry
  * @param session The used girara session
+ * @param argument_list List of passed arguments
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session);
+HIDDEN bool girara_cmd_quit(girara_session_t* session, girara_list_t* argument_list);
 
 /**
- * Default callback if an key in the input bar gets pressed
+ * Default command to set the value of settings
  *
- * @param widget The used widget
- * @param event The occured event
  * @param session The used girara session
+ * @param argument_list List of passed arguments
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+HIDDEN bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list);
 
 
 /**

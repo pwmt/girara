@@ -7,8 +7,9 @@
 #include "datastructures.h"
 #include "internal.h"
 #include "commands.h"
-
-#include "girara.h"
+#include "callbacks.h"
+#include "shortcuts.h"
+#include "config.h"
   
 girara_session_t*
 girara_session_create()
@@ -558,4 +559,53 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
   gtk_widget_show_all(widget);
 
   return true;
+}
+
+void
+girara_mode_set(girara_session_t* session, girara_mode_t mode)
+{
+  g_return_if_fail(session != NULL);
+
+  session->modes.current_mode = mode;
+}
+
+girara_mode_t
+girara_mode_add(girara_session_t* session, const char* name)
+{
+  g_return_val_if_fail(session  != NULL, FALSE);
+  g_return_val_if_fail(name != NULL && name[0] != 0x0, FALSE);
+
+  girara_mode_t last_index = 0;
+  GIRARA_LIST_FOREACH(session->modes.identifiers, girara_mode_string_t*, iter, mode)
+    if (mode->index > last_index) {
+      last_index = mode->index;
+    }
+  GIRARA_LIST_FOREACH_END(session->modes.identifiers, girara_mode_string_t*, iter, mode);
+
+  /* create new mode identifier */
+  girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);
+  mode->index = last_index + 1;
+  mode->name = g_strdup(name);
+  girara_list_append(session->modes.identifiers, mode);
+
+  return (1 << mode->index);
+}
+
+void
+girara_mode_string_free(girara_mode_string_t* mode)
+{
+  if (!mode) {
+    return;
+  }
+
+  g_free(mode->name);
+  g_slice_free(girara_mode_string_t, mode);
+}
+
+girara_mode_t
+girara_mode_get(girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, 0);
+
+  return session->modes.current_mode;
 }

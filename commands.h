@@ -4,36 +4,34 @@
 #define GIRARA_COMMANDS_H
 
 #include "types.h"
-#include "internal.h"
 
 /**
- * Default command to map sortcuts
+ * Adds an inputbar command
  *
  * @param session The used girara session
- * @param argument_list List of passed arguments
+ * @param command The name of the command
+ * @param abbreviation The abbreviation of the command
+ * @param function Executed function
+ * @param completion Completion function
+ * @param description Description of the command
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_list);
+bool girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description);
 
 /**
- * Default command to quit the application
+ * Adds a special command
  *
  * @param session The used girara session
- * @param argument_list List of passed arguments
+ * @param identifier Char identifier
+ * @param function Executed function
+ * @param always If the function should executed on every change of the input
+ *        (e.g.: incremental search)
+ * @param argument_n Argument identifier
+ * @param argument_data Argument data
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_cmd_quit(girara_session_t* session, girara_list_t* argument_list);
-
-/**
- * Default command to set the value of settings
- *
- * @param session The used girara session
- * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-HIDDEN bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list);
+bool girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function, bool always, int argument_n, void* argument_data);
 
 #endif
