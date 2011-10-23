@@ -94,7 +94,7 @@ girara_setting_get(girara_session_t* session, const char* name)
 
   GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
     if (g_strcmp0(setting->name, name) == 0) {
-      girara_list_iterator_next(iter);
+      girara_list_iterator_free(iter);
 
       bool  *bvalue = NULL;
       float *fvalue = NULL;

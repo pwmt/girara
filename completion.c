@@ -10,7 +10,6 @@
 #include "settings.h"
 #include "datastructures.h"
 
-/* header functions implementation */
 static GtkEventBox* girara_completion_row_create(girara_session_t*, const char*, const char*, bool);
 static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
@@ -29,7 +28,6 @@ struct girara_completion_element_s
 {
   char *value; /**> Name of the completion element */
   char *description; /**> Description of the completion element */
-  struct girara_completion_element_s *next; /**> Next completion element (linked list) */
 };
 
 /**
@@ -38,8 +36,7 @@ struct girara_completion_element_s
 struct girara_completion_group_s
 {
   char *value; /**> Name of the completion element */
-  girara_completion_element_t *elements; /**> Elements of the completion group */
-  struct girara_completion_group_s *next; /**> Next group (linked list) */
+  girara_list_t *elements; /**> Elements of the completion group */
 };
 
 /**
@@ -47,18 +44,30 @@ struct girara_completion_group_s
  */
 struct girara_completion_s
 {
-  girara_completion_group_t *groups; /**> Containing completion groups */
+  girara_list_t *groups; /**> Containing completion groups */
 };
-
 
 typedef struct girara_internal_completion_entry_s girara_internal_completion_entry_t;
 
+static void
+completion_element_free(girara_completion_element_t* element)
+{
+  if (element == NULL) {
+    return;
+  }
+
+  /* free element */
+  g_free(element->value);
+  g_free(element->description);
+  g_slice_free(girara_completion_element_t,  element);
+}
 
 girara_completion_t*
 girara_completion_init()
 {
   girara_completion_t *completion = g_slice_new(girara_completion_t);
-  completion->groups = NULL;
+  completion->groups = girara_list_new2(
+      (girara_free_function_t) girara_completion_group_free);
 
   return completion;
 }
@@ -69,8 +78,8 @@ girara_completion_group_create(girara_session_t* UNUSED(session), const char* na
   girara_completion_group_t* group = g_slice_new(girara_completion_group_t);
 
   group->value    = name ? g_strdup(name) : NULL;
-  group->elements = NULL;
-  group->next     = NULL;
+  group->elements = girara_list_new2(
+      (girara_free_function_t) completion_element_free);
 
   return group;
 }
@@ -81,17 +90,7 @@ girara_completion_add_group(girara_completion_t* completion, girara_completion_g
   g_return_if_fail(completion != NULL);
   g_return_if_fail(group      != NULL);
 
-  girara_completion_group_t* cg = completion->groups;
-
-  while (cg && cg->next) {
-    cg = cg->next;
-  }
-
-  if (cg) {
-    cg->next = group;
-  } else {
-    completion->groups = group;
-  }
+  girara_list_append(completion->groups, group);
 }
 
 void
@@ -101,10 +100,8 @@ girara_completion_group_free(girara_completion_group_t* group)
     return;
   }
 
-  if (group->value) {
-    g_free(group->value);
-  }
-
+  g_free(group->value);
+  girara_list_free(group->elements);
   g_slice_free(girara_completion_group_t, group);
 }
 
@@ -113,31 +110,7 @@ girara_completion_free(girara_completion_t* completion)
 {
   g_return_if_fail(completion != NULL);
 
-  girara_completion_group_t* group = completion->groups;
-  girara_completion_element_t *element;
-
-  while (group) {
-    element = group->elements;
-
-    while (element) {
-      girara_completion_element_t* ne = element->next;
-
-      /* free element */
-      g_free(element->value);
-      if (element->description) {
-        g_free(element->description);
-      }
-      g_slice_free(girara_completion_element_t,  element);
-
-      element = ne;
-    }
-
-    /* free group */
-    girara_completion_group_t *ng = group->next;
-    girara_completion_group_free(group);
-    group = ng;
-  }
-
+  girara_list_free(completion->groups);
   /* free completion */
   g_slice_free(girara_completion_t, completion);
 }
@@ -148,23 +121,11 @@ girara_completion_group_add_element(girara_completion_group_t* group, const char
   g_return_if_fail(group   != NULL);
   g_return_if_fail(name    != NULL);
 
-  girara_completion_element_t* el = group->elements;
-
-  while (el && el->next) {
-    el = el->next;
-  }
-
   girara_completion_element_t* new_element = g_slice_new(girara_completion_element_t);
 
   new_element->value       = g_strdup(name);
   new_element->description = description ?  g_strdup(description) : NULL;
-  new_element->next        = NULL;
-
-  if (el) {
-    el->next = new_element;
-  } else {
-    group->elements = new_element;
-  }
+  girara_list_append(group->elements, new_element);
 }
 
 bool
@@ -324,12 +285,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
         return false;
       }
 
-      girara_completion_group_t* group     = result->groups;
-      girara_completion_element_t *element = NULL;
-
-      while (group) {
-        element = group->elements;
-
+      GIRARA_LIST_FOREACH(result->groups, girara_completion_group_t*, iter, group)
         /* create group entry */
         if (group->value) {
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
@@ -342,7 +298,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
 
-        while (element) {
+        GIRARA_LIST_FOREACH(group->elements, girara_completion_element_t*, iter2, element)
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
           entry->group  = FALSE;
           entry->value  = g_strdup(element->value);
@@ -352,12 +308,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
 
-          element = element->next;
-        }
-
-        group = group->next;
-      }
-
+        GIRARA_LIST_FOREACH_END(group->elements, girara_completion_element_t*, iter2, element);
+      GIRARA_LIST_FOREACH_END(result->groups, girara_completion_group_t*, iter, group);
       girara_completion_free(result);
 
       command_mode = FALSE;
