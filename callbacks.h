@@ -4,7 +4,6 @@
 #define GIRARA_CALLBACKS_H
 
 #include "types.h"
-#include "internal.h"
 #include <gtk/gtk.h>
 
 /**
@@ -16,7 +15,7 @@
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
 
 /**
  * Default callback if the inputbar gets activated
@@ -26,7 +25,7 @@ HIDDEN bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey*
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session);
+bool girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session);
 
 /**
  * Default callback if an key in the input bar gets pressed
@@ -37,6 +36,6 @@ HIDDEN bool girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t*
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
 
 #endif

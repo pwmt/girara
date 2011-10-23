@@ -6,34 +6,6 @@
 #include "types.h"
 
 /**
- * Structure of a completion element
- */
-struct girara_completion_element_s
-{
-  char *value; /**> Name of the completion element */
-  char *description; /**> Description of the completion element */
-  struct girara_completion_element_s *next; /**> Next completion element (linked list) */
-};
-
-/**
- * Structure of a completion group
- */
-struct girara_completion_group_s
-{
-  char *value; /**> Name of the completion element */
-  girara_completion_element_t *elements; /**> Elements of the completion group */
-  struct girara_completion_group_s *next; /**> Next group (linked list) */
-};
-
-/**
- * Structure of a completion object
- */
-struct girara_completion_s
-{
-  girara_completion_group_t *groups; /**> Containing completion groups */
-};
-
-/**
  * Creates an girara completion object
  *
  * @return Completion object
@@ -47,7 +19,7 @@ girara_completion_t* girara_completion_init();
  * @return Completion object
  * @return NULL An error occured
  */
-girara_completion_group_t* girara_completion_group_create(girara_session_t* session, char* name);
+girara_completion_group_t* girara_completion_group_create(girara_session_t* session, const char* name);
 
 /**
  * Frees a completion group
@@ -78,6 +50,6 @@ void girara_completion_free(girara_completion_t* completion);
  * @param value Value of the entry
  * @param description Description of the entry
  */
-void girara_completion_group_add_element(girara_completion_group_t* group, char* value, char* description);
+void girara_completion_group_add_element(girara_completion_group_t* group, const char* value, const char* description);
 
 #endif

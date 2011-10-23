@@ -11,7 +11,7 @@
 #include "datastructures.h"
 
 /* header functions implementation */
-static GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, bool);
+static GtkEventBox* girara_completion_row_create(girara_session_t*, const char*, const char*, bool);
 static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
 /* completion */
@@ -21,6 +21,35 @@ struct girara_internal_completion_entry_s
   char* value; /**< Name of the entry */
   GtkEventBox* widget; /**< Eventbox widget */
 };
+
+/**
+ * Structure of a completion element
+ */
+struct girara_completion_element_s
+{
+  char *value; /**> Name of the completion element */
+  char *description; /**> Description of the completion element */
+  struct girara_completion_element_s *next; /**> Next completion element (linked list) */
+};
+
+/**
+ * Structure of a completion group
+ */
+struct girara_completion_group_s
+{
+  char *value; /**> Name of the completion element */
+  girara_completion_element_t *elements; /**> Elements of the completion group */
+  struct girara_completion_group_s *next; /**> Next group (linked list) */
+};
+
+/**
+ * Structure of a completion object
+ */
+struct girara_completion_s
+{
+  girara_completion_group_t *groups; /**> Containing completion groups */
+};
+
 
 typedef struct girara_internal_completion_entry_s girara_internal_completion_entry_t;
 
@@ -35,7 +64,7 @@ girara_completion_init()
 }
 
 girara_completion_group_t*
-girara_completion_group_create(girara_session_t* UNUSED(session), char* name)
+girara_completion_group_create(girara_session_t* UNUSED(session), const char* name)
 {
   girara_completion_group_t* group = g_slice_new(girara_completion_group_t);
 
@@ -114,7 +143,7 @@ girara_completion_free(girara_completion_t* completion)
 }
 
 void
-girara_completion_group_add_element(girara_completion_group_t* group, char* name, char* description)
+girara_completion_group_add_element(girara_completion_group_t* group, const char* name, const char* description)
 {
   g_return_if_fail(group   != NULL);
   g_return_if_fail(name    != NULL);
@@ -459,7 +488,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 }
 
 static GtkEventBox*
-girara_completion_row_create(girara_session_t* session, char* command, char* description, bool group)
+girara_completion_row_create(girara_session_t* session, const char* command, const char* description, bool group)
 {
   GtkBox      *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
   GtkEventBox *row = GTK_EVENT_BOX(gtk_event_box_new());

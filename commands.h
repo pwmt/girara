@@ -17,7 +17,7 @@
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description);
+bool girara_inputbar_command_add(girara_session_t* session, const char* command , const char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, const char* description);
 
 /**
  * Adds a special command

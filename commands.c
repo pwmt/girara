@@ -388,7 +388,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
 }
 
 bool
-girara_inputbar_command_add(girara_session_t* session, char* command , char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, char* description)
+girara_inputbar_command_add(girara_session_t* session, const char* command , const char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, const char* description)
 {
   g_return_val_if_fail(session  != NULL, false);
   g_return_val_if_fail(command  != NULL, false);
