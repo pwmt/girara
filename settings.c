@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "settings.h"
-#include "internal.h"
 #include "datastructures.h"
 #include "completion.h"
 #include "session.h"

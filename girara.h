@@ -169,38 +169,6 @@ bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* ar
 bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
- * Default callback for key press events in the view area
- *
- * @param widget The used widget
- * @param event The occured event
- * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
-
-/**
- * Default callback if the inputbar gets activated
- *
- * @param entry The inputbar entry
- * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session);
-
-/**
- * Default callback if an key in the input bar gets pressed
- *
- * @param widget The used widget
- * @param event The occured event
- * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
-
-/**
  * Default inputbar shortcut to abort
  *
  * @param session The used girara session
