@@ -100,10 +100,10 @@ void girara_clean_line(char* line);
  * @param format Debug message
  * @param ... Additional parameters
  */
-#define girara_debug(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_DEBUG,   ##__VA_ARGS__)
-#define girara_info(...)    _girara_debug(__FUNCTION__, __LINE__, GIRARA_INFO,    ##__VA_ARGS__)
-#define girara_warning(...) _girara_debug(__FUNCTION__, __LINE__, GIRARA_WARNING, ##__VA_ARGS__)
-#define girara_error(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_ERROR,   ##__VA_ARGS__)
+#define girara_debug(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_DEBUG,   __VA_ARGS__)
+#define girara_info(...)    _girara_debug(__FUNCTION__, __LINE__, GIRARA_INFO,    __VA_ARGS__)
+#define girara_warning(...) _girara_debug(__FUNCTION__, __LINE__, GIRARA_WARNING, __VA_ARGS__)
+#define girara_error(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_ERROR,   __VA_ARGS__)
 
 void _girara_debug(const char* function, int line, girara_debug_level_t level, const char* format, ...);
 
