@@ -1,6 +1,6 @@
 /* See LICENSE file for license and copyright information */
 
-#include <girara.h>
+#include <session.h>
 #include "helpers.h"
 
 void

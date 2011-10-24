@@ -7,8 +7,8 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <errno.h>
-#include "girara-utils.h"
-#include "girara-datastructures.h"
+#include <utils.h>
+#include <datastructures.h>
 #include "helpers.h"
 
 typedef struct

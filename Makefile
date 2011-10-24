@@ -5,9 +5,10 @@ include common.mk
 
 PROJECTNV = girara
 PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
-SOURCE    = girara.c completion.c config.c settings.c utils.c datastructures.c
+SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
+HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h" -a ! -name "callbacks.h")
 
 all: options ${PROJECT}
 	@${MAKE} -C examples
@@ -63,13 +64,16 @@ lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
 debug: options ${PROJECT}-debug
 	$(QUIET)${MAKE} -C examples debug
 
-test: debug
+test: ${PROJECT}
 	$(QUIET)${MAKE} -C tests
+
+test-debug: debug
+	$(QUIET)${MAKE} -C tests debug
 
 dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)cp -R LICENSE Makefile config.mk README ${PROJECTNV}.pc.in \
-		girara.h girara-utils.h girara-types.h girara-datastructures.h \
+		${HEADERS} internal.h commands.h tests/ \
 		${SOURCE} examples/ ${PROJECTNV}-${VERSION}
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
@@ -92,9 +96,8 @@ install: all ${PROJECT}.pc
 	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so || \
 		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 	$(ECHO) installing header file
-	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/include
-	$(QUIET)install -m 644 girara.h girara-utils.h girara-datastructures.h \
-		girara-types.h ${DESTDIR}${PREFIX}/include
+	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/include/girara
+	$(QUIET)install -m 644 ${HEADERS} ${DESTDIR}${PREFIX}/include/girara
 	$(ECHO) installing pkgconfig file
 	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/lib/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${PREFIX}/lib/pkgconfig
@@ -104,8 +107,7 @@ uninstall:
 	$(QUIET)rm -f ${PREFIX}/lib/lib${PROJECT}.a ${PREFIX}/lib/lib${PROJECT}.so.${SOVERSION} \
 		${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR} ${PREFIX}/lib/lib${PROJECT}.so
 	$(ECHO) removing include file
-	$(QUIET)rm -f ${PREFIX}/include/girara.h ${PREFIX}/include/girara-utils.h \
-		${PREFIX}/include/girara-datastructures.h ${PREFIX}/include/girara-types.h
+	$(QUIET)rm -rf ${PREFIX}/include/girara
 	$(ECHO) removing pkgconfig file
 	$(QUIET)rm -f ${PREFIX}/lib/pkgconfig/${PROJECT}.pc
 

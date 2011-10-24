@@ -2,9 +2,11 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <gtk/gtk.h>
 
-#include "girara.h"
+#include "datastructures.h"
+#include "session.h"
+#include "utils.h"
+#include "internal.h"
 
 #define COMMENT_PREFIX '#'
 

@@ -4,15 +4,7 @@
 #include <stdlib.h>
 
 #include "../girara.h"
-
-#ifdef UNUSED
-#elif defined(__GNUC__)
-# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
-#elif defined(__LCLINT__)
-# define UNUSED(x) /*@unused@*/ x
-#else
-# define UNUSED(x) x
-#endif
+#include "../internal.h"
 
 void setting_cb(girara_session_t* session, girara_setting_t* setting);
 
@@ -30,8 +22,6 @@ int main(int argc, char *argv[])
 
   girara_statusbar_item_t* item = girara_statusbar_item_add(session, TRUE, TRUE, TRUE, NULL);
   girara_statusbar_item_set_text(session, item, "girara-left");
-
-  girara_config_handle_add(session, "map", girara_cmd_map);
 
   girara_config_parse(session, "~/.config/girara/config");
 

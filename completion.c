@@ -4,12 +4,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "girara.h"
-#include "girara-internal.h"
+#include "completion.h"
+#include "internal.h"
+#include "session.h"
+#include "settings.h"
+#include "datastructures.h"
 
-/* header functions implementation */
-GtkEventBox* girara_completion_row_create(girara_session_t*, char*, char*, bool);
-void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
+static GtkEventBox* girara_completion_row_create(girara_session_t*, const char*, const char*, bool);
+static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
 /* completion */
 struct girara_internal_completion_entry_s
@@ -19,26 +21,65 @@ struct girara_internal_completion_entry_s
   GtkEventBox* widget; /**< Eventbox widget */
 };
 
+/**
+ * Structure of a completion element
+ */
+struct girara_completion_element_s
+{
+  char *value; /**> Name of the completion element */
+  char *description; /**> Description of the completion element */
+};
+
+/**
+ * Structure of a completion group
+ */
+struct girara_completion_group_s
+{
+  char *value; /**> Name of the completion element */
+  girara_list_t *elements; /**> Elements of the completion group */
+};
+
+/**
+ * Structure of a completion object
+ */
+struct girara_completion_s
+{
+  girara_list_t *groups; /**> Containing completion groups */
+};
+
 typedef struct girara_internal_completion_entry_s girara_internal_completion_entry_t;
 
+static void
+completion_element_free(girara_completion_element_t* element)
+{
+  if (element == NULL) {
+    return;
+  }
+
+  /* free element */
+  g_free(element->value);
+  g_free(element->description);
+  g_slice_free(girara_completion_element_t,  element);
+}
 
 girara_completion_t*
 girara_completion_init()
 {
   girara_completion_t *completion = g_slice_new(girara_completion_t);
-  completion->groups = NULL;
+  completion->groups = girara_list_new2(
+      (girara_free_function_t) girara_completion_group_free);
 
   return completion;
 }
 
 girara_completion_group_t*
-girara_completion_group_create(girara_session_t* UNUSED(session), char* name)
+girara_completion_group_create(girara_session_t* UNUSED(session), const char* name)
 {
   girara_completion_group_t* group = g_slice_new(girara_completion_group_t);
 
   group->value    = name ? g_strdup(name) : NULL;
-  group->elements = NULL;
-  group->next     = NULL;
+  group->elements = girara_list_new2(
+      (girara_free_function_t) completion_element_free);
 
   return group;
 }
@@ -49,17 +90,7 @@ girara_completion_add_group(girara_completion_t* completion, girara_completion_g
   g_return_if_fail(completion != NULL);
   g_return_if_fail(group      != NULL);
 
-  girara_completion_group_t* cg = completion->groups;
-
-  while (cg && cg->next) {
-    cg = cg->next;
-  }
-
-  if (cg) {
-    cg->next = group;
-  } else {
-    completion->groups = group;
-  }
+  girara_list_append(completion->groups, group);
 }
 
 void
@@ -69,10 +100,8 @@ girara_completion_group_free(girara_completion_group_t* group)
     return;
   }
 
-  if (group->value) {
-    g_free(group->value);
-  }
-
+  g_free(group->value);
+  girara_list_free(group->elements);
   g_slice_free(girara_completion_group_t, group);
 }
 
@@ -81,77 +110,22 @@ girara_completion_free(girara_completion_t* completion)
 {
   g_return_if_fail(completion != NULL);
 
-  girara_completion_group_t* group = completion->groups;
-  girara_completion_element_t *element;
-
-  while (group) {
-    element = group->elements;
-
-    while (element) {
-      girara_completion_element_t* ne = element->next;
-
-      /* free element */
-      g_free(element->value);
-      if (element->description) {
-        g_free(element->description);
-      }
-      g_slice_free(girara_completion_element_t,  element);
-
-      element = ne;
-    }
-
-    /* free group */
-    girara_completion_group_t *ng = group->next;
-    girara_completion_group_free(group);
-    group = ng;
-  }
-
+  girara_list_free(completion->groups);
   /* free completion */
   g_slice_free(girara_completion_t, completion);
 }
 
 void
-girara_completion_group_add_element(girara_completion_group_t* group, char* name, char* description)
+girara_completion_group_add_element(girara_completion_group_t* group, const char* name, const char* description)
 {
   g_return_if_fail(group   != NULL);
   g_return_if_fail(name    != NULL);
-
-  girara_completion_element_t* el = group->elements;
-
-  while (el && el->next) {
-    el = el->next;
-  }
 
   girara_completion_element_t* new_element = g_slice_new(girara_completion_element_t);
 
   new_element->value       = g_strdup(name);
   new_element->description = description ?  g_strdup(description) : NULL;
-  new_element->next        = NULL;
-
-  if (el) {
-    el->next = new_element;
-  } else {
-    group->elements = new_element;
-  }
-}
-
-bool
-girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), unsigned int UNUSED(t))
-{
-  /* hide completion */
-  girara_argument_t arg = { GIRARA_HIDE, NULL };
-  girara_isc_completion(session, &arg, 0);
-
-  /* clear inputbar */
-  gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
-
-  /* grab view */
-  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
-
-  /* hide inputbar */
-  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
-
-  return true;
+  girara_list_append(group->elements, new_element);
 }
 
 bool
@@ -268,24 +242,26 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
       /* search matching command */
       girara_command_t* command = NULL;
-      for (command = session->bindings.commands; command != NULL; command = command->next) {
-        if ( (command->command && !strncmp(current_command, command->command, current_command_length)) ||
-            (command->abbr    && !strncmp(current_command, command->abbr,    current_command_length))
+      GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command_it)
+        if ( (command_it->command && !strncmp(current_command, command_it->command, current_command_length)) ||
+            (command_it->abbr    && !strncmp(current_command, command_it->abbr,    current_command_length))
           )
         {
-          if (command->completion) {
+          if (command_it->completion) {
             g_free(previous_command);
-            previous_command = g_strdup(command->command);
+            previous_command = g_strdup(command_it->command);
+            command = command_it;
             break;
           } else {
             g_free(current_command);
             g_free(current_parameter);
 
             g_strfreev(elements);
+            girara_list_iterator_free(iter);
             return false;
           }
         }
-      }
+      GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command_it);
 
       if (!command) {
         g_free(current_command);
@@ -309,12 +285,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
         return false;
       }
 
-      girara_completion_group_t* group     = result->groups;
-      girara_completion_element_t *element = NULL;
-
-      while (group) {
-        element = group->elements;
-
+      GIRARA_LIST_FOREACH(result->groups, girara_completion_group_t*, iter, group)
         /* create group entry */
         if (group->value) {
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
@@ -327,7 +298,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
 
-        while (element) {
+        GIRARA_LIST_FOREACH(group->elements, girara_completion_element_t*, iter2, element)
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
           entry->group  = FALSE;
           entry->value  = g_strdup(element->value);
@@ -337,12 +308,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
 
-          element = element->next;
-        }
-
-        group = group->next;
-      }
-
+        GIRARA_LIST_FOREACH_END(group->elements, girara_completion_element_t*, iter2, element);
+      GIRARA_LIST_FOREACH_END(result->groups, girara_completion_group_t*, iter, group);
       girara_completion_free(result);
 
       command_mode = FALSE;
@@ -351,9 +318,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       command_mode = TRUE;
 
       /* create command rows */
-      for (girara_command_t* command = session->bindings.commands;
-        command != NULL; command = command->next) {
-
+      GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command)
         if (!current_command ||
             (command->command && !strncmp(current_command, command->command, current_command_length)) ||
             (command->abbr && !strncmp(current_command, command->abbr,    current_command_length))
@@ -370,7 +335,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
           /* show entry row */
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
-      }
+      GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
     }
 
     if (entries) {
@@ -474,89 +439,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
   return false;
 }
 
-bool
-girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
-{
-  gchar *separator = girara_setting_get(session, "word-separator");
-  gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
-  int    length = strlen(input);
-  int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar));
-  int i;
-
-  switch (argument->n) {
-    case GIRARA_DELETE_LAST_WORD:
-      i = pos - 1;
-
-      if (!pos) {
-        return false;
-      }
-
-      /* remove trailing spaces */
-      for (; i >= 0 && input[i] == ' '; i--);
-
-      /* find the beginning of the word */
-      while ((i == (pos - 1)) || ((i > 0) && !strchr(separator, input[i]))) {
-        i--;
-      }
-
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar),  i + 1, pos);
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), i + 1);
-      break;
-    case GIRARA_DELETE_LAST_CHAR:
-      if ((length - 1) <= 0) {
-        girara_isc_abort(session, argument, 0);
-      }
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos - 1, pos);
-      break;
-    case GIRARA_DELETE_TO_LINE_START:
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 1, pos);
-      break;
-    case GIRARA_NEXT_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), pos + 1);
-      break;
-    case GIRARA_PREVIOUS_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), (pos == 0) ? 0 : pos - 1);
-      break;
-  }
-
-  g_free(separator);
-  g_free(input);
-
-  return false;
-}
-
-girara_completion_t*
-girara_cc_set(girara_session_t* session, const char* input)
-{
-  if (input == NULL) {
-    return NULL;
-  }
-
-  girara_completion_t* completion  = girara_completion_init();
-  if (completion == NULL) {
-    return NULL;
-  }
-  girara_completion_group_t* group = girara_completion_group_create(session, NULL);
-  if (group == NULL) {
-    girara_completion_free(completion);
-    return NULL;
-  }
-  girara_completion_add_group(completion, group);
-
-  unsigned int input_length = strlen(input);
-
-  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
-    if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
-        !strncmp(input, setting->name, input_length)) {
-      girara_completion_group_add_element(group, setting->name, setting->description);
-    }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
-
-  return completion;
-}
-
-GtkEventBox*
-girara_completion_row_create(girara_session_t* session, char* command, char* description, bool group)
+static GtkEventBox*
+girara_completion_row_create(girara_session_t* session, const char* command, const char* description, bool group)
 {
   GtkBox      *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
   GtkEventBox *row = GTK_EVENT_BOX(gtk_event_box_new());
@@ -622,7 +506,7 @@ girara_completion_row_create(girara_session_t* session, char* command, char* des
   return row;
 }
 
-void
+static void
 girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int mode)
 {
   g_return_if_fail(session != NULL);

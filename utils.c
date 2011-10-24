@@ -13,7 +13,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "girara-utils.h"
+#include "utils.h"
 
 #define BLOCK_SIZE 64
 

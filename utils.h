@@ -3,7 +3,9 @@
 #ifndef GIRARA_UTILS_H
 #define GIRARA_UTILS_H
 
-#include <gtk/gtk.h>
+#include <glib.h>
+#include <stdio.h>
+#include "types.h"
 
 /**
  * Enum for directories specified in the XDG specification.
@@ -88,17 +90,6 @@ char* girara_file_read_from_fd(int fd);
  * @param line
  */
 void girara_clean_line(char* line);
-
-/**
- * Debug levels
- */
-typedef enum girara_debug_level_e
-{
-  GIRARA_INFO, /**> Information debug output */
-  GIRARA_WARNING, /**> Warning level */
-  GIRARA_DEBUG, /**> Debug messages */
-  GIRARA_ERROR /**> Error */
-} girara_debug_level_t;
 
 /**
  * Prints a debug message

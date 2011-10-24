@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "girara-types.h"
+#include "types.h"
 
 /**
  * Create a new list.
@@ -121,6 +121,17 @@ int girara_list_position(girara_list_t* list, void* data);
  * @param compare compare function
  */
 void girara_list_sort(girara_list_t* list, girara_compare_function_t compare);
+
+/**
+ * Find an element
+ *
+ * @param list The list
+ * @param compare compare function
+ * @param data data passed as the second argument to the compare function
+ * @return the element if found or NULL
+ */
+void* girara_list_find(girara_list_t* list, girara_compare_function_t compare,
+    const void* data);
 
 /**
  * Create an iterator pointing at the start of list.
