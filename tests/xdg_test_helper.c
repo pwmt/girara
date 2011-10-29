@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     return -2;
   }
 
-  const gchar* tmp = girara_get_xdg_path(argv[1][0] - '0');
+  const char* tmp = girara_get_xdg_path(argv[1][0] - '0');
   if (tmp == NULL) {
     return -3;
   }
