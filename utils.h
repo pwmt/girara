@@ -3,7 +3,6 @@
 #ifndef GIRARA_UTILS_H
 #define GIRARA_UTILS_H
 
-#include <glib.h>
 #include <stdio.h>
 #include "types.h"
 
@@ -25,7 +24,7 @@ typedef enum {
  * @return a string containing the path to the user's home directory (needs to
  * be freed with g_free) or NULL if the user doesn't exist.
  */
-gchar* girara_get_home_directory(const gchar* user);
+char* girara_get_home_directory(const char* user);
 
 /**
  * Returns a specific path specified in the XDG specification. ~ in paths will
@@ -34,14 +33,14 @@ gchar* girara_get_home_directory(const gchar* user);
  * @return a string containing the requested patch (needs to be freed with
  * g_free) or NULL for invalid values.
  */
-gchar* girara_get_xdg_path(girara_xdg_path_t path);
+char* girara_get_xdg_path(girara_xdg_path_t path);
 
 /**
  * Splits paths seperated by : (as in $PATH) into a list.
  * @param patharray $PATH like string to split
  * @return a list of paths and NULL on failure.
  */
-girara_list_t* girara_split_path_array(const gchar* patharray);
+girara_list_t* girara_split_path_array(const char* patharray);
 
 /**
  * Returns a "fixed" version of path. Which means, it will be an absolute path
@@ -50,7 +49,7 @@ girara_list_t* girara_split_path_array(const gchar* patharray);
  * @param path the path to "fix".
  * @return the "fixed" path (needs to be freed with g_free).
  */
-gchar* girara_fix_path(const gchar* path);
+char* girara_fix_path(const char* path);
 
 /**
  * Open a file in a safe way

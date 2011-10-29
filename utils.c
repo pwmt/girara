@@ -12,21 +12,22 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <glib.h>
 
 #include "utils.h"
 #include "datastructures.h"
 
 #define BLOCK_SIZE 64
 
-gchar*
-girara_fix_path(const gchar* path)
+char*
+girara_fix_path(const char* path)
 {
   g_return_val_if_fail(path != NULL, NULL);
 
-  gchar* rpath = NULL;
+  char* rpath = NULL;
   if (path[0] == '~') {
     const size_t len = strlen(path);
-    gchar* user = NULL;
+    char* user = NULL;
     size_t idx = 1;
 
     if (len > 1 && path[1] != '/') {
@@ -37,7 +38,7 @@ girara_fix_path(const gchar* path)
       user = g_strndup(path + 1, idx - 1);
     }
 
-    gchar* home_path = girara_get_home_directory(user);
+    char* home_path = girara_get_home_directory(user);
     g_free(user);
 
     if (!home_path) {
@@ -53,11 +54,11 @@ girara_fix_path(const gchar* path)
   return rpath;
 }
 
-gchar*
-girara_get_home_directory(const gchar* user)
+char*
+girara_get_home_directory(const char* user)
 {
   if (!user || g_strcmp0(user, g_get_user_name()) == 0) {
-    const gchar* homedir = g_getenv("HOME");
+    const char* homedir = g_getenv("HOME");
     return g_strdup(homedir ? homedir : g_get_home_dir());
   }
 
@@ -73,7 +74,7 @@ girara_get_home_directory(const gchar* user)
   int bufsize = 4096;
 #endif
 
-  gchar* buffer = g_malloc0(sizeof(gchar) * bufsize);
+  char* buffer = g_malloc0(sizeof(char) * bufsize);
 
   getpwnam_r(user, &pwd, buffer, bufsize, &result);
   if (result == NULL) {
@@ -81,22 +82,22 @@ girara_get_home_directory(const gchar* user)
     return NULL;
   }
 
-  gchar* dir = g_strdup(pwd.pw_dir);
+  char* dir = g_strdup(pwd.pw_dir);
   g_free(buffer);
   return dir;
 }
 
-gchar*
+char*
 girara_get_xdg_path(girara_xdg_path_t path)
 {
-  static const gchar* VARS[] = {
+  static const char* VARS[] = {
     "XDG_CONFIG_HOME",
     "XDG_DATA_HOME",
     "XDG_CONFIG_DIRS",
     "XDG_DATA_DIRS"
   };
 
-  static const gchar* DEFAULTS[] = {
+  static const char* DEFAULTS[] = {
     "NOTUSED",
     "NOTUSED",
     "/etc/xdg",
@@ -111,7 +112,7 @@ girara_get_xdg_path(girara_xdg_path_t path)
     case XDG_CONFIG_DIRS:
     case XDG_DATA_DIRS:
     {
-      const gchar* tmp = g_getenv(VARS[path]);
+      const char* tmp = g_getenv(VARS[path]);
       if (tmp == NULL || !g_strcmp0(tmp, "")) {
         return g_strdup(DEFAULTS[path]);
       }
@@ -123,14 +124,14 @@ girara_get_xdg_path(girara_xdg_path_t path)
 }
 
 girara_list_t*
-girara_split_path_array(const gchar* patharray)
+girara_split_path_array(const char* patharray)
 {
   if (patharray == NULL || !g_strcmp0(patharray, "")) {
     return NULL;
   }
 
   girara_list_t* res = girara_list_new2(g_free);
-  gchar** paths = g_strsplit(patharray, ":", 0);
+  char** paths = g_strsplit(patharray, ":", 0);
   for (unsigned int i = 0; paths[i] != '\0'; ++i) {
     girara_list_append(res, g_strdup(paths[i]));
   }
