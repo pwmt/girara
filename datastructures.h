@@ -211,6 +211,16 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, v
   } while(0)
 
 /**
+ * Merge a kist into another one. Both lists need to have the same free
+ * function. If other has a source free function set it will be set to NULL as
+ * the elements then belong to list.
+ * @param list the target list
+ * @param other the source list
+ * @returns list with the elements from other.
+ */
+girara_list_t* girara_list_merge(girara_list_t* list, girara_list_t* other);
+
+/**
  * Create a new node.
  *
  * @param data Data of the new node
