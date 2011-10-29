@@ -11,8 +11,10 @@
  * Enum for directories specified in the XDG specification.
  */
 typedef enum {
-  XDG_CONFIG,
-  XDG_DATA
+  XDG_CONFIG, /**< XDG_CONFIG_HOME */
+  XDG_DATA, /**< XDG_DATA_HOME */
+  XDG_CONFIG_DIRS, /**< XDG_CONFIG_DIRS */
+  XDG_DATA_DIRS, /** < XDG_DATA_DIRS */
 } girara_xdg_path_t;
 
 /**

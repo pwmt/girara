@@ -89,11 +89,34 @@ girara_get_home_directory(const gchar* user)
 gchar*
 girara_get_xdg_path(girara_xdg_path_t path)
 {
+  static const gchar* VARS[] = {
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME",
+    "XDG_CONFIG_DIRS",
+    "XDG_DATA_DIRS"
+  };
+
+  static const gchar* DEFAULTS[] = {
+    "NOTUSED",
+    "NOTUSED",
+    "/etc/xdg",
+    "/usr/local/share/:/usr/share",
+  };
+
   switch (path) {
     case XDG_DATA:
       return g_strdup(g_get_user_data_dir());
     case XDG_CONFIG:
       return g_strdup(g_get_user_config_dir());
+    case XDG_CONFIG_DIRS:
+    case XDG_DATA_DIRS:
+    {
+      const gchar* tmp = g_getenv(VARS[path]);
+      if (tmp == NULL || !g_strcmp0(tmp, "")) {
+        return g_strdup(DEFAULTS[path]);
+      }
+      return g_strdup(tmp);
+    }
   }
 
   return NULL;
@@ -102,7 +125,7 @@ girara_get_xdg_path(girara_xdg_path_t path)
 girara_list_t*
 girara_split_path_array(const gchar* patharray)
 {
-  if (patharray == NULL) {
+  if (patharray == NULL || g_strcmp0(patharray, "")) {
     return NULL;
   }
 
