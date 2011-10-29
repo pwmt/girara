@@ -14,6 +14,7 @@
 #include <unistd.h>
 
 #include "utils.h"
+#include "datastructures.h"
 
 #define BLOCK_SIZE 64
 
@@ -96,6 +97,23 @@ girara_get_xdg_path(girara_xdg_path_t path)
   }
 
   return NULL;
+}
+
+girara_list_t*
+girara_split_path_array(const gchar* patharray)
+{
+  if (patharray == NULL) {
+    return NULL;
+  }
+
+  girara_list_t* res = girara_list_new2(g_free);
+  gchar** paths = g_strsplit(patharray, ":", 0);
+  for (unsigned int i = 0; paths[i] != '\0'; ++i) {
+    girara_list_append(res, g_strdup(paths[i]));
+  }
+  g_strfreev(paths);
+
+  return res;
 }
 
 FILE*

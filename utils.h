@@ -34,6 +34,13 @@ gchar* girara_get_home_directory(const gchar* user);
 gchar* girara_get_xdg_path(girara_xdg_path_t path);
 
 /**
+ * Splits paths seperated by : (as in $PATH) into a list.
+ * @param patharray $PATH like string to split
+ * @return a list of paths and NULL on failure.
+ */
+girara_list_t* girara_split_path_array(const gchar* patharray);
+
+/**
  * Returns a "fixed" version of path. Which means, it will be an absolute path
  * and fully expanded. ~ and ~user will be replaced by the current user's home
  * directory (user's home directory respectively).

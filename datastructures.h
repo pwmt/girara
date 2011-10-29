@@ -5,6 +5,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <sys/types.h>
 #include "types.h"
 
 /**
@@ -112,7 +113,7 @@ size_t girara_list_size(girara_list_t* list);
  * @param data The element
  * @return The position or -1 if the data is not found
  */
-int girara_list_position(girara_list_t* list, void* data);
+ssize_t girara_list_position(girara_list_t* list, void* data);
 
 /**
  * Sort a list

@@ -113,4 +113,6 @@ uninstall:
 
 .PHONY: all options clean debug test dist install uninstall ${PROJECT} ${PROJECT}-debug
 
--include $(wildcard .depend/*.dep)
+TDEPENDS = ${OBJECTS:.o=.o.dep}
+DEPENDS = ${TDEPENDS:^=.depend/}
+-include ${DEPENDS}
