@@ -310,14 +310,22 @@ girara_cmd_quit(girara_session_t* session, girara_list_t* UNUSED(argument_list))
 bool
 girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
 {
-  int number_of_arguments = girara_list_size(argument_list);
+  const size_t number_of_arguments = girara_list_size(argument_list);
 
-  if (number_of_arguments <= 0) {
+  if (number_of_arguments == 0) {
+    girara_warning("Not enough arguments for :set.");
+    girara_notify(session, GIRARA_ERROR, "Not enough arguments.");
+    return false;
+  }
+  if (number_of_arguments > 2) {
+    girara_warning("Too many arguments for :set.");
+    girara_notify(session, GIRARA_ERROR, "Too many arguments.");
     return false;
   }
 
+
   char* name  = (char*) girara_list_nth(argument_list, 0);
-  char* value = (number_of_arguments >= 2) ? ((char*) girara_list_nth(argument_list, 1)) : NULL;
+  char* value = (number_of_arguments == 2) ? ((char*) girara_list_nth(argument_list, 1)) : NULL;
 
   /* search for existing setting */
   girara_setting_t*       setting = NULL;
