@@ -28,7 +28,8 @@ typedef enum {
 gchar* girara_get_home_directory(const gchar* user);
 
 /**
- * Returns a specific path specified in the XDG specification.
+ * Returns a specific path specified in the XDG specification. ~ in paths will
+ * not be expanded.
  * @param path which path to get
  * @return a string containing the requested patch (needs to be freed with
  * g_free) or NULL for invalid values.
