@@ -6,12 +6,14 @@ include ../common.mk
 SOURCE   = tests.c test_utils.c test_datastructures.c test_session.c
 OBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
+XDG_HELPER_SOURCE = xdg_test_helper.c
+XDG_HELPER = ${XDG_HELPER_SOURCE:.c=}
 
-all: options girara_test-gtk${GIRARA_GTK_VERSION}
+all: options girara_test-gtk${GIRARA_GTK_VERSION} ${XDG_HELPER}
 	$(ECHO) "running tests ..."
 	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}
 
-debug: options girara_test-gtk${GIRARA_GTK_VERSION}-debug
+debug: options girara_test-gtk${GIRARA_GTK_VERSION}-debug ${XDG_HELPER}
 	$(ECHO) "running tests ..."
 	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}-debug
 
@@ -26,6 +28,11 @@ options:
 	@mkdir -p .depend
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c -I.. ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
+
+${XDG_HELPER}: ${XDG_HELPER_SOURCE} ../libgirara-gtk${GIRARA_GTK_VERSION}.a
+	@mkdir -p .depend
+	$(ECHO) CC $<
+	$(QUIET)${CC}  -I.. ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a ${LIBS} -MMD -MF .depend/$@.dep
 
 %-gtk${GIRARA_GTK_VERSION}.do: %.c
 	@mkdir -p .depend
@@ -44,7 +51,7 @@ ${DOBJECTS} ${OBJECTS}: ../config.mk
 
 clean:
 	$(QUIET)rm -rf ${OBJECTS} ${DOBJECTS} girara_test-gtk${GIRARA_GTK_VERSION} \
-		girara_test-gtk${GIRARA_GTK_VERSION}-debug .depend
+		girara_test-gtk${GIRARA_GTK_VERSION}-debug .depend ${XDG_HELPER}
 
 .PHONY: all options clean debug
 
