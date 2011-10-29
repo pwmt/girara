@@ -147,10 +147,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   res = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(res);
   g_assert(output);
-  gchar* ex = g_build_filename(g_get_home_dir(), "xdg", NULL);
-  g_assert_cmpstr(output, ==, ex);
-  g_free(output);
-  g_free(ex);
+  g_assert_cmpstr(output, ==, "~/xdg");
 
   g_free(envp[0]);
   envp[0] = g_strdup_printf("%s=/home/test/xdg", envvar);

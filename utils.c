@@ -125,7 +125,7 @@ girara_get_xdg_path(girara_xdg_path_t path)
 girara_list_t*
 girara_split_path_array(const gchar* patharray)
 {
-  if (patharray == NULL || g_strcmp0(patharray, "")) {
+  if (patharray == NULL || !g_strcmp0(patharray, "")) {
     return NULL;
   }
 
