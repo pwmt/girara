@@ -4,6 +4,7 @@
 #include <glib.h>
 
 #include "datastructures.h"
+#include "utils.h"
 
 struct girara_tree_node_s
 {
@@ -276,7 +277,7 @@ girara_list_size(girara_list_t* list)
   return g_list_length(list->start);
 }
 
-int
+ssize_t
 girara_list_position(girara_list_t* list, void* data)
 {
   g_return_val_if_fail(list != NULL, -1);
@@ -285,13 +286,14 @@ girara_list_position(girara_list_t* list, void* data)
     return -1;
   }
 
-  for (unsigned int i = 0; i < g_list_length(list->start); i++) {
-    GList* tmp = g_list_nth(list->start, i);
-
-    if (data == tmp->data) {
-      return i;
+  size_t pos = 0;
+  GIRARA_LIST_FOREACH(list, void*, iter, tmp)
+    if (tmp == data) {
+      girara_list_iterator_free(iter);
+      return pos;
     }
-  }
+    ++pos;
+  GIRARA_LIST_FOREACH_END(list, void*, iter, tmp);
 
   return -1;
 }
@@ -313,6 +315,27 @@ girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* 
   g_return_if_fail(list && list->start && callback);
 
   g_list_foreach(list->start, callback, data);
+}
+
+girara_list_t*
+girara_list_merge(girara_list_t* list, girara_list_t* other)
+{
+  if (list == NULL) {
+    return other;
+  }
+  if (other == NULL) {
+    return list;
+  }
+
+  if (list->free != other->free) {
+    girara_warning("girara_list_merge: merging lists with different free functions!");
+  }
+  other->free = NULL;
+
+  GIRARA_LIST_FOREACH(other, void*, iter, data)
+    girara_list_append(list, data);
+  GIRARA_LIST_FOREACH_END(other, void*, iter, data);
+  return list;
 }
 
 girara_tree_node_t*

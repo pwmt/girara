@@ -14,6 +14,7 @@
 #include <unistd.h>
 
 #include "utils.h"
+#include "datastructures.h"
 
 #define BLOCK_SIZE 64
 
@@ -88,14 +89,54 @@ girara_get_home_directory(const gchar* user)
 gchar*
 girara_get_xdg_path(girara_xdg_path_t path)
 {
+  static const gchar* VARS[] = {
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME",
+    "XDG_CONFIG_DIRS",
+    "XDG_DATA_DIRS"
+  };
+
+  static const gchar* DEFAULTS[] = {
+    "NOTUSED",
+    "NOTUSED",
+    "/etc/xdg",
+    "/usr/local/share/:/usr/share",
+  };
+
   switch (path) {
     case XDG_DATA:
       return g_strdup(g_get_user_data_dir());
     case XDG_CONFIG:
       return g_strdup(g_get_user_config_dir());
+    case XDG_CONFIG_DIRS:
+    case XDG_DATA_DIRS:
+    {
+      const gchar* tmp = g_getenv(VARS[path]);
+      if (tmp == NULL || !g_strcmp0(tmp, "")) {
+        return g_strdup(DEFAULTS[path]);
+      }
+      return g_strdup(tmp);
+    }
   }
 
   return NULL;
+}
+
+girara_list_t*
+girara_split_path_array(const gchar* patharray)
+{
+  if (patharray == NULL || !g_strcmp0(patharray, "")) {
+    return NULL;
+  }
+
+  girara_list_t* res = girara_list_new2(g_free);
+  gchar** paths = g_strsplit(patharray, ":", 0);
+  for (unsigned int i = 0; paths[i] != '\0'; ++i) {
+    girara_list_append(res, g_strdup(paths[i]));
+  }
+  g_strfreev(paths);
+
+  return res;
 }
 
 FILE*

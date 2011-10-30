@@ -114,11 +114,7 @@ test_utils_fix_path()
   */
 
   girara_list_t* list = read_pwd_info();
-  girara_list_iterator_t* iter = girara_list_iterator(list);
-  g_assert_cmpptr(iter, !=, NULL);
-  while (girara_list_iterator_is_valid(iter))
-  {
-    pwd_info_t* pwdinfo = (pwd_info_t*) girara_list_iterator_data(iter);
+  GIRARA_LIST_FOREACH(list, pwd_info_t*, iter, pwdinfo)
     gchar* path = g_strdup_printf("~%s/test", pwdinfo->name);
     gchar* eres = g_build_filename(pwdinfo->dir, "test", NULL);
 
@@ -127,9 +123,7 @@ test_utils_fix_path()
     g_free(res);
     g_free(eres);
     g_free(path);
-    girara_list_iterator_next(iter);
-  }
-  girara_list_iterator_free(iter);
+  GIRARA_LIST_FOREACH_END(list, pwd_info_t*, iter, pwdinfo);
   girara_list_free(list);
 }
 
@@ -137,29 +131,33 @@ static void
 xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
     const gchar* expected)
 {
-  gchar* oldenv = g_getenv(envvar) ? g_strdup(g_getenv(envvar)) : NULL;
+  gchar* envp[] = { g_strdup_printf("%s=", envvar) , NULL };
+  gchar* argv[] = { "./xdg_test_helper", g_strdup_printf("%d", path), NULL };
 
-  g_unsetenv(envvar);
-  gchar* res = girara_get_xdg_path(path);
-  g_assert_cmpstr(res, ==, expected);
-  g_free(res);
+  gchar* output = NULL;
+  bool res = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
+  g_assert(res);
+  g_assert(output);
+  g_assert_cmpstr(output, ==, expected);
+  g_free(output);
 
-  g_setenv(envvar, "~/xdg", TRUE);
-  gchar* ex = g_build_filename(g_get_home_dir(), "xdg", NULL);
-  res = girara_get_xdg_path(path);
-  g_assert_cmpstr(res, ==, expected);
-  g_free(res);
-  g_free(ex);
+  g_free(envp[0]);
+  envp[0] = g_strdup_printf("%s=~/xdg", envvar);
 
-  g_setenv(envvar, "/home/test/xdg", TRUE);
-  res = girara_get_xdg_path(path);
-  g_assert_cmpstr(res, ==, expected);
-  g_free(res);
+  res = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
+  g_assert(res);
+  g_assert(output);
+  g_assert_cmpstr(output, ==, "~/xdg");
 
-  if (oldenv) {
-    g_setenv(envvar, oldenv, TRUE);
-    g_free(oldenv);
-  }
+  g_free(envp[0]);
+  envp[0] = g_strdup_printf("%s=/home/test/xdg", envvar);
+
+  res = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
+  g_assert(res);
+  g_assert(output);
+  g_assert_cmpstr(output, ==, "/home/test/xdg");
+
+  g_free(argv[1]);
 }
 
 void
@@ -167,6 +165,8 @@ test_utils_xdg_path()
 {
   xdg_path_impl(XDG_CONFIG, "XDG_CONFIG_HOME", g_get_user_config_dir());
   xdg_path_impl(XDG_DATA, "XDG_DATA_HOME", g_get_user_data_dir());
+  xdg_path_impl(XDG_CONFIG_DIRS, "XDG_CONFIG_DIRS", "/etc/xdg");
+  xdg_path_impl(XDG_DATA_DIRS, "XDG_DATA_DIRS", "/usr/local/share/:/usr/share");
 }
 
 void

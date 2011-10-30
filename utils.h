@@ -11,8 +11,10 @@
  * Enum for directories specified in the XDG specification.
  */
 typedef enum {
-  XDG_CONFIG,
-  XDG_DATA
+  XDG_CONFIG, /**< XDG_CONFIG_HOME */
+  XDG_DATA, /**< XDG_DATA_HOME */
+  XDG_CONFIG_DIRS, /**< XDG_CONFIG_DIRS */
+  XDG_DATA_DIRS, /** < XDG_DATA_DIRS */
 } girara_xdg_path_t;
 
 /**
@@ -32,6 +34,13 @@ gchar* girara_get_home_directory(const gchar* user);
  * g_free) or NULL for invalid values.
  */
 gchar* girara_get_xdg_path(girara_xdg_path_t path);
+
+/**
+ * Splits paths seperated by : (as in $PATH) into a list.
+ * @param patharray $PATH like string to split
+ * @return a list of paths and NULL on failure.
+ */
+girara_list_t* girara_split_path_array(const gchar* patharray);
 
 /**
  * Returns a "fixed" version of path. Which means, it will be an absolute path

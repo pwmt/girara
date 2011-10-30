@@ -88,6 +88,12 @@ test_datastructures_list()
     g_assert_cmpuint(girara_list_contains(list, (void*)i), ==, true);
   }
 
+  // position
+  for (intptr_t i = 0; i != 10; ++i) {
+    g_assert_cmpint(girara_list_position(list, (void*) i), ==, i);
+  }
+  g_assert_cmpint(girara_list_position(list, (void*) 10), ==, -1);
+
   // remove
   for (intptr_t i = 9; i >= 0; --i) {
     g_assert_cmpuint(girara_list_contains(list, (void*)i), ==, true);
