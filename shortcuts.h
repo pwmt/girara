@@ -9,6 +9,8 @@
 /**
  * Adds an shortcut
  *
+ * Note: currently argument_data accepts only a character string
+ *
  * @param session The used girara session
  * @param modifier The modifier
  * @param key The key
