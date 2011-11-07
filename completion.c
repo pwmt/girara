@@ -390,10 +390,11 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       unsigned int n_completion_items = tmp ? *tmp : 15;
       unsigned int uh = ceil( n_completion_items / 2);
       unsigned int lh = floor(n_completion_items / 2);
-      free(tmp);
+      g_free(tmp);
 
       unsigned int current_item = g_list_position(entries, entries_current);
 
+      GList* tmpentry = entries;
       for (unsigned int i = 0; i < n_elements; i++) {
         if (
             (i >= (current_item - lh) && (i <= current_item + uh)) ||
@@ -401,10 +402,12 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
             (i >= (n_elements - n_completion_items) && (current_item >= (n_elements - uh)))
           )
         {
-          gtk_widget_show(GTK_WIDGET(((girara_internal_completion_entry_t*) (g_list_nth(entries, i))->data)->widget));
+          gtk_widget_show(GTK_WIDGET(((girara_internal_completion_entry_t*) tmpentry->data)->widget));
         } else {
-          gtk_widget_hide(GTK_WIDGET(((girara_internal_completion_entry_t*) (g_list_nth(entries, i))->data)->widget));
+          gtk_widget_hide(GTK_WIDGET(((girara_internal_completion_entry_t*) tmpentry->data)->widget));
         }
+
+        tmpentry = g_list_next(tmpentry);
       }
     } else {
       gtk_widget_hide(GTK_WIDGET(((girara_internal_completion_entry_t*) (g_list_nth(entries, 0))->data)->widget));
