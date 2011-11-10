@@ -230,8 +230,8 @@ girara_file_read_line(FILE* file)
       buffer = tmp;
     }
   }
-
-  if (i == 0) {
+  /* i can be zero if c was '\n' because then you read empty line */
+  if ( (i == 0) && (c != '\n') ) {
     goto error_free;
   }
 
