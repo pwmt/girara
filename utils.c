@@ -220,13 +220,10 @@ girara_file_read_line(FILE* file)
 
     if (i == bc) {
       bc += BLOCK_SIZE;
-      char* tmp = realloc(buffer, sizeof(char) * bc);
-
-      if (!tmp) {
+      buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * bc);
+      if (buffer == NULL) {
         goto error_free;
       }
-
-      buffer = tmp;
     }
   }
 
@@ -234,12 +231,10 @@ girara_file_read_line(FILE* file)
     goto error_free;
   }
 
-  char* tmp = realloc(buffer, sizeof(char) * (i + 1));
-  if (tmp == NULL) {
+  buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * (i + 1));
+  if (buffer == NULL) {
     goto error_free;
   }
-
-  buffer = tmp;
   buffer[i] = '\0';
 
   return buffer;
@@ -270,13 +265,10 @@ girara_file_read_line_from_fd(int fd)
 
     if (i == bc) {
       bc += BLOCK_SIZE;
-      char* tmp = realloc(buffer, sizeof(char) * bc);
-
-      if (!tmp) {
+      buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * bc);
+      if (buffer == NULL) {
         goto error_free;
       }
-
-      buffer = tmp;
     }
   }
 
@@ -284,12 +276,10 @@ girara_file_read_line_from_fd(int fd)
     goto error_free;
   }
 
-  char* tmp = realloc(buffer, sizeof(char) * (i + 1));
-  if (tmp == NULL) {
+  buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * (i + 1));
+  if (buffer == NULL) {
     goto error_free;
   }
-
-  buffer = tmp;
   buffer[i] = '\0';
 
   return buffer;
@@ -329,13 +319,10 @@ girara_file_read(const char* path)
 
     if (i == bc) {
       bc += BLOCK_SIZE;
-      char* tmp = realloc(buffer, sizeof(char) * bc);
-
-      if (!tmp) {
+      buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * bc);
+      if (buffer == NULL) {
         goto error_free;
       }
-
-      buffer = tmp;
     }
   }
 
@@ -343,12 +330,10 @@ girara_file_read(const char* path)
     goto error_free;
   }
 
-  char* tmp = realloc(buffer, sizeof(char) * (i + 1));
-  if (!tmp) {
+  buffer = realloc((void**) &buffer, sizeof(char) * (i + 1));
+  if (buffer == NULL) {
     goto error_free;
   }
-
-  buffer = tmp;
   buffer[i] = '\0';
 
   fclose(file);
@@ -383,13 +368,10 @@ girara_file_read_from_fd(int fd)
 
     if (i == bc) {
       bc += BLOCK_SIZE;
-      char* tmp = realloc(buffer, sizeof(char) * bc);
-
-      if (!tmp) {
+      buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * bc);
+      if (buffer == NULL) {
         goto error_free;
       }
-
-      buffer = tmp;
     }
   }
 
@@ -397,12 +379,10 @@ girara_file_read_from_fd(int fd)
     goto error_free;
   }
 
-  char* tmp = realloc(buffer, sizeof(char) * (i + 1));
-  if (!tmp) {
+  buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * (i + 1));
+  if (buffer == NULL) {
     goto error_free;
   }
-
-  buffer = tmp;
   buffer[i] = '\0';
 
   return buffer;
@@ -442,6 +422,29 @@ girara_clean_line(char* line)
   }
 
   line[j] = '\0';
+}
+
+void*
+girara_safe_realloc(void** ptr, size_t size)
+{
+  if (size == 0) {
+    goto error_free;
+  }
+
+  void* tmp = realloc(*ptr, size);
+  if(tmp == NULL) {
+    goto error_free;
+  }
+
+  *ptr = tmp;
+  return *ptr;
+
+error_free:
+
+  free(*ptr);
+  *ptr = NULL;
+
+  return NULL;
 }
 
 void

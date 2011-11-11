@@ -101,6 +101,16 @@ char* girara_file_read_from_fd(int fd);
 void girara_clean_line(char* line);
 
 /**
+ * Changes the size of the memory block by wrapping a realloc function call
+ * In addition it frees the old memory block if realloc fails.
+ *
+ * @param ptr Memory space
+ * @param size Number of bytes 
+ * @return Pointer to the allocated memory block or NULL
+ */
+void* girara_safe_realloc(void** ptr, size_t size);
+
+/**
  * Prints a debug message
  *
  * @param function Name of the function
