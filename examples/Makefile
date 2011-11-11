@@ -18,12 +18,12 @@ options:
 %-gtk${GIRARA_GTK_VERSION}: %.c ../libgirara-gtk${GIRARA_GTK_VERSION}.a
 	$(ECHO) CC $<
 	@mkdir -p .depend
-	$(QUIET)${CC} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a  ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a  ${LIBS} -MMD -MF .depend/$@.dep
 
 %-gtk${GIRARA_GTK_VERSION}-debug: %.c ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a
 	$(ECHO) CC $<
 	@mkdir -p .depend
-	$(QUIET)${CC} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a ${LIBS} -MMD -MF .depend/$@.dep
 
 debug: options ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}-debug}
 

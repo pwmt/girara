@@ -23,12 +23,12 @@ options:
 %-gtk${GIRARA_GTK_VERSION}.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
-	$(QUIET)${CC} -c ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 %-gtk${GIRARA_GTK_VERSION}.do: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
-	$(QUIET)${CC} -c ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 ${OBJECTS}:  config.mk
 ${DOBJECTS}: config.mk

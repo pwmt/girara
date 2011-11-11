@@ -27,17 +27,17 @@ options:
 %-gtk${GIRARA_GTK_VERSION}.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
-	$(QUIET)${CC} -c -I.. ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 ${XDG_HELPER}: ${XDG_HELPER_SOURCE} ../libgirara-gtk${GIRARA_GTK_VERSION}.a
 	@mkdir -p .depend
 	$(ECHO) CC $<
-	$(QUIET)${CC}  -I.. ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC}  -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a ${LIBS} -MMD -MF .depend/$@.dep
 
 %-gtk${GIRARA_GTK_VERSION}.do: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
-	$(QUIET)${CC} -c -I.. ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 girara_test-gtk${GIRARA_GTK_VERSION}: ${OBJECTS} ../libgirara-gtk${GIRARA_GTK_VERSION}.a
 	$(ECHO) LD $@
