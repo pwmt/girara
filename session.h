@@ -4,6 +4,7 @@
 #define GIRARA_SESSION_H
 
 #include "types.h"
+#include "macros.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -202,7 +203,7 @@ char* girara_buffer_get(girara_session_t* session);
  * @param format String format
  * @param ...
  */
-void girara_notify(girara_session_t* session, int level, const char* format, ...);
+void girara_notify(girara_session_t* session, int level, const char* format, ...) GIRARA_PRINTF(3, 4);
 
 /**
  * Adds a new mode by its string identifier
