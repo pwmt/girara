@@ -10,6 +10,25 @@
 #include "callbacks.h"
 #include "shortcuts.h"
 #include "config.h"
+#include "utils.h"
+
+static void
+cb_window_icon(girara_session_t* session, girara_setting_t* setting)
+{
+  g_return_if_fail(session != NULL && setting != NULL);
+
+  if (setting->value.s == NULL) {
+    girara_warning("window-icon is NULL!");
+    return;
+  }
+
+  GError* error = NULL;
+  gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), setting->value.s, &error);
+  if (error != NULL) {
+    girara_error("failed to load window icon: %s", error->message);
+    g_error_free(error);
+  }
+}
   
 girara_session_t*
 girara_session_create()
@@ -109,6 +128,9 @@ girara_session_create()
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  NULL, NULL, NULL);
+
+  /* window icon */
+  girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, "Window icon", cb_window_icon, NULL);
 
   /* default shortcuts */
 #if (GTK_MAJOR_VERSION == 3)
