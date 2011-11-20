@@ -1,7 +1,7 @@
 /* See LICENSE file for license and copyright information */
 
 #define _BSD_SOURCE
-#define _XOPEN_SOURCE 500
+#define _XOPEN_SOURCE 700
 
 #include <ctype.h>
 #include <fcntl.h>
@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <glib.h>
+#include <stdio.h>
 
 #include "utils.h"
 #include "datastructures.h"
@@ -22,7 +23,9 @@
 char*
 girara_fix_path(const char* path)
 {
-  g_return_val_if_fail(path != NULL, NULL);
+  if (path == NULL) {
+    return NULL;
+  }
 
   char* rpath = NULL;
   if (path[0] == '~') {
@@ -141,11 +144,11 @@ girara_split_path_array(const char* patharray)
 }
 
 FILE*
-girara_file_open(const char* path, char* mode)
+girara_file_open(const char* path, const char* mode)
 {
   char* fixed_path = girara_fix_path(path);
 
-  if (fixed_path == NULL) {
+  if (fixed_path == NULL || mode == NULL) {
     return NULL;
   }
 
@@ -207,46 +210,18 @@ girara_file_read_line(FILE* file)
     return NULL;
   }
 
-  unsigned int bc = BLOCK_SIZE;
-  unsigned int i  = 0;
-  char* buffer    = malloc(sizeof(char) * bc);
-
-  if (!buffer) {
-    goto error_ret;
+  size_t size = 0;
+  char* line = NULL;
+  if (getline(&line, &size, file) == -1) {
+    return NULL;
   }
 
-  char c;
-  while ((c = fgetc(file)) != EOF && c != '\n') {
-    buffer[i++] = c;
-
-    if (i == bc) {
-      bc += BLOCK_SIZE;
-      buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * bc);
-      if (buffer == NULL) {
-        goto error_free;
-      }
-    }
+  /* remove the trailing line deliminator */
+  char* pos = strchr(line, '\n');
+  if (pos != NULL) {
+    *pos = '\0';
   }
-  /* i can be zero if c was '\n' because then you read empty line */
-  if ( (i == 0) && (c != '\n') ) {
-    goto error_free;
-  }
-
-  buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * (i + 1));
-  if (buffer == NULL) {
-    goto error_free;
-  }
-  buffer[i] = '\0';
-
-  return buffer;
-
-error_free:
-
-  free(buffer);
-
-error_ret:
-
-  return NULL;
+  return line;
 }
 
 char*

@@ -11,7 +11,7 @@ int main(int argc, char** argv)
   g_test_add_func("/utils/path/home", test_utils_home_directory);
   g_test_add_func("/utils/path/fix", test_utils_fix_path);
   g_test_add_func("/utils/path/xdg", test_utils_xdg_path);
-  g_test_add_func("/utils/file/invariants", test_utils_xdg_path);
+  g_test_add_func("/utils/file/invariants", test_utils_file_invariants);
 
   // datastructures tests
   g_test_add_func("/datastructures/list", test_datastructures_list);

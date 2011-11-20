@@ -59,7 +59,7 @@ char* girara_fix_path(const char* path);
  * @param mode Mode that the file should be opened
  * @return NULL if an error occured
  */
-FILE* girara_file_open(const char* path, char* mode);
+FILE* girara_file_open(const char* path, const char* mode);
 
 /**
  * Reads a line from the file. Returned string has to be freed.
