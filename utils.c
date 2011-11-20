@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <glib.h>
 #include <stdio.h>
+#include <errno.h>
 
 #include "utils.h"
 #include "datastructures.h"
@@ -227,46 +228,14 @@ girara_file_read_line(FILE* file)
 char*
 girara_file_read_line_from_fd(int fd)
 {
-  unsigned int bc = BLOCK_SIZE;
-  unsigned int i  = 0;
-  char* buffer    = malloc(sizeof(char) * bc);
-
-  if (buffer == NULL) {
-    goto error_ret;
+  FILE* f = fdopen(fd, "r");
+  if (f == NULL) {
+    return NULL;
   }
 
-  char c;
-  while ((read(fd, &c, 1) == 1) && c != '\n') {
-    buffer[i++] = c;
-
-    if (i == bc) {
-      bc += BLOCK_SIZE;
-      buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * bc);
-      if (buffer == NULL) {
-        goto error_free;
-      }
-    }
-  }
-
-  if (i == 0 || c == EOF) {
-    goto error_free;
-  }
-
-  buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * (i + 1));
-  if (buffer == NULL) {
-    goto error_free;
-  }
-  buffer[i] = '\0';
-
-  return buffer;
-
-error_free:
-
-  free(buffer);
-
-error_ret:
-
-  return NULL;
+  char* result = girara_file_read_line(f);
+  fclose(f);
+  return result;
 }
 
 char*
@@ -339,6 +308,7 @@ girara_file_read_from_fd(int fd)
   }
 
   char c;
+  errno = 0;
   while ((read(fd, &c, 1)) == 1) {
     buffer[i++] = c;
 
@@ -351,7 +321,7 @@ girara_file_read_from_fd(int fd)
     }
   }
 
-  if (i == 0 && c == EOF) {
+  if (i == 0 && errno !=0) {
     goto error_free;
   }
 
