@@ -42,7 +42,12 @@ enum
   GIRARA_DELETE_LAST_CHAR, /**< Delete the last character */
   GIRARA_NEXT_CHAR, /**< Go to the next character */
   GIRARA_PREVIOUS_CHAR, /**< Go to the previous character */
-  GIRARA_DELETE_TO_LINE_START /** Delete the line until the start */
+  GIRARA_DELETE_TO_LINE_START, /**< Delete the line to the start */
+  GIRARA_DELETE_TO_LINE_END, /**< Delete the line to the end */
+  GIRARA_DELETE_CURR_CHAR, /**< Delete current char */ 
+  GIRARA_GOTO_START, /**< Go to start of the line */
+  GIRARA_GOTO_END /**< Go to end of the line */
+
 };
 
 /**

@@ -154,6 +154,21 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
     case GIRARA_PREVIOUS_CHAR:
       gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), (pos == 0) ? 0 : pos - 1);
       break;
+    case GIRARA_DELETE_CURR_CHAR:
+      if((length - 1) <= 0) {
+        girara_isc_abort(session, argument, 0);
+      }
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos, pos + 1);
+      break;
+    case GIRARA_DELETE_TO_LINE_END:
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos, length);
+      break;
+    case GIRARA_GOTO_START:
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), 1);
+      break;
+    case GIRARA_GOTO_END:
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+      break;
   }
 
   g_free(separator);
