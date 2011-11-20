@@ -347,9 +347,11 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
     case BOOLEAN:
       if (value) {
         if (!g_strcmp0(value, "false")) {
-          setting->value.b = false;
+          bool b = false;
+          girara_setting_set(session, name, &b);;
         } else if (!g_strcmp0(value, "true")) {
-          setting->value.b = true;
+          bool b = true;
+          girara_setting_set(session, name, &b);
         } else {
           girara_warning("Unknown value for option: %s", name);
           girara_notify(session, GIRARA_ERROR, "Unknown value for option: %s", name);
@@ -360,7 +362,8 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
       break;
     case FLOAT:
       if (value) {
-        setting->value.f = strtof(value, NULL);
+        float f = strtof(value, NULL);
+        girara_setting_set(session, name, &f);
       } else {
         girara_warning("No value defined for option: %s", name);
         girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
@@ -368,28 +371,21 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
       break;
     case INT:
       if (value) {
-        setting->value.i = atoi(value);
+        int i = atoi(value);
+        girara_setting_set(session, name, &i);
       } else {
         girara_warning("No value defined for option: %s", name);
         girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
       }
       break;
     case STRING:
-      if (setting->value.s != NULL) {
-        g_free(setting->value.s);
-        setting->value.s = NULL;
-      }
       if (value) {
-        setting->value.s = g_strdup(value);
+        girara_setting_set(session, name, value);
       } else {
         girara_warning("No value defined for option: %s", name);
         girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
       }
       break;
-  }
-
-  if (setting->callback != NULL) {
-    setting->callback(session, setting);
   }
 
   return true;

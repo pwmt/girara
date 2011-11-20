@@ -186,4 +186,24 @@ struct girara_config_handle_s
   girara_command_function_t handle;
 };
 
+/**
+ * Structure of a settings entry
+ */
+struct girara_setting_s
+{
+  char* name; /**< Name of the setting */
+  union
+  {
+    bool b; /**< Boolean */
+    int i; /**< Integer */
+    float f; /**< Floating number */
+    char *s; /**< String */
+  } value; /**< Value of the setting */
+  int type; /**< Type identifier */
+  bool init_only; /**< Option can be set only before girara gets initialized */
+  char* description; /**< Description of this setting */
+  girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */
+  void* data; /**< Arbitary data that can be used by callbacks */
+};
+
 #endif

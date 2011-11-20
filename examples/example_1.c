@@ -6,7 +6,7 @@
 #include "../girara.h"
 #include "../internal.h"
 
-void setting_cb(girara_session_t* session, girara_setting_t* setting);
+void setting_cb(girara_session_t* UNUSED(session), const char* name, girara_setting_type_t type, void* UNUSED(value), void* UNUSED(data));
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
   int* x = girara_setting_get(session, "window-width");
   if(x) {
     printf("%d\n", *x);
-    free(x);
+    g_free(x);
   } else {
     printf("none\n");
   }
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
   int* y = girara_setting_get(session, "window-width");
   if(y) {
     printf("%d\n", *y);
-    free(y);
+    g_free(y);
   } else {
     printf("none\n");
   }
@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-void setting_cb(girara_session_t* UNUSED(session), girara_setting_t* setting)
+void setting_cb(girara_session_t* UNUSED(session), const char* name, girara_setting_type_t type, void* UNUSED(value), void* UNUSED(data))
 {
-  printf("Changed setting '%s' (%c)!\n", setting->name, setting->type);
+  printf("Changed setting '%s' (%c)!\n", name, type);
   return;
 }

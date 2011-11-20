@@ -8,6 +8,7 @@
 #include "datastructures.h"
 #include "completion.h"
 #include "session.h"
+#include "internal.h"
 
 static void
 set_value(girara_setting_t* setting, void* value)
@@ -76,7 +77,7 @@ girara_setting_set(girara_session_t* session, const char* name, void* value)
       set_value(setting, value);
 
       if (setting->callback != NULL) {
-        setting->callback(session, setting);
+        setting->callback(session, setting->name, setting->type, value, setting->data);
       }
 
       return true;

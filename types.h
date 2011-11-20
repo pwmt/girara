@@ -137,9 +137,12 @@ typedef enum girara_setting_type_e
  * Function declaration for a settings callback
  *
  * @param session The current girara session
- * @param setting The affected setting
+ * @param name The name of the affected settting
+ * @param type The type of the affected setting
+ * @param value Pointer to the new value
+ * @param data User data
  */
-typedef void (*girara_setting_callback_t)(girara_session_t* session, girara_setting_t* setting);
+typedef void (*girara_setting_callback_t)(girara_session_t* session, const char* name, girara_setting_type_t type, void* value, void* data);
 
 /**
  * Definition of an argument of a shortcut or buffered command

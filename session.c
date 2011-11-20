@@ -13,17 +13,17 @@
 #include "utils.h"
 
 static void
-cb_window_icon(girara_session_t* session, girara_setting_t* setting)
+cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
-  g_return_if_fail(session != NULL && setting != NULL);
+  g_return_if_fail(session != NULL && value != NULL);
 
-  if (setting->value.s == NULL) {
+  if (value == NULL) {
     girara_warning("window-icon is NULL!");
     return;
   }
 
   GError* error = NULL;
-  gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), setting->value.s, &error);
+  gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), (const char*) value, &error);
   if (error != NULL) {
     girara_error("failed to load window icon: %s", error->message);
     g_error_free(error);
