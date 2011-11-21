@@ -181,9 +181,7 @@ test_utils_file_invariants(void)
   g_assert_cmpptr(girara_file_open(NULL, "r"), ==, NULL);
 
   g_assert_cmpptr(girara_file_read_line(NULL), ==, NULL);
-  g_assert_cmpptr(girara_file_read_line_from_fd(-1), ==, NULL);
   g_assert_cmpptr(girara_file_read(NULL), ==, NULL);
-  g_assert_cmpptr(girara_file_read_from_fd(-1), ==, NULL);
 }
 
 #include <unistd.h>
@@ -209,26 +207,8 @@ test_utils_file_read(void)
 
   FILE* file = girara_file_open(path, "r");
   g_assert_cmpptr(file, !=, NULL);
-  int ffd = fileno(file);
-  content = girara_file_read_from_fd(ffd);
-  g_assert_cmpstr(content, ==, CONTENT);
-  free(content);
-  fclose(file);
-
-  file = girara_file_open(path, "r");
-  g_assert_cmpptr(file, !=, NULL);
   for (size_t i = 0; i != NUMLINES; ++i) {
     char* line = girara_file_read_line(file);
-    g_assert_cmpstr(line, ==, LINES[i]);
-    free(line);
-  }
-  fclose(file);
-
-  file = girara_file_open(path, "r");
-  g_assert_cmpptr(file, !=, NULL);
-  ffd = fileno(file);
-  for (size_t i = 0; i != NUMLINES; ++i) {
-    char* line = girara_file_read_line_from_fd(ffd);
     g_assert_cmpstr(line, ==, LINES[i]);
     free(line);
   }
