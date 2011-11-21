@@ -78,6 +78,14 @@ char* girara_file_read_line(FILE* file);
 char* girara_file_read(const char* path);
 
 /**
+ * Reads the whole content from a file. Returned string has to be freed.
+ *
+ * @param file file to read
+ * @return Read file or NULL if an error occured
+ */
+char* girara_file_read2(FILE* file);
+
+/**
  * Trims and cleans a line from multiple whitespaces
  *
  * @param line

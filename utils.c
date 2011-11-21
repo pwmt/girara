@@ -234,6 +234,18 @@ girara_file_read(const char* path)
     return NULL;
   }
 
+  char* content = girara_file_read2(file);
+  fclose(file);
+  return content;
+}
+
+char*
+girara_file_read2(FILE* file)
+{
+  if (file == NULL) {
+    return NULL;
+  }
+
   unsigned int bc = BLOCK_SIZE;
   unsigned int i  = 0;
   char* buffer    = malloc(sizeof(char) * bc);
@@ -265,8 +277,6 @@ girara_file_read(const char* path)
   }
   buffer[i] = '\0';
 
-  fclose(file);
-
   return buffer;
 
 error_free:
@@ -274,8 +284,6 @@ error_free:
   free(buffer);
 
 error_ret:
-
-  fclose(file);
 
   return NULL;
 }
