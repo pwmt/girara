@@ -218,10 +218,7 @@ girara_file_read_line(FILE* file)
   }
 
   /* remove the trailing line deliminator */
-  char* pos = strchr(line, '\n');
-  if (pos != NULL) {
-    *pos = '\0';
-  }
+  g_strdelimit(line, "\n\r", '\0');
   return line;
 }
 
@@ -275,7 +272,7 @@ girara_file_read(const char* path)
     goto error_free;
   }
 
-  buffer = realloc((void**) &buffer, sizeof(char) * (i + 1));
+  buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * (i + 1));
   if (buffer == NULL) {
     goto error_free;
   }

@@ -4,7 +4,7 @@
 #include "helpers.h"
 
 void
-test_session_basic()
+test_session_basic(void)
 {
   // just create and destroy
   girara_session_t* session = girara_session_create();

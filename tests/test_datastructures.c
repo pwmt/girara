@@ -18,7 +18,7 @@ list_free(void* data)
 }
 
 void
-test_datastructures_list_free()
+test_datastructures_list_free(void)
 {
   // free function
   girara_list_t* list = girara_list_new();
@@ -44,7 +44,7 @@ test_datastructures_list_free()
 }
 
 void
-test_datastructures_list()
+test_datastructures_list(void)
 {
   girara_list_t* list = girara_list_new();
   // size of empty list
@@ -125,7 +125,7 @@ test_datastructures_list()
 }
 
 void
-test_datastructures_sorted_list()
+test_datastructures_sorted_list(void)
 {
   girara_list_t* list = girara_sorted_list_new(NULL);
   g_assert_cmpptr(list, !=, NULL);
@@ -200,7 +200,7 @@ node_free(void* data)
 }
 
 void
-test_datastructures_node()
+test_datastructures_node(void)
 {
   girara_tree_node_t* root = girara_node_new("root");
   g_assert_cmpuint(girara_node_get_num_children(root), ==, 0);

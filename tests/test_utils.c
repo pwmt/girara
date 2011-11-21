@@ -1,8 +1,10 @@
 // See LICENSE file for license and copyright information
 
 #define _BSD_SOURCE
+#define _POSIX_SOURCE
 
 #include <glib.h>
+#include <glib/gstdio.h>
 #include "tests.h"
 #include <sys/types.h>
 #include <pwd.h>
@@ -10,6 +12,8 @@
 #include <utils.h>
 #include <datastructures.h>
 #include "helpers.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef struct
 {
@@ -51,7 +55,7 @@ read_pwd_info(void)
 }
 
 void
-test_utils_home_directory()
+test_utils_home_directory(void)
 {
   const gchar* user = g_get_home_dir();
   gchar* oldenv = g_getenv("HOME") ? g_strdup(g_getenv("HOME")) : NULL;
@@ -93,7 +97,7 @@ test_utils_home_directory()
 }
 
 void
-test_utils_fix_path()
+test_utils_fix_path(void)
 {
   gchar* res = girara_fix_path("test");
   g_assert_cmpstr(res, ==, "test");
@@ -161,7 +165,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
 }
 
 void
-test_utils_xdg_path()
+test_utils_xdg_path(void)
 {
   xdg_path_impl(XDG_CONFIG, "XDG_CONFIG_HOME", g_get_user_config_dir());
   xdg_path_impl(XDG_DATA, "XDG_DATA_HOME", g_get_user_data_dir());
@@ -170,7 +174,7 @@ test_utils_xdg_path()
 }
 
 void
-test_utils_file_invariants()
+test_utils_file_invariants(void)
 {
   g_assert_cmpptr(girara_file_open(NULL, NULL), ==, NULL);
   g_assert_cmpptr(girara_file_open("somefile", NULL), ==, NULL);
@@ -180,4 +184,56 @@ test_utils_file_invariants()
   g_assert_cmpptr(girara_file_read_line_from_fd(-1), ==, NULL);
   g_assert_cmpptr(girara_file_read(NULL), ==, NULL);
   g_assert_cmpptr(girara_file_read_from_fd(-1), ==, NULL);
+}
+
+#include <unistd.h>
+
+void
+test_utils_file_read(void)
+{
+  static const char CONTENT[] = "test1\ntest2\ntest3";
+  static const char* LINES[] = { "test1", "test2", "test3" };
+  static size_t NUMLINES = 3;
+
+  gchar* path = NULL;
+  int fd = g_file_open_tmp("girara.test.XXXXXX", &path, NULL);
+  g_assert_cmpint(fd, !=, -1);
+  g_assert_cmpstr(path, !=, "");
+  close(fd);
+
+  g_assert(g_file_set_contents(path, CONTENT, -1, NULL));
+
+  char* content = girara_file_read(path);
+  g_assert_cmpstr(content, ==, CONTENT);
+  free(content);
+
+  FILE* file = girara_file_open(path, "r");
+  g_assert_cmpptr(file, !=, NULL);
+  int ffd = fileno(file);
+  content = girara_file_read_from_fd(ffd);
+  g_assert_cmpstr(content, ==, CONTENT);
+  free(content);
+  fclose(file);
+
+  file = girara_file_open(path, "r");
+  g_assert_cmpptr(file, !=, NULL);
+  for (size_t i = 0; i != NUMLINES; ++i) {
+    char* line = girara_file_read_line(file);
+    g_assert_cmpstr(line, ==, LINES[i]);
+    free(line);
+  }
+  fclose(file);
+
+  file = girara_file_open(path, "r");
+  g_assert_cmpptr(file, !=, NULL);
+  ffd = fileno(file);
+  for (size_t i = 0; i != NUMLINES; ++i) {
+    char* line = girara_file_read_line_from_fd(ffd);
+    g_assert_cmpstr(line, ==, LINES[i]);
+    free(line);
+  }
+  fclose(file);
+
+  g_assert_cmpint(g_remove(path), ==, 0);
+  g_free(path);
 }
