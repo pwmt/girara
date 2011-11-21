@@ -2,6 +2,7 @@
 
 #define _BSD_SOURCE
 #define _XOPEN_SOURCE 700
+#define _FILE_OFFSET_BITS 64
 
 #include <ctype.h>
 #include <fcntl.h>
@@ -15,6 +16,7 @@
 #include <glib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <stdint.h>
 
 #include "utils.h"
 #include "datastructures.h"
@@ -246,46 +248,39 @@ girara_file_read2(FILE* file)
     return NULL;
   }
 
-  unsigned int bc = BLOCK_SIZE;
-  unsigned int i  = 0;
-  char* buffer    = malloc(sizeof(char) * bc);
+  const off_t curpos = ftello(file);
+  if (curpos == -1) {
+    return NULL;
+  }
 
+  fseeko(file, 0, SEEK_END);
+  const off_t size = ftello(file) - curpos;
+  fseeko(file, curpos, SEEK_SET);
+
+  if (size == 0) {
+    char* content = malloc(1);
+    content[0] = '\0';
+    return content;
+  }
+  /* this can happen on 32 bit systems */
+  if ((uintmax_t)size >= (uintmax_t)SIZE_MAX) {
+    girara_error("file is too large");
+    return NULL;
+  }
+
+  char* buffer    = malloc(size + 1);
   if (!buffer) {
-    goto error_ret;
+    return NULL;
   }
 
-  char c;
-  while ((c = fgetc(file)) != EOF) {
-    buffer[i++] = c;
-
-    if (i == bc) {
-      bc += BLOCK_SIZE;
-      buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * bc);
-      if (buffer == NULL) {
-        goto error_free;
-      }
-    }
+  size_t read = fread(buffer, size, 1, file);
+  if (read != 1) {
+    free(buffer);
+    return NULL;
   }
 
-  if (i == 0 && c == EOF) {
-    goto error_free;
-  }
-
-  buffer = girara_safe_realloc((void**) &buffer, sizeof(char) * (i + 1));
-  if (buffer == NULL) {
-    goto error_free;
-  }
-  buffer[i] = '\0';
-
+  buffer[size] = '\0';
   return buffer;
-
-error_free:
-
-  free(buffer);
-
-error_ret:
-
-  return NULL;
 }
 
 void
