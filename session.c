@@ -131,6 +131,8 @@ girara_session_create()
 
   /* window icon */
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, "Window icon", cb_window_icon, NULL);
+  /* exec-command */
+  girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, "Command to execute in :exec", NULL, NULL);
 
   /* default shortcuts */
 #if (GTK_MAJOR_VERSION == 3)
@@ -192,6 +194,7 @@ girara_session_create()
   girara_inputbar_command_add(session, "map",  "m", girara_cmd_map,  NULL,          "Map a key sequence");
   girara_inputbar_command_add(session, "quit", "q", girara_cmd_quit, NULL,          "Quit the program");
   girara_inputbar_command_add(session, "set",  "s", girara_cmd_set,  girara_cc_set, "Set an option");
+  girara_inputbar_command_add(session, "exec", NULL, girara_cmd_exec, NULL, "Execute a command");
 
   /* default config handle */
   girara_config_handle_add(session, "map", girara_cmd_map);

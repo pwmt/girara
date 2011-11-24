@@ -93,6 +93,15 @@ HIDDEN bool girara_cmd_quit(girara_session_t* session, girara_list_t* argument_l
  */
 HIDDEN bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list);
 
+/**
+ * Execute an external command
+ * * @param session The used girara session
+ * @param argument_list List of passed arguments
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+HIDDEN bool girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list);
+
 
 /**
  * Structure of a command

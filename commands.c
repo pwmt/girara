@@ -91,7 +91,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     {"Button5", 5},
   };
 
-  int number_of_arguments = girara_list_size(argument_list);
+  size_t number_of_arguments = girara_list_size(argument_list);
 
   if (number_of_arguments < 2) {
     girara_notify(session, GIRARA_WARNING, "Usage: map <binding> <function>");
@@ -107,9 +107,9 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   char* shortcut_buffer_command                = NULL;
   girara_shortcut_function_t shortcut_function = NULL;
 
-  int current_command = 0;
+  size_t current_command = 0;
   char* tmp      = girara_list_nth(argument_list, current_command);
-  int tmp_length = strlen(tmp);
+  size_t tmp_length = strlen(tmp);
 
   /* Check first argument for mode */
   bool is_mode = false;
@@ -135,9 +135,9 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
 
   if (is_mode == true) {
     if (number_of_arguments < 3) {
-      girara_warning("Invalid number of arguments passed: %d instead of at least 3", number_of_arguments);
+      girara_warning("Invalid number of arguments passed: %zu instead of at least 3", number_of_arguments);
       girara_notify(session, GIRARA_ERROR, "Invalid number of arguments passed: \
-          %d instead of at least 3", number_of_arguments);
+          %zu instead of at least 3", number_of_arguments);
       return false;
     }
     tmp = girara_list_nth(argument_list, ++current_command);
@@ -323,7 +323,6 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
     return false;
   }
 
-
   char* name  = (char*) girara_list_nth(argument_list, 0);
   char* value = (number_of_arguments == 2) ? ((char*) girara_list_nth(argument_list, 1)) : NULL;
 
@@ -479,4 +478,41 @@ girara_command_free(girara_command_t* command)
   g_free(command->abbr);
   g_free(command->description);
   g_slice_free(girara_command_t, command);
+}
+
+bool
+girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list)
+{
+  const size_t number_of_arguments = girara_list_size(argument_list);
+  if (number_of_arguments == 0) {
+    girara_warning("Not enough arguments");
+    girara_notify(session, GIRARA_ERROR, "Not enoguh arguments");
+    return false;
+  }
+
+  char** args = g_malloc0((2 + number_of_arguments) * sizeof(char*));
+  args[0] = girara_setting_get(session, "exec-command");
+  if (args[0] == NULL) {
+    girara_warning("exec-command is invalid.");
+    girara_notify(session, GIRARA_ERROR, "exec-command is invalid.");
+    g_free(args);
+    return false;
+  }
+
+  size_t idx = 1;
+  GIRARA_LIST_FOREACH(argument_list, char*, iter, value)
+    args[idx++] = value;
+  GIRARA_LIST_FOREACH_END(argument_list, char*, iter, value);
+
+  GError* error = NULL;
+  gboolean ret = g_spawn_async(NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
+  if (error != NULL) {
+    girara_warning("Failed to execute command: %s", error->message);
+    girara_notify(session, GIRARA_ERROR, "Failed to execute command: %s", error->message);
+    g_error_free(error);
+  }
+
+  g_free(args[0]);
+  g_free(args);
+  return ret;
 }
