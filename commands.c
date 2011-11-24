@@ -483,36 +483,32 @@ girara_command_free(girara_command_t* command)
 bool
 girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list)
 {
-  const size_t number_of_arguments = girara_list_size(argument_list);
-  if (number_of_arguments == 0) {
-    girara_warning("Not enough arguments");
-    girara_notify(session, GIRARA_ERROR, "Not enoguh arguments");
-    return false;
-  }
-
-  char** args = g_malloc0((2 + number_of_arguments) * sizeof(char*));
-  args[0] = girara_setting_get(session, "exec-command");
-  if (args[0] == NULL) {
+  char* cmd = girara_setting_get(session, "exec-command");
+  if (cmd == NULL || strlen(cmd) == 0) {
     girara_warning("exec-command is invalid.");
     girara_notify(session, GIRARA_ERROR, "exec-command is invalid.");
-    g_free(args);
+    g_free(cmd);
     return false;
   }
 
-  size_t idx = 1;
+  GString* command = g_string_new(cmd);
+  g_free(cmd);
+
   GIRARA_LIST_FOREACH(argument_list, char*, iter, value)
-    args[idx++] = value;
+    g_string_append_c(command, ' ');
+    char* tmp = g_shell_quote(value);
+    g_string_append(command, tmp);
+    g_free(tmp);
   GIRARA_LIST_FOREACH_END(argument_list, char*, iter, value);
 
   GError* error = NULL;
-  gboolean ret = g_spawn_async(NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
+  gboolean ret = g_spawn_command_line_async(command->str, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
     girara_notify(session, GIRARA_ERROR, "Failed to execute command: %s", error->message);
     g_error_free(error);
   }
 
-  g_free(args[0]);
-  g_free(args);
+  g_string_free(command, TRUE);
   return ret;
 }
