@@ -26,6 +26,10 @@ test_settings_basic(void)
   ptr = girara_setting_get(session, "test2");
   g_assert_cmpstr(ptr, ==, "value");
 
+  g_assert(!girara_setting_add(session, "test3", NULL, INT, false, NULL, NULL, NULL));
+  ptr = girara_setting_get(session, "test3");
+  g_assert_cmpptr(ptr, ==, NULL);
+
   girara_session_destroy(session);
 }
 

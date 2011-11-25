@@ -40,6 +40,9 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
 {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
+  if (type != STRING && value == NULL) {
+    return false;
+  }
 
   /* search for existing setting */
   GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
