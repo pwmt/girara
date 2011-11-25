@@ -261,7 +261,7 @@ girara_session_init(girara_session_t* session)
           GTK_POLICY_NEVER, GTK_POLICY_NEVER);
     }
 
-    free(tmp_bool_value);
+    g_free(tmp_bool_value);
   }
 
   /* viewport */
@@ -346,7 +346,7 @@ girara_session_init(girara_session_t* session)
 #else
       gdk_color_parse(tmp_value, color_setting_mappings[i].color);
 #endif
-      free(tmp_value);
+      g_free(tmp_value);
       tmp_value = NULL;
     }
   }
@@ -355,7 +355,7 @@ girara_session_init(girara_session_t* session)
   tmp_value = girara_setting_get(session, "font");
   if (tmp_value) {
     session->style.font = pango_font_description_from_string(tmp_value);
-    free(tmp_value);
+    g_free(tmp_value);
     tmp_value = NULL;
   }
 
@@ -417,13 +417,8 @@ girara_session_init(girara_session_t* session)
     gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), *window_width, *window_height);
   }
 
-  if (window_width) {
-    free(window_width);
-  }
-
-  if (window_height) {
-    free(window_height);
-  }
+  g_free(window_width);
+  g_free(window_height);
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
   gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
