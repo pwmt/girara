@@ -21,6 +21,6 @@ void test_session_basic(void);
 
 // settings tests
 void test_settings_basic(void);
-
+void test_settings_callback(void);
 
 #endif

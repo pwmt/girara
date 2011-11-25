@@ -23,6 +23,7 @@ int main(int argc, char** argv)
 
   // settings tests
   g_test_add_func("/settings/basic", test_settings_basic);
+  g_test_add_func("/settings/callback", test_settings_callback);
 
   // session tests
   // we need GTK+ from here onwards
