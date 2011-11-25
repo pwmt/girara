@@ -19,4 +19,8 @@ void test_datastructures_node(void);
 // session tests
 void test_session_basic(void);
 
+// settings tests
+void test_settings_basic(void);
+
+
 #endif

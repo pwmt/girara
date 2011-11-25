@@ -3,7 +3,7 @@
 include ../config.mk
 include ../common.mk
 
-SOURCE   = tests.c test_utils.c test_datastructures.c test_session.c
+SOURCE   = tests.c $(wildcard test_*.c)
 OBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
 XDG_HELPER_SOURCE = xdg_test_helper.c

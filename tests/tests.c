@@ -21,6 +21,9 @@ int main(int argc, char** argv)
   g_test_add_func("/datastructures/list/sorted", test_datastructures_sorted_list);
   g_test_add_func("/datastructures/node", test_datastructures_node);
 
+  // settings tests
+  g_test_add_func("/settings/basic", test_settings_basic);
+
   // session tests
   // we need GTK+ from here onwards
   gtk_init(&argc, &argv);
