@@ -4,20 +4,14 @@
 #define GIRARA_INTERNAL_H
 
 #include "types.h"
+#include "macros.h"
 #include <glib.h>
 
 #define CLEAN(m) ((m) & ~(GDK_MOD2_MASK) & ~(GDK_MOD5_MASK) & ~(GDK_BUTTON1_MASK) & ~(GDK_BUTTON2_MASK) & ~(GDK_BUTTON3_MASK) & ~(GDK_BUTTON4_MASK) & ~(GDK_BUTTON5_MASK) & ~(GDK_LEAVE_NOTIFY_MASK))
 #define FORMAT_COMMAND "<b>%s</b>"
 #define FORMAT_DESCRIPTION "<i>%s</i>"
 
-#ifdef UNUSED
-#elif defined(__GNUC__)
-# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
-#elif defined(__LCLINT__)
-# define UNUSED(x) /*@unused@*/ x
-#else
-# define UNUSED(x) x
-#endif
+#define UNUSED(x) GIRARA_UNUSED(x)
 
 #ifdef HIDDEN
 #elif defined(__GNUC__) && (__GNUC__ >= 4)
