@@ -62,6 +62,25 @@ completion_element_free(girara_completion_element_t* element)
   g_slice_free(girara_completion_element_t,  element);
 }
 
+static char*
+escape(const char* value)
+{
+  if (value == NULL) {
+    return NULL;
+  }
+
+  GString* str = g_string_new("");
+  while (*value) {
+    const char c = *value++;
+    if (strchr("\\ \t", c) != NULL) {
+      g_string_append_c(str, '\\');
+    }
+    g_string_append_c(str, c);
+  }
+
+  return g_string_free(str, FALSE);
+}
+
 girara_completion_t*
 girara_completion_init()
 {
@@ -135,7 +154,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
   /* get current text */
   gchar *input     = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
-  int input_length = strlen(input);
+  const size_t input_length = strlen(input);
 
   if (input_length == 0 || input[0] != ':') {
     g_free(input);
@@ -163,14 +182,13 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
   gchar *current_command   = (elements[0] != NULL && elements[0][0] != '\0') ? g_strdup(elements[0]) : NULL;
   gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL)    ? g_strdup(elements[1]) : NULL;
 
-  unsigned int current_command_length = current_command ? strlen(current_command) : 0;
+  const size_t current_command_length = current_command ? strlen(current_command) : 0;
 
   static GList* entries           = NULL;
   static GList* entries_current   = NULL;
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
   static bool command_mode        = true;
-  static int   previous_length    = 0;
 
   /* delete old list iff
    *   the completion should be hidden
@@ -180,8 +198,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
    */
   if ( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
-      (current_command && previous_command && strcmp(current_command, previous_command)) ||
-      input_length != previous_length
+      (current_command && previous_command && strcmp(current_command, previous_command))
     )
   {
     if (session->gtk.results) {
@@ -415,15 +432,17 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
 
     /* update text */
     char* temp;
+    char* escaped_value = escape(((girara_internal_completion_entry_t *) entries_current->data)->value);
     if (command_mode) {
       char* space = (n_elements == 1) ? " " : "";
-      temp = g_strconcat(":", ((girara_internal_completion_entry_t *) entries_current->data)->value, space, NULL);
+      temp = g_strconcat(":", escaped_value, space, NULL);
     } else {
-      temp = g_strconcat(":", previous_command, " ", ((girara_internal_completion_entry_t *) entries_current->data)->value, NULL);
+      temp = g_strconcat(":", previous_command, " ", escaped_value, NULL);
     }
 
     gtk_entry_set_text(session->gtk.inputbar, temp);
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+    g_free(escaped_value);
     g_free(temp);
 
     /* update previous */
@@ -431,7 +450,6 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
     g_free(previous_parameter);
     previous_command   = g_strdup((command_mode) ? ((girara_internal_completion_entry_t*) entries_current->data)->value : current_command);
     previous_parameter = g_strdup((command_mode) ? current_parameter : ((girara_internal_completion_entry_t*) entries_current->data)->value);
-    previous_length    = strlen(previous_command) + ((command_mode) ? (input_length - current_command_length) : (strlen(previous_parameter) + 2));
   }
 
   g_free(current_command);
