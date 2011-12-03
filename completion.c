@@ -189,6 +189,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
   static char *previous_command   = NULL;
   static char *previous_parameter = NULL;
   static bool command_mode        = true;
+  static size_t previous_length   = 0;
 
   /* delete old list iff
    *   the completion should be hidden
@@ -198,7 +199,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
    */
   if ( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
-      (current_command && previous_command && strcmp(current_command, previous_command))
+      (current_command && previous_command && strcmp(current_command, previous_command)) ||
+      input_length != previous_length
     )
   {
     if (session->gtk.results) {
@@ -443,13 +445,14 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
     gtk_entry_set_text(session->gtk.inputbar, temp);
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
     g_free(escaped_value);
-    g_free(temp);
 
     /* update previous */
     g_free(previous_command);
     g_free(previous_parameter);
     previous_command   = g_strdup((command_mode) ? ((girara_internal_completion_entry_t*) entries_current->data)->value : current_command);
     previous_parameter = g_strdup((command_mode) ? current_parameter : ((girara_internal_completion_entry_t*) entries_current->data)->value);
+    previous_length    = strlen(temp);
+    g_free(temp);
   }
 
   g_free(current_command);
