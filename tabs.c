@@ -6,6 +6,10 @@
 
 #define UNTITLED_TAB_TITLE "untitled"
 
+#if GTK_MAJOR_VERSION == 2
+#include "gtk2-compat.h"
+#endif
+
 /**
  * Default implementation of the event that is executed if a tab is clicked
  *
@@ -156,7 +160,6 @@ girara_tab_update(girara_session_t* session)
     GtkWidget* tab_event = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "event"));
     GtkWidget* tab_label = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "label"));
 
-#if (GTK_MAJOR_VERSION == 3)
     if (i == current_tab) {
       gtk_widget_override_background_color(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_focus_background));
       gtk_widget_override_color(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_focus_foreground));
@@ -164,15 +167,6 @@ girara_tab_update(girara_session_t* session)
       gtk_widget_override_background_color(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_background));
       gtk_widget_override_color(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_foreground));
     }
-#else
-    if (i == current_tab) {
-      gtk_widget_modify_bg(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_focus_background));
-      gtk_widget_modify_fg(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_focus_foreground));
-    } else {
-      gtk_widget_modify_bg(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_background));
-      gtk_widget_modify_fg(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_foreground));
-    }
-#endif
   }
 }
 

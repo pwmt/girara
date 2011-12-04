@@ -2270,7 +2270,7 @@
 #define gtk_widget_override_background_color(widget, state, color) \
   gtk_widget_modify_bg(widget, state, color)
 #define gtk_widget_override_color(widget, state, color) \
-  gtk_widget_modify_text(widget, state, color)
+  gtk_widget_modify_fg(widget, state, color)
 #define gtk_widget_override_font(widget, font) \
   gtk_widget_modify_font(widget, font)
 

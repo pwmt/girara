@@ -4,6 +4,10 @@
 #include "session.h"
 #include "datastructures.h"
 
+#if GTK_MAJOR_VERSION == 2
+#include "gtk2-compat.h"
+#endif
+
 /**
  * Structure of a statusbar item
  */
@@ -24,15 +28,9 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   item->text = GTK_LABEL(gtk_label_new(NULL));
 
   /* set style */
-#if (GTK_MAJOR_VERSION == 3)
   gtk_widget_override_background_color(GTK_WIDGET(item->box),  GTK_STATE_NORMAL, &(session->style.statusbar_background));
   gtk_widget_override_color(GTK_WIDGET(item->text),            GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
   gtk_widget_override_font(GTK_WIDGET(item->text),             session->style.font);
-#else
-  gtk_widget_modify_bg(GTK_WIDGET(item->box),      GTK_STATE_NORMAL, &(session->style.statusbar_background));
-  gtk_widget_modify_fg(GTK_WIDGET(item->text),     GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
-  gtk_widget_modify_font(GTK_WIDGET(item->text),   session->style.font);
-#endif
 
   /* set properties */
   gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.0);
