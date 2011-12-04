@@ -12,6 +12,9 @@
 #include "config.h"
 #include "utils.h"
 
+#if GTK_MAJOR_VERSION == 2
+#include "gtk2-compat.h"
+#endif
 static void
 cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
@@ -135,7 +138,6 @@ girara_session_create()
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, "Command to execute in :exec", NULL, NULL);
 
   /* default shortcuts */
-#if (GTK_MAJOR_VERSION == 3)
   girara_shortcut_add(session, 0,                GDK_KEY_Escape, NULL, girara_sc_abort,           normal_mode, 0, NULL);
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_c,      NULL, girara_sc_abort,           normal_mode, 0, NULL);
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_q,      NULL, girara_sc_quit,            normal_mode, 0, NULL);
@@ -143,18 +145,8 @@ girara_session_create()
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_w,      NULL, girara_sc_tab_close,       normal_mode, 0, NULL);
   girara_shortcut_add(session, 0,                0,              "gt", girara_sc_tab_navigate,    normal_mode, GIRARA_NEXT,     NULL);
   girara_shortcut_add(session, 0,                0,              "gT", girara_sc_tab_navigate,    normal_mode, GIRARA_PREVIOUS, NULL);
-#else
-  girara_shortcut_add(session, 0,                GDK_Escape, NULL, girara_sc_abort,          normal_mode, 0, NULL);
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_c,      NULL, girara_sc_abort,          normal_mode, 0, NULL);
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_q,      NULL, girara_sc_quit,           normal_mode, 0, NULL);
-  girara_shortcut_add(session, 0,                GDK_colon,  NULL, girara_sc_focus_inputbar, normal_mode, 0, ":");
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_w,      NULL, girara_sc_tab_close,      normal_mode, 0, NULL);
-  girara_shortcut_add(session, 0,                0,          "gt", girara_sc_tab_navigate,   normal_mode, GIRARA_NEXT,     NULL);
-  girara_shortcut_add(session, 0,                0,          "gT", girara_sc_tab_navigate,   normal_mode, GIRARA_PREVIOUS, NULL);
-#endif
 
   /* default inputbar shortcuts */
-#if (GTK_MAJOR_VERSION == 3)
   girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Escape,       girara_isc_abort,               0,                           NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_c,            girara_isc_abort,               0,                           NULL);
   girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Tab,          girara_isc_completion,          GIRARA_NEXT,                 NULL);
@@ -171,24 +163,6 @@ girara_session_create()
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_b,            girara_isc_string_manipulation, GIRARA_PREVIOUS_CHAR,        NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_a,            girara_isc_string_manipulation, GIRARA_GOTO_START,           NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_e,            girara_isc_string_manipulation, GIRARA_GOTO_END,             NULL);
-#else
-  girara_inputbar_shortcut_add(session, 0,                GDK_Escape,       girara_isc_abort,               0,                           NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_c,            girara_isc_abort,               0,                           NULL);
-  girara_inputbar_shortcut_add(session, 0,                GDK_Tab,          girara_isc_completion,          GIRARA_NEXT,                 NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_Tab,          girara_isc_completion,          GIRARA_NEXT_GROUP,           NULL);
-  girara_inputbar_shortcut_add(session, GDK_SHIFT_MASK,   GDK_ISO_Left_Tab, girara_isc_completion,          GIRARA_PREVIOUS,             NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_ISO_Left_Tab, girara_isc_completion,          GIRARA_PREVIOUS_GROUP,       NULL);
-  girara_inputbar_shortcut_add(session, 0,                GDK_BackSpace,    girara_isc_string_manipulation, GIRARA_DELETE_LAST_CHAR,     NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_h,            girara_isc_string_manipulation, GIRARA_DELETE_LAST_CHAR,     NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_u,            girara_isc_string_manipulation, GIRARA_DELETE_TO_LINE_START, NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_k,            girara_isc_string_manipulation, GIRARA_DELETE_TO_LINE_END,   NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_d,            girara_isc_string_manipulation, GIRARA_DELETE_CURR_CHAR,     NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_w,            girara_isc_string_manipulation, GIRARA_DELETE_LAST_WORD,     NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_f,            girara_isc_string_manipulation, GIRARA_NEXT_CHAR,            NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_b,            girara_isc_string_manipulation, GIRARA_PREVIOUS_CHAR,        NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_a,            girara_isc_string_manipulation, GIRARA_GOTO_START,           NULL);
-  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_e,            girara_isc_string_manipulation, GIRARA_GOTO_END,             NULL);
-#endif
 
   /* default commands */
   girara_inputbar_command_add(session, "map",  "m", girara_cmd_map,  NULL,          "Map a key sequence");

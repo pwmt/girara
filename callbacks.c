@@ -7,6 +7,9 @@
 #include <string.h>
 
 #include "internal.h"
+#if GTK_MAJOR_VERSION == 2
+#include "gtk2-compat.h"
+#endif
 
 /* callback implementation */
 bool
@@ -258,11 +261,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 
   if ((session->gtk.results != NULL) &&
      (gtk_widget_get_visible(GTK_WIDGET(session->gtk.results)) == TRUE) &&
-#if (GTK_MAJOR_VERSION == 3)
      (event->keyval == GDK_KEY_space))
-#else
-     (event->keyval == GDK_space))
-#endif
   {
     gtk_widget_hide(GTK_WIDGET(session->gtk.results));
   }

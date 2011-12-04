@@ -11,6 +11,10 @@
 #include "settings.h"
 #include "shortcuts.h"
 
+#if GTK_MAJOR_VERSION == 2
+#include "gtk2-compat.h"
+#endif
+
 /* default commands implementation */
 bool
 girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
@@ -22,7 +26,6 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   } gdk_keyboard_button_t;
 
   static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
-#if (GTK_MAJOR_VERSION == 3)
     {"BackSpace", GDK_KEY_BackSpace},
     {"CapsLock",  GDK_KEY_Caps_Lock},
     {"Down",      GDK_KEY_Down},
@@ -48,33 +51,6 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
     {"Super",     GDK_KEY_Super_L},
     {"Tab",       GDK_KEY_Tab},
     {"Up",        GDK_KEY_Up},
-#else
-    {"BackSpace", GDK_BackSpace},
-    {"CapsLock",  GDK_Caps_Lock},
-    {"Down",      GDK_Down},
-    {"Esc",       GDK_Escape},
-    {"F10",       GDK_F10},
-    {"F11",       GDK_F11},
-    {"F12",       GDK_F12},
-    {"F1",        GDK_F1},
-    {"F2",        GDK_F2},
-    {"F3",        GDK_F3},
-    {"F4",        GDK_F4},
-    {"F5",        GDK_F5},
-    {"F6",        GDK_F6},
-    {"F7",        GDK_F7},
-    {"F8",        GDK_F8},
-    {"F9",        GDK_F9},
-    {"Left",      GDK_Left},
-    {"PageDown",  GDK_Page_Down},
-    {"PageUp",    GDK_Page_Up},
-    {"Return",    GDK_Return},
-    {"Right",     GDK_Right},
-    {"Space",     GDK_space},
-    {"Super",     GDK_Super_L},
-    {"Tab",       GDK_Tab},
-    {"Up",        GDK_Up},
-#endif
   };
 
   typedef struct gdk_mouse_button_s

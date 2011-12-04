@@ -8,7 +8,7 @@ PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
-HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h")
+HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h" -a ! -name "gtk2-compat.h")
 
 all: options ${PROJECT}
 	@${MAKE} -C examples
