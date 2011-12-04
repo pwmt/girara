@@ -10,6 +10,10 @@
 #include "settings.h"
 #include "datastructures.h"
 
+#if GTK_MAJOR_VERSION == 2
+#include "gtk2-compat.h"
+#endif
+
 static GtkEventBox* girara_completion_row_create(girara_session_t*, const char*, const char*, bool);
 static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
@@ -493,7 +497,6 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
   g_free(c);
   g_free(d);
 
-#if (GTK_MAJOR_VERSION == 3)
   if (group) {
     gtk_widget_override_color(GTK_WIDGET(show_command),     GTK_STATE_NORMAL, &(session->style.completion_group_foreground));
     gtk_widget_override_color(GTK_WIDGET(show_description), GTK_STATE_NORMAL, &(session->style.completion_group_foreground));
@@ -506,20 +509,6 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
 
   gtk_widget_override_font(GTK_WIDGET(show_command),     session->style.font);
   gtk_widget_override_font(GTK_WIDGET(show_description), session->style.font);
-#else
-  if (group) {
-    gtk_widget_modify_fg(GTK_WIDGET(show_command),     GTK_STATE_NORMAL, &(session->style.completion_group_foreground));
-    gtk_widget_modify_fg(GTK_WIDGET(show_description), GTK_STATE_NORMAL, &(session->style.completion_group_foreground));
-    gtk_widget_modify_bg(GTK_WIDGET(row),              GTK_STATE_NORMAL, &(session->style.completion_group_background));
-  } else {
-    gtk_widget_modify_fg(GTK_WIDGET(show_command),     GTK_STATE_NORMAL, &(session->style.completion_foreground));
-    gtk_widget_modify_fg(GTK_WIDGET(show_description), GTK_STATE_NORMAL, &(session->style.completion_foreground));
-    gtk_widget_modify_bg(GTK_WIDGET(row),              GTK_STATE_NORMAL, &(session->style.completion_background));
-  }
-
-  gtk_widget_modify_font(GTK_WIDGET(show_command),     session->style.font);
-  gtk_widget_modify_font(GTK_WIDGET(show_description), session->style.font);
-#endif
 
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command),     TRUE,  TRUE,  2);
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), FALSE, FALSE, 2);
@@ -541,7 +530,6 @@ girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int
   GtkLabel *cmd   = GTK_LABEL(g_list_nth_data(items, 0));
   GtkLabel *desc  = GTK_LABEL(g_list_nth_data(items, 1));
 
-#if (GTK_MAJOR_VERSION == 3)
   if (mode == GIRARA_HIGHLIGHT) {
     gtk_widget_override_color(GTK_WIDGET(cmd),            GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
     gtk_widget_override_color(GTK_WIDGET(desc),           GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
@@ -551,17 +539,6 @@ girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int
     gtk_widget_override_color(GTK_WIDGET(desc),           GTK_STATE_NORMAL, &(session->style.completion_foreground));
     gtk_widget_override_background_color(GTK_WIDGET(row), GTK_STATE_NORMAL, &(session->style.completion_background));
   }
-#else
-  if (mode == GIRARA_HIGHLIGHT) {
-    gtk_widget_modify_fg(GTK_WIDGET(cmd),   GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
-    gtk_widget_modify_fg(GTK_WIDGET(desc),  GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
-    gtk_widget_modify_bg(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_highlight_background));
-  } else {
-    gtk_widget_modify_fg(GTK_WIDGET(cmd),   GTK_STATE_NORMAL, &(session->style.completion_foreground));
-    gtk_widget_modify_fg(GTK_WIDGET(desc),  GTK_STATE_NORMAL, &(session->style.completion_foreground));
-    gtk_widget_modify_bg(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_background));
-  }
-#endif
 
   g_list_free(items);
 }
