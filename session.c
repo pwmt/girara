@@ -15,6 +15,7 @@
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
 #endif
+
 static void
 cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
@@ -280,11 +281,7 @@ girara_session_init(girara_session_t* session)
   typedef struct color_setting_mapping_s
   {
     char* identifier;
-#if (GTK_MAJOR_VERSION == 3)
     GdkRGBA *color;
-#else
-    GdkColor *color;
-#endif
   } color_setting_mapping_t;
 
   const color_setting_mapping_t color_setting_mappings[] = {
@@ -315,11 +312,7 @@ girara_session_init(girara_session_t* session)
   for (unsigned i = 0; i < LENGTH(color_setting_mappings); i++) {
     tmp_value = girara_setting_get(session, color_setting_mappings[i].identifier);
     if (tmp_value) {
-#if (GTK_MAJOR_VERSION == 3)
       gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
-#else
-      gdk_color_parse(tmp_value, color_setting_mappings[i].color);
-#endif
       g_free(tmp_value);
       tmp_value = NULL;
     }
@@ -489,43 +482,22 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
 
   switch (level) {
     case GIRARA_ERROR:
-#if (GTK_MAJOR_VERSION == 3)
       gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
           GTK_STATE_NORMAL, &(session->style.notification_error_background));
       gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_error_foreground));
-#else
-      gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_error_background));
-      gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_error_foreground));
-#endif
       break;
     case GIRARA_WARNING:
-#if (GTK_MAJOR_VERSION == 3)
       gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
           GTK_STATE_NORMAL, &(session->style.notification_warning_background));
       gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
-#else
-      gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_warning_background));
-      gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
-#endif
       break;
     case GIRARA_INFO:
-#if (GTK_MAJOR_VERSION == 3)
       gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
           GTK_STATE_NORMAL, &(session->style.notification_default_background));
       gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
           GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
-#else
-      gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_default_background));
-      gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
-#endif
       break;
     default:
       return;
