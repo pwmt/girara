@@ -217,3 +217,27 @@ test_utils_file_read(void)
   g_assert_cmpint(g_remove(path), ==, 0);
   g_free(path);
 }
+
+static gboolean
+ignore_criticals(const gchar* GIRARA_UNUSED(log_domain),
+    GLogLevelFlags log_level, const gchar* GIRARA_UNUSED(message),
+    gpointer GIRARA_UNUSED(user_data))
+{
+  return (log_level & G_LOG_LEVEL_MASK) != G_LOG_LEVEL_CRITICAL;
+}
+
+void
+test_utils_safe_realloc(void)
+{
+  g_test_log_set_fatal_handler(ignore_criticals, NULL);
+
+  g_assert_cmpptr(girara_safe_realloc(NULL, 0u), ==, NULL);
+
+  void* ptr = NULL;
+  g_assert_cmpptr(girara_safe_realloc(&ptr, sizeof(int)), !=, NULL);
+  g_assert_cmpptr(ptr, !=, NULL);
+  g_assert_cmpptr(girara_safe_realloc(&ptr, 1024*sizeof(int)), !=, NULL);
+  g_assert_cmpptr(ptr, !=, NULL);
+  g_assert_cmpptr(girara_safe_realloc(&ptr, 0u), ==, NULL);
+  g_assert_cmpptr(ptr, ==, NULL);
+}

@@ -9,6 +9,7 @@ void test_utils_fix_path(void);
 void test_utils_xdg_path(void);
 void test_utils_file_invariants(void);
 void test_utils_file_read(void);
+void test_utils_safe_realloc(void);
 
 // datastructures tests
 void test_datastructures_list(void);
