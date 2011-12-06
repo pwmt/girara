@@ -87,15 +87,9 @@ girara_statusbar_set_background(girara_session_t* session, const char* color)
 {
   g_return_val_if_fail(session != NULL, false);
 
-#if (GTK_MAJOR_VERSION == 3)
   GdkRGBA gdk_color;
   gdk_rgba_parse(&gdk_color, color);
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
-#else
-  GdkColor gdk_color;
-  gdk_color_parse(color, &gdk_color);
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
-#endif
 
   return true;
 }
