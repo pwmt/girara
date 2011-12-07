@@ -22,4 +22,12 @@
 # endif
 #endif
 
+#ifndef GIRARA_HIDDEN
+# if defined(__GNUC__) && (__GNUC__ >= 4)
+#  define GIRARA_HIDDEN __attribute__((visibility("hidden")))
+# else
+#  define GIRARA_HIDDEN
+# endif
+#endif
+
 #endif

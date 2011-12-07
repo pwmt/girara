@@ -326,7 +326,6 @@ girara_session_init(girara_session_t* session)
     tmp_value = NULL;
   }
 
-#if (GTK_MAJOR_VERSION == 3)
   /* view */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport),
       GTK_STATE_NORMAL, &(session->style.default_background));
@@ -335,6 +334,7 @@ girara_session_init(girara_session_t* session)
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),
       GTK_STATE_NORMAL, &(session->style.statusbar_background));
 
+#if (GTK_MAJOR_VERSION == 3)
   /* inputbar */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar),
       GTK_STATE_NORMAL, &(session->style.inputbar_background));
@@ -351,14 +351,6 @@ girara_session_init(girara_session_t* session)
   gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text),
       session->style.font);
 #else
-  /* view */
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL,
-      &(session->style.default_background));
-
-  /* statusbar */
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL,
-      &(session->style.statusbar_background));
-
   /* inputbar */
   gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL,
       &(session->style.inputbar_background));
