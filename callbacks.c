@@ -11,22 +11,31 @@
 #include "gtk2-compat.h"
 #endif
 
+static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
+
 /* callback implementation */
 bool
 girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
+  guint keyval = 0;
+  GdkModifierType consumed = 0;
+  if (!gdk_keymap_translate_keyboard_state(gdk_keymap_get_default(), event->hardware_keycode, event->state, event->group, &keyval, NULL, NULL, &consumed)) {
+    return FALSE;
+  }
+  const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
+
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcut)
     if (session->buffer.command) {
       break;
     }
     if (
-       event->keyval == shortcut->key
-       && (CLEAN(event->state) == shortcut->mask || (shortcut->key >= 0x21
-       && shortcut->key <= 0x7E && CLEAN(event->state) == GDK_SHIFT_MASK))
-       && (session->modes.current_mode & shortcut->mode || shortcut->mode == 0)
-       && shortcut->function
+      keyval == shortcut->key
+      && (clean == shortcut->mask || (shortcut->key >= 0x21
+      && shortcut->key <= 0x7E && clean == GDK_SHIFT_MASK))
+      && (session->modes.current_mode & shortcut->mode || shortcut->mode == 0)
+      && shortcut->function
       )
     {
       int t = (session->buffer.n > 0) ? session->buffer.n : 1;
@@ -229,9 +238,16 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 {
   g_return_val_if_fail(session != NULL, false);
 
+  guint keyval = 0;
+  GdkModifierType consumed = 0;
+  if (!gdk_keymap_translate_keyboard_state(gdk_keymap_get_default(), event->hardware_keycode, event->state, event->group, &keyval, NULL, NULL, &consumed)) {
+    return false;
+  }
+  const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
+
   GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
-    if (inputbar_shortcut->key == event->keyval
-     && inputbar_shortcut->mask == CLEAN(event->state))
+    if (inputbar_shortcut->key == keyval
+     && inputbar_shortcut->mask == clean)
     {
       if (inputbar_shortcut->function != NULL) {
         inputbar_shortcut->function(session, &(inputbar_shortcut->argument), 0);
