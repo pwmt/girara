@@ -22,7 +22,7 @@ GTK_INC ?= $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
 GTK_LIB ?= $(shell pkg-config --libs gtk+-${GIRARA_GTK_VERSION}.0)
 
 INCS = ${GTK_INC}
-LIBS = ${GTK_LIB}
+LIBS = ${GTK_LIB} -lm
 
 # flags
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)

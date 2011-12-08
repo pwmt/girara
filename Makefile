@@ -86,7 +86,7 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(QUIET)echo libdir=${PREFIX}/lib >> ${PROJECT}.pc
 	$(QUIET)cat ${PROJECTNV}.pc.in >> ${PROJECT}.pc
 
-install: all ${PROJECT}.pc
+install: all ${PROJECT}.pc install-headers
 	$(ECHO) installing library file
 	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/lib
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${PREFIX}/lib
@@ -95,23 +95,27 @@ install: all ${PROJECT}.pc
 		echo "Failed to create lib${PROJECT}.so.${SOMAJOR}. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so || \
 		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
-	$(ECHO) installing header file
-	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/include/girara
-	$(QUIET)install -m 644 ${HEADERS} ${DESTDIR}${PREFIX}/include/girara
 	$(ECHO) installing pkgconfig file
 	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/lib/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${PREFIX}/lib/pkgconfig
 
-uninstall:
+install-headers:
+	$(ECHO) installing header files
+	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/include/girara
+	$(QUIET)install -m 644 ${HEADERS} ${DESTDIR}${PREFIX}/include/girara
+
+uninstall: uninstall-headers
 	$(ECHO) removing library file
 	$(QUIET)rm -f ${PREFIX}/lib/lib${PROJECT}.a ${PREFIX}/lib/lib${PROJECT}.so.${SOVERSION} \
 		${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR} ${PREFIX}/lib/lib${PROJECT}.so
-	$(ECHO) removing include file
-	$(QUIET)rm -rf ${PREFIX}/include/girara
 	$(ECHO) removing pkgconfig file
 	$(QUIET)rm -f ${PREFIX}/lib/pkgconfig/${PROJECT}.pc
 
-.PHONY: all options clean debug test dist install uninstall ${PROJECT} ${PROJECT}-debug
+uninstall-headers:
+	$(ECHO) removing header files
+	$(QUIET)rm -rf ${PREFIX}/include/girara
+
+.PHONY: all options clean debug test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug
 
 TDEPENDS = ${OBJECTS:.o=.o.dep}
 DEPENDS = ${TDEPENDS:^=.depend/}
