@@ -84,7 +84,7 @@ typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* s
  * @return TRUE No error occured
  * @return FALSE Error occured
  */
-typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session, char* input, girara_argument_t* argument);
+typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session, const char* input, girara_argument_t* argument);
 
 /**
  * Function declaration of a command function

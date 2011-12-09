@@ -276,8 +276,6 @@ girara_session_init(girara_session_t* session)
   gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),          FALSE, FALSE, 0);
 
   /* parse color values */
-  char* tmp_value = NULL;
-
   typedef struct color_setting_mapping_s
   {
     char* identifier;
@@ -310,20 +308,18 @@ girara_session_init(girara_session_t* session)
   };
 
   for (unsigned i = 0; i < LENGTH(color_setting_mappings); i++) {
-    tmp_value = girara_setting_get(session, color_setting_mappings[i].identifier);
+    char* tmp_value = girara_setting_get(session, color_setting_mappings[i].identifier);
     if (tmp_value) {
       gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
       g_free(tmp_value);
-      tmp_value = NULL;
     }
   }
 
   /* parse font */
-  tmp_value = girara_setting_get(session, "font");
+  char* tmp_value = girara_setting_get(session, "font");
   if (tmp_value) {
     session->style.font = pango_font_description_from_string(tmp_value);
     g_free(tmp_value);
-    tmp_value = NULL;
   }
 
   /* view */
