@@ -53,11 +53,36 @@ void* girara_setting_get(girara_session_t* session, const char* name);
 girara_setting_t* girara_setting_find(girara_session_t* session, const char* name);
 
 /**
- * Get a settings name.
+ * Get the setting's name.
  *
  * @param setting The setting
  * @return the setting's name
  */
 const char* girara_setting_get_name(girara_setting_t* setting);
+
+/**
+ * Get the setting's value.
+ *
+ * @param setting The setting
+ * @return pointer to the value, this has to freed with g_free when you're done
+ */
+void* girara_setting_get_value(girara_setting_t* setting);
+
+/**
+ * Get the setting's value.
+ *
+ * @param setting The setting
+ * @return the value
+ */
+girara_setting_type_t girara_setting_get_type(girara_setting_t* setting);
+
+/**
+ * Set the setting's value.
+ *
+ * @param setting The setting
+ * @param value The new value
+ */
+void girara_setting_set_value(girara_setting_t* setting, void* value);
+
 
 #endif

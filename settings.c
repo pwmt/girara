@@ -10,9 +10,31 @@
 #include "session.h"
 #include "internal.h"
 
-static void
-set_value(girara_setting_t* setting, void* value)
+/**
+ * Structure of a settings entry
+ */
+struct girara_setting_s
 {
+  char* name; /**< Name of the setting */
+  union
+  {
+    bool b; /**< Boolean */
+    int i; /**< Integer */
+    float f; /**< Floating number */
+    char *s; /**< String */
+  } value; /**< Value of the setting */
+  girara_setting_type_t type; /**< Type identifier */
+  bool init_only; /**< Option can be set only before girara gets initialized */
+  char* description; /**< Description of this setting */
+  girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */
+  void* data; /**< Arbitary data that can be used by callbacks */
+};
+
+void
+girara_setting_set_value(girara_setting_t* setting, void* value)
+{
+  g_return_if_fail(setting && (value || setting->type == STRING));
+
   switch(setting->type) {
     case BOOLEAN:
       setting->value.b = *((bool *) value);
@@ -27,7 +49,6 @@ set_value(girara_setting_t* setting, void* value)
       if (setting->value.s != NULL) {
         g_free(setting->value.s);
       }
-
       setting->value.s = value ? g_strdup(value) : NULL;
       break;
     default:
@@ -40,6 +61,7 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
 {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
+  g_return_val_if_fail(type != UNKNOWN, false);
   if (type != STRING && value == NULL) {
     return false;
   }
@@ -58,7 +80,7 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
   setting->description = description ? g_strdup(description) : NULL;
   setting->callback    = callback;
   setting->data        = data;
-  set_value(setting, value);
+  girara_setting_set_value(setting, value);
 
   girara_list_append(session->settings, setting);
 
@@ -76,7 +98,7 @@ girara_setting_set(girara_session_t* session, const char* name, void* value)
     return false;
   }
 
-  set_value(setting, value);
+  girara_setting_set_value(setting, value);
   if (setting->callback != NULL) {
     setting->callback(session, setting->name, setting->type, value, setting->data);
   }
@@ -84,16 +106,11 @@ girara_setting_set(girara_session_t* session, const char* name, void* value)
   return true;
 }
 
-void*
-girara_setting_get(girara_session_t* session, const char* name)
-{
-  g_return_val_if_fail(session != NULL, NULL);
-  g_return_val_if_fail(name != NULL, NULL);
 
-  girara_setting_t* setting = girara_setting_find(session, name);
-  if (setting == NULL) {
-    return NULL;
-  }
+void*
+girara_setting_get_value(girara_setting_t* setting)
+{
+  g_return_val_if_fail(setting, NULL);
 
   bool  *bvalue = NULL;
   float *fvalue = NULL;
@@ -113,10 +130,26 @@ girara_setting_get(girara_session_t* session, const char* name)
       *ivalue = setting->value.i;
       return ivalue;
     case STRING:
-      return g_strdup(setting->value.s);
+      return setting->value.s ? g_strdup(setting->value.s) : NULL;
+    default:
+      g_assert(false);
   }
 
   return NULL;
+}
+
+void*
+girara_setting_get(girara_session_t* session, const char* name)
+{
+  g_return_val_if_fail(session != NULL, NULL);
+  g_return_val_if_fail(name != NULL, NULL);
+
+  girara_setting_t* setting = girara_setting_find(session, name);
+  if (setting == NULL) {
+    return NULL;
+  }
+
+  return girara_setting_get_value(setting);
 }
 
 void
@@ -151,9 +184,16 @@ girara_setting_find(girara_session_t* session, const char* name)
   return result;
 }
 
-const char* girara_setting_get_name(girara_setting_t* setting) {
+const char*
+girara_setting_get_name(girara_setting_t* setting) {
   g_return_val_if_fail(setting, NULL);
   return setting->name;
+}
+
+girara_setting_type_t
+girara_setting_get_type(girara_setting_t* setting) {
+  g_return_val_if_fail(setting, UNKNOWN);
+  return setting->type;
 }
 
 girara_completion_t*

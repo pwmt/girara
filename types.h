@@ -135,7 +135,8 @@ typedef enum girara_setting_type_e
   BOOLEAN, /**< Boolean type */
   FLOAT, /**< Floating number */
   INT, /**< Integer */
-  STRING /**< String */
+  STRING, /**< String */
+  UNKNOWN = 0xFFFF /**< Unknown type */
 } girara_setting_type_t;
 
 /**

@@ -299,68 +299,80 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
     return false;
   }
 
-  char* name  = (char*) girara_list_nth(argument_list, 0);
-  char* value = (number_of_arguments == 2) ? ((char*) girara_list_nth(argument_list, 1)) : NULL;
-
   /* search for existing setting */
-  girara_setting_t*       setting = NULL;
-  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, tmp)
-    if (!g_strcmp0(name, tmp->name)) {
-      setting = tmp;
-      break;
-    }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, tmp);
-
+  char* name  = (char*) girara_list_nth(argument_list, 0);
+  girara_setting_t* setting = girara_setting_find(session, name);
   if (setting == NULL) {
     girara_warning("Unknown option: %s", name);
     girara_notify(session, GIRARA_ERROR, "Unknown option: %s", name);
     return false;
   }
 
-  /* update value */
-  switch (setting->type) {
-    case BOOLEAN:
-      if (value) {
-        if (!g_strcmp0(value, "false")) {
+  if (number_of_arguments == 1) {
+    /* display setting*/
+    void* value = girara_setting_get_value(setting);
+    switch (girara_setting_get_type(setting)) {
+      case BOOLEAN:
+      {
+        /* for compatibility reasons: toogle the setting */
+        bool tmp = !*(bool*)value;
+        girara_setting_set_value(setting, &tmp);
+        girara_notify(session, GIRARA_INFO, "%s: %s", name, tmp ? "true" : "false");
+        break;
+      }
+      case FLOAT:
+        girara_notify(session, GIRARA_INFO, "%s: %f", name, *(float*)value);
+        break;
+      case INT:
+        girara_notify(session, GIRARA_INFO, "%s: %i", name, *(int*)value);
+        break;
+      case STRING:
+        girara_notify(session, GIRARA_INFO, "%s: %s", name, (char*)value);
+        break;
+      default:
+        return false;
+    }
+    g_free(value);
+  } else {
+    char* value = (char*) girara_list_nth(argument_list, 1);
+    if (!value) {
+      girara_warning("No value defined for option: %s", name);
+      girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
+      return false;
+    }
+
+    /* update value */
+    switch (girara_setting_get_type(setting)) {
+      case BOOLEAN:
+        if (!g_strcmp0(value, "false") || !g_strcmp0(value, "0")) {
           bool b = false;
-          girara_setting_set(session, name, &b);;
-        } else if (!g_strcmp0(value, "true")) {
+          girara_setting_set_value(setting, &b);
+        } else if (!g_strcmp0(value, "true") || !g_strcmp0(value, "1")) {
           bool b = true;
-          girara_setting_set(session, name, &b);
+          girara_setting_set_value(setting, &b);
         } else {
           girara_warning("Unknown value for option: %s", name);
           girara_notify(session, GIRARA_ERROR, "Unknown value for option: %s", name);
         }
-      } else {
-        setting->value.b = !setting->value.b;
-      }
-      break;
-    case FLOAT:
-      if (value) {
+        break;
+      case FLOAT:
+      {
         float f = strtof(value, NULL);
-        girara_setting_set(session, name, &f);
-      } else {
-        girara_warning("No value defined for option: %s", name);
-        girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
+        girara_setting_set_value(setting, &f);
+        break;
       }
-      break;
-    case INT:
-      if (value) {
+      case INT:
+      {
         int i = atoi(value);
-        girara_setting_set(session, name, &i);
-      } else {
-        girara_warning("No value defined for option: %s", name);
-        girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
+        girara_setting_set_value(setting, &i);
+        break;
       }
-      break;
-    case STRING:
-      if (value) {
-        girara_setting_set(session, name, value);
-      } else {
-        girara_warning("No value defined for option: %s", name);
-        girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
-      }
-      break;
+      case STRING:
+        girara_setting_set_value(setting, value);
+        break;
+      default:
+        return false;
+    }
   }
 
   return true;
