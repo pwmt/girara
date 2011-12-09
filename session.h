@@ -11,6 +11,8 @@
 
 #if (GTK_MAJOR_VERSION == 3)
 #include <gtk/gtkx.h>
+#elif GTK_MAJOR_VERSION == 2
+#include "gtk2-compat.h"
 #endif
 
 /**
@@ -42,7 +44,6 @@ struct girara_session_s
 
   struct
   {
-#if (GTK_MAJOR_VERSION == 3)
     GdkRGBA default_foreground; /**< The default foreground color */
     GdkRGBA default_background; /**< The default background color */
     GdkRGBA inputbar_foreground; /**< The foreground color of the inputbar */
@@ -65,30 +66,6 @@ struct girara_session_s
     GdkRGBA tabbar_background; /**< The background color for a tab */
     GdkRGBA tabbar_focus_foreground; /**< The foreground color for a focused tab */
     GdkRGBA tabbar_focus_background; /**< The background color for a focused tab */
-#else
-    GdkColor default_foreground; /**< The default foreground color */
-    GdkColor default_background; /**< The default background color */
-    GdkColor inputbar_foreground; /**< The foreground color of the inputbar */
-    GdkColor inputbar_background; /**< The background color of the inputbar */
-    GdkColor statusbar_foreground; /**< The foreground color of the statusbar */
-    GdkColor statusbar_background; /**< The background color of the statusbar */
-    GdkColor completion_foreground; /**< The foreground color of a completion item */
-    GdkColor completion_background; /**< The background color of a completion item */
-    GdkColor completion_group_foreground; /**< The foreground color of a completion group entry */
-    GdkColor completion_group_background; /**< The background color of a completion group entry */
-    GdkColor completion_highlight_foreground; /**< The foreground color of a highlighted completion item */
-    GdkColor completion_highlight_background; /**< The background color of a highlighted completion item */
-    GdkColor notification_error_foreground; /**< The foreground color of an error notification */
-    GdkColor notification_error_background; /**< The background color of an error notification */
-    GdkColor notification_warning_foreground; /**< The foreground color of a warning notification */
-    GdkColor notification_warning_background; /**< The background color of a warning notification */
-    GdkColor notification_default_foreground; /**< The foreground color of a default notification */
-    GdkColor notification_default_background; /**< The background color of a default notification */
-    GdkColor tabbar_foreground; /**< The foreground color for a tab */
-    GdkColor tabbar_background; /**< The background color for a tab */
-    GdkColor tabbar_focus_foreground; /**< The foreground color for a focused tab */
-    GdkColor tabbar_focus_background; /**< The background color for a focused tab */
-#endif
     PangoFontDescription *font; /**< The used font */
   } style;
 
