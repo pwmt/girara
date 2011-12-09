@@ -21,17 +21,30 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setti
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  if (value == NULL) {
-    girara_warning("window-icon is NULL!");
-    return;
-  }
-
   GError* error = NULL;
   gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), (const char*) value, &error);
   if (error != NULL) {
     girara_error("failed to load window icon: %s", error->message);
     g_error_free(error);
   }
+}
+
+static void
+cb_font(girara_session_t* session, const char* UNUSED(named), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+{
+  g_return_if_fail(session != NULL && value != NULL);
+
+  pango_font_description_free(session->style.font);
+
+  /* parse font */
+  PangoFontDescription* font = pango_font_description_from_string(value);
+  session->style.font = font;
+
+  /* inputbar */
+  gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), font);
+
+  /* notification area */
+  gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
 }
 
 static int
@@ -60,8 +73,6 @@ girara_session_create()
   session->gtk.results                 = NULL;
 
   session->gtk.embed                   = 0;
-
-  session->style.font                  = NULL;
 
   session->bindings.mouse_events       = girara_list_new2(
       (girara_free_function_t) girara_mouse_event_free);
@@ -111,7 +122,7 @@ girara_session_create()
   bool show_scrollbars   = false;
 
   /* add default settings */
-  girara_setting_add(session, "font",                     "monospace normal 9", STRING,  TRUE,  NULL, NULL, NULL);
+  girara_setting_add(session, "font",                     "monospace normal 9", STRING,  FALSE, "Font", cb_font, NULL);
   girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "default-bg",               "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING,  TRUE,  NULL, NULL, NULL);
@@ -322,13 +333,6 @@ girara_session_init(girara_session_t* session)
     }
   }
 
-  /* parse font */
-  char* tmp_value = girara_setting_get(session, "font");
-  if (tmp_value) {
-    session->style.font = pango_font_description_from_string(tmp_value);
-    g_free(tmp_value);
-  }
-
   /* view */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport),
       GTK_STATE_NORMAL, &(session->style.default_background));
@@ -343,33 +347,26 @@ girara_session_init(girara_session_t* session)
       GTK_STATE_NORMAL, &(session->style.inputbar_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar),
       GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
-  gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar),
-      session->style.font);
 
   /* notification area */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
       GTK_STATE_NORMAL, &(session->style.notification_default_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
       GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
-  gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text),
-      session->style.font);
 #else
   /* inputbar */
   gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL,
       &(session->style.inputbar_background));
   gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL,
       &(session->style.inputbar_foreground));
-  gtk_widget_modify_font(GTK_WIDGET(session->gtk.inputbar),
-      session->style.font);
 
   /* notification area */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
       GTK_STATE_NORMAL, &(session->style.notification_default_background));
   gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
       GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
-  gtk_widget_modify_font(GTK_WIDGET(session->gtk.notification_text),
-      session->style.font);
 #endif
+  girara_setting_set(session, "font", "monospace normal 9");
 
   /* set window size */
   int* window_width  = girara_setting_get(session, "window-width");
