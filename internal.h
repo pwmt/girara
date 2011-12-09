@@ -16,7 +16,7 @@
 #define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
 
 /**
- * Free girara_settings_t struct
+ * Free girara_setting_t struct
  *
  * @param setting The setting to free.
  */
@@ -195,7 +195,7 @@ struct girara_setting_s
     float f; /**< Floating number */
     char *s; /**< String */
   } value; /**< Value of the setting */
-  int type; /**< Type identifier */
+  girara_setting_type_t type; /**< Type identifier */
   bool init_only; /**< Option can be set only before girara gets initialized */
   char* description; /**< Description of this setting */
   girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */

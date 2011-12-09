@@ -33,6 +33,12 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setti
     g_error_free(error);
   }
 }
+
+static int
+cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
+{
+  return g_strcmp0(girara_setting_get_name(lhs), girara_setting_get_name(rhs));
+}
   
 girara_session_t*
 girara_session_create()
@@ -69,7 +75,8 @@ girara_session_create()
       (girara_free_function_t) girara_inputbar_shortcut_free);
   session->elements.statusbar_items    = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
-  session->settings                    = girara_list_new2(
+  session->settings                    = girara_sorted_list_new2(
+      (girara_compare_function_t) cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
 
   session->signals.view_key_pressed     = 0;
