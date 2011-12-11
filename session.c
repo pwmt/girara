@@ -115,6 +115,8 @@ girara_session_create()
   session->config.argument_mappings = girara_list_new2(
       (girara_free_function_t) girara_argument_mapping_free);
 
+  session->style.font = NULL;
+
   /* default values */
   int window_width       = 800;
   int window_height      = 600;
