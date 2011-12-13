@@ -13,7 +13,7 @@ test_session_basic(void)
 
   session = girara_session_create();
   g_assert_cmpptr(session, !=, NULL);
-  bool res = girara_session_init(session);
+  bool res = girara_session_init(session, NULL);
   g_assert_cmpuint(res, ==, true);
   girara_session_destroy(session);
 }

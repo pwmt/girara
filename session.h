@@ -139,10 +139,11 @@ girara_session_t* girara_session_create();
  * Initializes an girara session
  *
  * @param session The used girara session
+ * @param sessionname Name of the session (can be NULL)
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_session_init(girara_session_t* session);
+bool girara_session_init(girara_session_t* session, const char* appname);
 
 /**
  * Destroys an girara session

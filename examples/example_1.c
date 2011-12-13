@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
   gtk_init(&argc, &argv);
 
   girara_session_t* session = girara_session_create();
-  girara_session_init(session);
+  girara_session_init(session, NULL);
 
   int test_val_int = -1337;
   girara_setting_add(session, "test-val-int", &test_val_int, INT, FALSE, NULL, setting_cb, NULL);

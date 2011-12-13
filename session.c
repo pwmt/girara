@@ -201,12 +201,15 @@ girara_session_create()
 }
 
 bool
-girara_session_init(girara_session_t* session)
+girara_session_init(girara_session_t* session, const char* sessionname)
 {
   if (session->gtk.embed){
     session->gtk.window = gtk_plug_new(session->gtk.embed);
   } else {
     session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  }
+  if (sessionname) {
+    gtk_widget_set_name(GTK_WIDGET(session->gtk.window), sessionname);
   }
 
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
