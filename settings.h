@@ -77,12 +77,14 @@ void* girara_setting_get_value(girara_setting_t* setting);
 girara_setting_type_t girara_setting_get_type(girara_setting_t* setting);
 
 /**
- * Set the setting's value.
+ * Set the setting's value. If session is NULL, the setting's callback won't be
+ * called.
  *
+ * @param session The girara session
  * @param setting The setting
  * @param value The new value
  */
-void girara_setting_set_value(girara_setting_t* setting, void* value);
+void girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, void* value);
 
 
 #endif

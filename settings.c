@@ -31,7 +31,7 @@ struct girara_setting_s
 };
 
 void
-girara_setting_set_value(girara_setting_t* setting, void* value)
+girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, void* value)
 {
   g_return_if_fail(setting && (value || setting->type == STRING));
 
@@ -53,6 +53,10 @@ girara_setting_set_value(girara_setting_t* setting, void* value)
       break;
     default:
       g_assert(false);
+  }
+
+  if (session && setting->callback != NULL) {
+    setting->callback(session, setting->name, setting->type, value, setting->data);
   }
 }
 
@@ -80,7 +84,7 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
   setting->description = description ? g_strdup(description) : NULL;
   setting->callback    = callback;
   setting->data        = data;
-  girara_setting_set_value(setting, value);
+  girara_setting_set_value(NULL, setting, value);
 
   girara_list_append(session->settings, setting);
 
@@ -98,11 +102,7 @@ girara_setting_set(girara_session_t* session, const char* name, void* value)
     return false;
   }
 
-  girara_setting_set_value(setting, value);
-  if (setting->callback != NULL) {
-    setting->callback(session, setting->name, setting->type, value, setting->data);
-  }
-
+  girara_setting_set_value(session, setting, value);
   return true;
 }
 

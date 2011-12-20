@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-  if (girara_session_init(session) == false) {
+  if (girara_session_init(session, NULL) == false) {
 		girara_session_destroy(session);
 		return -1;
 	}

@@ -316,7 +316,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
       {
         /* for compatibility reasons: toogle the setting */
         bool tmp = !*(bool*)value;
-        girara_setting_set_value(setting, &tmp);
+        girara_setting_set_value(session, setting, &tmp);
         girara_notify(session, GIRARA_INFO, "%s: %s", name, tmp ? "true" : "false");
         break;
       }
@@ -346,10 +346,10 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
       case BOOLEAN:
         if (!g_strcmp0(value, "false") || !g_strcmp0(value, "0")) {
           bool b = false;
-          girara_setting_set_value(setting, &b);
+          girara_setting_set_value(session, setting, &b);
         } else if (!g_strcmp0(value, "true") || !g_strcmp0(value, "1")) {
           bool b = true;
-          girara_setting_set_value(setting, &b);
+          girara_setting_set_value(session, setting, &b);
         } else {
           girara_warning("Unknown value for option: %s", name);
           girara_notify(session, GIRARA_ERROR, "Unknown value for option: %s", name);
@@ -358,17 +358,17 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
       case FLOAT:
       {
         float f = strtof(value, NULL);
-        girara_setting_set_value(setting, &f);
+        girara_setting_set_value(session, setting, &f);
         break;
       }
       case INT:
       {
         int i = atoi(value);
-        girara_setting_set_value(setting, &i);
+        girara_setting_set_value(session, setting, &i);
         break;
       }
       case STRING:
-        girara_setting_set_value(setting, value);
+        girara_setting_set_value(session, setting, value);
         break;
       default:
         return false;
