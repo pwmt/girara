@@ -463,6 +463,25 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   return true;
 }
 
+bool
+girara_mouse_event_remove(girara_session_t* session, guint mask, guint button, girara_mode_t mode)
+{
+  g_return_val_if_fail(session  != NULL, false);
+
+  /* search for existing binding */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, me_it)
+    if (me_it->mask == mask && me_it->button == button &&
+       me_it->mode == mode)
+    {
+			girara_list_remove(session->bindings.mouse_events, me_it);
+      girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, me_it);
+
+  return false;
+}
+
 void
 girara_mouse_event_free(girara_mouse_event_t* mouse_event)
 {
