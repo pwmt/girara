@@ -90,7 +90,7 @@ girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
   /* Check first argument for mode */
   bool is_mode = false;
   if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_length - 1] == ']') {
-    char* tmp_inner            = g_strndup(tmp + 1, tmp_length - 2);
+    char* tmp_inner = g_strndup(tmp + 1, tmp_length - 2);
 
     GIRARA_LIST_FOREACH(session->modes.identifiers, girara_mode_string_t*, iter, mode)
       if (!g_strcmp0(tmp_inner, mode->name)) {

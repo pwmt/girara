@@ -97,7 +97,7 @@ void girara_clean_line(char* line);
  * In addition it frees the old memory block if realloc fails.
  *
  * @param ptr Memory space
- * @param size Number of bytes 
+ * @param size Number of bytes
  * @return Pointer to the allocated memory block or NULL
  */
 void* girara_safe_realloc(void** ptr, size_t size);
