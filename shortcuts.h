@@ -7,7 +7,7 @@
 #include <glib.h>
 
 /**
- * Adds an shortcut
+ * Adds a shortcut
  *
  * Note: currently argument_data accepts only a character string
  *
@@ -23,6 +23,19 @@
  * @return FALSE An error occured
  */
 bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+
+/**
+ * Removes a shortcut
+ *
+ * @param session The used girara session
+ * @param modifier The modifier
+ * @param key The key
+ * @param buffer Buffer command
+ * @param mode Available modes
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+bool girara_shortcut_remove(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_mode_t mode);
 
 /**
  * Adds an inputbar shortcut

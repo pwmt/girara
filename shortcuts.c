@@ -17,6 +17,7 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
 {
   g_return_val_if_fail(session != NULL, FALSE);
   g_return_val_if_fail(buffer || key || modifier, FALSE);
+  g_return_val_if_fail(function != NULL, FALSE);
 
   girara_argument_t argument = {argument_n, (argument_data != NULL) ?
     g_strdup(argument_data) : NULL};
@@ -44,6 +45,27 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
   shortcut->mode             = mode;
   shortcut->argument         = argument;
   girara_list_append(session->bindings.shortcuts, shortcut);
+
+  return TRUE;
+}
+
+bool
+girara_shortcut_remove(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_mode_t mode)
+{
+  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(buffer || key || modifier, FALSE);
+
+  /* search for existing binding */
+  GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it)
+    if (((shortcuts_it->mask == modifier && shortcuts_it->key == key && (modifier != 0 || key != 0)) ||
+       (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
+        && shortcuts_it->mode == mode)
+    {
+      girara_list_remove(session->bindings.shortcuts, shortcuts_it);
+      girara_list_iterator_free(iter);
+      return TRUE;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it);
 
   return TRUE;
 }
@@ -386,7 +408,7 @@ girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping)
   if (argument_mapping == NULL) {
     return;
   }
-  
+
   g_free(argument_mapping->identifier);
   g_slice_free(girara_argument_mapping_t, argument_mapping);
 }
