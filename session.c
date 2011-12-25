@@ -52,7 +52,7 @@ cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
 {
   return g_strcmp0(girara_setting_get_name(lhs), girara_setting_get_name(rhs));
 }
-  
+
 girara_session_t*
 girara_session_create()
 {
@@ -184,10 +184,10 @@ girara_session_create()
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_e,            girara_isc_string_manipulation, GIRARA_GOTO_END,             NULL);
 
   /* default commands */
-  girara_inputbar_command_add(session, "map",  "m", girara_cmd_map,  NULL,          "Map a key sequence");
-  girara_inputbar_command_add(session, "quit", "q", girara_cmd_quit, NULL,          "Quit the program");
-  girara_inputbar_command_add(session, "set",  "s", girara_cmd_set,  girara_cc_set, "Set an option");
-  girara_inputbar_command_add(session, "exec", NULL, girara_cmd_exec, NULL, "Execute a command");
+  girara_inputbar_command_add(session, "map",  "m",  girara_cmd_map,  NULL,          "Map a key sequence");
+  girara_inputbar_command_add(session, "quit", "q",  girara_cmd_quit, NULL,          "Quit the program");
+  girara_inputbar_command_add(session, "set",  "s",  girara_cmd_set,  girara_cc_set, "Set an option");
+  girara_inputbar_command_add(session, "exec", NULL, girara_cmd_exec, NULL,          "Execute a command");
 
   /* default config handle */
   girara_config_handle_add(session, "map", girara_cmd_map);
