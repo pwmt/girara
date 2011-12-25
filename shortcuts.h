@@ -52,6 +52,17 @@ bool girara_shortcut_remove(girara_session_t* session, guint modifier, guint key
 bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data);
 
 /**
+ * Removes an inputbar shortcut
+ *
+ * @param session The used girara session
+ * @param modifier The modifier
+ * @param key The key
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+bool girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, guint key);
+
+/**
  * Default shortcut function to focus the inputbar
  *
  * @param session The used girara session

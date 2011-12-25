@@ -109,6 +109,23 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   return TRUE;
 }
 
+bool
+girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, guint key)
+{
+  g_return_val_if_fail(session  != NULL, false);
+
+  /* search for existing special command */
+  GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inp_sh_it)
+    if (inp_sh_it->mask == modifier && inp_sh_it->key == key) {
+      girara_list_remove(session->bindings.inputbar_shortcuts, inp_sh_it);
+      girara_list_iterator_free(iter);
+      return TRUE;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inp_sh_it);
+
+  return TRUE;
+}
+
 void
 girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut)
 {
