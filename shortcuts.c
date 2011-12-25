@@ -15,9 +15,9 @@ static void girara_toggle_widget_visibility(GtkWidget* widget);
 bool
 girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
-  g_return_val_if_fail(buffer || key || modifier, FALSE);
-  g_return_val_if_fail(function != NULL, FALSE);
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(buffer || key || modifier, false);
+  g_return_val_if_fail(function != NULL, false);
 
   girara_argument_t argument = {argument_n, (argument_data != NULL) ?
     g_strdup(argument_data) : NULL};
@@ -31,7 +31,7 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
       shortcuts_it->function = function;
       shortcuts_it->argument = argument;
       girara_list_iterator_free(iter);
-      return TRUE;
+      return true;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it);
 
@@ -46,14 +46,14 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
   shortcut->argument         = argument;
   girara_list_append(session->bindings.shortcuts, shortcut);
 
-  return TRUE;
+  return true;
 }
 
 bool
 girara_shortcut_remove(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_mode_t mode)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
-  g_return_val_if_fail(buffer || key || modifier, FALSE);
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(buffer || key || modifier, false);
 
   /* search for existing binding */
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it)
@@ -63,11 +63,11 @@ girara_shortcut_remove(girara_session_t* session, guint modifier, guint key, con
     {
       girara_list_remove(session->bindings.shortcuts, shortcuts_it);
       girara_list_iterator_free(iter);
-      return TRUE;
+      return true;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it);
 
-  return TRUE;
+  return false;
 }
 
 void
@@ -93,7 +93,7 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
       inp_sh_it->argument = argument;
 
       girara_list_iterator_free(iter);
-      return TRUE;
+      return true;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inp_sh_it);
 
@@ -106,7 +106,7 @@ girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint ke
   inputbar_shortcut->argument = argument;
 
   girara_list_append(session->bindings.inputbar_shortcuts, inputbar_shortcut);
-  return TRUE;
+  return true;
 }
 
 bool
@@ -119,11 +119,11 @@ girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, guint
     if (inp_sh_it->mask == modifier && inp_sh_it->key == key) {
       girara_list_remove(session->bindings.inputbar_shortcuts, inp_sh_it);
       girara_list_iterator_free(iter);
-      return TRUE;
+      return true;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inp_sh_it);
 
-  return TRUE;
+  return true;
 }
 
 void
@@ -222,11 +222,11 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
 {
   g_return_val_if_fail(session != NULL, false);
 
-  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == FALSE) {
+  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == false) {
     gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
   }
 
-  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.notification_area)) == TRUE) {
+  if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.notification_area)) == true) {
     gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
   }
 
@@ -358,7 +358,7 @@ girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* UNUSED(arg
 
 bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, girara_shortcut_function_t function)
 {
-  g_return_val_if_fail(session  != NULL, FALSE);
+  g_return_val_if_fail(session  != NULL, false);
 
   if (function == NULL || identifier == NULL) {
     return false;

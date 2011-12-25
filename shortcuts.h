@@ -19,8 +19,8 @@
  * @param mode Available modes
  * @param argument_n Argument identifier
  * @param argument_data Argument data
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
 
@@ -32,8 +32,8 @@ bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, c
  * @param key The key
  * @param buffer Buffer command
  * @param mode Available modes
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_shortcut_remove(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_mode_t mode);
 
@@ -46,8 +46,8 @@ bool girara_shortcut_remove(girara_session_t* session, guint modifier, guint key
  * @param function Executed function
  * @param argument_n Argument identifier
  * @param argument_data Argument data
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data);
 
@@ -57,8 +57,8 @@ bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, gui
  * @param session The used girara session
  * @param modifier The modifier
  * @param key The key
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, guint key);
 
@@ -218,8 +218,8 @@ bool girara_argument_mapping_add(girara_session_t* session, const char* identifi
  * @param mode Available mode
  * @param argument_n Argument identifier
  * @param argument_data Argument data
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
 
