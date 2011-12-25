@@ -184,14 +184,16 @@ girara_session_create()
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_e,            girara_isc_string_manipulation, GIRARA_GOTO_END,             NULL);
 
   /* default commands */
-  girara_inputbar_command_add(session, "map",  "m",  girara_cmd_map,  NULL,          "Map a key sequence");
-  girara_inputbar_command_add(session, "quit", "q",  girara_cmd_quit, NULL,          "Quit the program");
-  girara_inputbar_command_add(session, "set",  "s",  girara_cmd_set,  girara_cc_set, "Set an option");
-  girara_inputbar_command_add(session, "exec", NULL, girara_cmd_exec, NULL,          "Execute a command");
+  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,  NULL,          "Execute a command");
+  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,   NULL,          "Map a key sequence");
+  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,  NULL,          "Quit the program");
+  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,   girara_cc_set, "Set an option");
+  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap, NULL,          "Unmap a key sequence");
 
   /* default config handle */
-  girara_config_handle_add(session, "map", girara_cmd_map);
-  girara_config_handle_add(session, "set", girara_cmd_set);
+  girara_config_handle_add(session, "map",   girara_cmd_map);
+  girara_config_handle_add(session, "set",   girara_cmd_set);
+  girara_config_handle_add(session, "unmap", girara_cmd_unmap);
 
   /* default shortcut mappings */
   girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);

@@ -61,6 +61,16 @@ HIDDEN girara_completion_t* girara_cc_set(girara_session_t* session, const char*
 HIDDEN bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_list);
 
 /**
+ * Default command to unmap sortcuts
+ *
+ * @param session The used girara session
+ * @param argument_list List of passed arguments
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+HIDDEN bool girara_cmd_unmap(girara_session_t* session, girara_list_t* argument_list);
+
+/**
  * Default command to quit the application
  *
  * @param session The used girara session
