@@ -7,7 +7,7 @@
 #include <glib.h>
 
 /**
- * Adds an shortcut
+ * Adds a shortcut
  *
  * Note: currently argument_data accepts only a character string
  *
@@ -19,10 +19,23 @@
  * @param mode Available modes
  * @param argument_n Argument identifier
  * @param argument_data Argument data
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+
+/**
+ * Removes a shortcut
+ *
+ * @param session The used girara session
+ * @param modifier The modifier
+ * @param key The key
+ * @param buffer Buffer command
+ * @param mode Available modes
+ * @return true No error occured
+ * @return false An error occured
+ */
+bool girara_shortcut_remove(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_mode_t mode);
 
 /**
  * Adds an inputbar shortcut
@@ -33,10 +46,21 @@ bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, c
  * @param function Executed function
  * @param argument_n Argument identifier
  * @param argument_data Argument data
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key, girara_shortcut_function_t function, int argument_n, void* argument_data);
+
+/**
+ * Removes an inputbar shortcut
+ *
+ * @param session The used girara session
+ * @param modifier The modifier
+ * @param key The key
+ * @return true No error occured
+ * @return false An error occured
+ */
+bool girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, guint key);
 
 /**
  * Default shortcut function to focus the inputbar
@@ -194,9 +218,21 @@ bool girara_argument_mapping_add(girara_session_t* session, const char* identifi
  * @param mode Available mode
  * @param argument_n Argument identifier
  * @param argument_data Argument data
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return true No error occured
+ * @return false An error occured
  */
 bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+
+/**
+ * Removes a mouse event
+ *
+ * @param session The used girara session
+ * @param mask The mask
+ * @param button Pressed button
+ * @param mode Available mode
+ * @return true No error occured
+ * @return false An error occured
+ */
+bool girara_mouse_event_remove(girara_session_t* session, guint mask, guint button, girara_mode_t mode);
 
 #endif

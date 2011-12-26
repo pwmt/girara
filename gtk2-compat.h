@@ -2274,7 +2274,7 @@
 #define gtk_widget_override_font(widget, font) \
   gtk_widget_modify_font(widget, font)
 
-#define GdkRGBA GdkColor 
+#define GdkRGBA GdkColor
 #define gdk_rgba_parse(out, in) \
   gdk_color_parse(in, out)
 
