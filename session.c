@@ -41,10 +41,14 @@ cb_font(girara_session_t* session, const char* UNUSED(named), girara_setting_typ
   session->style.font = font;
 
   /* inputbar */
-  gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), font);
+  if (session->gtk.inputbar != NULL) {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), font);
+  }
 
   /* notification area */
-  gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
+  if (session->gtk.notification_text != NULL) {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
+  }
 }
 
 static int
@@ -73,6 +77,8 @@ girara_session_create()
   session->gtk.results                 = NULL;
 
   session->gtk.embed                   = 0;
+
+  session->style.font                  = NULL;
 
   session->bindings.mouse_events       = girara_list_new2(
       (girara_free_function_t) girara_mouse_event_free);
@@ -371,7 +377,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
       GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
 #endif
-  girara_setting_set(session, "font", "monospace normal 9");
+
+  if (session->style.font == NULL) {
+    /* set default font */
+    girara_setting_set(session, "font", "monospace normal 9");
+  } else {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), session->style.font);
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), session->style.font);
+  }
 
   /* set window size */
   int* window_width  = girara_setting_get(session, "window-width");
