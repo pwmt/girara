@@ -41,10 +41,14 @@ cb_font(girara_session_t* session, const char* UNUSED(named), girara_setting_typ
   session->style.font = font;
 
   /* inputbar */
-  gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), font);
+  if (session->gtk.inputbar != NULL) {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), font);
+  }
 
   /* notification area */
-  gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
+  if (session->gtk.notification_text != NULL) {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
+  }
 }
 
 static int
@@ -56,24 +60,9 @@ cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
 girara_session_t*
 girara_session_create()
 {
-  girara_session_t* session = g_slice_new(girara_session_t);
+  girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
 
   /* init values */
-  session->gtk.window                  = NULL;
-  session->gtk.box                     = NULL;
-  session->gtk.view                    = NULL;
-  session->gtk.viewport                = NULL;
-  session->gtk.statusbar               = NULL;
-  session->gtk.statusbar_entries       = NULL;
-  session->gtk.notification_area       = NULL;
-  session->gtk.notification_text       = NULL;
-  session->gtk.tabbar                  = NULL;
-  session->gtk.inputbar                = NULL;
-  session->gtk.tabs                    = NULL;
-  session->gtk.results                 = NULL;
-
-  session->gtk.embed                   = 0;
-
   session->bindings.mouse_events       = girara_list_new2(
       (girara_free_function_t) girara_mouse_event_free);
   session->bindings.commands           = girara_list_new2(
@@ -89,18 +78,6 @@ girara_session_create()
   session->settings                    = girara_sorted_list_new2(
       (girara_compare_function_t) cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
-
-  session->signals.view_key_pressed     = 0;
-  session->signals.inputbar_key_pressed = 0;
-  session->signals.inputbar_activate    = 0;
-
-  session->events.buffer_changed        = NULL;
-
-  session->buffer.n       = 0;
-  session->buffer.command = NULL;
-
-  session->global.buffer  = NULL;
-  session->global.data    = NULL;
 
   session->modes.identifiers  = girara_list_new2(
       (girara_free_function_t) girara_mode_string_free);
@@ -373,7 +350,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
       GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
 #endif
-  girara_setting_set(session, "font", "monospace normal 9");
+
+  if (session->style.font == NULL) {
+    /* set default font */
+    girara_setting_set(session, "font", "monospace normal 9");
+  } else {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), session->style.font);
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), session->style.font);
+  }
 
   /* set window size */
   int* window_width  = girara_setting_get(session, "window-width");
