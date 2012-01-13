@@ -11,7 +11,6 @@ DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
 HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h")
 
 all: options ${PROJECT}
-	@${MAKE} -C examples
 
 options:
 	@echo ${PROJECT} build options:
@@ -48,7 +47,6 @@ clean:
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
 		${PROJECTNV}-${VERSION}.tar.gz
-	$(QUIET)${MAKE} -C examples clean
 	$(QUIET)${MAKE} -C tests clean
 
 ${PROJECT}-debug: lib${PROJECT}-debug.a lib${PROJECT}-debug.so.${SOVERSION}
@@ -62,7 +60,6 @@ lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
 	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${DOBJECTS} ${LIBS}
 
 debug: options ${PROJECT}-debug
-	$(QUIET)${MAKE} -C examples debug
 
 test: ${PROJECT}
 	$(QUIET)${MAKE} -C tests
@@ -74,7 +71,7 @@ dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)cp -R LICENSE Makefile config.mk README ${PROJECTNV}.pc.in \
 		${HEADERS} internal.h commands.h tests/ \
-		${SOURCE} examples/ ${PROJECTNV}-${VERSION}
+		${SOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
 	$(QUIET)rm -rf ${PROJECTNV}-${VERSION}
