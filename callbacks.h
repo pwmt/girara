@@ -6,6 +6,9 @@
 #include "types.h"
 #include <gtk/gtk.h>
 
+typedef bool (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
+typedef bool (*girara_callback_inputbar_activate_t)(GtkEntry* entry, girara_session_t* session);
+
 /**
  * Default callback for key press events in the view area
  *

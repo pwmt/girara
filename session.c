@@ -288,7 +288,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_dialog), FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_entry),  TRUE,  TRUE,  0);
   gtk_container_add(GTK_CONTAINER(session->gtk.inputbar), GTK_WIDGET(session->gtk.inputbar_box));
-  gtk_widget_show_all(GTK_WIDGET(session->gtk.inputbar));
 
   /* tabs */
   gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
@@ -401,6 +400,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
   gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
 
   return TRUE;
 }
@@ -526,6 +526,38 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   /* update visibility */
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+}
+
+void girara_dialog(girara_session_t* session, const char* dialog, bool
+    invisible, girara_callback_inputbar_key_press_event_t key_press_event,
+    girara_callback_inputbar_activate_t activate_event)
+{
+  if (session == NULL || session->gtk.inputbar == NULL
+      || session->gtk.inputbar_dialog == NULL
+      || session->gtk.inputbar_entry == NULL) {
+    return;
+  }
+
+  gtk_widget_show(GTK_WIDGET(session->gtk.inputbar_dialog));
+
+  /* set dialog message */
+  if (dialog != NULL) {
+    gtk_label_set_markup(session->gtk.inputbar_dialog, dialog);
+  }
+
+  /* set input visibility */
+  if (invisible == true) {
+    gtk_entry_set_visibility(session->gtk.inputbar_entry, FALSE);
+  } else {
+    gtk_entry_set_visibility(session->gtk.inputbar_entry, TRUE);
+  }
+
+  /* set handler */
+  session->signals.inputbar_custom_activate        = activate_event;
+  session->signals.inputbar_custom_key_press_event = key_press_event;
+
+  /* focus inputbar */
+  girara_sc_focus_inputbar(session, NULL, 0);
 }
 
 bool

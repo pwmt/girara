@@ -15,9 +15,14 @@ static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD
 
 /* callback implementation */
 bool
-girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* event, girara_session_t* session)
+girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
+
+  /* a custom handler has been installed (e.g. by girara_dialog) */
+  if (session->signals.inputbar_custom_key_press_event != NULL) {
+    return session->signals.inputbar_custom_key_press_event(widget, event, session);
+  }
 
   guint keyval = 0;
   GdkModifierType consumed = 0;
@@ -145,12 +150,34 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
+  /* a custom handler has been installed (e.g. by girara_dialog) */
+  if (session->signals.inputbar_custom_activate != NULL) {
+    bool return_value = session->signals.inputbar_custom_activate(entry, session);
+
+    /* disconnect custom handler */
+    session->signals.inputbar_custom_activate        = NULL;
+    session->signals.inputbar_custom_key_press_event = NULL;
+
+    if (session->gtk.inputbar_dialog != NULL && session->gtk.inputbar_entry != NULL) {
+      gtk_label_set_markup(session->gtk.inputbar_dialog, "");
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_entry));
+      girara_isc_abort(session, NULL, 0);
+      return true;
+    }
+
+    return return_value;
+  }
+
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
   if (!input) {
+    girara_isc_abort(session, NULL, 0);
     return false;
   }
 
   if (strlen(input) == 0) {
+    g_free(input);
+    girara_isc_abort(session, NULL, 0);
     return false;
   }
 

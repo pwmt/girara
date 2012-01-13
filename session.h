@@ -5,6 +5,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "callbacks.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -96,6 +97,8 @@ struct girara_session_s
     int inputbar_activate; /**< Inputbar activation */
     int inputbar_key_pressed; /**< Pressed key in inputbar */
     int view_key_pressed; /**< Pressed key in view */
+    girara_callback_inputbar_activate_t inputbar_custom_activate; /**< Custom handler */
+    girara_callback_inputbar_key_press_event_t inputbar_custom_key_press_event; /**< Custom handler */
   } signals;
 
   struct
@@ -185,6 +188,19 @@ char* girara_buffer_get(girara_session_t* session);
  * @param ...
  */
 void girara_notify(girara_session_t* session, int level, const char* format, ...) GIRARA_PRINTF(3, 4);
+
+/**
+ * Creates a girara dialog
+ *
+ * @param session The girara session
+ * @param dialog The dialog message
+ * @param invisible Sets the input visibility
+ * @param key_press_event Callback function to a custom key press event handler
+ * @param activate_event Callback function to a custom activate event handler
+ */
+void girara_dialog(girara_session_t* session, const char* dialog, bool
+    invisible, girara_callback_inputbar_key_press_event_t key_press_event,
+    girara_callback_inputbar_activate_t activate_event);
 
 /**
  * Adds a new mode by its string identifier

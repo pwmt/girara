@@ -145,6 +145,7 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 
   /* hide inputbar */
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
 
   return true;
@@ -221,6 +222,7 @@ bool
 girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(session->gtk.inputbar_entry != NULL, false);
 
   if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == false) {
     gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
@@ -230,13 +232,14 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
     gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
   }
 
-  if (argument->data) {
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
+
+  if (argument != NULL && argument->data != NULL) {
     gtk_entry_set_text(session->gtk.inputbar_entry, (char*) argument->data);
 
     /* we save the X clipboard that will be clear by "grab_focus" */
     gchar* x_clipboard_text = gtk_clipboard_wait_for_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY));
 
-    gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
     gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
 
     if (x_clipboard_text != NULL) {
@@ -473,7 +476,7 @@ girara_mouse_event_remove(girara_session_t* session, guint mask, guint button, g
     if (me_it->mask == mask && me_it->button == button &&
        me_it->mode == mode)
     {
-			girara_list_remove(session->bindings.mouse_events, me_it);
+      girara_list_remove(session->bindings.mouse_events, me_it);
       girara_list_iterator_free(iter);
       return true;
     }
