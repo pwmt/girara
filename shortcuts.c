@@ -148,6 +148,10 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
 
+  /* reset custom functions */
+  session->signals.inputbar_custom_activate        = NULL;
+  session->signals.inputbar_custom_key_press_event = NULL;
+
   return true;
 }
 
