@@ -7,6 +7,25 @@
 #include <gtk/gtk.h>
 
 /**
+ * Callback definition for an inputbar key press event handler
+ *
+ * @param widget The widget
+ * @param event Event
+ * @param data Custom data
+ * @return true if no error occured
+ */
+typedef bool (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget, GdkEventKey* event, void* data);
+
+/**
+ * Callback definition for an inputbar key press event handler
+ *
+ * @param entry The inputbar
+ * @param data Custom data
+ * @return true if no error occured
+ */
+typedef bool (*girara_callback_inputbar_activate_t)(GtkEntry* entry, void* data);
+
+/**
  * Default callback for key press events in the view area
  *
  * @param widget The used widget

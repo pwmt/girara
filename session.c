@@ -41,8 +41,12 @@ cb_font(girara_session_t* session, const char* UNUSED(named), girara_setting_typ
   session->style.font = font;
 
   /* inputbar */
-  if (session->gtk.inputbar != NULL) {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), font);
+  if (session->gtk.inputbar_entry != NULL) {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_entry), font);
+  }
+
+  if (session->gtk.inputbar_dialog != NULL) {
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_dialog), font);
   }
 
   /* notification area */
@@ -201,7 +205,10 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->gtk.notification_area = gtk_event_box_new();
   session->gtk.notification_text = gtk_label_new(NULL);
   session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
-  session->gtk.inputbar          = GTK_ENTRY(gtk_entry_new());
+  session->gtk.inputbar_box      = GTK_BOX(gtk_hbox_new(TRUE, 0));
+  session->gtk.inputbar_dialog   = GTK_LABEL(gtk_label_new(NULL));
+  session->gtk.inputbar_entry    = GTK_ENTRY(gtk_entry_new());
+  session->gtk.inputbar          = gtk_event_box_new();
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
   /* window */
@@ -259,12 +266,30 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_label_set_use_markup(GTK_LABEL(session->gtk.notification_text), TRUE);
 
   /* inputbar */
-  gtk_entry_set_inner_border(session->gtk.inputbar, NULL);
-  gtk_entry_set_has_frame(session->gtk.inputbar, FALSE);
-  gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar), TRUE);
+  gtk_entry_set_inner_border(session->gtk.inputbar_entry, NULL);
+  gtk_entry_set_has_frame(session->gtk.inputbar_entry, FALSE);
+  gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar_entry), TRUE);
 
-  session->signals.inputbar_key_pressed = g_signal_connect(G_OBJECT(session->gtk.inputbar), "key-press-event", G_CALLBACK(girara_callback_inputbar_key_press_event), session);
-  session->signals.inputbar_activate    = g_signal_connect(G_OBJECT(session->gtk.inputbar), "activate",        G_CALLBACK(girara_callback_inputbar_activate),        session);
+  session->signals.inputbar_key_pressed = g_signal_connect(
+      G_OBJECT(session->gtk.inputbar_entry),
+      "key-press-event",
+      G_CALLBACK(girara_callback_inputbar_key_press_event),
+      session
+    );
+
+  session->signals.inputbar_activate = g_signal_connect(
+      G_OBJECT(session->gtk.inputbar_entry),
+      "activate",
+      G_CALLBACK(girara_callback_inputbar_activate),
+      session
+    );
+
+  gtk_misc_set_alignment(GTK_MISC(session->gtk.inputbar_dialog), 0.0, 0.0);
+  gtk_label_set_markup(session->gtk.inputbar_dialog, "test");
+
+  gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_dialog), FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_entry),  TRUE,  TRUE,  0);
+  gtk_container_add(GTK_CONTAINER(session->gtk.inputbar), GTK_WIDGET(session->gtk.inputbar_box));
 
   /* tabs */
   gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
@@ -325,12 +350,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),
       GTK_STATE_NORMAL, &(session->style.statusbar_background));
 
-#if (GTK_MAJOR_VERSION == 3)
   /* inputbar */
+#if (GTK_MAJOR_VERSION == 3)
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar),
       GTK_STATE_NORMAL, &(session->style.inputbar_background));
-  gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar),
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_dialog),
       GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar_entry),
+      GTK_STATE_NORMAL, &(session->style.inputbar_background));
 
   /* notification area */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
@@ -339,23 +366,25 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
 #else
   /* inputbar */
-  gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL,
-      &(session->style.inputbar_background));
-  gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar), GTK_STATE_NORMAL,
-      &(session->style.inputbar_foreground));
+  gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar_entry), GTK_STATE_NORMAL, &(session->style.inputbar_background));
+  gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar_entry), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+
+  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.inputbar),        GTK_STATE_NORMAL, &(session->style.inputbar_background));
+  gtk_widget_modify_fg(GTK_WIDGET(session->gtk.inputbar_dialog), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
 
   /* notification area */
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
-      GTK_STATE_NORMAL, &(session->style.notification_default_background));
+    GTK_STATE_NORMAL, &(session->style.notification_default_background));
   gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
-      GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+    GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
 #endif
 
   if (session->style.font == NULL) {
     /* set default font */
     girara_setting_set(session, "font", "monospace normal 9");
   } else {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar), session->style.font);
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_entry),    session->style.font);
+    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_dialog),   session->style.font);
     gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), session->style.font);
   }
 
@@ -373,6 +402,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
   gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
 
   return TRUE;
 }
@@ -498,6 +528,38 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   /* update visibility */
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+}
+
+void girara_dialog(girara_session_t* session, const char* dialog, bool
+    invisible, girara_callback_inputbar_key_press_event_t key_press_event,
+    girara_callback_inputbar_activate_t activate_event)
+{
+  if (session == NULL || session->gtk.inputbar == NULL
+      || session->gtk.inputbar_dialog == NULL
+      || session->gtk.inputbar_entry == NULL) {
+    return;
+  }
+
+  gtk_widget_show(GTK_WIDGET(session->gtk.inputbar_dialog));
+
+  /* set dialog message */
+  if (dialog != NULL) {
+    gtk_label_set_markup(session->gtk.inputbar_dialog, dialog);
+  }
+
+  /* set input visibility */
+  if (invisible == true) {
+    gtk_entry_set_visibility(session->gtk.inputbar_entry, FALSE);
+  } else {
+    gtk_entry_set_visibility(session->gtk.inputbar_entry, TRUE);
+  }
+
+  /* set handler */
+  session->signals.inputbar_custom_activate        = activate_event;
+  session->signals.inputbar_custom_key_press_event = key_press_event;
+
+  /* focus inputbar */
+  girara_sc_focus_inputbar(session, NULL, 0);
 }
 
 bool

@@ -157,7 +157,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
   g_return_val_if_fail(session != NULL, false);
 
   /* get current text */
-  gchar *input     = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
+  gchar *input     = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
   const size_t input_length = strlen(input);
 
   if (input_length == 0 || input[0] != ':') {
@@ -446,8 +446,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, un
       temp = g_strconcat(":", previous_command, " ", escaped_value, NULL);
     }
 
-    gtk_entry_set_text(session->gtk.inputbar, temp);
-    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+    gtk_entry_set_text(session->gtk.inputbar_entry, temp);
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
     g_free(escaped_value);
 
     /* update previous */
@@ -505,7 +505,7 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
     gtk_widget_override_color(GTK_WIDGET(show_command),     GTK_STATE_NORMAL, &(session->style.completion_foreground));
     gtk_widget_override_color(GTK_WIDGET(show_description), GTK_STATE_NORMAL, &(session->style.completion_foreground));
     gtk_widget_override_background_color(GTK_WIDGET(row),   GTK_STATE_NORMAL, &(session->style.completion_background));
-  }
+ }
 
   gtk_widget_override_font(GTK_WIDGET(show_command),     session->style.font);
   gtk_widget_override_font(GTK_WIDGET(show_description), session->style.font);

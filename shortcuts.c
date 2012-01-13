@@ -139,13 +139,18 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   girara_isc_completion(session, &arg, 0);
 
   /* clear inputbar */
-  gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
+  gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
 
   /* grab view */
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 
   /* hide inputbar */
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+
+  /* reset custom functions */
+  session->signals.inputbar_custom_activate        = NULL;
+  session->signals.inputbar_custom_key_press_event = NULL;
 
   return true;
 }
@@ -154,9 +159,9 @@ bool
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
   gchar *separator = girara_setting_get(session, "word-separator");
-  gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar), 0, -1);
+  gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
   int    length = strlen(input);
-  int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar));
+  int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar_entry));
   int i;
 
   switch (argument->n) {
@@ -175,38 +180,38 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
         i--;
       }
 
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar),  i + 1, pos);
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), i + 1);
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry),  i + 1, pos);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), i + 1);
       break;
     case GIRARA_DELETE_LAST_CHAR:
       if ((length - 1) <= 0) {
         girara_isc_abort(session, argument, 0);
       }
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos - 1, pos);
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos - 1, pos);
       break;
     case GIRARA_DELETE_TO_LINE_START:
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), 1, pos);
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), 1, pos);
       break;
     case GIRARA_NEXT_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), pos + 1);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), pos + 1);
       break;
     case GIRARA_PREVIOUS_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), (pos == 0) ? 0 : pos - 1);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 0) ? 0 : pos - 1);
       break;
     case GIRARA_DELETE_CURR_CHAR:
       if((length - 1) <= 0) {
         girara_isc_abort(session, argument, 0);
       }
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos, pos + 1);
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos, pos + 1);
       break;
     case GIRARA_DELETE_TO_LINE_END:
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar), pos, length);
+      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos, length);
       break;
     case GIRARA_GOTO_START:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), 1);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), 1);
       break;
     case GIRARA_GOTO_END:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
       break;
   }
 
@@ -221,6 +226,7 @@ bool
 girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(session->gtk.inputbar_entry != NULL, false);
 
   if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == false) {
     gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
@@ -230,14 +236,15 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
     gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
   }
 
-  if (argument->data) {
-    gtk_entry_set_text(session->gtk.inputbar, (char*) argument->data);
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
+
+  if (argument != NULL && argument->data != NULL) {
+    gtk_entry_set_text(session->gtk.inputbar_entry, (char*) argument->data);
 
     /* we save the X clipboard that will be clear by "grab_focus" */
     gchar* x_clipboard_text = gtk_clipboard_wait_for_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY));
 
-    gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar));
-    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar), -1);
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
 
     if (x_clipboard_text != NULL) {
       /* we reset the X clipboard with saved text */
@@ -473,7 +480,7 @@ girara_mouse_event_remove(girara_session_t* session, guint mask, guint button, g
     if (me_it->mask == mask && me_it->button == button &&
        me_it->mode == mode)
     {
-			girara_list_remove(session->bindings.mouse_events, me_it);
+      girara_list_remove(session->bindings.mouse_events, me_it);
       girara_list_iterator_free(iter);
       return true;
     }
