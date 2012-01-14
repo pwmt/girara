@@ -282,8 +282,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       session
     );
 
-  gtk_misc_set_alignment(GTK_MISC(session->gtk.inputbar_dialog), 0.0, 0.0);
-  gtk_label_set_markup(session->gtk.inputbar_dialog, "test");
+  gtk_box_set_homogeneous(session->gtk.inputbar_box, FALSE);
+  gtk_box_set_spacing(session->gtk.inputbar_box, 5);
 
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_dialog), FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_entry),  TRUE,  TRUE,  0);
