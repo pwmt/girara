@@ -60,6 +60,37 @@ girara_fix_path(const char* path)
   return rpath;
 }
 
+bool
+girara_xdg_open(const char* uri)
+{
+  if (!uri || !strlen(uri)) {
+    return false;
+  }
+
+  GString* command = g_string_new("xdg-open ");
+  if (!command) {
+    return false;
+  }
+
+  char* tmp = g_shell_quote(uri);
+  if (!tmp) {
+    g_string_free(command, true);
+    return false;
+  }
+  g_string_append(command, tmp);
+  g_free(tmp);
+
+  GError* error = NULL;
+  bool res = g_spawn_command_line_async(uri, &error);
+  if (error != NULL) {
+    girara_warning("Failed to execute command: %s", error->message);
+    g_error_free(error);
+  }
+
+  g_string_free(command, TRUE);
+  return res;
+}
+
 char*
 girara_get_home_directory(const char* user)
 {

@@ -37,6 +37,13 @@ char* girara_get_home_directory(const char* user);
 char* girara_get_xdg_path(girara_xdg_path_t path);
 
 /**
+ * Opens a URI with xdg-open.
+ * @param uri the URI to be opened.
+ * @param true on success, false otherwise
+ */
+bool girara_xdg_open(const char* uri);
+
+/**
  * Splits paths seperated by : (as in $PATH) into a list.
  * @param patharray $PATH like string to split
  * @return a list of paths and NULL on failure.
