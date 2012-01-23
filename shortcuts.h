@@ -144,11 +144,22 @@ bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* ar
  *
  * @param session The used girara session
  * @param argument The argument
- * @param t Numbr of execution
+ * @param t Number of execution
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
 bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+
+/**
+ * Passes the argument to the set command
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param t Number ofexecutions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_set(girara_session_t* session, girara_argument_t* argument, unsigned int t);
 
 /**
  * Default inputbar shortcut to abort
