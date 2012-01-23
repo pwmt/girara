@@ -63,17 +63,17 @@ girara_fix_path(const char* path)
 bool
 girara_xdg_open(const char* uri)
 {
-  if (!uri || !strlen(uri)) {
+  if (uri == NULL || strlen(uri) == 0) {
     return false;
   }
 
   GString* command = g_string_new("xdg-open ");
-  if (!command) {
+  if (command == NULL) {
     return false;
   }
 
   char* tmp = g_shell_quote(uri);
-  if (!tmp) {
+  if (tmp == NULL) {
     g_string_free(command, true);
     return false;
   }
