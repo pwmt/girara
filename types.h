@@ -48,7 +48,6 @@ enum
   GIRARA_DELETE_CURR_CHAR, /**< Delete current char */
   GIRARA_GOTO_START, /**< Go to start of the line */
   GIRARA_GOTO_END /**< Go to end of the line */
-
 };
 
 /**
@@ -160,18 +159,38 @@ struct girara_argument_s
   void *data; /**< Data */
 };
 
+/**
+ * Define mouse buttons
+ */
+typedef enum girara_mouse_button_e
+{
+  GIRARA_MOUSE_BUTTON1 = 1, /**< Button 1 */
+  GIRARA_MOUSE_BUTTON2 = 2, /**< Button 2 */
+  GIRARA_MOUSE_BUTTON3 = 3, /**< Button 3 */
+  GIRARA_MOUSE_BUTTON4 = 4, /**< Button 4 */
+  GIRARA_MOUSE_BUTTON5 = 5  /**< Button 5 */
+} girara_mouse_button_t;
+
+/**
+ * Describes the types of a girara
+ */
 typedef enum girara_event_type_e
 {
   GIRARA_EVENT_BUTTON_PRESS, /**< Single click */
-  GIRARA_EVENT_BUTTON2_PRESS, /**< Double click */
-  GIRARA_EVENT_BUTTON3_PRESS, /**< Triple click */
+  GIRARA_EVENT_2BUTTON_PRESS, /**< Double click */
+  GIRARA_EVENT_3BUTTON_PRESS, /**< Triple click */
   GIRARA_EVENT_BUTTON_RELEASE, /**< Button released */
-  GIRARA_EVENT_MOTION_NOTIFY /**< Cursor moved */
+  GIRARA_EVENT_MOTION_NOTIFY, /**< Cursor moved */
+  GIRARA_EVENT_OTHER /**< Unknown event */
 } girara_event_type_t;
 
+/**
+ * Describes a girara event
+ */
 struct girara_event_s
 {
   girara_event_type_t type; /**< The event type */
+
   double x; /**< X coordinates where the event occured */
   double y; /**< Y coordinates where the event occured */
 };
