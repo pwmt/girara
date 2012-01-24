@@ -31,6 +31,7 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
   }
   const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
 
+  /* prepare event */
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcut)
     if (session->buffer.command) {
       break;
@@ -45,7 +46,7 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
     {
       int t = (session->buffer.n > 0) ? session->buffer.n : 1;
       for (int i = 0; i < t; i++) {
-        if (!shortcut->function(session, &(shortcut->argument), session->buffer.n)) {
+        if (!shortcut->function(session, &(shortcut->argument), NULL, session->buffer.n)) {
           break;
         }
       }
@@ -113,7 +114,7 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
 
             int t = (session->buffer.n > 0) ? session->buffer.n : 1;
             for (int i = 0; i < t; i++) {
-              if (!shortcut->function(session, &(shortcut->argument), session->buffer.n)) {
+              if (!shortcut->function(session, &(shortcut->argument), NULL, session->buffer.n)) {
                 break;
               }
             }
@@ -146,6 +147,24 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
 }
 
 bool
+girara_callback_view_button_press_event(GtkWidget* UNUSED(widget), GdkEventButton* UNUSED(button), girara_session_t* UNUSED(session))
+{
+  return TRUE;
+}
+
+bool
+girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventButton* UNUSED(button), girara_session_t* UNUSED(session))
+{
+  return TRUE;
+}
+
+bool
+girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEventMotion* UNUSED(button), girara_session_t* UNUSED(session))
+{
+  return TRUE;
+}
+
+bool
 girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -162,7 +181,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       gtk_label_set_markup(session->gtk.inputbar_dialog, "");
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_entry));
-      girara_isc_abort(session, NULL, 0);
+      girara_isc_abort(session, NULL, NULL, 0);
       return true;
     }
 
@@ -171,13 +190,13 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
   if (!input) {
-    girara_isc_abort(session, NULL, 0);
+    girara_isc_abort(session, NULL, NULL, 0);
     return false;
   }
 
   if (strlen(input) == 0) {
     g_free(input);
-    girara_isc_abort(session, NULL, 0);
+    girara_isc_abort(session, NULL, NULL, 0);
     return false;
   }
 
@@ -205,7 +224,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       g_free(input);
       g_strfreev(argv);
 
-      girara_isc_abort(session, NULL, 0);
+      girara_isc_abort(session, NULL, NULL, 0);
 
       girara_list_iterator_free(iter);
       return true;
@@ -246,7 +265,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       g_free(input);
       g_strfreev(argv);
 
-      girara_isc_abort(session, NULL, 0);
+      girara_isc_abort(session, NULL, NULL, 0);
 
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
       girara_list_iterator_free(iter);
@@ -255,7 +274,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
 
   /* no known command */
-  girara_isc_abort(session, NULL, 0);
+  girara_isc_abort(session, NULL, NULL, 0);
 
   return false;
 }
@@ -277,7 +296,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
      && inputbar_shortcut->mask == clean)
     {
       if (inputbar_shortcut->function != NULL) {
-        inputbar_shortcut->function(session, &(inputbar_shortcut->argument), 0);
+        inputbar_shortcut->function(session, &(inputbar_shortcut->argument), NULL, 0);
       }
 
       girara_list_iterator_free(iter);

@@ -307,7 +307,7 @@ bool
 girara_cmd_quit(girara_session_t* session, girara_list_t* UNUSED(argument_list))
 {
   girara_argument_t arg = { GIRARA_HIDE, NULL };
-  girara_isc_completion(session, &arg, 0);
+  girara_isc_completion(session, &arg, NULL, 0);
 
   gtk_main_quit();
 

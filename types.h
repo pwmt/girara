@@ -25,6 +25,7 @@ typedef struct girara_completion_group_s girara_completion_group_t;
 typedef struct girara_shortcut_s girara_shortcut_t;
 typedef struct girara_inputbar_shortcut_s girara_inputbar_shortcut_t;
 typedef struct girara_special_command_s girara_special_command_t;
+typedef struct girara_event_s girara_event_t;
 
 /**
  * This structure defines the possible argument identifiers
@@ -102,7 +103,7 @@ typedef bool (*girara_command_function_t)(girara_session_t* session, girara_list
  * often executed as the value defines or until the function returns false the
  * first time.
  */
-typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, unsigned int);
+typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, girara_event_t*, unsigned int);
 
 /**
  * Function declaration of a function that frees something.
@@ -157,6 +158,22 @@ struct girara_argument_s
 {
   int   n; /**< Identifier */
   void *data; /**< Data */
+};
+
+typedef enum girara_event_type_e
+{
+  GIRARA_EVENT_BUTTON_PRESS, /**< Single click */
+  GIRARA_EVENT_BUTTON2_PRESS, /**< Double click */
+  GIRARA_EVENT_BUTTON3_PRESS, /**< Triple click */
+  GIRARA_EVENT_BUTTON_RELEASE, /**< Button released */
+  GIRARA_EVENT_MOTION_NOTIFY /**< Cursor moved */
+} girara_event_type_t;
+
+struct girara_event_s
+{
+  girara_event_type_t type; /**< The event type */
+  double x; /**< X coordinates where the event occured */
+  double y; /**< Y coordinates where the event occured */
 };
 
 #endif

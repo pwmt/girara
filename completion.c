@@ -152,7 +152,7 @@ girara_completion_group_add_element(girara_completion_group_t* group, const char
 }
 
 bool
-girara_isc_completion(girara_session_t* session, girara_argument_t* argument, unsigned int UNUSED(t))
+girara_isc_completion(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session != NULL, false);
 

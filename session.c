@@ -558,7 +558,7 @@ void girara_dialog(girara_session_t* session, const char* dialog, bool
   session->signals.inputbar_custom_key_press_event = key_press_event;
 
   /* focus inputbar */
-  girara_sc_focus_inputbar(session, NULL, 0);
+  girara_sc_focus_inputbar(session, NULL, NULL, 0);
 }
 
 bool
