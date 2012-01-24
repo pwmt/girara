@@ -60,11 +60,11 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
   } gdk_mouse_button_t;
 
   static const gdk_mouse_button_t gdk_mouse_buttons[] = {
-    {"Button1", 1},
-    {"Button2", 2},
-    {"Button3", 3},
-    {"Button4", 4},
-    {"Button5", 5},
+    {"Button1", GIRARA_MOUSE_BUTTON1},
+    {"Button2", GIRARA_MOUSE_BUTTON2},
+    {"Button3", GIRARA_MOUSE_BUTTON3},
+    {"Button4", GIRARA_MOUSE_BUTTON4},
+    {"Button5", GIRARA_MOUSE_BUTTON5},
   };
 
   size_t number_of_arguments = girara_list_size(argument_list);
