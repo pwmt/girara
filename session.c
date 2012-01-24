@@ -234,6 +234,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
       G_CALLBACK(girara_callback_view_key_press_event), session);
 
+  session->signals.view_button_press_event = g_signal_connect(G_OBJECT(session->gtk.view), "button-press-event",
+      G_CALLBACK(girara_callback_view_button_press_event), session);
+
+  session->signals.view_button_release_event = g_signal_connect(G_OBJECT(session->gtk.view), "button-release-event",
+      G_CALLBACK(girara_callback_view_button_release_event), session);
+
+  session->signals.view_motion_notify_event = g_signal_connect(G_OBJECT(session->gtk.view), "motion-notify-event",
+      G_CALLBACK(girara_callback_view_button_motion_notify_event), session);
+
   bool* tmp_bool_value = girara_setting_get(session, "show-scrollbars");
   if (tmp_bool_value) {
     if (*tmp_bool_value == true) {

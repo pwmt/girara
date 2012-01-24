@@ -147,21 +147,101 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
 }
 
 bool
-girara_callback_view_button_press_event(GtkWidget* UNUSED(widget), GdkEventButton* UNUSED(button), girara_session_t* UNUSED(session))
+girara_callback_view_button_press_event(GtkWidget* UNUSED(widget), GdkEventButton* button, girara_session_t* session)
 {
-  return TRUE;
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(button  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+
+  switch (button->type) {
+    case GDK_BUTTON_PRESS:
+      event.type = GIRARA_EVENT_BUTTON_PRESS;
+      break;
+    case GDK_2BUTTON_PRESS:
+      event.type = GIRARA_EVENT_2BUTTON_PRESS;
+      break;
+    case GDK_3BUTTON_PRESS:
+      event.type = GIRARA_EVENT_3BUTTON_PRESS;
+      break;
+    default: /* do not handle unknown events */
+      event.type = GIRARA_EVENT_OTHER;
+      break;
+  }
+
+  event.x = button->x;
+  event.y = button->y;
+
+  /* search registered mouse events */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && button->button == mouse_event->button
+        && button->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
 }
 
 bool
-girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventButton* UNUSED(button), girara_session_t* UNUSED(session))
+girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventButton* button, girara_session_t* session)
 {
-  return TRUE;
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(button  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+  event.type = GIRARA_EVENT_BUTTON_RELEASE;
+  event.x    = button->x;
+  event.y    = button->y;
+
+  /* search registered mouse events */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && button->button == mouse_event->button
+        && button->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
 }
 
 bool
-girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEventMotion* UNUSED(button), girara_session_t* UNUSED(session))
+girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEventMotion* button, girara_session_t* session)
 {
-  return TRUE;
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(button  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+  event.type = GIRARA_EVENT_MOTION_NOTIFY;
+  event.x    = button->x;
+  event.y    = button->y;
+
+  /* search registered mouse events */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && button->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
 }
 
 bool
