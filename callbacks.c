@@ -245,6 +245,51 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
 }
 
 bool
+girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scroll, girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(scroll  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+  event.type = GIRARA_EVENT_SCROLL;
+  event.x    = scroll->x;
+  event.y    = scroll->y;
+
+  switch (scroll->direction) {
+    case GDK_SCROLL_UP:
+      event.direction = GIRARA_SCROLL_UP;
+      break;
+    case GDK_SCROLL_DOWN:
+      event.direction = GIRARA_SCROLL_DOWN;
+      break;
+    case GDK_SCROLL_LEFT:
+      event.direction = GIRARA_SCROLL_LEFT;
+      break;
+    case GDK_SCROLL_RIGHT:
+      event.direction = GIRARA_SCROLL_RIGHT;
+      break;
+    default:
+      return false;
+  }
+
+  /* search registered mouse events */
+  /* TODO: Filter correct event */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && scroll->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+        return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
+}
+
+bool
 girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);

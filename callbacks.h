@@ -70,6 +70,17 @@ bool girara_callback_view_button_release_event(GtkWidget* widget, GdkEventButton
 bool girara_callback_view_button_motion_notify_event(GtkWidget* widget, GdkEventMotion* button, girara_session_t* session);
 
 /**
+ * Default callback then a scroll event is triggered by the view
+ *
+ * @param widget The widget
+ * @param event The event motion
+ * @param session The girara session
+ * @return true to stop other handlers from being invoked for the event.
+ * @return false to propagate the event further.
+ */
+bool girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* event, girara_session_t* session);
+
+/**
  * Default callback if the inputbar gets activated
  *
  * @param entry The inputbar entry
