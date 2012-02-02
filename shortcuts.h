@@ -67,99 +67,120 @@ bool girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, 
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of executions
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Default shortcut function to abort
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of executions
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_abort(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_abort(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Default shortcut function to quit the application
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of executions
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Closes the current tab
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of executions
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_tab_close(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_tab_close(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Default shortcut function to navigate through tabs
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of execution
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Toggles the visibility of the inputbar
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Numbr of execution
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_toggle_inputbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_toggle_inputbar(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Toggles the visibility of the statusbar
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Numbr of execution
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Toggles the visibility of the tabbar
  *
  * @param session The used girara session
  * @param argument The argument
- * @param t Numbr of execution
+ * @param event Girara event
+ * @param t Number of execution
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
+
+/**
+ * Passes the argument to the set command
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param event Girara event
+ * @param t Number ofexecutions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Default inputbar shortcut to abort
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of executions
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Default inputbar shortcut that completes the given input
@@ -167,22 +188,24 @@ bool girara_isc_abort(girara_session_t* session, girara_argument_t* argument, un
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of executions
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Default inputbar shortcut to manipulate the inputbar string
  *
  * @param session The used girara session
  * @param argument The argument
+ * @param event Girara event
  * @param t Number of executions
  * @return true No error occured
  * @return false An error occured (abort execution)
  */
-bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, unsigned int t);
+bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
  * Creates a mapping between a shortcut function and an identifier and is used

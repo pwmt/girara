@@ -31,6 +31,7 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
   }
   const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
 
+  /* prepare event */
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcut)
     if (session->buffer.command) {
       break;
@@ -45,7 +46,7 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
     {
       int t = (session->buffer.n > 0) ? session->buffer.n : 1;
       for (int i = 0; i < t; i++) {
-        if (!shortcut->function(session, &(shortcut->argument), session->buffer.n)) {
+        if (!shortcut->function(session, &(shortcut->argument), NULL, session->buffer.n)) {
           break;
         }
       }
@@ -113,7 +114,7 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
 
             int t = (session->buffer.n > 0) ? session->buffer.n : 1;
             for (int i = 0; i < t; i++) {
-              if (!shortcut->function(session, &(shortcut->argument), session->buffer.n)) {
+              if (!shortcut->function(session, &(shortcut->argument), NULL, session->buffer.n)) {
                 break;
               }
             }
@@ -146,6 +147,149 @@ girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, gira
 }
 
 bool
+girara_callback_view_button_press_event(GtkWidget* UNUSED(widget), GdkEventButton* button, girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(button  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+
+  switch (button->type) {
+    case GDK_BUTTON_PRESS:
+      event.type = GIRARA_EVENT_BUTTON_PRESS;
+      break;
+    case GDK_2BUTTON_PRESS:
+      event.type = GIRARA_EVENT_2BUTTON_PRESS;
+      break;
+    case GDK_3BUTTON_PRESS:
+      event.type = GIRARA_EVENT_3BUTTON_PRESS;
+      break;
+    default: /* do not handle unknown events */
+      event.type = GIRARA_EVENT_OTHER;
+      break;
+  }
+
+  event.x = button->x;
+  event.y = button->y;
+
+  /* search registered mouse events */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && button->button == mouse_event->button
+        && button->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
+}
+
+bool
+girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventButton* button, girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(button  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+  event.type = GIRARA_EVENT_BUTTON_RELEASE;
+  event.x    = button->x;
+  event.y    = button->y;
+
+  /* search registered mouse events */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && button->button == mouse_event->button
+        && button->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
+}
+
+bool
+girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEventMotion* button, girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(button  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+  event.type = GIRARA_EVENT_MOTION_NOTIFY;
+  event.x    = button->x;
+  event.y    = button->y;
+
+  /* search registered mouse events */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && button->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+      return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
+}
+
+bool
+girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scroll, girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, false);
+  g_return_val_if_fail(scroll  != NULL, false);
+
+  /* prepare girara event */
+  girara_event_t event;
+  event.type = GIRARA_EVENT_SCROLL;
+  event.x    = scroll->x;
+  event.y    = scroll->y;
+
+  switch (scroll->direction) {
+    case GDK_SCROLL_UP:
+      event.direction = GIRARA_SCROLL_UP;
+      break;
+    case GDK_SCROLL_DOWN:
+      event.direction = GIRARA_SCROLL_DOWN;
+      break;
+    case GDK_SCROLL_LEFT:
+      event.direction = GIRARA_SCROLL_LEFT;
+      break;
+    case GDK_SCROLL_RIGHT:
+      event.direction = GIRARA_SCROLL_RIGHT;
+      break;
+    default:
+      return false;
+  }
+
+  /* search registered mouse events */
+  /* TODO: Filter correct event */
+  GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
+    if (mouse_event->function != NULL
+        && scroll->state  == mouse_event->mask
+        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+       ) {
+        mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
+        girara_list_iterator_free(iter);
+        return true;
+    }
+  GIRARA_LIST_FOREACH_END(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event);
+
+  return false;
+}
+
+bool
 girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -162,7 +306,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       gtk_label_set_markup(session->gtk.inputbar_dialog, "");
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_entry));
-      girara_isc_abort(session, NULL, 0);
+      girara_isc_abort(session, NULL, NULL, 0);
       return true;
     }
 
@@ -171,13 +315,13 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
   if (!input) {
-    girara_isc_abort(session, NULL, 0);
+    girara_isc_abort(session, NULL, NULL, 0);
     return false;
   }
 
   if (strlen(input) == 0) {
     g_free(input);
-    girara_isc_abort(session, NULL, 0);
+    girara_isc_abort(session, NULL, NULL, 0);
     return false;
   }
 
@@ -205,7 +349,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       g_free(input);
       g_strfreev(argv);
 
-      girara_isc_abort(session, NULL, 0);
+      girara_isc_abort(session, NULL, NULL, 0);
 
       girara_list_iterator_free(iter);
       return true;
@@ -246,7 +390,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       g_free(input);
       g_strfreev(argv);
 
-      girara_isc_abort(session, NULL, 0);
+      girara_isc_abort(session, NULL, NULL, 0);
 
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
       girara_list_iterator_free(iter);
@@ -255,7 +399,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
 
   /* no known command */
-  girara_isc_abort(session, NULL, 0);
+  girara_isc_abort(session, NULL, NULL, 0);
 
   return false;
 }
@@ -277,7 +421,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
      && inputbar_shortcut->mask == clean)
     {
       if (inputbar_shortcut->function != NULL) {
-        inputbar_shortcut->function(session, &(inputbar_shortcut->argument), 0);
+        inputbar_shortcut->function(session, &(inputbar_shortcut->argument), NULL, 0);
       }
 
       girara_list_iterator_free(iter);

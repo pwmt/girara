@@ -97,6 +97,9 @@ struct girara_session_s
     int inputbar_activate; /**< Inputbar activation */
     int inputbar_key_pressed; /**< Pressed key in inputbar */
     int view_key_pressed; /**< Pressed key in view */
+    int view_button_press_event; /**< Pressed button */
+    int view_button_release_event; /**< Released button */
+    int view_motion_notify_event; /**< Cursor movement event */
     girara_callback_inputbar_activate_t inputbar_custom_activate; /**< Custom handler */
     girara_callback_inputbar_key_press_event_t inputbar_custom_key_press_event; /**< Custom handler */
   } signals;

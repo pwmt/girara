@@ -25,6 +25,7 @@ typedef struct girara_completion_group_s girara_completion_group_t;
 typedef struct girara_shortcut_s girara_shortcut_t;
 typedef struct girara_inputbar_shortcut_s girara_inputbar_shortcut_t;
 typedef struct girara_special_command_s girara_special_command_t;
+typedef struct girara_event_s girara_event_t;
 
 /**
  * This structure defines the possible argument identifiers
@@ -47,7 +48,6 @@ enum
   GIRARA_DELETE_CURR_CHAR, /**< Delete current char */
   GIRARA_GOTO_START, /**< Go to start of the line */
   GIRARA_GOTO_END /**< Go to end of the line */
-
 };
 
 /**
@@ -102,7 +102,7 @@ typedef bool (*girara_command_function_t)(girara_session_t* session, girara_list
  * often executed as the value defines or until the function returns false the
  * first time.
  */
-typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, unsigned int);
+typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, girara_event_t*, unsigned int);
 
 /**
  * Function declaration of a function that frees something.
@@ -157,6 +157,52 @@ struct girara_argument_s
 {
   int   n; /**< Identifier */
   void *data; /**< Data */
+};
+
+/**
+ * Define mouse buttons
+ */
+typedef enum girara_mouse_button_e
+{
+  GIRARA_MOUSE_BUTTON1 = 1, /**< Button 1 */
+  GIRARA_MOUSE_BUTTON2 = 2, /**< Button 2 */
+  GIRARA_MOUSE_BUTTON3 = 3, /**< Button 3 */
+  GIRARA_MOUSE_BUTTON4 = 4, /**< Button 4 */
+  GIRARA_MOUSE_BUTTON5 = 5  /**< Button 5 */
+} girara_mouse_button_t;
+
+/**
+ * Describes the types of a girara
+ */
+typedef enum girara_event_type_e
+{
+  GIRARA_EVENT_BUTTON_PRESS, /**< Single click */
+  GIRARA_EVENT_2BUTTON_PRESS, /**< Double click */
+  GIRARA_EVENT_3BUTTON_PRESS, /**< Triple click */
+  GIRARA_EVENT_BUTTON_RELEASE, /**< Button released */
+  GIRARA_EVENT_MOTION_NOTIFY, /**< Cursor moved */
+  GIRARA_EVENT_SCROLL, /**< Scroll event */
+  GIRARA_EVENT_OTHER /**< Unknown event */
+} girara_event_type_t;
+
+typedef enum girara_scroll_direction_e
+{
+  GIRARA_SCROLL_UP, /**< The window is scrolled up */
+  GIRARA_SCROLL_DOWN, /**< The window is scrolled down */
+  GIRARA_SCROLL_LEFT, /**< The window is scrolled left */
+  GIRARA_SCROLL_RIGHT /**< The window is scrolled right */
+} girara_scroll_direction_t;
+
+/**
+ * Describes a girara event
+ */
+struct girara_event_s
+{
+  girara_event_type_t type; /**< The event type */
+
+  double x; /**< X coordinates where the event occured */
+  double y; /**< Y coordinates where the event occured */
+  girara_scroll_direction_t direction; /**< Scroll direction (iff GIRARA_EVENT_SCROLL) */
 };
 
 #endif

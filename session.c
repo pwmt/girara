@@ -179,8 +179,9 @@ girara_session_create()
   girara_config_handle_add(session, "unmap", girara_cmd_unmap);
 
   /* default shortcut mappings */
-  girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
   girara_shortcut_mapping_add(session, "focus_inputbar", girara_sc_focus_inputbar);
+  girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
+  girara_shortcut_mapping_add(session, "set",            girara_sc_set);
 
   return session;
 }
@@ -235,6 +236,18 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
       G_CALLBACK(girara_callback_view_key_press_event), session);
 
+  session->signals.view_button_press_event = g_signal_connect(G_OBJECT(session->gtk.view), "button-press-event",
+      G_CALLBACK(girara_callback_view_button_press_event), session);
+
+  session->signals.view_button_release_event = g_signal_connect(G_OBJECT(session->gtk.view), "button-release-event",
+      G_CALLBACK(girara_callback_view_button_release_event), session);
+
+  session->signals.view_motion_notify_event = g_signal_connect(G_OBJECT(session->gtk.view), "motion-notify-event",
+      G_CALLBACK(girara_callback_view_button_motion_notify_event), session);
+
+  session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "scroll-event",
+      G_CALLBACK(girara_callback_view_scroll_event), session);
+
   bool* tmp_bool_value = girara_setting_get(session, "show-scrollbars");
   if (tmp_bool_value) {
     if (*tmp_bool_value == true) {
@@ -284,8 +297,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       session
     );
 
-  gtk_misc_set_alignment(GTK_MISC(session->gtk.inputbar_dialog), 0.0, 0.0);
-  gtk_label_set_markup(session->gtk.inputbar_dialog, "test");
+  gtk_box_set_homogeneous(session->gtk.inputbar_box, FALSE);
+  gtk_box_set_spacing(session->gtk.inputbar_box, 5);
 
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_dialog), FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_entry),  TRUE,  TRUE,  0);
@@ -559,7 +572,7 @@ void girara_dialog(girara_session_t* session, const char* dialog, bool
   session->signals.inputbar_custom_key_press_event = key_press_event;
 
   /* focus inputbar */
-  girara_sc_focus_inputbar(session, NULL, 0);
+  girara_sc_focus_inputbar(session, NULL, NULL, 0);
 }
 
 bool

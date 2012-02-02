@@ -37,6 +37,50 @@ typedef bool (*girara_callback_inputbar_activate_t)(GtkEntry* entry, void* data)
 bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
 
 /**
+ * Default callback when a button (typically a mouse button) has been pressed
+ *
+ * @param widget The used widget
+ * @param button The button that triggered the event
+ * @param session The used girara session
+ * @return true to stop other handlers from being invoked for the event.
+ * @return false to propagate the event further.
+ */
+bool girara_callback_view_button_press_event(GtkWidget* widget, GdkEventButton* button, girara_session_t* session);
+
+/**
+ * Default callback when a button (typically a mouse button) has been released
+ *
+ * @param widget The used widget
+ * @param button The button that triggered the event
+ * @param session The used girara session
+ * @return true to stop other handlers from being invoked for the event.
+ * @return false to propagate the event further.
+ */
+bool girara_callback_view_button_release_event(GtkWidget* widget, GdkEventButton* button, girara_session_t* session);
+
+/**
+ * Default callback when the pointer moves over the widget
+ *
+ * @param widget The used widget
+ * @param button The event motion that triggered the event
+ * @param session The used girara session
+ * @return true to stop other handlers from being invoked for the event.
+ * @return false to propagate the event further.
+ */
+bool girara_callback_view_button_motion_notify_event(GtkWidget* widget, GdkEventMotion* button, girara_session_t* session);
+
+/**
+ * Default callback then a scroll event is triggered by the view
+ *
+ * @param widget The widget
+ * @param event The event motion
+ * @param session The girara session
+ * @return true to stop other handlers from being invoked for the event.
+ * @return false to propagate the event further.
+ */
+bool girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* event, girara_session_t* session);
+
+/**
  * Default callback if the inputbar gets activated
  *
  * @param entry The inputbar entry
