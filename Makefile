@@ -8,7 +8,7 @@ PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
-HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h")
+HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h") version.h
 
 all: options ${PROJECT}
 
@@ -19,6 +19,11 @@ options:
 	@echo "DFLAGS  = ${DFLAGS}"
 	@echo "CC      = ${CC}"
 
+version.h: version.h.in config.mk
+	$(QUIET)sed 's/GVMAJOR/${GIRARA_VERSION_MAJOR}/' < version.h.in | \
+		sed 's/GVMINOR/${GIRARA_VERSION_MINOR}/' | \
+		sed 's/GVREV/${GIRARA_VERSION_REV}/' > version.h
+	
 %-gtk${GIRARA_GTK_VERSION}.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
@@ -29,8 +34,8 @@ options:
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-${OBJECTS}:  config.mk
-${DOBJECTS}: config.mk
+${OBJECTS}:  config.mk version.h
+${DOBJECTS}: config.mk version.h
 
 ${PROJECT}: lib${PROJECT}.a lib${PROJECT}.so.${SOVERSION}
 
@@ -46,7 +51,7 @@ clean:
 	$(QUIET)rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
-		${PROJECTNV}-${VERSION}.tar.gz
+		${PROJECTNV}-${VERSION}.tar.gz version.h
 	$(QUIET)${MAKE} -C tests clean
 
 ${PROJECT}-debug: lib${PROJECT}-debug.a lib${PROJECT}-debug.so.${SOVERSION}
@@ -96,7 +101,7 @@ install: all ${PROJECT}.pc install-headers
 	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/lib/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${PREFIX}/lib/pkgconfig
 
-install-headers:
+install-headers: version.h
 	$(ECHO) installing header files
 	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/include/girara
 	$(QUIET)install -m 644 ${HEADERS} ${DESTDIR}${PREFIX}/include/girara

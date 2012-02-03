@@ -7,3 +7,4 @@ examples/example_*-gtk*-debug
 tests/girara_test-gtk*
 .depend
 *.pc
+version.h

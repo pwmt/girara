@@ -1,0 +1,11 @@
+/* See LICENSE file for license and copyright information */
+
+#ifndef GIRARA_VERSION_H
+#define GIRARA_VERSION_H
+
+#define GIRARA_VERSION_MAJOR GVMAJOR
+#define GIRARA_VERSION_MINOR GVMINOR
+#define GIRARA_VERSION_REV GVREV
+#define GIRARA_VERSION "GVMAJOR.GVMINOR.GVREV"
+
+#endif
