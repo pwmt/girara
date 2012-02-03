@@ -341,7 +341,8 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
 
   if (number_of_arguments == 1) {
     /* display setting*/
-    void* value = girara_setting_get_value(setting);
+    void* value = NULL;
+    girara_setting_get_value(setting, &value);
     switch (girara_setting_get_type(setting)) {
       case BOOLEAN:
       {
@@ -358,12 +359,15 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
         girara_notify(session, GIRARA_INFO, "%s: %i", name, *(int*)value);
         break;
       case STRING:
-        girara_notify(session, GIRARA_INFO, "%s: %s", name, (char*)value);
+      {
+        char* str = *(char**)value;
+        girara_notify(session, GIRARA_INFO, "%s: %s", name, str);
+        g_free(str);
         break;
+      }
       default:
         return false;
     }
-    g_free(value);
   } else {
     char* value = (char*) girara_list_nth(argument_list, 1);
     if (!value) {
@@ -502,7 +506,8 @@ girara_command_free(girara_command_t* command)
 bool
 girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list)
 {
-  char* cmd = girara_setting_get(session, "exec-command");
+  char* cmd = NULL;
+  girara_setting_get(session, "exec-command", &cmd);
   if (cmd == NULL || strlen(cmd) == 0) {
     girara_warning("exec-command is invalid.");
     girara_notify(session, GIRARA_ERROR, "exec-command is invalid.");

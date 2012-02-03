@@ -106,50 +106,47 @@ girara_setting_set(girara_session_t* session, const char* name, void* value)
   return true;
 }
 
-
-void*
-girara_setting_get_value(girara_setting_t* setting)
+bool
+girara_setting_get_value(girara_setting_t* setting, void* dest)
 {
-  g_return_val_if_fail(setting, NULL);
+  g_return_val_if_fail(setting != NULL && dest != NULL, false);
 
-  bool  *bvalue = NULL;
-  float *fvalue = NULL;
-  int   *ivalue = NULL;
+  bool  *bvalue = (bool*) dest;
+  float *fvalue = (float*) dest;
+  int   *ivalue = (int*) dest;
+  char **svalue = (char**) dest;
 
   switch(setting->type) {
     case BOOLEAN:
-      bvalue = g_malloc0(sizeof(bool));
       *bvalue = setting->value.b;
-      return bvalue;
+      break;
     case FLOAT:
-      fvalue = g_malloc0(sizeof(float));
       *fvalue = setting->value.f;
-      return fvalue;
+      break;
     case INT:
-      ivalue = g_malloc0(sizeof(int));
       *ivalue = setting->value.i;
-      return ivalue;
+      break;
     case STRING:
-      return setting->value.s ? g_strdup(setting->value.s) : NULL;
+      *svalue = setting->value.s ? g_strdup(setting->value.s) : NULL;
+      break;
     default:
       g_assert(false);
   }
 
-  return NULL;
+  return true;
 }
 
-void*
-girara_setting_get(girara_session_t* session, const char* name)
+bool
+girara_setting_get(girara_session_t* session, const char* name, void* dest)
 {
-  g_return_val_if_fail(session != NULL, NULL);
-  g_return_val_if_fail(name != NULL, NULL);
+  g_return_val_if_fail(session != NULL && name != NULL && dest != NULL, false);
 
   girara_setting_t* setting = girara_setting_find(session, name);
   if (setting == NULL) {
-    return NULL;
+    return false;
   }
 
-  return girara_setting_get_value(setting);
+  return girara_setting_get_value(setting, dest);
 }
 
 void

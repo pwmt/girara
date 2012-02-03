@@ -409,11 +409,10 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       girara_completion_row_set_color(session, ((girara_internal_completion_entry_t *) entries_current->data)->widget, GIRARA_HIGHLIGHT);
 
       /* hide other items */
-      int* tmp  = girara_setting_get(session, "n-completion-items");
-      unsigned int n_completion_items = tmp ? *tmp : 15;
+      unsigned int n_completion_items = 15;
+      girara_setting_get(session, "n-completion-items", &n_completion_items);
       unsigned int uh = ceil( n_completion_items / 2);
       unsigned int lh = floor(n_completion_items / 2);
-      g_free(tmp);
 
       unsigned int current_item = g_list_position(entries, entries_current);
 

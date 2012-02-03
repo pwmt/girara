@@ -248,17 +248,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "scroll-event",
       G_CALLBACK(girara_callback_view_scroll_event), session);
 
-  bool* tmp_bool_value = girara_setting_get(session, "show-scrollbars");
-  if (tmp_bool_value) {
-    if (*tmp_bool_value == true) {
-      gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-          GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    } else {
-      gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-          GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-    }
-
-    g_free(tmp_bool_value);
+  bool tmp_bool_value = false;
+  girara_setting_get(session, "show-scrollbars", &tmp_bool_value);
+  if (tmp_bool_value == true) {
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  } else {
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
   }
 
   /* viewport */
@@ -348,7 +345,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   };
 
   for (unsigned i = 0; i < LENGTH(color_setting_mappings); i++) {
-    char* tmp_value = girara_setting_get(session, color_setting_mappings[i].identifier);
+    char* tmp_value = NULL;
+    girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
     if (tmp_value) {
       gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
       g_free(tmp_value);
@@ -402,15 +400,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   }
 
   /* set window size */
-  int* window_width  = girara_setting_get(session, "window-width");
-  int* window_height = girara_setting_get(session, "window-height");
+  int window_width = 0;
+  int window_height = 0;
+  girara_setting_get(session, "window-width", &window_width);
+  girara_setting_get(session, "window-height", &window_height);
 
   if (window_width && window_height) {
-    gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), *window_width, *window_height);
+    gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), window_width, window_height);
   }
-
-  g_free(window_width);
-  g_free(window_height);
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
   gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));

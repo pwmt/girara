@@ -33,15 +33,14 @@ bool girara_setting_add(girara_session_t* session, const char* name, void* value
 bool girara_setting_set(girara_session_t* session, const char* name, void* value);
 
 /**
- * Retreives the value of a setting. The returned value needs to be freed with
- * g_free.
- *
+ * Retreive the value of a setting. If the setting is a string, the value stored
+ * in dest has to be deallocated with g_free.
  * @param session The used girara session
  * @param name The name of the setting
- * @return Value of the setting
- * @return NULL An error occured
+ * @param dest A pointer to the destination of the result.
+ * @return true if the setting exists, false otherwise.
  */
-void* girara_setting_get(girara_session_t* session, const char* name);
+bool girara_setting_get(girara_session_t* session, const char* name, void* dest);
 
 /**
  * Find a setting.
@@ -61,12 +60,14 @@ girara_setting_t* girara_setting_find(girara_session_t* session, const char* nam
 const char* girara_setting_get_name(girara_setting_t* setting);
 
 /**
- * Get the setting's value.
+ * Get the setting's value. If the setting is a string, the value stored
+ * in dest has to be deallocated with g_free.
  *
  * @param setting The setting
- * @return pointer to the value, this has to freed with g_free when you're done
+ * @param dest A pointer to the destination of the result.
+ * @return true if the setting exists, false otherwise.
  */
-void* girara_setting_get_value(girara_setting_t* setting);
+bool girara_setting_get_value(girara_setting_t* setting, void* dest);
 
 /**
  * Get the setting's value.

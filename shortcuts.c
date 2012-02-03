@@ -158,7 +158,8 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
 bool
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
-  gchar *separator = girara_setting_get(session, "word-separator");
+  gchar *separator = NULL;
+  girara_setting_get(session, "word-separator", &separator);
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
   int    length = strlen(input);
   int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar_entry));
@@ -169,7 +170,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       i = pos - 1;
 
       if (!pos) {
-        return false;
+        break;
       }
 
       /* remove trailing spaces */

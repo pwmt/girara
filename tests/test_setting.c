@@ -11,23 +11,27 @@ test_settings_basic(void)
   g_assert_cmpptr(session, !=, NULL);
   
   g_assert(girara_setting_add(session, "test", NULL, STRING, false, NULL, NULL, NULL));
-  char* ptr = girara_setting_get(session, "test");
+  char* ptr = NULL;
+  g_assert(girara_setting_get(session, "test", &ptr));
   g_assert_cmpptr(ptr, ==, NULL);
 
   g_assert(girara_setting_set(session, "test", "value"));
-  ptr = girara_setting_get(session, "test");
+  g_assert(girara_setting_get(session, "test", &ptr));
   g_assert_cmpstr(ptr, ==, "value");
   g_free(ptr);
 
-  ptr = girara_setting_get(session, "does-not-exist");
+  ptr = NULL;
+  g_assert(!girara_setting_get(session, "does-not-exist", &ptr));
   g_assert_cmpptr(ptr, ==, NULL);
 
   g_assert(girara_setting_add(session, "test2", "value", STRING, false, NULL, NULL, NULL));
-  ptr = girara_setting_get(session, "test2");
+  g_assert(girara_setting_get(session, "test2", &ptr));
   g_assert_cmpstr(ptr, ==, "value");
+  g_free(ptr);
 
+  ptr = NULL;
   g_assert(!girara_setting_add(session, "test3", NULL, INT, false, NULL, NULL, NULL));
-  ptr = girara_setting_get(session, "test3");
+  girara_setting_get(session, "test3", &ptr);
   g_assert_cmpptr(ptr, ==, NULL);
 
   girara_session_destroy(session);
