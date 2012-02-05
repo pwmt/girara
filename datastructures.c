@@ -83,9 +83,9 @@ girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree)
 }
 
 void
-girara_list_free(girara_list_t* list)
+girara_list_clear(girara_list_t* list)
 {
-  if (!list) {
+  if (list == NULL || list->start == NULL) {
     return;
   }
 
@@ -99,6 +99,17 @@ girara_list_free(girara_list_t* list)
   } else {
     g_list_free(list->start);
   }
+  list->start = NULL;
+}
+
+void
+girara_list_free(girara_list_t* list)
+{
+  if (!list) {
+    return;
+  }
+
+  girara_list_clear(list);
   g_free(list);
 }
 

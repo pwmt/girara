@@ -50,6 +50,13 @@ girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp, girara_fre
 void girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree);
 
 /**
+ * Remove all elements from a list.
+ *
+ * @param list The girara list object
+ */
+void girara_list_clear(girara_list_t* list);
+
+/**
  * Destroy list.
  *
  * @param list The girara list object
