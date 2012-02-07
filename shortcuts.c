@@ -27,7 +27,7 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it)
     if (((shortcuts_it->mask == modifier && shortcuts_it->key == key && (modifier != 0 || key != 0)) ||
        (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
-        && (shortcuts_it->mode == mode) || (mode == 0))
+        && ((shortcuts_it->mode == mode) || (mode == 0)))
     {
       shortcuts_it->function  = function;
       shortcuts_it->argument  = argument;
