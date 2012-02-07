@@ -239,7 +239,7 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
   g_return_val_if_fail(session->gtk.inputbar_entry != NULL, false);
 
   if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.inputbar)) == false) {
-    gtk_widget_show_all(GTK_WIDGET(session->gtk.inputbar));
+    gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
   }
 
   if (gtk_widget_get_visible(GTK_WIDGET(session->gtk.notification_area)) == true) {
