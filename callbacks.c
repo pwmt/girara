@@ -15,14 +15,9 @@ static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD
 
 /* callback implementation */
 bool
-girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session)
+girara_callback_view_key_press_event(GtkWidget* UNUSED(widget), GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
-
-  /* a custom handler has been installed (e.g. by girara_dialog) */
-  if (session->signals.inputbar_custom_key_press_event != NULL) {
-    return session->signals.inputbar_custom_key_press_event(widget, event, session);
-  }
 
   guint keyval = 0;
   GdkModifierType consumed = 0;
@@ -405,9 +400,14 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 }
 
 bool
-girara_callback_inputbar_key_press_event(GtkWidget* GIRARA_UNUSED(entry), GdkEventKey* event, girara_session_t* session)
+girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, false);
+
+  /* a custom handler has been installed (e.g. by girara_dialog) */
+  if (session->signals.inputbar_custom_key_press_event != NULL) {
+    return session->signals.inputbar_custom_key_press_event(entry, event, session);
+  }
 
   guint keyval = 0;
   GdkModifierType consumed = 0;
