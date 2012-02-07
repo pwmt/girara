@@ -1,34 +1,42 @@
-// See LICENSE file for license and copyright information
+/* See LICENSE file for license and copyright information */
 
+#include <check.h>
 #include <gtk/gtk.h>
-#include <glib.h>
-#include "tests.h"
 
-int main(int argc, char** argv)
+Suite* suite_utils();
+Suite* suite_datastructures();
+Suite* suite_settings();
+Suite* suite_session();
+
+int main(int argc, char *argv[])
 {
-  g_test_init(&argc, &argv, NULL);
+  Suite* suite          = NULL;
+  SRunner* suite_runner = NULL;
 
-  // utils tests
-  g_test_add_func("/utils/path/home", test_utils_home_directory);
-  g_test_add_func("/utils/path/fix", test_utils_fix_path);
-  g_test_add_func("/utils/path/xdg", test_utils_xdg_path);
-  g_test_add_func("/utils/file/invariants", test_utils_file_invariants);
-  g_test_add_func("/utils/file/read", test_utils_file_read);
-  g_test_add_func("/utils/realloc", test_utils_safe_realloc);
+  /* test utils */
+  suite        = suite_utils();
+  suite_runner = srunner_create(suite);
+  srunner_run_all(suite_runner, CK_NORMAL);
+  srunner_free(suite_runner);
 
-  // datastructures tests
-  g_test_add_func("/datastructures/list", test_datastructures_list);
-  g_test_add_func("/datastructures/list/free", test_datastructures_list_free);
-  g_test_add_func("/datastructures/list/sorted", test_datastructures_sorted_list);
-  g_test_add_func("/datastructures/node", test_datastructures_node);
+  /*[> test datastructures <]*/
+  /*suite        = suite_datastructures();*/
+  /*suite_runner = srunner_create(suite);*/
+  /*srunner_run_all(suite_runner, CK_NORMAL);*/
+  /*srunner_free(suite_runner);*/
 
-  // settings tests
-  g_test_add_func("/settings/basic", test_settings_basic);
-  g_test_add_func("/settings/callback", test_settings_callback);
+  /*[> test settings <]*/
+  /*suite        = suite_settings();*/
+  /*suite_runner = srunner_create(suite);*/
+  /*srunner_run_all(suite_runner, CK_NORMAL);*/
+  /*srunner_free(suite_runner);*/
 
-  // session tests
-  // we need GTK+ from here onwards
+  /* test session */
   gtk_init(&argc, &argv);
-  g_test_add_func("/session/basic", test_session_basic);
-  return g_test_run();
+  suite        = suite_session();
+  suite_runner = srunner_create(suite);
+  srunner_run_all(suite_runner, CK_NORMAL);
+  srunner_free(suite_runner);
+
+  return 0;
 }

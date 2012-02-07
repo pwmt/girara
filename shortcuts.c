@@ -23,17 +23,26 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
     g_strdup(argument_data) : NULL};
 
   /* search for existing binding */
+  bool found_existing_shortcut = false;
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it)
     if (((shortcuts_it->mask == modifier && shortcuts_it->key == key && (modifier != 0 || key != 0)) ||
        (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
-        && shortcuts_it->mode == mode)
+        && (shortcuts_it->mode == mode) || (mode == 0))
     {
-      shortcuts_it->function = function;
-      shortcuts_it->argument = argument;
-      girara_list_iterator_free(iter);
-      return true;
+      shortcuts_it->function  = function;
+      shortcuts_it->argument  = argument;
+      found_existing_shortcut = true;
+
+      if (mode != 0) {
+        girara_list_iterator_free(iter);
+        return true;
+      }
     }
   GIRARA_LIST_FOREACH_END(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it);
+
+  if (found_existing_shortcut == true) {
+    return true;
+  }
 
   /* add new shortcut */
   girara_shortcut_t* shortcut = g_slice_new(girara_shortcut_t);

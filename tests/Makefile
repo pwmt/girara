@@ -2,6 +2,7 @@
 
 include ../config.mk
 include ../common.mk
+include config.mk
 
 SOURCE   = tests.c $(wildcard test_*.c)
 OBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
