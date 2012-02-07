@@ -81,7 +81,7 @@ girara_xdg_open(const char* uri)
   g_free(tmp);
 
   GError* error = NULL;
-  bool res = g_spawn_command_line_async(uri, &error);
+  bool res = g_spawn_command_line_async(command, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
     g_error_free(error);
