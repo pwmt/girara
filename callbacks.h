@@ -101,4 +101,14 @@ bool girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* sessio
  */
 bool girara_callback_inputbar_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session);
 
+/**
+ * Default callback if the text of the input bar has changed
+ *
+ * @param widget The used widget
+ * @param session The used girara session
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+bool girara_callback_inputbar_changed_event(GtkEditable* widget, girara_session_t* session);
+
 #endif
