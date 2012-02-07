@@ -30,7 +30,7 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setti
 }
 
 static void
-cb_font(girara_session_t* session, const char* UNUSED(named), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+cb_font(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
@@ -284,6 +284,13 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       G_OBJECT(session->gtk.inputbar_entry),
       "key-press-event",
       G_CALLBACK(girara_callback_inputbar_key_press_event),
+      session
+    );
+
+  session->signals.inputbar_changed = g_signal_connect(
+      G_OBJECT(session->gtk.inputbar_entry),
+      "changed",
+      G_CALLBACK(girara_callback_inputbar_changed_event),
       session
     );
 

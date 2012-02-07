@@ -405,7 +405,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 }
 
 bool
-girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session)
+girara_callback_inputbar_key_press_event(GtkWidget* GIRARA_UNUSED(entry), GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, false);
 
@@ -429,8 +429,23 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     }
   GIRARA_LIST_FOREACH_END(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut);
 
+  if ((session->gtk.results != NULL) &&
+     (gtk_widget_get_visible(GTK_WIDGET(session->gtk.results)) == TRUE) &&
+     (event->keyval == GDK_KEY_space))
+  {
+    gtk_widget_hide(GTK_WIDGET(session->gtk.results));
+  }
+
+  return false;
+}
+
+bool
+girara_callback_inputbar_changed_event(GtkEditable* entry, girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, false);
+
   /* special commands */
-  char *identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
+  char *identifier_s = gtk_editable_get_chars(entry, 0, 1);
   char identifier    = identifier_s[0];
   g_free(identifier_s);
 
@@ -445,13 +460,6 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
       return false;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, special_command);
-
-  if ((session->gtk.results != NULL) &&
-     (gtk_widget_get_visible(GTK_WIDGET(session->gtk.results)) == TRUE) &&
-     (event->keyval == GDK_KEY_space))
-  {
-    gtk_widget_hide(GTK_WIDGET(session->gtk.results));
-  }
 
   return false;
 }
