@@ -23,7 +23,7 @@ version.h: version.h.in config.mk
 	$(QUIET)sed 's/GVMAJOR/${GIRARA_VERSION_MAJOR}/' < version.h.in | \
 		sed 's/GVMINOR/${GIRARA_VERSION_MINOR}/' | \
 		sed 's/GVREV/${GIRARA_VERSION_REV}/' > version.h
-	
+
 %-gtk${GIRARA_GTK_VERSION}.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
@@ -51,7 +51,7 @@ clean:
 	$(QUIET)rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
-		${PROJECTNV}-${VERSION}.tar.gz version.h
+		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov
 	$(QUIET)${MAKE} -C tests clean
 
 ${PROJECT}-debug: lib${PROJECT}-debug.a lib${PROJECT}-debug.so.${SOVERSION}
@@ -68,6 +68,12 @@ debug: options ${PROJECT}-debug
 
 doc: clean
 	$(QUIET)doxygen Doxyfile
+
+gcov: clean
+	$(QUIET)CFLAGS+="-fprofile-arcs -ftest-coverage" LDFLAGS+="-fprofile-arcs" $(MAKE) $(PROJECT)
+	$(QUIET)make -C tests
+	$(QUIET)lcov --directory . --capture --output-file $(PROJECT).info
+	$(QUIET)genhtml --output-directory gcov $(PROJECT).info
 
 test: ${PROJECT}
 	$(QUIET)${MAKE} -C tests

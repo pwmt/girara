@@ -52,7 +52,7 @@ ${DOBJECTS} ${OBJECTS}: ../config.mk
 
 clean:
 	$(QUIET)rm -rf ${OBJECTS} ${DOBJECTS} girara_test-gtk${GIRARA_GTK_VERSION} \
-		girara_test-gtk${GIRARA_GTK_VERSION}-debug .depend ${XDG_HELPER}
+		girara_test-gtk${GIRARA_GTK_VERSION}-debug .depend ${XDG_HELPER} *gcda *gcno
 
 .PHONY: all options clean debug
 
