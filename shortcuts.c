@@ -160,6 +160,7 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   /* reset custom functions */
   session->signals.inputbar_custom_activate        = NULL;
   session->signals.inputbar_custom_key_press_event = NULL;
+  gtk_entry_set_visibility(session->gtk.inputbar_entry, TRUE);
 
   return true;
 }
