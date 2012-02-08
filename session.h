@@ -103,6 +103,7 @@ struct girara_session_s
     int view_motion_notify_event; /**< Cursor movement event */
     girara_callback_inputbar_activate_t inputbar_custom_activate; /**< Custom handler */
     girara_callback_inputbar_key_press_event_t inputbar_custom_key_press_event; /**< Custom handler */
+    void* inputbar_custom_data; /**< Data for custom handler */
   } signals;
 
   struct
@@ -201,10 +202,11 @@ void girara_notify(girara_session_t* session, int level, const char* format, ...
  * @param invisible Sets the input visibility
  * @param key_press_event Callback function to a custom key press event handler
  * @param activate_event Callback function to a custom activate event handler
+ * @param data Custom data that is passed to the callback functions
  */
 void girara_dialog(girara_session_t* session, const char* dialog, bool
     invisible, girara_callback_inputbar_key_press_event_t key_press_event,
-    girara_callback_inputbar_activate_t activate_event);
+    girara_callback_inputbar_activate_t activate_event, void* data);
 
 /**
  * Adds a new mode by its string identifier

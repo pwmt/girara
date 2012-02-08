@@ -291,11 +291,12 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
   if (session->signals.inputbar_custom_activate != NULL) {
-    bool return_value = session->signals.inputbar_custom_activate(entry, session);
+    bool return_value = session->signals.inputbar_custom_activate(entry, session->signals.inputbar_custom_data);
 
     /* disconnect custom handler */
     session->signals.inputbar_custom_activate        = NULL;
     session->signals.inputbar_custom_key_press_event = NULL;
+    session->signals.inputbar_custom_data            = NULL;
 
     if (session->gtk.inputbar_dialog != NULL && session->gtk.inputbar_entry != NULL) {
       gtk_label_set_markup(session->gtk.inputbar_dialog, "");

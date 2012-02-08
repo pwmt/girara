@@ -549,7 +549,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
 
 void girara_dialog(girara_session_t* session, const char* dialog, bool
     invisible, girara_callback_inputbar_key_press_event_t key_press_event,
-    girara_callback_inputbar_activate_t activate_event)
+    girara_callback_inputbar_activate_t activate_event, void* data)
 {
   if (session == NULL || session->gtk.inputbar == NULL
       || session->gtk.inputbar_dialog == NULL
@@ -574,6 +574,7 @@ void girara_dialog(girara_session_t* session, const char* dialog, bool
   /* set handler */
   session->signals.inputbar_custom_activate        = activate_event;
   session->signals.inputbar_custom_key_press_event = key_press_event;
+  session->signals.inputbar_custom_data            = data;
 
   /* focus inputbar */
   girara_sc_focus_inputbar(session, NULL, NULL, 0);
