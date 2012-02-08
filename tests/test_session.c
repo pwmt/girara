@@ -14,7 +14,7 @@ START_TEST(test_init) {
   girara_session_t* session = girara_session_create();
   fail_unless(session != NULL, "Could not create session");
   bool result = girara_session_init(session, NULL);
-  fail_unless(result != NULL, "Could not init session");
+  fail_unless(result == true, "Could not init session");
   girara_session_destroy(session);
 } END_TEST
 

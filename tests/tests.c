@@ -19,17 +19,17 @@ int main(int argc, char *argv[])
   srunner_run_all(suite_runner, CK_NORMAL);
   srunner_free(suite_runner);
 
-  /*[> test datastructures <]*/
-  /*suite        = suite_datastructures();*/
-  /*suite_runner = srunner_create(suite);*/
-  /*srunner_run_all(suite_runner, CK_NORMAL);*/
-  /*srunner_free(suite_runner);*/
+  /* test datastructures */
+  suite        = suite_datastructures();
+  suite_runner = srunner_create(suite);
+  srunner_run_all(suite_runner, CK_NORMAL);
+  srunner_free(suite_runner);
 
-  /*[> test settings <]*/
-  /*suite        = suite_settings();*/
-  /*suite_runner = srunner_create(suite);*/
-  /*srunner_run_all(suite_runner, CK_NORMAL);*/
-  /*srunner_free(suite_runner);*/
+  /* test settings */
+  suite        = suite_settings();
+  suite_runner = srunner_create(suite);
+  srunner_run_all(suite_runner, CK_NORMAL);
+  srunner_free(suite_runner);
 
   /* test session */
   gtk_init(&argc, &argv);

@@ -1,64 +1,80 @@
 /* See LICENSE file for license and copyright information */
 
-#include <session.h>
-#include <settings.h>
+#include <check.h>
 
-void
-test_settings_basic(void)
-{
+#include "../session.h"
+#include "../settings.h"
+
+START_TEST(test_settings_basic) {
   girara_session_t* session = girara_session_create();
-  /*g_assert_cmpptr(session, !=, NULL);*/
-  
-  g_assert(girara_setting_add(session, "test", NULL, STRING, false, NULL, NULL, NULL));
+  fail_unless(session != NULL);
+
+  fail_unless(girara_setting_add(session, "test", NULL, STRING, false, NULL, NULL, NULL));
   char* ptr = NULL;
-  g_assert(girara_setting_get(session, "test", &ptr));
-  /*g_assert_cmpptr(ptr, ==, NULL);*/
+  fail_unless(girara_setting_get(session, "test", &ptr));
+  fail_unless(ptr == NULL);
 
-  g_assert(girara_setting_set(session, "test", "value"));
-  g_assert(girara_setting_get(session, "test", &ptr));
-  g_assert_cmpstr(ptr, ==, "value");
+  fail_unless(girara_setting_set(session, "test", "value"));
+  fail_unless(girara_setting_get(session, "test", &ptr));
+  fail_unless(g_strcmp0(ptr, "value") == 0);
   g_free(ptr);
 
   ptr = NULL;
-  g_assert(!girara_setting_get(session, "does-not-exist", &ptr));
-  /*g_assert_cmpptr(ptr, ==, NULL);*/
+  fail_unless(!girara_setting_get(session, "does-not-exist", &ptr));
+  fail_unless(ptr == NULL);
 
-  g_assert(girara_setting_add(session, "test2", "value", STRING, false, NULL, NULL, NULL));
-  g_assert(girara_setting_get(session, "test2", &ptr));
-  g_assert_cmpstr(ptr, ==, "value");
+  fail_unless(girara_setting_add(session, "test2", "value", STRING, false, NULL, NULL, NULL));
+  fail_unless(girara_setting_get(session, "test2", &ptr));
+  fail_unless(g_strcmp0(ptr, "value") == 0);
   g_free(ptr);
 
   ptr = NULL;
-  g_assert(!girara_setting_add(session, "test3", NULL, INT, false, NULL, NULL, NULL));
+  fail_unless(!girara_setting_add(session, "test3", NULL, INT, false, NULL, NULL, NULL));
   girara_setting_get(session, "test3", &ptr);
-  /*g_assert_cmpptr(ptr, ==, NULL);*/
+  fail_unless(ptr == NULL);
 
   girara_session_destroy(session);
-}
+} END_TEST
 
 static int callback_called = 0;
 
 static void
 setting_callback(girara_session_t* session, const char* name, girara_setting_type_t type, void* value, void* data)
 {
-  g_assert_cmpint(callback_called, ==, 0);
-  /*g_assert_cmpptr(session, !=, NULL);*/
-  g_assert_cmpstr(name, ==, "test");
-  g_assert_cmpint(type, ==, STRING);
-  g_assert_cmpstr(value, ==, "value");
-  g_assert_cmpstr(data, ==, "data");
+  fail_unless(callback_called == 0);
+  fail_unless(session != NULL);
+  fail_unless(g_strcmp0(name, "test") == 0);
+  fail_unless(type == STRING);
+  fail_unless(g_strcmp0(value, "value") == 0);
+  fail_unless(g_strcmp0(data, "data") == 0);
   callback_called++;
 }
 
-void
-test_settings_callback(void)
-{
+START_TEST(test_settings_callback) {
   girara_session_t* session = girara_session_create();
-  /*g_assert_cmpptr(session, !=, NULL);*/
+  fail_unless(session != NULL);
 
-  g_assert(girara_setting_add(session, "test", "oldvalue", STRING, false, NULL, setting_callback, "data"));
-  g_assert(girara_setting_set(session, "test", "value"));
-  g_assert_cmpint(callback_called, ==, 1);
+  fail_unless(girara_setting_add(session, "test", "oldvalue", STRING, false, NULL, setting_callback, "data"));
+  fail_unless(girara_setting_set(session, "test", "value"));
+  fail_unless(callback_called == 1);
 
   girara_session_destroy(session);
+} END_TEST
+
+Suite* suite_settings()
+{
+  TCase* tcase = NULL;
+  Suite* suite = suite_create("Settings");
+
+  /* basic */
+  tcase = tcase_create("basic");
+  tcase_add_test(tcase, test_settings_basic);
+  suite_add_tcase(suite, tcase);
+
+  /* callback */
+  tcase = tcase_create("callback");
+  suite_add_tcase(suite, tcase);
+  tcase_add_test(tcase, test_settings_callback);
+
+  return suite;
 }

@@ -10,10 +10,11 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <errno.h>
-#include <utils.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../utils.h"
 #include "../datastructures.h"
 
 typedef struct
