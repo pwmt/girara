@@ -302,6 +302,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       gtk_label_set_markup(session->gtk.inputbar_dialog, "");
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
       gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+      gtk_entry_set_visibility(session->gtk.inputbar_entry, TRUE);
       girara_isc_abort(session, NULL, NULL, 0);
       return true;
     }
