@@ -173,6 +173,7 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget), GdkEventButto
     if (mouse_event->function != NULL
         && button->button == mouse_event->button
         && button->state  == mouse_event->mask
+        && mouse_event->event_type == event.type
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
@@ -201,6 +202,7 @@ girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventBut
     if (mouse_event->function != NULL
         && button->button == mouse_event->button
         && button->state  == mouse_event->mask
+        && mouse_event->event_type == GIRARA_EVENT_BUTTON_RELEASE
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
@@ -227,7 +229,8 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
   /* search registered mouse events */
   GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
     if (mouse_event->function != NULL
-        && button->state  == mouse_event->mask
+        && button->state  == mouse_event->mask 
+        && mouse_event->event_type == event.type
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
@@ -273,6 +276,7 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
   GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
     if (mouse_event->function != NULL
         && scroll->state  == mouse_event->mask
+        && mouse_event->event_type == event.type
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);

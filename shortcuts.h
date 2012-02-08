@@ -239,12 +239,15 @@ bool girara_argument_mapping_add(girara_session_t* session, const char* identifi
  * @param button Pressed button
  * @param function Executed function
  * @param mode Available mode
+ * @param event_type Event type
  * @param argument_n Argument identifier
  * @param argument_data Argument data
  * @return true No error occured
  * @return false An error occured
  */
-bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data);
+bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button,
+    girara_shortcut_function_t function, girara_mode_t mode, girara_event_type_t
+    event_type, int argument_n, void* argument_data);
 
 /**
  * Removes a mouse event

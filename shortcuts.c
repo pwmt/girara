@@ -492,7 +492,9 @@ girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping)
 }
 
 bool
-girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
+girara_mouse_event_add(girara_session_t* session, guint mask, guint button,
+    girara_shortcut_function_t function, girara_mode_t mode, girara_event_type_t
+    event_type, int argument_n, void* argument_data)
 {
   g_return_val_if_fail(session  != NULL, false);
   g_return_val_if_fail(function != NULL, false);
@@ -502,7 +504,7 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   /* search for existing binding */
   GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, me_it)
     if (me_it->mask == mask && me_it->button == button &&
-       me_it->mode == mode)
+       me_it->mode == mode && me_it->event_type == event_type)
     {
       me_it->function = function;
       me_it->argument = argument;
@@ -514,11 +516,12 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button, gira
   /* add new mouse event */
   girara_mouse_event_t* mouse_event = g_slice_new(girara_mouse_event_t);
 
-  mouse_event->mask     = mask;
-  mouse_event->button   = button;
-  mouse_event->function = function;
-  mouse_event->mode     = mode;
-  mouse_event->argument = argument;
+  mouse_event->mask       = mask;
+  mouse_event->button     = button;
+  mouse_event->function   = function;
+  mouse_event->mode       = mode;
+  mouse_event->event_type = event_type;
+  mouse_event->argument   = argument;
   girara_list_append(session->bindings.mouse_events, mouse_event);
 
   return true;

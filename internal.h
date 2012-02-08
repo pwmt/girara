@@ -180,6 +180,7 @@ struct girara_mouse_event_s
   guint button; /**< Button */
   girara_shortcut_function_t function; /**< Function */
   girara_mode_t mode; /**< Allowed modes */
+	girara_event_type_t event_type; /**< Event type */
   girara_argument_t argument; /**< Given argument */
 };
 

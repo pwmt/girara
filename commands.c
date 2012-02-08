@@ -86,6 +86,8 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
   char* shortcut_argument_data                 = NULL;
   int shortcut_argument_n                      = 0;
   char* shortcut_buffer_command                = NULL;
+	// FIXME: Parse event type
+	girara_event_type_t event_type               = GIRARA_EVENT_BUTTON_PRESS;
   girara_shortcut_function_t shortcut_function = NULL;
 
   size_t current_command = 0;
@@ -280,7 +282,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
           shortcut_mode);
     } else {
       girara_mouse_event_add(session, shortcut_mask, shortcut_mouse_button,
-          shortcut_function, shortcut_mode, shortcut_argument_n, shortcut_argument_data);
+          shortcut_function, shortcut_mode, event_type, shortcut_argument_n, shortcut_argument_data);
     }
   }
 
