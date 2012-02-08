@@ -4,15 +4,17 @@
 
 #include "../session.h"
 
-START_TEST(test_basic) {
+START_TEST(test_create) {
   girara_session_t* session = girara_session_create();
   fail_unless(session != NULL, "Could not create session");
   girara_session_destroy(session);
+} END_TEST
 
-  session = girara_session_create();
+START_TEST(test_init) {
+  girara_session_t* session = girara_session_create();
   fail_unless(session != NULL, "Could not create session");
-  bool res = girara_session_init(session, NULL);
-  _assert_cmpuint(res, ==, true);
+  bool result = girara_session_init(session, NULL);
+  fail_unless(result != NULL, "Could not init session");
   girara_session_destroy(session);
 } END_TEST
 
@@ -23,7 +25,8 @@ Suite* suite_session()
 
   /* basic */
   tcase = tcase_create("basic");
-  tcase_add_test(tcase, test_basic);
+  tcase_add_test(tcase, test_create);
+  tcase_add_test(tcase, test_init);
   suite_add_tcase(suite, tcase);
 
   return suite;

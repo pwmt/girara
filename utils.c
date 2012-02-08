@@ -345,7 +345,9 @@ girara_clean_line(char* line)
 void*
 girara_safe_realloc(void** ptr, size_t size)
 {
-  g_return_val_if_fail(ptr, NULL);
+  if(ptr == NULL) {
+    return NULL;
+  }
 
   if (size == 0) {
     goto error_free;

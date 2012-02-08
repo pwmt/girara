@@ -60,34 +60,34 @@ START_TEST(test_home_directory) {
   gchar* oldenv = g_getenv("HOME") ? g_strdup(g_getenv("HOME")) : NULL;
 
   if (oldenv) {
-    gchar* res = girara_get_home_directory(NULL);
-    /*g_assert_cmpstr(res, ==, oldenv);*/
-    g_free(res);
+    gchar* result = girara_get_home_directory(NULL);
+    fail_unless(result != oldenv, "Home directory is not the same");
+    g_free(result);
   }
 
   g_unsetenv("HOME");
-  gchar* res = girara_get_home_directory(NULL);
-  /*g_assert_cmpstr(res, ==, user);*/
-  g_free(res);
+  gchar* result = girara_get_home_directory(NULL);
+  fail_unless(result != user, "Home directory is not the same");
+  g_free(result);
 
   girara_list_t* list = read_pwd_info();
   girara_list_iterator_t* iter = girara_list_iterator(list);
-  /*g_assert_cmpptr(iter, !=, NULL);*/
+  fail_unless(iter != NULL, "Could not create iterator");
   while (girara_list_iterator_is_valid(iter))
   {
     pwd_info_t* pwdinfo = (pwd_info_t*) girara_list_iterator_data(iter);
-    gchar* res = girara_get_home_directory(pwdinfo->name);
-    /*g_assert_cmpstr(res, ==, pwdinfo->dir);*/
-    g_free(res);
+    gchar* result = girara_get_home_directory(pwdinfo->name);
+    fail_unless(result != pwdinfo->dir, "Home directory is not the same");
+    g_free(result);
     girara_list_iterator_next(iter);
   }
   girara_list_iterator_free(iter);
   girara_list_free(list);
 
   g_setenv("HOME", "/home/test", TRUE);
-  res = girara_get_home_directory(NULL);
-  /*g_assert_cmpstr(res, ==, "/home/test");*/
-  g_free(res);
+  result = girara_get_home_directory(NULL);
+  fail_unless(g_strcmp0(result, "/home/test") == 0, "Home directory is not the same");
+  g_free(result);
 
   if (oldenv) {
     g_setenv("HOME", oldenv, TRUE);
@@ -96,22 +96,22 @@ START_TEST(test_home_directory) {
 } END_TEST
 
 START_TEST(test_fix_path) {
-  gchar* res = girara_fix_path("test");
-  /*g_assert_cmpstr(res, ==, "test");*/
-  g_free(res);
+  gchar* result = girara_fix_path("test");
+  fail_unless(g_strcmp0(result, "test") == 0, "Fix path result does not match");
+  g_free(result);
 
-  res = girara_fix_path("test/test");
-  /*g_assert_cmpstr(res, ==, "test/test");*/
-  g_free(res);
+  result = girara_fix_path("test/test");
+  fail_unless(g_strcmp0(result, "test/test") == 0, "Fix path result does not match");
+  g_free(result);
 
   girara_list_t* list = read_pwd_info();
   GIRARA_LIST_FOREACH(list, pwd_info_t*, iter, pwdinfo)
     gchar* path = g_strdup_printf("~%s/test", pwdinfo->name);
     gchar* eres = g_build_filename(pwdinfo->dir, "test", NULL);
 
-    gchar* res = girara_fix_path(path);
-    /*g_assert_cmpstr(res, ==, eres);*/
-    g_free(res);
+    gchar* result = girara_fix_path(path);
+    fail_unless(g_strcmp0(result, eres) == 0, "Fix path result does not match");
+    g_free(result);
     g_free(eres);
     g_free(path);
   GIRARA_LIST_FOREACH_END(list, pwd_info_t*, iter, pwdinfo);
@@ -126,45 +126,45 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   gchar* argv[] = { "./xdg_test_helper", g_strdup_printf("%d", path), NULL };
 
   gchar* output = NULL;
-  bool res = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
-  g_assert(res);
+  bool result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
+  g_assert(result);
   g_assert(output);
-  /*g_assert_cmpstr(output, ==, expected);*/
+  fail_unless(g_strcmp0(output, expected) == 0, "Output is not the same");
   g_free(output);
 
   g_free(envp[0]);
   envp[0] = g_strdup_printf("%s=~/xdg", envvar);
 
-  res = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
-  g_assert(res);
+  result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
+  g_assert(result);
   g_assert(output);
-  /*g_assert_cmpstr(output, ==, "~/xdg");*/
+  fail_unless(g_strcmp0(output, "~/xdg") == 0, "Output is not the same");
 
   g_free(envp[0]);
   envp[0] = g_strdup_printf("%s=/home/test/xdg", envvar);
 
-  res = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
-  g_assert(res);
+  result= g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
+  g_assert(result);
   g_assert(output);
-  /*g_assert_cmpstr(output, ==, "/home/test/xdg");*/
+  fail_unless(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same");
 
   g_free(argv[1]);
 }
 
 START_TEST(test_xdg_path) {
-  xdg_path_impl(XDG_CONFIG, "XDG_CONFIG_HOME", g_get_user_config_dir());
-  xdg_path_impl(XDG_DATA, "XDG_DATA_HOME", g_get_user_data_dir());
+  xdg_path_impl(XDG_CONFIG,      "XDG_CONFIG_HOME", g_get_user_config_dir());
+  xdg_path_impl(XDG_DATA,        "XDG_DATA_HOME",   g_get_user_data_dir());
   xdg_path_impl(XDG_CONFIG_DIRS, "XDG_CONFIG_DIRS", "/etc/xdg");
-  xdg_path_impl(XDG_DATA_DIRS, "XDG_DATA_DIRS", "/usr/local/share/:/usr/share");
+  xdg_path_impl(XDG_DATA_DIRS,   "XDG_DATA_DIRS",   "/usr/local/share/:/usr/share");
 } END_TEST
 
 START_TEST(test_file_invariants) {
-  /*g_assert_cmpptr(girara_file_open(NULL, NULL), ==, NULL);*/
-  /*g_assert_cmpptr(girara_file_open("somefile", NULL), ==, NULL);*/
-  /*g_assert_cmpptr(girara_file_open(NULL, "r"), ==, NULL);*/
+  fail_unless(girara_file_open(NULL, NULL) == NULL);
+  fail_unless(girara_file_open("somefile", NULL) == NULL);
+  fail_unless(girara_file_open(NULL, "r") == NULL);
 
-  /*g_assert_cmpptr(girara_file_read_line(NULL), ==, NULL);*/
-  /*g_assert_cmpptr(girara_file_read(NULL), ==, NULL);*/
+  fail_unless(girara_file_read_line(NULL) == NULL);
+  fail_unless(girara_file_read(NULL) == NULL);
 } END_TEST
 
 START_TEST(test_file_read) {
@@ -174,39 +174,39 @@ START_TEST(test_file_read) {
 
   gchar* path = NULL;
   int fd = g_file_open_tmp("girara.test.XXXXXX", &path, NULL);
-  /*g_assert_cmpint(fd, !=, -1);*/
-  /*g_assert_cmpstr(path, !=, "");*/
+  fail_unless(fd != -1);
+  fail_unless(g_strcmp0(path, "") != 0);
   close(fd);
 
   g_assert(g_file_set_contents(path, CONTENT, -1, NULL));
 
   char* content = girara_file_read(path);
-  /*g_assert_cmpstr(content, ==, CONTENT);*/
+  fail_unless(g_strcmp0(content, CONTENT) == 0);
   free(content);
 
   FILE* file = girara_file_open(path, "r");
-  /*g_assert_cmpptr(file, !=, NULL);*/
+  fail_unless(file != NULL);
   for (size_t i = 0; i != NUMLINES; ++i) {
     char* line = girara_file_read_line(file);
-    /*g_assert_cmpstr(line, ==, LINES[i]);*/
+    fail_unless(g_strcmp0(line, LINES[i]) == 0);
     free(line);
   }
   fclose(file);
 
-  /*g_assert_cmpint(g_remove(path), ==, 0);*/
+  fail_unless(g_remove(path) == 0);
   g_free(path);
 } END_TEST
 
 START_TEST(test_safe_realloc) {
-  /*g_assert_cmpptr(girara_safe_realloc(NULL, 0u), ==, NULL);*/
+  fail_unless(girara_safe_realloc(NULL, 0u) == NULL);
 
   void* ptr = NULL;
-  /*g_assert_cmpptr(girara_safe_realloc(&ptr, sizeof(int)), !=, NULL);*/
-  /*g_assert_cmpptr(ptr, !=, NULL);*/
-  /*g_assert_cmpptr(girara_safe_realloc(&ptr, 1024*sizeof(int)), !=, NULL);*/
-  /*g_assert_cmpptr(ptr, !=, NULL);*/
-  /*g_assert_cmpptr(girara_safe_realloc(&ptr, 0u), ==, NULL);*/
-  /*g_assert_cmpptr(ptr, ==, NULL);*/
+  fail_unless(girara_safe_realloc(&ptr, sizeof(int)) != NULL);
+  fail_unless(ptr != NULL);
+  fail_unless(girara_safe_realloc(&ptr, 1024*sizeof(int)) != NULL);
+  fail_unless(ptr != NULL);
+  fail_unless(girara_safe_realloc(&ptr, 0u) == NULL);
+  fail_unless(ptr == NULL);
 } END_TEST
 
 Suite* suite_utils()
