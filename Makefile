@@ -49,7 +49,7 @@ lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
 
 clean:
 	$(QUIET)rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
-		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc \
+		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
 		${PROJECTNV}-${VERSION}.tar.gz version.h
 	$(QUIET)${MAKE} -C tests clean
@@ -65,6 +65,9 @@ lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
 	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${DOBJECTS} ${LIBS}
 
 debug: options ${PROJECT}-debug
+
+doc: clean
+	$(QUIET)doxygen Doxyfile
 
 test: ${PROJECT}
 	$(QUIET)${MAKE} -C tests
@@ -117,7 +120,7 @@ uninstall-headers:
 	$(ECHO) removing header files
 	$(QUIET)rm -rf ${PREFIX}/include/girara
 
-.PHONY: all options clean debug test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug
+.PHONY: all options clean debug doc test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug
 
 TDEPENDS = ${OBJECTS:.o=.o.dep}
 DEPENDS = ${TDEPENDS:^=.depend/}

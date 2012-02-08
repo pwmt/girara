@@ -38,14 +38,16 @@ char* girara_get_xdg_path(girara_xdg_path_t path);
 
 /**
  * Opens a URI with xdg-open.
+ *
  * @param uri the URI to be opened.
- * @param true on success, false otherwise
+ * @return true on success, false otherwise
  */
 bool girara_xdg_open(const char* uri);
 
 /**
  * Splits paths seperated by : (as in $PATH) into a list.
- * @param patharray $PATH like string to split
+ *
+ * @param patharray String like $PATH to split
  * @return a list of paths and NULL on failure.
  */
 girara_list_t* girara_split_path_array(const char* patharray);
@@ -111,12 +113,6 @@ void* girara_safe_realloc(void** ptr, size_t size);
 
 /**
  * Prints a debug message
- *
- * @param function Name of the function
- * @param line Line number
- * @param level Debug level
- * @param format Debug message
- * @param ... Additional parameters
  */
 #define girara_debug(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_DEBUG,   __VA_ARGS__)
 #define girara_info(...)    _girara_debug(__FUNCTION__, __LINE__, GIRARA_INFO,    __VA_ARGS__)

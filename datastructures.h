@@ -152,7 +152,7 @@ girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
 /**
  * Move iterator to next element.
  *
- * @param list The list iterator
+ * @param iter The list iterator
  * @return The moved iterator or NULL if an error occured
  */
 girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
@@ -160,7 +160,7 @@ girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
 /**
  * Check if iterator has next element.
  *
- * @param list The list iterator
+ * @param iter The list iterator
  * @return true if iterator has a next element, false otherwise
  */
 bool girara_list_iterator_has_next(girara_list_iterator_t* iter);
@@ -168,7 +168,7 @@ bool girara_list_iterator_has_next(girara_list_iterator_t* iter);
 /**
  * Check if iterator is valid
  *
- * @param list The list iterator
+ * @param iter The list iterator
  * @return true if iterator is valid, false otherwise
  */
 bool girara_list_iterator_is_valid(girara_list_iterator_t* iter);
@@ -176,7 +176,7 @@ bool girara_list_iterator_is_valid(girara_list_iterator_t* iter);
 /**
  * Get data from the element pointed to by the iterator.
  *
- * @param list The list iterator
+ * @param iter The list iterator
  * @return The data of the current element
  */
 void* girara_list_iterator_data(girara_list_iterator_t* iter);
@@ -184,7 +184,7 @@ void* girara_list_iterator_data(girara_list_iterator_t* iter);
 /**
  * Set data from the element pointed to by the iterator.
  *
- * @param list The list iterator
+ * @param iter The list iterator
  * @param data Sets the list iterator to a specific element
  */
 void girara_list_iterator_set(girara_list_iterator_t* iter, void *data);

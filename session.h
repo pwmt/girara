@@ -149,7 +149,7 @@ girara_session_t* girara_session_create();
  * Initializes an girara session
  *
  * @param session The used girara session
- * @param sessionname Name of the session (can be NULL)
+ * @param appname Name of the session (can be NULL)
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
