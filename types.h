@@ -169,7 +169,11 @@ typedef enum girara_mouse_button_e
   GIRARA_MOUSE_BUTTON2 = 2, /**< Button 2 */
   GIRARA_MOUSE_BUTTON3 = 3, /**< Button 3 */
   GIRARA_MOUSE_BUTTON4 = 4, /**< Button 4 */
-  GIRARA_MOUSE_BUTTON5 = 5  /**< Button 5 */
+  GIRARA_MOUSE_BUTTON5 = 5, /**< Button 5 */
+  GIRARA_MOUSE_BUTTON6 = 6, /**< Button 6 */
+  GIRARA_MOUSE_BUTTON7 = 7, /**< Button 7 */
+  GIRARA_MOUSE_BUTTON8 = 8, /**< Button 8 */
+  GIRARA_MOUSE_BUTTON9 = 9  /**< Button 9 */
 } girara_mouse_button_t;
 
 /**
