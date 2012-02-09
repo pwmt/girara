@@ -344,27 +344,36 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
 
   if (number_of_arguments == 1) {
     /* display setting*/
-    void* value = NULL;
-    girara_setting_get_value(setting, &value);
     switch (girara_setting_get_type(setting)) {
       case BOOLEAN:
       {
         /* for compatibility reasons: toogle the setting */
-        bool tmp = !*(bool*)value;
+        bool value = false;
+        girara_setting_get_value(setting, &value);
+        bool tmp = !value;
         girara_setting_set_value(session, setting, &tmp);
         girara_notify(session, GIRARA_INFO, "%s: %s", name, tmp ? "true" : "false");
         break;
       }
       case FLOAT:
-        girara_notify(session, GIRARA_INFO, "%s: %f", name, *(float*)value);
+      {
+        float value = 0;
+        girara_setting_get_value(setting, &value);
+        girara_notify(session, GIRARA_INFO, "%s: %f", name, value);
         break;
+      }
       case INT:
-        girara_notify(session, GIRARA_INFO, "%s: %i", name, *(int*)value);
+      {
+        int value = 0;
+        girara_setting_get_value(setting, &value);
+        girara_notify(session, GIRARA_INFO, "%s: %i", name, value);
         break;
+      }
       case STRING:
       {
-        char* str = *(char**)value;
-        girara_notify(session, GIRARA_INFO, "%s: %s", name, str);
+        char* str = NULL;
+        girara_setting_get_value(setting, &str);
+        girara_notify(session, GIRARA_INFO, "%s: %s", name, str ? str : "(NULL)");
         g_free(str);
         break;
       }
