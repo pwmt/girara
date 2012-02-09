@@ -12,3 +12,4 @@ version.h
 *.gcno
 *.gcda
 gcov/
+*.swp
