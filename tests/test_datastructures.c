@@ -198,7 +198,6 @@ START_TEST(test_datastructures_sorted_list) {
   girara_list_free(unsorted_list);
 } END_TEST
 
-
 static void
 node_free(void* data)
 {
@@ -295,6 +294,44 @@ START_TEST(test_datastructures_node) {
   girara_node_free(root);
 } END_TEST
 
+static int
+find_compare(const void* item, const void* data)
+{
+  if (item == data) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+START_TEST(test_datastructures_list_find) {
+  girara_list_t* list = girara_list_new();
+  fail_unless(list != NULL);
+
+  /* test parameters */
+  fail_unless(girara_list_find(NULL, NULL, NULL) == NULL);
+  fail_unless(girara_list_find(list, NULL, NULL) == NULL);
+  fail_unless(girara_list_find(NULL, NULL, (void*) 0xDEAD) == NULL);
+  fail_unless(girara_list_find(NULL, find_compare, NULL) == NULL);
+
+  /* test functionality */
+  girara_list_append(list, (void*) 0xDEAD);
+  fail_unless(girara_list_find(list, find_compare, (void*) 0xDEAD) == NULL);
+  fail_unless(girara_list_find(list, find_compare, (void*) 0xCAFE) != NULL);
+  girara_list_free(list);
+} END_TEST
+
+START_TEST(test_datastructures_list_prepend) {
+  girara_list_t* list = girara_list_new();
+  fail_unless(list != NULL);
+
+  /* test parameters */
+  girara_list_prepend(list, NULL);
+  fail_unless(girara_list_size(list) != 0);
+
+  girara_list_free(list);
+} END_TEST
+
 Suite* suite_datastructures()
 {
   TCase* tcase = NULL;
@@ -318,6 +355,16 @@ Suite* suite_datastructures()
   /* merge lists */
   tcase = tcase_create("list_merge");
   tcase_add_test(tcase, test_datastructures_list_merge);
+  suite_add_tcase(suite, tcase);
+
+  /* search lists */
+  tcase = tcase_create("list_find");
+  tcase_add_test(tcase, test_datastructures_list_find);
+  suite_add_tcase(suite, tcase);
+
+  /* prepend ists */
+  tcase = tcase_create("list_prepend");
+  tcase_add_test(tcase, test_datastructures_list_prepend);
   suite_add_tcase(suite, tcase);
 
   /* node free */
