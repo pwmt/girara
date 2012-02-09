@@ -96,6 +96,26 @@ START_TEST(test_datastructures_list) {
   girara_list_free(list);
 } END_TEST
 
+START_TEST(test_datastructures_list_merge) {
+  girara_list_t* list1 = girara_list_new();
+  girara_list_t* list2 = girara_list_new();
+  fail_unless(list1 != NULL);
+  fail_unless(list2 != NULL);
+
+  fail_unless(girara_list_merge(NULL, NULL) == NULL);
+  fail_unless(girara_list_merge(list1, NULL) == list1);
+  fail_unless(girara_list_merge(NULL, list2) == list2);
+
+  girara_list_append(list1, (void*)0);
+  girara_list_append(list2, (void*)1);
+
+  girara_list_t* list3 = girara_list_merge(list1, list2);
+  fail_unless(list3 == list1);
+  fail_unless(girara_list_nth(list3, 0) == (void*)0);
+  fail_unless(girara_list_nth(list3, 1) == (void*)1);
+  girara_list_free(list1);
+  girara_list_free(list2);
+} END_TEST
 
 START_TEST(test_datastructures_list_free) {
   // free function
@@ -293,6 +313,11 @@ Suite* suite_datastructures()
   /* sorted list */
   tcase = tcase_create("list_sorted");
   tcase_add_test(tcase, test_datastructures_sorted_list);
+  suite_add_tcase(suite, tcase);
+
+  /* merge lists */
+  tcase = tcase_create("list_merge");
+  tcase_add_test(tcase, test_datastructures_list_merge);
   suite_add_tcase(suite, tcase);
 
   /* node free */
