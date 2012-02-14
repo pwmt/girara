@@ -85,7 +85,7 @@ test-debug: debug
 dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)cp -R LICENSE Makefile config.mk README ${PROJECTNV}.pc.in \
-		${HEADERS} internal.h tests/ \
+		${HEADERS} internal.h version.h.in tests/ common.mk \
 		${SOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
