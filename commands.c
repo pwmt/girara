@@ -69,9 +69,21 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
     {"Button6", GIRARA_MOUSE_BUTTON6},
     {"Button7", GIRARA_MOUSE_BUTTON7},
     {"Button8", GIRARA_MOUSE_BUTTON8},
-    {"Button9", GIRARA_MOUSE_BUTTON9},
-    {"scroll",  GIRARA_EVENT_SCROLL},
-    {"motion",  GIRARA_EVENT_MOTION_NOTIFY}
+    {"Button9", GIRARA_MOUSE_BUTTON9}
+  };
+
+  typedef struct event_type_s
+  {
+    char* identifier;
+    int event;
+  } event_type_t;
+
+  static const event_type_t event_types[] = {
+    {"motion",       GIRARA_EVENT_MOTION_NOTIFY},
+    {"scroll-up",    GIRARA_EVENT_SCROLL_UP},
+    {"scroll-down",  GIRARA_EVENT_SCROLL_DOWN},
+    {"scroll-left",  GIRARA_EVENT_SCROLL_LEFT},
+    {"scroll-right", GIRARA_EVENT_SCROLL_RIGHT}
   };
 
   typedef struct mouse_event_s
@@ -188,13 +200,16 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
 
         for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
           if (!g_strcmp0(tmp + 2, gdk_mouse_buttons[i].identifier)) {
-            if (g_strcmp0(tmp + 2, "scroll") == 0) {
-              event_type = GIRARA_EVENT_SCROLL;
-            } else if (g_strcmp0(tmp + 2, "motion") == 0) {
-              event_type = GIRARA_EVENT_MOTION_NOTIFY;
-            } else {
-              shortcut_mouse_button = gdk_mouse_buttons[i].button;
-            }
+            shortcut_mouse_button = gdk_mouse_buttons[i].button;
+            mouse_event = true;
+            found = true;
+            break;
+          }
+        }
+
+        for (unsigned int i = 0; i < LENGTH(event_types); i++) {
+          if (!g_strcmp0(tmp + 2, event_types[i].identifier)) {
+            event_type = event_types[i].event;
             mouse_event = true;
             found = true;
             break;
@@ -221,13 +236,16 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
 
       for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
         if (!g_strcmp0(tmp, gdk_mouse_buttons[i].identifier)) {
-          if (g_strcmp0(tmp, "scroll") == 0) {
-            event_type = GIRARA_EVENT_SCROLL;
-          } else if (g_strcmp0(tmp + 2, "motion") == 0) {
-            event_type = GIRARA_EVENT_MOTION_NOTIFY;
-          } else {
-            shortcut_mouse_button = gdk_mouse_buttons[i].button;
-          }
+          shortcut_mouse_button = gdk_mouse_buttons[i].button;
+          mouse_event = true;
+          found = true;
+          break;
+        }
+      }
+
+      for (unsigned int i = 0; i < LENGTH(event_types); i++) {
+        if (!g_strcmp0(tmp, event_types[i].identifier)) {
+          event_type = event_types[i].event;
           mouse_event = true;
           found = true;
           break;
