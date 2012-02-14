@@ -8,7 +8,8 @@ PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
-HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h" -a ! -name "version.h") version.h
+HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h" -a ! -name "version.h")
+HEADERS_INSTALL = ${HEADERS} version.h
 
 all: options ${PROJECT}
 
@@ -84,7 +85,7 @@ test-debug: debug
 dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)cp -R LICENSE Makefile config.mk README ${PROJECTNV}.pc.in \
-		${HEADERS} internal.h commands.h tests/ \
+		${HEADERS} internal.h tests/ \
 		${SOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
@@ -113,7 +114,7 @@ install: all ${PROJECT}.pc install-headers
 install-headers: version.h
 	$(ECHO) installing header files
 	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/include/girara
-	$(QUIET)install -m 644 ${HEADERS} ${DESTDIR}${PREFIX}/include/girara
+	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${PREFIX}/include/girara
 
 uninstall: uninstall-headers
 	$(ECHO) removing library file
