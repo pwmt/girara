@@ -51,9 +51,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
     {"Super",     GDK_KEY_Super_L},
     {"Tab",       GDK_KEY_Tab},
     {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
-    {"Up",        GDK_KEY_Up},
-    {"scroll",    GIRARA_EVENT_SCROLL},
-    {"motion",    GIRARA_EVENT_MOTION_NOTIFY},
+    {"Up",        GDK_KEY_Up}
   };
 
   typedef struct gdk_mouse_button_s
@@ -71,7 +69,9 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
     {"Button6", GIRARA_MOUSE_BUTTON6},
     {"Button7", GIRARA_MOUSE_BUTTON7},
     {"Button8", GIRARA_MOUSE_BUTTON8},
-    {"Button9", GIRARA_MOUSE_BUTTON9}
+    {"Button9", GIRARA_MOUSE_BUTTON9},
+    {"scroll",  GIRARA_EVENT_SCROLL},
+    {"motion",  GIRARA_EVENT_MOTION_NOTIFY}
   };
 
   typedef struct mouse_event_s
@@ -84,7 +84,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
     {"button-pressed",   GIRARA_EVENT_BUTTON_PRESS},
     {"2-button-pressed", GIRARA_EVENT_2BUTTON_PRESS},
     {"3-button-pressed", GIRARA_EVENT_2BUTTON_PRESS},
-    {"button-released",  GIRARA_EVENT_BUTTON_RELEASE},
+    {"button-released",  GIRARA_EVENT_BUTTON_RELEASE}
   };
 
   size_t number_of_arguments = girara_list_size(argument_list);
@@ -180,15 +180,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
         bool found = false;
         for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
           if (g_strcmp0(tmp + 2, gdk_keyboard_buttons[i].identifier) == 0) {
-            if (g_strcmp0(tmp + 2, "scroll") == 0) {
-              event_type = GIRARA_EVENT_SCROLL;
-              mouse_event = true;
-            } else if (g_strcmp0(tmp + 2, "motion") == 0) {
-              event_type = GIRARA_EVENT_MOTION_NOTIFY;
-              mouse_event = true;
-            } else {
-              shortcut_key = gdk_keyboard_buttons[i].keyval;
-            }
+            shortcut_key = gdk_keyboard_buttons[i].keyval;
             found = true;
             break;
           }
@@ -196,7 +188,13 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
 
         for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
           if (!g_strcmp0(tmp + 2, gdk_mouse_buttons[i].identifier)) {
-            shortcut_mouse_button = gdk_mouse_buttons[i].button;
+            if (g_strcmp0(tmp + 2, "scroll") == 0) {
+              event_type = GIRARA_EVENT_SCROLL;
+            } else if (g_strcmp0(tmp + 2, "motion") == 0) {
+              event_type = GIRARA_EVENT_MOTION_NOTIFY;
+            } else {
+              shortcut_mouse_button = gdk_mouse_buttons[i].button;
+            }
             mouse_event = true;
             found = true;
             break;
@@ -215,15 +213,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
       bool found = false;
       for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
         if (g_strcmp0(tmp, gdk_keyboard_buttons[i].identifier) == 0) {
-          if (g_strcmp0(tmp, "scroll") == 0) {
-            event_type = GIRARA_EVENT_SCROLL;
-            mouse_event = true;
-          } else if (g_strcmp0(tmp, "motion") == 0) {
-            event_type = GIRARA_EVENT_MOTION_NOTIFY;
-            mouse_event = true;
-          } else {
-            shortcut_key = gdk_keyboard_buttons[i].keyval;
-          }
+          shortcut_key = gdk_keyboard_buttons[i].keyval;
           found = true;
           break;
         }
@@ -231,7 +221,13 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
 
       for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
         if (!g_strcmp0(tmp, gdk_mouse_buttons[i].identifier)) {
-          shortcut_mouse_button = gdk_mouse_buttons[i].button;
+          if (g_strcmp0(tmp, "scroll") == 0) {
+            event_type = GIRARA_EVENT_SCROLL;
+          } else if (g_strcmp0(tmp + 2, "motion") == 0) {
+            event_type = GIRARA_EVENT_MOTION_NOTIFY;
+          } else {
+            shortcut_mouse_button = gdk_mouse_buttons[i].button;
+          }
           mouse_event = true;
           found = true;
           break;
