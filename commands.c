@@ -80,10 +80,10 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bo
 
   static const event_type_t event_types[] = {
     {"motion",       GIRARA_EVENT_MOTION_NOTIFY},
-    {"scroll-up",    GIRARA_EVENT_SCROLL_UP},
-    {"scroll-down",  GIRARA_EVENT_SCROLL_DOWN},
-    {"scroll-left",  GIRARA_EVENT_SCROLL_LEFT},
-    {"scroll-right", GIRARA_EVENT_SCROLL_RIGHT}
+    {"scroll_up",    GIRARA_EVENT_SCROLL_UP},
+    {"scroll_down",  GIRARA_EVENT_SCROLL_DOWN},
+    {"scroll_left",  GIRARA_EVENT_SCROLL_LEFT},
+    {"scroll_right", GIRARA_EVENT_SCROLL_RIGHT}
   };
 
   typedef struct mouse_event_s
