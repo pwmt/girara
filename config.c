@@ -53,7 +53,6 @@ girara_config_parse(girara_session_t* session, const char* path)
   FILE* file = girara_file_open(path, "r");
 
   if (file == NULL) {
-    girara_error("Could not open configuration file '%s'", path);
     return;
   }
 
