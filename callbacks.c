@@ -250,22 +250,21 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
 
   /* prepare girara event */
   girara_event_t event;
-  event.type = GIRARA_EVENT_SCROLL;
   event.x    = scroll->x;
   event.y    = scroll->y;
 
   switch (scroll->direction) {
     case GDK_SCROLL_UP:
-      event.direction = GIRARA_SCROLL_UP;
+      event.type = GIRARA_EVENT_SCROLL_UP;
       break;
     case GDK_SCROLL_DOWN:
-      event.direction = GIRARA_SCROLL_DOWN;
+      event.type = GIRARA_EVENT_SCROLL_DOWN;
       break;
     case GDK_SCROLL_LEFT:
-      event.direction = GIRARA_SCROLL_LEFT;
+      event.type = GIRARA_EVENT_SCROLL_LEFT;
       break;
     case GDK_SCROLL_RIGHT:
-      event.direction = GIRARA_SCROLL_RIGHT;
+      event.type = GIRARA_EVENT_SCROLL_RIGHT;
       break;
     default:
       return false;

@@ -186,17 +186,12 @@ typedef enum girara_event_type_e
   GIRARA_EVENT_3BUTTON_PRESS, /**< Triple click */
   GIRARA_EVENT_BUTTON_RELEASE, /**< Button released */
   GIRARA_EVENT_MOTION_NOTIFY, /**< Cursor moved */
-  GIRARA_EVENT_SCROLL, /**< Scroll event */
+  GIRARA_EVENT_SCROLL_UP, /**< Scroll event */
+  GIRARA_EVENT_SCROLL_DOWN, /**< Scroll event */
+  GIRARA_EVENT_SCROLL_LEFT, /**< Scroll event */
+  GIRARA_EVENT_SCROLL_RIGHT, /**< Scroll event */
   GIRARA_EVENT_OTHER /**< Unknown event */
 } girara_event_type_t;
-
-typedef enum girara_scroll_direction_e
-{
-  GIRARA_SCROLL_UP, /**< The window is scrolled up */
-  GIRARA_SCROLL_DOWN, /**< The window is scrolled down */
-  GIRARA_SCROLL_LEFT, /**< The window is scrolled left */
-  GIRARA_SCROLL_RIGHT /**< The window is scrolled right */
-} girara_scroll_direction_t;
 
 /**
  * Describes a girara event
@@ -207,7 +202,6 @@ struct girara_event_s
 
   double x; /**< X coordinates where the event occured */
   double y; /**< Y coordinates where the event occured */
-  girara_scroll_direction_t direction; /**< Scroll direction (iff GIRARA_EVENT_SCROLL) */
 };
 
 #endif
