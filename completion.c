@@ -76,7 +76,7 @@ escape(const char* value)
   GString* str = g_string_new("");
   while (*value) {
     const char c = *value++;
-    if (strchr("\\ \t", c) != NULL) {
+    if (strchr("\\ \t\"", c) != NULL) {
       g_string_append_c(str, '\\');
     }
     g_string_append_c(str, c);
