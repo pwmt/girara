@@ -94,38 +94,38 @@ dist: clean
 ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(QUIET)echo project=${PROJECT} > ${PROJECT}.pc
 	$(QUIET)echo version=${VERSION} >> ${PROJECT}.pc
-	$(QUIET)echo includedir=${PREFIX}/include >> ${PROJECT}.pc
-	$(QUIET)echo libdir=${PREFIX}/lib >> ${PROJECT}.pc
+	$(QUIET)echo includedir=${INCLUDEDIR} >> ${PROJECT}.pc
+	$(QUIET)echo libdir=${LIBDIR} >> ${PROJECT}.pc
 	$(QUIET)cat ${PROJECTNV}.pc.in >> ${PROJECT}.pc
 
 install: all ${PROJECT}.pc install-headers
 	$(ECHO) installing library file
-	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/lib
-	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${PREFIX}/lib
-	$(QUIET)install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib
-	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR} || \
+	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}
+	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
+	$(QUIET)install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}
+	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} || \
 		echo "Failed to create lib${PROJECT}.so.${SOMAJOR}. Please check if it exists and points to the correct version of lib${PROJECT}.so."
-	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${PREFIX}/lib/lib${PROJECT}.so || \
+	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so || \
 		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 	$(ECHO) installing pkgconfig file
-	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/lib/pkgconfig
-	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${PREFIX}/lib/pkgconfig
+	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}/pkgconfig
+	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
 
 install-headers: version.h
 	$(ECHO) installing header files
-	$(QUIET)mkdir -p ${DESTDIR}${PREFIX}/include/girara
-	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${PREFIX}/include/girara
+	$(QUIET)mkdir -p ${DESTDIR}${INCLUDEDIR}/girara
+	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${INCLUDEDIR}/girara
 
 uninstall: uninstall-headers
 	$(ECHO) removing library file
-	$(QUIET)rm -f ${PREFIX}/lib/lib${PROJECT}.a ${PREFIX}/lib/lib${PROJECT}.so.${SOVERSION} \
-		${PREFIX}/lib/lib${PROJECT}.so.${SOMAJOR} ${PREFIX}/lib/lib${PROJECT}.so
+	$(QUIET)rm -f ${LIBDIR}/lib${PROJECT}.a ${LIBDIR}/lib${PROJECT}.so.${SOVERSION} \
+		${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} ${LIBDIR}/lib${PROJECT}.so
 	$(ECHO) removing pkgconfig file
-	$(QUIET)rm -f ${PREFIX}/lib/pkgconfig/${PROJECT}.pc
+	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 
 uninstall-headers:
 	$(ECHO) removing header files
-	$(QUIET)rm -rf ${PREFIX}/include/girara
+	$(QUIET)rm -rf ${INCLUDEDIR}/girara
 
 .PHONY: all options clean debug doc test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug
 

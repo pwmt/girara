@@ -17,6 +17,8 @@ SOVERSION = ${SOMAJOR}.${SOMINOR}
 
 # paths
 PREFIX ?= /usr
+LIBDIR ?= ${PREFIX}/lib
+INCLUDEDIR ?= ${PREFIX}/include
 
 GIRARA_GTK_VERSION ?= 2
 
