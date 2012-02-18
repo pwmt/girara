@@ -505,8 +505,11 @@ girara_buffer_get(girara_session_t* session)
 void
 girara_notify(girara_session_t* session, int level, const char* format, ...)
 {
-  if (session == NULL || session->gtk.notification_text == NULL ||
-      session->gtk.notification_area == NULL) {
+  if (session == NULL
+      || session->gtk.notification_text == NULL
+      || session->gtk.notification_area == NULL
+      || session->gtk.inputbar == NULL
+      || session->gtk.view == NULL) {
     return;
   }
 
@@ -545,6 +548,8 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   /* update visibility */
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 }
 
 void girara_dialog(girara_session_t* session, const char* dialog, bool
