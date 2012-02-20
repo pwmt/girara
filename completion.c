@@ -390,7 +390,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       for (unsigned int i = 0; i < n_elements; i++) {
         if (argument->n == GIRARA_NEXT || argument->n == GIRARA_NEXT_GROUP) {
           GList* entry = g_list_next(entries_current);
-          if (entry != NULL) {
+          if (entry == NULL) {
             entry = g_list_first(entries);
           }
 
