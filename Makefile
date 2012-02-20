@@ -67,7 +67,7 @@ lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
 
 debug: options ${PROJECT}-debug
 
-doc: clean
+doc:
 	$(QUIET)doxygen Doxyfile
 
 gcov: clean
