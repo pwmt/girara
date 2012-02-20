@@ -13,3 +13,4 @@ version.h
 *.gcda
 gcov/
 *.swp
+doc/
