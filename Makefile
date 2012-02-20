@@ -86,7 +86,7 @@ dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/tests
 	$(QUIET)cp LICENSE Makefile config.mk common.mk ${PROJECTNV}.pc.in \
-		${HEADERS} internal.h version.h.in README AUTHORS \
+		${HEADERS} internal.h version.h.in README AUTHORS Doxyfile \
 		${SOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)cp tests/*.c tests/Makefile tests/config.mk ${PROJECTNV}-${VERSION}/tests
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
