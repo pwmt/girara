@@ -47,7 +47,7 @@ girara_fix_path(const char* path)
     char* home_path = girara_get_home_directory(user);
     g_free(user);
 
-    if (home_path != NULL) {
+    if (home_path == NULL) {
       return g_strdup(path);
     }
 

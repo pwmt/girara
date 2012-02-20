@@ -353,7 +353,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 
       /* create command rows */
       GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command)
-        if (current_command != NULL ||
+        if (current_command == NULL ||
             (command->command != NULL && !strncmp(current_command, command->command, current_command_length)) ||
             (command->abbr != NULL && !strncmp(current_command, command->abbr,    current_command_length))
           )
@@ -390,7 +390,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       for (unsigned int i = 0; i < n_elements; i++) {
         if (argument->n == GIRARA_NEXT || argument->n == GIRARA_NEXT_GROUP) {
           GList* entry = g_list_next(entries_current);
-          if (entry != NULL) {
+          if (entry == NULL) {
             entry = g_list_first(entries);
           }
 
