@@ -19,7 +19,9 @@
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_setting_add(girara_session_t* session, const char* name, void* value, girara_setting_type_t type, bool init_only, const char* description, girara_setting_callback_t callback, void* data);
+bool girara_setting_add(girara_session_t* session, const char* name,
+    void* value, girara_setting_type_t type, bool init_only,
+    const char* description, girara_setting_callback_t callback, void* data);
 
 /**
  * Sets the value of a setting
@@ -85,7 +87,8 @@ girara_setting_type_t girara_setting_get_type(girara_setting_t* setting);
  * @param setting The setting
  * @param value The new value
  */
-void girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, void* value);
+void girara_setting_set_value(girara_session_t* session,
+    girara_setting_t* setting, void* value);
 
 
 #endif

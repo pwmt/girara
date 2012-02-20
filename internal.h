@@ -34,9 +34,11 @@ HIDDEN void girara_mode_string_free(girara_mode_string_t* mode);
 
 HIDDEN void girara_statusbar_item_free(girara_statusbar_item_t* statusbaritem);
 
-HIDDEN void girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping);
+HIDDEN void girara_argument_mapping_free(
+    girara_argument_mapping_t* argument_mapping);
 
-HIDDEN void girara_special_command_free(girara_special_command_t* special_command);
+HIDDEN void girara_special_command_free(
+    girara_special_command_t* special_command);
 
 HIDDEN void girara_command_free(girara_command_t* command);
 
@@ -48,7 +50,8 @@ HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
  * @param session The used girara session
  * @param input The current input
  */
-HIDDEN girara_completion_t* girara_cc_set(girara_session_t* session, const char* input);
+HIDDEN girara_completion_t* girara_cc_set(girara_session_t* session,
+    const char* input);
 
 /**
  * Default command to map sortcuts
@@ -58,7 +61,8 @@ HIDDEN girara_completion_t* girara_cc_set(girara_session_t* session, const char*
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_list);
+HIDDEN bool girara_cmd_map(girara_session_t* session,
+    girara_list_t* argument_list);
 
 /**
  * Default command to unmap sortcuts
@@ -68,7 +72,8 @@ HIDDEN bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_li
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_cmd_unmap(girara_session_t* session, girara_list_t* argument_list);
+HIDDEN bool girara_cmd_unmap(girara_session_t* session,
+    girara_list_t* argument_list);
 
 /**
  * Default command to quit the application
@@ -78,7 +83,8 @@ HIDDEN bool girara_cmd_unmap(girara_session_t* session, girara_list_t* argument_
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_cmd_quit(girara_session_t* session, girara_list_t* argument_list);
+HIDDEN bool girara_cmd_quit(girara_session_t* session,
+    girara_list_t* argument_list);
 
 /**
  * Default command to set the value of settings
@@ -88,7 +94,8 @@ HIDDEN bool girara_cmd_quit(girara_session_t* session, girara_list_t* argument_l
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list);
+HIDDEN bool girara_cmd_set(girara_session_t* session,
+    girara_list_t* argument_list);
 
 /**
  * Execute an external command
@@ -97,8 +104,8 @@ HIDDEN bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_li
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-HIDDEN bool girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list);
-
+HIDDEN bool girara_cmd_exec(girara_session_t* session,
+    girara_list_t* argument_list);
 
 /**
  * Structure of a command
@@ -108,7 +115,7 @@ struct girara_command_s
   char* command; /**< Name of the command */
   char* abbr; /**< Abbreviation of the command */
   girara_command_function_t function; /**< Function */
-  girara_completion_function_t completion; /**< Completion function of the command */
+  girara_completion_function_t completion; /**< Completion function */
   char* description; /**< Description of the command */
 };
 

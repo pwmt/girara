@@ -74,7 +74,8 @@ typedef int girara_mode_t;
  * @param input The current input
  * @return The completion group
  */
-typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* session, const char* input);
+typedef girara_completion_t* (*girara_completion_function_t)(
+    girara_session_t* session, const char* input);
 
 /**
  * Function declaration of a inputbar special function
@@ -85,7 +86,8 @@ typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* s
  * @return TRUE No error occured
  * @return FALSE Error occured
  */
-typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session, const char* input, girara_argument_t* argument);
+typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session,
+    const char* input, girara_argument_t* argument);
 
 /**
  * Function declaration of a command function
@@ -94,7 +96,8 @@ typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session, co
  * @param argc Number of arguments
  * @param argv Arguments
  */
-typedef bool (*girara_command_function_t)(girara_session_t* session, girara_list_t* argument_list);
+typedef bool (*girara_command_function_t)(girara_session_t* session,
+    girara_list_t* argument_list);
 
 /**
  * Function declaration of a shortcut function
@@ -103,7 +106,8 @@ typedef bool (*girara_command_function_t)(girara_session_t* session, girara_list
  * often executed as the value defines or until the function returns false the
  * first time.
  */
-typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, girara_event_t*, unsigned int);
+typedef bool (*girara_shortcut_function_t)(girara_session_t*,
+    girara_argument_t*, girara_event_t*, unsigned int);
 
 /**
  * Function declaration of a function that frees something.
@@ -149,7 +153,8 @@ typedef enum girara_setting_type_e
  * @param value Pointer to the new value
  * @param data User data
  */
-typedef void (*girara_setting_callback_t)(girara_session_t* session, const char* name, girara_setting_type_t type, void* value, void* data);
+typedef void (*girara_setting_callback_t)(girara_session_t* session,
+    const char* name, girara_setting_type_t type, void* value, void* data);
 
 /**
  * Definition of an argument of a shortcut or buffered command

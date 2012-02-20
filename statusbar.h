@@ -15,7 +15,8 @@
  * @return TRUE No error occured
  * @return FALSE Error occured (and forward event)
  */
-typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
+typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event,
+    girara_session_t* session);
 
 /**
  * Creates an statusbar item
@@ -28,7 +29,8 @@ typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, gir
  * @return The created statusbar item
  * @return NULL An error occured
  */
-girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback);
+girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session,
+    bool expand, bool fill, bool left, girara_statusbar_event_t callback);
 
 /**
  * Sets the shown text of an statusbar item
@@ -39,7 +41,8 @@ girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, bo
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, const char* text);
+bool girara_statusbar_item_set_text(girara_session_t* session,
+    girara_statusbar_item_t* item, const char* text);
 
 /**
  * Sets the foreground color of an statusbar item
@@ -50,7 +53,8 @@ bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, const char* color);
+bool girara_statusbar_item_set_foreground(girara_session_t* session,
+    girara_statusbar_item_t* item, const char* color);
 
 /**
  * Sets the background color of the statusbar
@@ -60,6 +64,7 @@ bool girara_statusbar_item_set_foreground(girara_session_t* session, girara_stat
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_statusbar_set_background(girara_session_t* session, const char* color);
+bool girara_statusbar_set_background(girara_session_t* session,
+    const char* color);
 
 #endif

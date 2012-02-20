@@ -39,7 +39,8 @@ girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp);
  * @return The girara list object or NULL if an error occured.
  */
 
-girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gfree);
+girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp,
+    girara_free_function_t gfree);
 
 /**
  * Set the function which should be called if the stored data should be freed.
@@ -47,7 +48,8 @@ girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp, girara_fre
  * @param list The girara list object
  * @param gfree Pointer to the free function
  */
-void girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree);
+void girara_list_set_free_function(girara_list_t* list,
+    girara_free_function_t gfree);
 
 /**
  * Remove all elements from a list.
@@ -203,7 +205,8 @@ void girara_list_iterator_free(girara_list_iterator_t* iter);
  * @param callback The function to call.
  * @param data Passed to the callback as second argument.
  */
-void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data);
+void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback,
+    void* data);
 
 #define GIRARA_LIST_FOREACH(list, type, iter, data) \
   do { \
@@ -241,7 +244,8 @@ girara_tree_node_t* girara_node_new(void* data);
  * @param node The girara node object
  * @param gfree Pointer to the free function
  */
-void girara_node_set_free_function(girara_tree_node_t* node, girara_free_function_t gfree);
+void girara_node_set_free_function(girara_tree_node_t* node,
+    girara_free_function_t gfree);
 
 /**
  * Free a node. This will remove the node from its' parent and will destroy all
@@ -266,7 +270,8 @@ void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child);
  * @param data The data of the node
  * @return The node object or NULL if an error occured
  */
-girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* data);
+girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent,
+    void* data);
 
 /**
  * Get parent node.

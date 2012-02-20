@@ -192,7 +192,8 @@ char* girara_buffer_get(girara_session_t* session);
  * @param format String format
  * @param ...
  */
-void girara_notify(girara_session_t* session, int level, const char* format, ...) GIRARA_PRINTF(3, 4);
+void girara_notify(girara_session_t* session, int level,
+    const char* format, ...) GIRARA_PRINTF(3, 4);
 
 /**
  * Creates a girara dialog
