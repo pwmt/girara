@@ -80,14 +80,7 @@ girara_config_parse(girara_session_t* session, const char* path)
     if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
       for(int i = 1; i < argc; i++) {
         char* argument = g_strdup(argv[i]);
-        if (argument != NULL) {
-          girara_list_append(argument_list, (void*) argument);
-        } else {
-          girara_list_free(argument_list);
-          free(line);
-          fclose(file);
-          return;
-        }
+        girara_list_append(argument_list, (void*) argument);
       }
     } else {
       girara_list_free(argument_list);

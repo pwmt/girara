@@ -17,7 +17,8 @@
 
 /* default commands implementation */
 bool
-girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bool unmap)
+girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
+    bool unmap)
 {
   typedef struct gdk_keyboard_button_s
   {
@@ -434,7 +435,11 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
   }
 
   /* search for existing setting */
-  char* name  = (char*) girara_list_nth(argument_list, 0);
+  char* name = (char*) girara_list_nth(argument_list, 0);
+  if (name == NULL) {
+    return false;
+  }
+
   girara_setting_t* setting = girara_setting_find(session, name);
   if (setting == NULL) {
     girara_warning("Unknown option: %s", name);
@@ -482,7 +487,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
     }
   } else {
     char* value = (char*) girara_list_nth(argument_list, 1);
-    if (!value) {
+    if (value == NULL) {
       girara_warning("No value defined for option: %s", name);
       girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
       return false;
@@ -491,10 +496,10 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
     /* update value */
     switch (girara_setting_get_type(setting)) {
       case BOOLEAN:
-        if (!g_strcmp0(value, "false") || !g_strcmp0(value, "0")) {
+        if (g_strcmp0(value, "false") == 0 || g_strcmp0(value, "0") == 0) {
           bool b = false;
           girara_setting_set_value(session, setting, &b);
-        } else if (!g_strcmp0(value, "true") || !g_strcmp0(value, "1")) {
+        } else if (g_strcmp0(value, "true") == 0 || g_strcmp0(value, "1") == 0) {
           bool b = true;
           girara_setting_set_value(session, setting, &b);
         } else {
@@ -526,7 +531,9 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
 }
 
 bool
-girara_inputbar_command_add(girara_session_t* session, const char* command , const char* abbreviation, girara_command_function_t function, girara_completion_function_t completion, const char* description)
+girara_inputbar_command_add(girara_session_t* session, const char* command,
+    const char* abbreviation, girara_command_function_t function,
+    girara_completion_function_t completion, const char* description)
 {
   g_return_val_if_fail(session  != NULL, false);
   g_return_val_if_fail(command  != NULL, false);
@@ -534,7 +541,7 @@ girara_inputbar_command_add(girara_session_t* session, const char* command , con
 
   /* search for existing binding */
   GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, commands_it)
-    if (!g_strcmp0(commands_it->command, command)) {
+    if (g_strcmp0(commands_it->command, command) == 0) {
       g_free(commands_it->abbr);
       g_free(commands_it->description);
 

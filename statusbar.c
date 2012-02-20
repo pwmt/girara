@@ -37,7 +37,7 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_misc_set_padding(GTK_MISC(item->text),       2, 4);
   gtk_label_set_use_markup(item->text,             TRUE);
 
-  if (callback) {
+  if (callback != NULL) {
     g_signal_connect(G_OBJECT(item->box), "button-press-event", G_CALLBACK(callback), session);
   }
 

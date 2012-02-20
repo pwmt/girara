@@ -47,7 +47,7 @@ girara_fix_path(const char* path)
     char* home_path = girara_get_home_directory(user);
     g_free(user);
 
-    if (!home_path) {
+    if (home_path != NULL) {
       return g_strdup(path);
     }
 
@@ -68,15 +68,8 @@ girara_xdg_open(const char* uri)
   }
 
   GString* command = g_string_new("xdg-open ");
-  if (command == NULL) {
-    return false;
-  }
+  char* tmp        = g_shell_quote(uri);
 
-  char* tmp = g_shell_quote(uri);
-  if (tmp == NULL) {
-    g_string_free(command, true);
-    return false;
-  }
   g_string_append(command, tmp);
   g_free(tmp);
 
@@ -94,7 +87,7 @@ girara_xdg_open(const char* uri)
 char*
 girara_get_home_directory(const char* user)
 {
-  if (!user || g_strcmp0(user, g_get_user_name()) == 0) {
+  if (user == NULL || g_strcmp0(user, g_get_user_name()) == 0) {
     const char* homedir = g_getenv("HOME");
     return g_strdup(homedir ? homedir : g_get_home_dir());
   }

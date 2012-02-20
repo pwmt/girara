@@ -396,12 +396,7 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
   if (g_shell_parse_argv((const gchar*) argument->data, &argc, &argv, NULL) != FALSE) {
     for(int i = 0; i < argc; i++) {
       char* argument = g_strdup(argv[i]);
-      if (argument != NULL) {
-        girara_list_append(argument_list, (void*) argument);
-      } else {
-        girara_list_free(argument_list);
-        return false;
-      }
+      girara_list_append(argument_list, (void*) argument);
     }
   } else {
     girara_list_free(argument_list);
