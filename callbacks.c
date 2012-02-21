@@ -44,7 +44,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
     if ( keyval == shortcut->key
       && (clean == shortcut->mask || (shortcut->key >= 0x21
       && shortcut->key <= 0x7E && clean == GDK_SHIFT_MASK))
-      && (session->modes.current_mode & shortcut->mode || shortcut->mode == 0)
+      && (session->modes.current_mode == shortcut->mode || shortcut->mode == 0)
       && shortcut->function != NULL
       )
     {

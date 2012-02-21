@@ -630,7 +630,7 @@ girara_mode_add(girara_session_t* session, const char* name)
   mode->name = g_strdup(name);
   girara_list_append(session->modes.identifiers, mode);
 
-  return (1 << mode->index);
+  return mode->index;
 }
 
 void
