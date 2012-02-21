@@ -197,7 +197,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
   gchar *current_command   = (elements[0] != NULL && elements[0][0] != '\0') ? g_strdup(elements[0]) : NULL;
   gchar *current_parameter = (elements[0] != NULL && elements[1] != NULL)    ? g_strdup(elements[1]) : NULL;
 
-  const size_t current_command_length = current_command ? strlen(current_command) : 0;
+  size_t current_command_length = current_command ? strlen(current_command) : 0;
 
   static GList* entries           = NULL;
   static GList* entries_current   = NULL;
@@ -271,14 +271,54 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       return false;
     }
 
+    if (n_parameter <= 1) {
+    /* based on commands */
+      command_mode = TRUE;
+
+      /* create command rows */
+      GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command)
+        if (current_command == NULL ||
+            (command->command != NULL && !strncmp(current_command, command->command, current_command_length)) ||
+            (command->abbr != NULL && !strncmp(current_command, command->abbr,    current_command_length))
+          )
+        {
+          /* create entry */
+          girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
+          entry->group  = FALSE;
+          entry->value  = g_strdup(command->command);
+          entry->widget = girara_completion_row_create(session, command->command, NULL, FALSE);
+
+          entries = g_list_append(entries, entry);
+
+          /* show entry row */
+          gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
+        }
+      GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
+    }
+
     /* based on parameters */
-    if (n_parameter > 1) {
+    if (n_parameter > 1 || g_list_length(entries) == 1) {
+      /* if only one command exists try to run parameter completion */
+      if (g_list_length(entries) == 1) {
+        girara_internal_completion_entry_t* entry = g_list_first(entries)->data;
+
+        /* unset command mode */
+        command_mode = false;
+        current_command = entry->value;
+        current_command_length = strlen(current_command);
+
+        /* clear list */
+        gtk_widget_destroy(GTK_WIDGET(entry->widget));
+
+        entries = g_list_remove(entries, g_list_first(entries)->data);
+        g_slice_free(girara_internal_completion_entry_t, entry);
+      }
 
       /* search matching command */
       girara_command_t* command = NULL;
       GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command_it)
         if ( (command_it->command && !strncmp(current_command, command_it->command, current_command_length)) ||
-            (command_it->abbr    && !strncmp(current_command, command_it->abbr,    current_command_length))
+             (command_it->abbr    && !strncmp(current_command, command_it->abbr,    current_command_length))
           )
         {
           if (command_it->completion != NULL) {
@@ -305,8 +345,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
         return false;
       }
 
-      /* generate completion result */
-      /* XXX: the last argument should only be current_paramater ... but
+      /* generate completion result
+       * XXX: the last argument should only be current_paramater ... but
        * therefore the completion functions would need to handle NULL correctly
        * (see cc_open in zathura). */
       girara_completion_t *result = command->completion(session, current_parameter ? current_parameter : "");
@@ -347,29 +387,6 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       girara_completion_free(result);
 
       command_mode = FALSE;
-    } else {
-    /* based on commands */
-      command_mode = TRUE;
-
-      /* create command rows */
-      GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command)
-        if (current_command == NULL ||
-            (command->command != NULL && !strncmp(current_command, command->command, current_command_length)) ||
-            (command->abbr != NULL && !strncmp(current_command, command->abbr,    current_command_length))
-          )
-        {
-          /* create entry */
-          girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
-          entry->group  = FALSE;
-          entry->value  = g_strdup(command->command);
-          entry->widget = girara_completion_row_create(session, command->command, NULL, FALSE);
-
-          entries = g_list_append(entries, entry);
-
-          /* show entry row */
-          gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
-        }
-      GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
     }
 
     if (entries != NULL) {
