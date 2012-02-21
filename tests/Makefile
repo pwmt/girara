@@ -12,13 +12,13 @@ XDG_HELPER = ${XDG_HELPER_SOURCE:.c=}
 
 all: options girara_test-gtk${GIRARA_GTK_VERSION} ${XDG_HELPER}
 
-tests: all
+run: girara_test-gtk${GIRARA_GTK_VERSION} ${XDG_HELPER}
 	$(ECHO) "running tests ..."
 	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}
 
 debug: options girara_test-gtk${GIRARA_GTK_VERSION}-debug ${XDG_HELPER}
 
-tests-debug: debug
+run-debug: debug
 	$(ECHO) "running tests ..."
 	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}-debug
 
@@ -58,6 +58,6 @@ clean:
 	$(QUIET)rm -rf ${OBJECTS} ${DOBJECTS} girara_test-gtk${GIRARA_GTK_VERSION} \
 		girara_test-gtk${GIRARA_GTK_VERSION}-debug .depend ${XDG_HELPER} *gcda *gcno
 
-.PHONY: all options clean debug tests tests-debug
+.PHONY: all options clean debug run run-debug
 
 -include $(wildcard .depend/*.dep)

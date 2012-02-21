@@ -77,10 +77,10 @@ gcov: clean
 	$(QUIET)genhtml --output-directory gcov $(PROJECT).info
 
 test: ${PROJECT}
-	$(QUIET)${MAKE} -C tests tests
+	$(QUIET)${MAKE} -C tests run
 
 test-debug: debug
-	$(QUIET)${MAKE} -C tests tests-debug
+	$(QUIET)${MAKE} -C tests run-debug
 
 dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
