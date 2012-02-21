@@ -8,3 +8,4 @@ Version: ${version}
 URL: http://pwmt.org/projects/libgirara
 Cflags: ${INC_PATH}
 Libs: -l${project} ${LIB_PATH}
+Requires.private: gtk+-${GTK_VERSION}.0

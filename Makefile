@@ -98,6 +98,7 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(QUIET)echo version=${VERSION} >> ${PROJECT}.pc
 	$(QUIET)echo includedir=${INCLUDEDIR} >> ${PROJECT}.pc
 	$(QUIET)echo libdir=${LIBDIR} >> ${PROJECT}.pc
+	$(QUIET)echo GTK_VERSION=${GIRARA_GTK_VERSION} >> ${PROJECT}.pc
 	$(QUIET)cat ${PROJECTNV}.pc.in >> ${PROJECT}.pc
 
 install: all ${PROJECT}.pc install-headers
