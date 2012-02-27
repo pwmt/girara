@@ -240,6 +240,9 @@ girara_file_read_line(FILE* file)
   size_t size = 0;
   char* line = NULL;
   if (getline(&line, &size, file) == -1) {
+    if (line != NULL) {
+      free(line);
+    }
     return NULL;
   }
 
