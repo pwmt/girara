@@ -29,6 +29,10 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
        (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
         && ((shortcuts_it->mode == mode) || (mode == 0)))
     {
+      if (shortcuts_it->argument.data != NULL) {
+        g_free(shortcuts_it->argument.data);
+      }
+
       shortcuts_it->function  = function;
       shortcuts_it->argument  = argument;
       found_existing_shortcut = true;
