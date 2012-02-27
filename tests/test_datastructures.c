@@ -21,7 +21,10 @@ START_TEST(test_datastructures_list) {
   girara_list_t* list = girara_list_new();
   // size of empty list
   fail_unless(girara_list_size(list) == 0);
+  // free empty list
+  girara_list_free(list);
 
+  list = girara_list_new();
   // append
   for (intptr_t i = 0; i != 10; ++i) {
     girara_list_append(list, (void*)i);
@@ -127,6 +130,10 @@ START_TEST(test_datastructures_list_free) {
   fail_unless(list_free_called == 1);
 
   list = girara_list_new2(NULL);
+  fail_unless(list != NULL);
+  girara_list_free(list);
+
+  list = girara_list_new2(g_free);
   fail_unless(list != NULL);
   girara_list_free(list);
 
