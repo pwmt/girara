@@ -21,10 +21,7 @@ START_TEST(test_datastructures_list) {
   girara_list_t* list = girara_list_new();
   // size of empty list
   fail_unless(girara_list_size(list) == 0);
-  // free empty list
-  girara_list_free(list);
 
-  list = girara_list_new();
   // append
   for (intptr_t i = 0; i != 10; ++i) {
     girara_list_append(list, (void*)i);
@@ -121,13 +118,10 @@ START_TEST(test_datastructures_list_merge) {
 } END_TEST
 
 START_TEST(test_datastructures_list_free) {
-  // free function
+  // free empty list
   girara_list_t* list = girara_list_new();
   fail_unless(list != NULL);
-  girara_list_set_free_function(list, list_free);
-  girara_list_append(list, (void*) 0xDEAD);
   girara_list_free(list);
-  fail_unless(list_free_called == 1);
 
   list = girara_list_new2(NULL);
   fail_unless(list != NULL);
@@ -136,6 +130,23 @@ START_TEST(test_datastructures_list_free) {
   list = girara_list_new2(g_free);
   fail_unless(list != NULL);
   girara_list_free(list);
+
+  // free cleared list
+  list = girara_list_new();
+  fail_unless(list != NULL);
+  girara_list_append(list, (void*) 0xDEAD);
+  fail_unless(girara_list_size(list) == 1);
+  girara_list_clear(list);
+  fail_unless(girara_list_size(list) == 0);
+  girara_list_free(list);
+
+  // free function
+  list = girara_list_new();
+  fail_unless(list != NULL);
+  girara_list_set_free_function(list, list_free);
+  girara_list_append(list, (void*) 0xDEAD);
+  girara_list_free(list);
+  fail_unless(list_free_called == 1);
 
   // remove with free function
   list_free_called = 0;
