@@ -72,7 +72,7 @@ doc:
 
 gcov: clean
 	$(QUIET)CFLAGS="${CFLAGS} -fprofile-arcs -ftest-coverage" LDFLAGS="${LDFLAGS} -fprofile-arcs" ${MAKE} $(PROJECT)
-	$(QUIET)${MAKE} -C tests
+	$(QUIET)CFLAGS="${CFLAGS} -fprofile-arcs -ftest-coverage" LDFLAGS="${LDFLAGS} -fprofile-arcs" ${MAKE} test
 	$(QUIET)lcov --directory . --capture --output-file $(PROJECT).info
 	$(QUIET)genhtml --output-directory gcov $(PROJECT).info
 
