@@ -12,6 +12,8 @@
 #endif
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
+static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK |
+  GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK;
 
 static bool
 clean_mask(guint hardware_keycode, GdkModifierType state, gint group, guint* clean, guint* keyval)
@@ -191,11 +193,13 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
   event.x = button->x;
   event.y = button->y;
 
+  const guint state = button->state & MOUSE_MASK;
+
   /* search registered mouse events */
   GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
     if (mouse_event->function != NULL
         && button->button == mouse_event->button
-        && button->state  == mouse_event->mask
+        && state  == mouse_event->mask
         && mouse_event->event_type == event.type
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
@@ -220,11 +224,13 @@ girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventBut
   event.x    = button->x;
   event.y    = button->y;
 
+  const guint state = button->state & MOUSE_MASK;
+
   /* search registered mouse events */
   GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
     if (mouse_event->function != NULL
         && button->button == mouse_event->button
-        && button->state  == mouse_event->mask
+        && state  == mouse_event->mask
         && mouse_event->event_type == GIRARA_EVENT_BUTTON_RELEASE
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
@@ -249,10 +255,12 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
   event.x    = button->x;
   event.y    = button->y;
 
+  const guint state = button->state & MOUSE_MASK;
+
   /* search registered mouse events */
   GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
     if (mouse_event->function != NULL
-        && button->state  == mouse_event->mask
+        && state  == mouse_event->mask
         && mouse_event->event_type == event.type
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
@@ -293,11 +301,13 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
       return false;
   }
 
+  const guint state = scroll->state & MOUSE_MASK;
+
   /* search registered mouse events */
   /* TODO: Filter correct event */
   GIRARA_LIST_FOREACH(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event)
     if (mouse_event->function != NULL
-        && scroll->state  == mouse_event->mask
+        && state  == mouse_event->mask
         && mouse_event->event_type == event.type
         && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
        ) {
