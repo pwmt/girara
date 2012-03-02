@@ -13,6 +13,28 @@
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
 
+static bool
+clean_mask(guint hardware_keycode, GdkModifierType state, gint group, guint* clean, guint* keyval)
+{
+  GdkModifierType consumed = 0;
+  if ((gdk_keymap_translate_keyboard_state(
+        gdk_keymap_get_default(),
+        hardware_keycode,
+        state, group,
+        keyval,
+        NULL,
+        NULL,
+        &consumed)
+      ) == FALSE) {
+    return false;
+  }
+
+  if (clean != NULL) {
+    *clean = state & ~consumed & ALL_ACCELS_MASK;
+  }
+  return true;
+}
+
 /* callback implementation */
 bool
 girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
@@ -20,20 +42,11 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
+  guint clean = 0;
   guint keyval = 0;
-  GdkModifierType consumed = 0;
-  if ((gdk_keymap_translate_keyboard_state(
-        gdk_keymap_get_default(),
-        event->hardware_keycode,
-        event->state, event->group,
-        &keyval,
-        NULL,
-        NULL,
-        &consumed)
-      ) == FALSE) {
+  if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
     return false;
   }
-  const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
 
   /* prepare event */
   GIRARA_LIST_FOREACH(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcut)
