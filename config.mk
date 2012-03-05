@@ -19,6 +19,8 @@ SOVERSION = ${SOMAJOR}.${SOMINOR}
 PREFIX ?= /usr
 LIBDIR ?= ${PREFIX}/lib
 INCLUDEDIR ?= ${PREFIX}/include
+# locale directory
+LOCALEDIR ?= ${PREFIX}/share/locale
 
 GIRARA_GTK_VERSION ?= 2
 
