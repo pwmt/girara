@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <glib/gi18n-lib.h>
-#include <locale.h>
 
 #include "session.h"
 #include "settings.h"
