@@ -1,6 +1,8 @@
 /* See LICENSE file for license and copyright information */
 
 #include <stdlib.h>
+#include <glib/gi18n.h>
+#include <locale.h>
 
 #include "session.h"
 #include "settings.h"
@@ -64,6 +66,8 @@ cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
 girara_session_t*
 girara_session_create()
 {
+  bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+
   girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
 
   /* init values */
@@ -105,7 +109,7 @@ girara_session_create()
   bool show_scrollbars   = false;
 
   /* add default settings */
-  girara_setting_add(session, "font",                     "monospace normal 9", STRING,  FALSE, "Font", cb_font, NULL);
+  girara_setting_add(session, "font",                     "monospace normal 9", STRING,  FALSE, _("Font"), cb_font, NULL);
   girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "default-bg",               "#000000",            STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING,  TRUE,  NULL, NULL, NULL);
@@ -135,9 +139,9 @@ girara_session_create()
   girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  NULL, NULL, NULL);
 
   /* window icon */
-  girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, "Window icon", cb_window_icon, NULL);
+  girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   /* exec-command */
-  girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, "Command to execute in :exec", NULL, NULL);
+  girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
 
   /* default shortcuts */
   girara_shortcut_add(session, 0,                GDK_KEY_Escape, NULL, girara_sc_abort,           normal_mode, 0, NULL);
@@ -167,11 +171,11 @@ girara_session_create()
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_e,            girara_isc_string_manipulation, GIRARA_GOTO_END,             NULL);
 
   /* default commands */
-  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,  NULL,          "Execute a command");
-  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,   NULL,          "Map a key sequence");
-  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,  NULL,          "Quit the program");
-  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,   girara_cc_set, "Set an option");
-  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap, NULL,          "Unmap a key sequence");
+  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,  NULL,          _("Execute a command"));
+  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,   NULL,          _("Map a key sequence"));
+  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,  NULL,          _("Quit the program"));
+  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,   girara_cc_set, _("Set an option"));
+  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap, NULL,          _("Unmap a key sequence"));
 
   /* default config handle */
   girara_config_handle_add(session, "map",   girara_cmd_map);

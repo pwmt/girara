@@ -11,7 +11,17 @@ DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
 HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h" -a ! -name "version.h")
 HEADERS_INSTALL = ${HEADERS} version.h
 
+
+ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
+CPPFLAGS += -DGETTEXT_PACKAGE=\"${PROJECTNV}\"
+endif
+ifeq (,$(findstring -DLOCALEDIR,${CPPFLAGS}))
+CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
+endif
+
+
 all: options ${PROJECT}
+	$(QUIET)${MAKE} -C po
 
 options:
 	@echo ${PROJECT} build options:
@@ -54,6 +64,7 @@ clean:
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
 		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov
 	$(QUIET)${MAKE} -C tests clean
+	$(QUIET)${MAKE} -C po clean
 
 ${PROJECT}-debug: lib${PROJECT}-debug.a lib${PROJECT}-debug.so.${SOVERSION}
 
@@ -85,10 +96,12 @@ test-debug: debug
 dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/tests
+	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/po
 	$(QUIET)cp LICENSE Makefile config.mk common.mk ${PROJECTNV}.pc.in \
 		${HEADERS} internal.h version.h.in README AUTHORS Doxyfile \
 		${SOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)cp tests/*.c tests/Makefile tests/config.mk ${PROJECTNV}-${VERSION}/tests
+	$(QUIET)cp po/Makefile tests/*.po ${PROJECTNV}-${VERSION}/po
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
 	$(QUIET)rm -rf ${PROJECTNV}-${VERSION}
@@ -113,6 +126,7 @@ install: all ${PROJECT}.pc install-headers
 	$(ECHO) installing pkgconfig file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
+	$(QUIET)${MAKE} -C po install
 
 install-headers: version.h
 	$(ECHO) installing header files

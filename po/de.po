@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-05 15:40+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../commands.c:108
+msgid "Usage: unmap <binding>"
+msgstr ""
+
+#: ../commands.c:110
+msgid "Usage: map <binding> <function>"
+msgstr ""
+
+#: ../commands.c:145
+#, c-format
+msgid "Unregistered mode specified: %s"
+msgstr ""
+
+#: ../commands.c:155
+#, c-format
+msgid "Invalid number of arguments passed:         %zu instead of at least %d"
+msgstr ""
+
+#: ../commands.c:184
+#, c-format
+msgid "Invalid modifier in %s"
+msgstr ""
+
+#: ../commands.c:223
+#, c-format
+msgid "Invalid special key value for %s"
+msgstr ""
+
+#: ../commands.c:259
+#, c-format
+msgid "Invalid special key value or mode %s"
+msgstr ""
+
+#: ../commands.c:317
+#, c-format
+msgid ""
+"Invalid number of arguments passed:           %zu instead of at least %u"
+msgstr ""
+
+#: ../commands.c:341
+#, c-format
+msgid "Not a valid shortcut function: %s"
+msgstr ""
+
+#: ../commands.c:429
+msgid "Not enough arguments."
+msgstr ""
+
+#: ../commands.c:434
+msgid "Too many arguments."
+msgstr ""
+
+#: ../commands.c:447
+#, c-format
+msgid "Unknown option: %s"
+msgstr ""
+
+#: ../commands.c:461
+msgid "true"
+msgstr ""
+
+#: ../commands.c:461
+msgid "false"
+msgstr ""
+
+#: ../commands.c:493
+#, c-format
+msgid "No value defined for option: %s"
+msgstr ""
+
+#: ../commands.c:508
+#, c-format
+msgid "Unknown value for option: %s"
+msgstr ""
+
+#: ../commands.c:633
+msgid "exec-command is invalid."
+msgstr ""
+
+#: ../commands.c:652
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr ""
+
+#. add default settings
+#: ../session.c:112
+msgid "Font"
+msgstr "Schriftart"
+
+#. window icon
+#: ../session.c:142
+msgid "Window icon"
+msgstr ""
+
+#. exec-command
+#: ../session.c:144
+msgid "Command to execute in :exec"
+msgstr ""
+
+#. default commands
+#: ../session.c:174
+msgid "Execute a command"
+msgstr ""
+
+#: ../session.c:175
+msgid "Map a key sequence"
+msgstr ""
+
+#: ../session.c:176
+msgid "Quit the program"
+msgstr "Beende das Programm"
+
+#: ../session.c:177
+msgid "Set an option"
+msgstr "Setze eine Option"
+
+#: ../session.c:178
+msgid "Unmap a key sequence"
+msgstr ""

@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <glib/gi18n.h>
 
 #include "commands.h"
 #include "datastructures.h"
@@ -104,9 +105,9 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
   if (number_of_arguments < ((unmap == true) ? 1 : 2)) {
     if (unmap == true) {
-      girara_notify(session, GIRARA_WARNING, "Usage: unmap <binding>");
+      girara_notify(session, GIRARA_WARNING, _("Usage: unmap <binding>"));
     } else {
-      girara_notify(session, GIRARA_WARNING, "Usage: map <binding> <function>");
+      girara_notify(session, GIRARA_WARNING, _("Usage: map <binding> <function>"));
     }
     return false;
   }
@@ -141,7 +142,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
     if (is_mode == false) {
       girara_warning("Unregistered mode specified: %s", tmp_inner);
-      girara_notify(session, GIRARA_ERROR, "Unregistered mode specified: %s", tmp_inner);
+      girara_notify(session, GIRARA_ERROR, _("Unregistered mode specified: %s"), tmp_inner);
       g_free(tmp_inner);
       return false;
     }
@@ -151,8 +152,8 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
   unsigned int limit = (unmap == true) ? 1 : 2;
   if (number_of_arguments < limit) {
     girara_warning("Invalid number of arguments passed: %zu instead of at least %d", number_of_arguments, limit);
-    girara_notify(session, GIRARA_ERROR, "Invalid number of arguments passed: \
-        %zu instead of at least %d", number_of_arguments, limit);
+    girara_notify(session, GIRARA_ERROR, _("Invalid number of arguments passed: \
+        %zu instead of at least %d"), number_of_arguments, limit);
     return false;
   }
 
@@ -180,7 +181,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
           break;
         default:
           girara_warning("Invalid modifier in %s", tmp);
-          girara_notify(session, GIRARA_ERROR, "Invalid modifier in %s", tmp);
+          girara_notify(session, GIRARA_ERROR, _("Invalid modifier in %s"), tmp);
           g_free(tmp);
           return false;
       }
@@ -219,7 +220,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
         if (found == false) {
           girara_warning("Invalid special key value or mode: %s", tmp);
-          girara_notify(session, GIRARA_ERROR, "Invalid special key value for %s", tmp);
+          girara_notify(session, GIRARA_ERROR, _("Invalid special key value for %s"), tmp);
           g_free(tmp);
           return false;
         }
@@ -255,7 +256,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
       if (found == false) {
         girara_warning("Invalid special key value or mode: %s", tmp);
-        girara_notify(session, GIRARA_ERROR, "Invalid special key value or mode %s", tmp);
+        girara_notify(session, GIRARA_ERROR, _("Invalid special key value or mode %s"), tmp);
         g_free(tmp);
         return false;
       }
@@ -313,8 +314,8 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     limit = (mouse_mode == true) ? 3 : 2;
     if (number_of_arguments < limit) {
       girara_warning("Invalid number of arguments passed: %zu instead of at least %u", number_of_arguments, limit);
-      girara_notify(session, GIRARA_ERROR, "Invalid number of arguments passed: \
-          %zu instead of at least %u", number_of_arguments, limit);
+      girara_notify(session, GIRARA_ERROR, _("Invalid number of arguments passed: \
+          %zu instead of at least %u"), number_of_arguments, limit);
       return false;
     }
 
@@ -337,7 +338,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
     if (found_mapping == false) {
       girara_warning("Not a valid shortcut function: %s", tmp);
-      girara_notify(session, GIRARA_ERROR, "Not a valid shortcut function:  %s", tmp);
+      girara_notify(session, GIRARA_ERROR, _("Not a valid shortcut function: %s"), tmp);
       if (shortcut_buffer_command) {
         g_free(shortcut_buffer_command);
       }
@@ -425,12 +426,12 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
 
   if (number_of_arguments == 0) {
     girara_warning("Not enough arguments for :set.");
-    girara_notify(session, GIRARA_ERROR, "Not enough arguments.");
+    girara_notify(session, GIRARA_ERROR, _("Not enough arguments."));
     return false;
   }
   if (number_of_arguments > 2) {
     girara_warning("Too many arguments for :set.");
-    girara_notify(session, GIRARA_ERROR, "Too many arguments.");
+    girara_notify(session, GIRARA_ERROR, _("Too many arguments."));
     return false;
   }
 
@@ -443,7 +444,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
   girara_setting_t* setting = girara_setting_find(session, name);
   if (setting == NULL) {
     girara_warning("Unknown option: %s", name);
-    girara_notify(session, GIRARA_ERROR, "Unknown option: %s", name);
+    girara_notify(session, GIRARA_ERROR, _("Unknown option: %s"), name);
     return false;
   }
 
@@ -457,7 +458,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
         girara_setting_get_value(setting, &value);
         bool tmp = !value;
         girara_setting_set_value(session, setting, &tmp);
-        girara_notify(session, GIRARA_INFO, "%s: %s", name, tmp ? "true" : "false");
+        girara_notify(session, GIRARA_INFO, "%s: %s", name, tmp ? _("true") : _("false"));
         break;
       }
       case FLOAT:
@@ -489,7 +490,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
     char* value = (char*) girara_list_nth(argument_list, 1);
     if (value == NULL) {
       girara_warning("No value defined for option: %s", name);
-      girara_notify(session, GIRARA_ERROR, "No value defined for option: %s", name);
+      girara_notify(session, GIRARA_ERROR, _("No value defined for option: %s"), name);
       return false;
     }
 
@@ -504,7 +505,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
           girara_setting_set_value(session, setting, &b);
         } else {
           girara_warning("Unknown value for option: %s", name);
-          girara_notify(session, GIRARA_ERROR, "Unknown value for option: %s", name);
+          girara_notify(session, GIRARA_ERROR, _("Unknown value for option: %s"), name);
         }
         break;
       case FLOAT:
@@ -629,7 +630,7 @@ girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list)
   girara_setting_get(session, "exec-command", &cmd);
   if (cmd == NULL || strlen(cmd) == 0) {
     girara_warning("exec-command is invalid.");
-    girara_notify(session, GIRARA_ERROR, "exec-command is invalid.");
+    girara_notify(session, GIRARA_ERROR, _("exec-command is invalid."));
     g_free(cmd);
     return false;
   }
@@ -648,7 +649,7 @@ girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list)
   gboolean ret = g_spawn_command_line_async(command->str, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
-    girara_notify(session, GIRARA_ERROR, "Failed to execute command: %s", error->message);
+    girara_notify(session, GIRARA_ERROR, _("Failed to execute command: %s"), error->message);
     g_error_free(error);
   }
 
