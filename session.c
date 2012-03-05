@@ -66,6 +66,7 @@ girara_session_t*
 girara_session_create()
 {
   bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+  bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 
   girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
 
