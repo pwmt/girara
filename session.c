@@ -1,7 +1,7 @@
 /* See LICENSE file for license and copyright information */
 
 #include <stdlib.h>
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 #include <locale.h>
 
 #include "session.h"
