@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-05 15:40+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-03-05 16:42+0100\n"
+"PO-Revision-Date: 2012-03-05 17:01+0100\n"
+"Last-Translator: Sebastian Ramacher <s.ramacher@gmx.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +32,7 @@ msgstr ""
 #: ../commands.c:155
 #, c-format
 msgid "Invalid number of arguments passed:         %zu instead of at least %d"
-msgstr ""
+msgstr "Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %d"
 
 #: ../commands.c:184
 #, c-format
@@ -52,9 +51,8 @@ msgstr ""
 
 #: ../commands.c:317
 #, c-format
-msgid ""
-"Invalid number of arguments passed:           %zu instead of at least %u"
-msgstr ""
+msgid "Invalid number of arguments passed:           %zu instead of at least %u"
+msgstr "Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %d"
 
 #: ../commands.c:341
 #, c-format
@@ -63,43 +61,43 @@ msgstr ""
 
 #: ../commands.c:429
 msgid "Not enough arguments."
-msgstr ""
+msgstr "Zu wenige Argumente."
 
 #: ../commands.c:434
 msgid "Too many arguments."
-msgstr ""
+msgstr "Zu viele Argumente."
 
 #: ../commands.c:447
 #, c-format
 msgid "Unknown option: %s"
-msgstr ""
+msgstr "Unbekannte Otion: %s"
 
 #: ../commands.c:461
 msgid "true"
-msgstr ""
+msgstr "wahr"
 
 #: ../commands.c:461
 msgid "false"
-msgstr ""
+msgstr "falsch"
 
 #: ../commands.c:493
 #, c-format
 msgid "No value defined for option: %s"
-msgstr ""
+msgstr "Kein Wert für Option definiert: %s"
 
 #: ../commands.c:508
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr ""
+msgstr "Unbekannter Wert für Option: %s"
 
 #: ../commands.c:633
 msgid "exec-command is invalid."
-msgstr ""
+msgstr "exec-command ist ungültig."
 
 #: ../commands.c:652
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr ""
+msgstr "Konnte Befehl nicht ausführen: %s"
 
 #. add default settings
 #: ../session.c:112
@@ -114,12 +112,12 @@ msgstr ""
 #. exec-command
 #: ../session.c:144
 msgid "Command to execute in :exec"
-msgstr ""
+msgstr "Befehl, der von :exec ausgeführt werden soll"
 
 #. default commands
 #: ../session.c:174
 msgid "Execute a command"
-msgstr ""
+msgstr "Führe einen Befehl aus."
 
 #: ../session.c:175
 msgid "Map a key sequence"
@@ -136,3 +134,4 @@ msgstr "Setze eine Option"
 #: ../session.c:178
 msgid "Unmap a key sequence"
 msgstr ""
+
