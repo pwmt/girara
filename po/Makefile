@@ -42,5 +42,5 @@ install: ${MOS}
 uninstall: ${MOS}
 	$(ECHO) removing translations
 	$(QUIET)set -e && for f in $^ ; do \
-		rm -rf $(DESTDIR)$(LOCALEDIR)/`dirname $$f`; \
+		rm -f $(LOCALEDIR)/$$f; \
 	done
