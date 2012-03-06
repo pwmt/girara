@@ -30,8 +30,13 @@ START_TEST(test_settings_basic) {
 
   ptr = NULL;
   fail_unless(!girara_setting_add(session, "test3", NULL, INT, false, NULL, NULL, NULL));
-  girara_setting_get(session, "test3", &ptr);
+  fail_unless(!girara_setting_get(session, "test3", &ptr));
   fail_unless(ptr == NULL);
+
+  float val = 0.0, rval = 0.0;
+  fail_unless(girara_setting_add(session, "test4", &val, FLOAT, false, NULL, NULL, NULL));
+  fail_unless(girara_setting_get(session, "test4", &rval));
+  fail_unless(val == rval);
 
   girara_session_destroy(session);
 } END_TEST

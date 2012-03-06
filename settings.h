@@ -90,5 +90,4 @@ girara_setting_type_t girara_setting_get_type(girara_setting_t* setting);
 void girara_setting_set_value(girara_session_t* session,
     girara_setting_t* setting, void* value);
 
-
 #endif
