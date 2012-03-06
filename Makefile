@@ -139,6 +139,7 @@ uninstall: uninstall-headers
 		${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} ${LIBDIR}/lib${PROJECT}.so
 	$(ECHO) removing pkgconfig file
 	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
+	$(QUIET)${MAKE} -C po uninstall
 
 uninstall-headers:
 	$(ECHO) removing header files
