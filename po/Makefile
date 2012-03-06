@@ -38,3 +38,9 @@ install: ${MOS}
 		mkdir -p $(DESTDIR)$(LOCALEDIR)/`dirname $$f`; \
 		install -m 644 $$f $(DESTDIR)$(LOCALEDIR)/`dirname $$f` ; \
 	done
+
+uninstall: ${MOS}
+	$(ECHO) removing translations
+	$(QUIET)set -e && for f in $^ ; do \
+		rm -rf $(DESTDIR)$(LOCALEDIR)/`dirname $$f`; \
+	done
