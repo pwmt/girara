@@ -210,6 +210,24 @@ START_TEST(test_safe_realloc) {
   fail_unless(ptr == NULL);
 } END_TEST
 
+START_TEST(test_split_path) {
+  fail_unless(girara_split_path_array(NULL) == NULL);
+  fail_unless(girara_split_path_array("") == NULL);
+
+  girara_list_t* res = girara_split_path_array("one/path");
+  fail_unless(res != NULL);
+  fail_unless(girara_list_size(res) == 1);
+  fail_unless(g_strcmp0(girara_list_nth(res, 0), "one/path") == 0);
+  girara_list_free(res);
+
+  res = girara_split_path_array("first/path:second/path");
+  fail_unless(res != NULL);
+  fail_unless(girara_list_size(res) == 2);
+  fail_unless(g_strcmp0(girara_list_nth(res, 0), "first/path") == 0);
+  fail_unless(g_strcmp0(girara_list_nth(res, 1), "second/path") == 0);
+  girara_list_free(res);
+} END_TEST
+
 Suite* suite_utils()
 {
   TCase* tcase = NULL;
@@ -243,6 +261,11 @@ Suite* suite_utils()
   /* safe realloc */
   tcase = tcase_create("safe_realloc");
   tcase_add_test(tcase, test_safe_realloc);
+  suite_add_tcase(suite, tcase);
+
+  /* split path */
+  tcase = tcase_create("split_path");
+  tcase_add_test(tcase, test_split_path);
   suite_add_tcase(suite, tcase);
 
   return suite;
