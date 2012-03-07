@@ -21,7 +21,6 @@ endif
 
 
 all: options ${PROJECT}
-	$(QUIET)${MAKE} -C po
 
 options:
 	@echo ${PROJECT} build options:
@@ -114,7 +113,10 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(QUIET)echo GTK_VERSION=${GIRARA_GTK_VERSION} >> ${PROJECT}.pc
 	$(QUIET)cat ${PROJECTNV}.pc.in >> ${PROJECT}.pc
 
-install: all ${PROJECT}.pc install-headers
+po:
+	$(QUIET)${MAKE} -C po
+
+install: all ${PROJECT}.pc install-headers po
 	$(ECHO) installing library file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
@@ -145,7 +147,7 @@ uninstall-headers:
 	$(ECHO) removing header files
 	$(QUIET)rm -rf ${INCLUDEDIR}/girara
 
-.PHONY: all options clean debug doc test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug
+.PHONY: all options clean debug doc test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug po
 
 TDEPENDS = ${OBJECTS:.o=.o.dep}
 DEPENDS = ${TDEPENDS:^=.depend/}
