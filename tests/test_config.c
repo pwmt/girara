@@ -33,6 +33,7 @@ START_TEST(test_config_parse) {
   fail_unless(girara_setting_get(session, "test2", &real_val));
   fail_unless(real_val == 2);
 
+  close(fd);
   girara_session_destroy(session);
 } END_TEST
 
