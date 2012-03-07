@@ -76,7 +76,7 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
   }
 
   /* add new setting */
-  girara_setting_t* setting = g_slice_new(girara_setting_t);
+  girara_setting_t* setting = g_slice_new0(girara_setting_t);
 
   setting->name        = g_strdup(name);
   setting->type        = type;
