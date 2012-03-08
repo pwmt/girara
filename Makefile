@@ -8,7 +8,7 @@ PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
-HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h" -a ! -name "version.h")
+HEADERS   = $(filter-out version.h,$(filter-out internal.h $(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
 
@@ -116,6 +116,9 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 po:
 	$(QUIET)${MAKE} -C po
 
+update-po:
+	$(QUIET)${MAKE} -C po update-po
+
 install: all install-headers po
 	$(ECHO) installing library file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}
@@ -139,15 +142,16 @@ uninstall: uninstall-headers
 	$(ECHO) removing library file
 	$(QUIET)rm -f ${LIBDIR}/lib${PROJECT}.a ${LIBDIR}/lib${PROJECT}.so.${SOVERSION} \
 		${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} ${LIBDIR}/lib${PROJECT}.so
-	$(ECHO) removing pkgconfig file
-	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 	$(QUIET)${MAKE} -C po uninstall
 
 uninstall-headers:
 	$(ECHO) removing header files
 	$(QUIET)rm -rf ${INCLUDEDIR}/girara
+	$(ECHO) removing pkgconfig file
+	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 
-.PHONY: all options clean debug doc test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug po
+.PHONY: all options clean debug doc test dist install install-headers uninstall \
+	uninstall-headers ${PROJECT} ${PROJECT}-debug po update-po
 
 TDEPENDS = ${OBJECTS:.o=.o.dep}
 DEPENDS = ${TDEPENDS:^=.depend/}
