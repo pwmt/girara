@@ -8,7 +8,7 @@ PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
-HEADERS   = $(filter-out version.h,$(filter-out internal.h $(wildcard *.h)))
+HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
 
