@@ -100,7 +100,7 @@ dist: clean
 		${HEADERS} internal.h version.h.in README AUTHORS Doxyfile \
 		${SOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)cp tests/*.c tests/Makefile tests/config.mk ${PROJECTNV}-${VERSION}/tests
-	$(QUIET)cp po/Makefile tests/*.po ${PROJECTNV}-${VERSION}/po
+	$(QUIET)cp po/Makefile po/*.po ${PROJECTNV}-${VERSION}/po
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
 	$(QUIET)rm -rf ${PROJECTNV}-${VERSION}
@@ -116,7 +116,7 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 po:
 	$(QUIET)${MAKE} -C po
 
-install: all ${PROJECT}.pc install-headers po
+install: all install-headers po
 	$(ECHO) installing library file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
@@ -125,12 +125,12 @@ install: all ${PROJECT}.pc install-headers po
 		echo "Failed to create lib${PROJECT}.so.${SOMAJOR}. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so || \
 		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
+	$(QUIET)${MAKE} -C po install
+
+install-headers: version.h ${PROJECT}.pc
 	$(ECHO) installing pkgconfig file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
-	$(QUIET)${MAKE} -C po install
-
-install-headers: version.h
 	$(ECHO) installing header files
 	$(QUIET)mkdir -p ${DESTDIR}${INCLUDEDIR}/girara
 	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${INCLUDEDIR}/girara
