@@ -1,11 +1,12 @@
 # See LICENSE file for license and copyright information
 
-PROJECT  = girara
-CATALOGS = $(wildcard *.po)
-MOS = $(patsubst %.po, %/LC_MESSAGES/${PROJECT}.mo, $(CATALOGS))
-
 include ../config.mk
 include ../common.mk
+
+PROJECTNV = girara
+PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
+CATALOGS  = $(wildcard *.po)
+MOS = $(patsubst %.po, %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo, $(CATALOGS))
 
 all: ${MOS}
 
@@ -19,17 +20,17 @@ POTFILES.in: $(wildcard ../*.c)
 	done && \
 	mv $@.tmp $@
 
-${PROJECT}.pot: POTFILES.in
-	$(ECHO) regenerate ${PROJECT}.pot
-	$(QUIET)intltool-update --pot --gettext-package=${PROJECT}
+${GETTEXT_PACKAGE}.pot: POTFILES.in
+	$(ECHO) regenerate $@
+	$(QUIET)intltool-update --pot --gettext-package=${GETTEXT_PACKAGE}
 
-update-po: ${PROJECT}.pot
+update-po: ${GETTEXT_PACKAGE}.pot
 	$(ECHO) updating po: files ${CATALOGS}
 	$(QUIET)set -e && for f in ${CATALOGS} ; do \
-		intltool-update --dist --gettext-package=${PROJECT} `echo $$f | sed 's/\.po//'` ; \
+		intltool-update --dist --gettext-package=${GETTEXT_PACKAGE} `echo $$f | sed 's/\.po//'` ; \
 	done
 
-%/LC_MESSAGES/${PROJECT}.mo: %.po
+%/LC_MESSAGES/${GETTEXT_PACKAGE}.mo: %.po
 	@mkdir -p $(@D)
 	$(ECHO) msgfmt $(shell echo $< | sed 's/\.po//')
 	$(QUIET)msgfmt $< -o $@ -f

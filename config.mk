@@ -48,3 +48,6 @@ SFLAGS ?= -s
 
 # set to something != 0 if you want verbose build output
 VERBOSE ?= 0
+
+# gettext package name
+GETTEXT_PACKAGE ?= ${PROJECTNV}
