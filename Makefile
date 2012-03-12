@@ -20,7 +20,7 @@ CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
 
 
-all: options ${PROJECT}
+all: options ${PROJECT} po
 
 options:
 	@echo ${PROJECT} build options:
