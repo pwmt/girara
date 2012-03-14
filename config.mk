@@ -50,4 +50,4 @@ SFLAGS ?= -s
 VERBOSE ?= 0
 
 # gettext package name
-GETTEXT_PACKAGE ?= ${PROJECTNV}
+GETTEXT_PACKAGE ?= lib${PROJECTNV}.${SOMAJOR}
