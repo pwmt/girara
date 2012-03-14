@@ -96,22 +96,27 @@ START_TEST(test_home_directory) {
   }
 } END_TEST
 
-START_TEST(test_fix_path) {
+START_TEST(test_fix_path_basic) {
   gchar* result = girara_fix_path("test");
-  fail_unless(g_strcmp0(result, "test") == 0, "Fix path result does not match");
+  fail_unless(g_strcmp0(result, "test") == 0,
+      "Fix path result does not match (got: %s, expected: %s)", result, "test");
   g_free(result);
 
   result = girara_fix_path("test/test");
-  fail_unless(g_strcmp0(result, "test/test") == 0, "Fix path result does not match");
+  fail_unless(g_strcmp0(result, "test/test") == 0,
+      "Fix path result does not match (got: %s, expected: %s)", result, "test/test");
   g_free(result);
+} END_TEST
 
+START_TEST(test_fix_path_extended) {
   girara_list_t* list = read_pwd_info();
   GIRARA_LIST_FOREACH(list, pwd_info_t*, iter, pwdinfo)
     gchar* path = g_strdup_printf("~%s/test", pwdinfo->name);
     gchar* eres = g_build_filename(pwdinfo->dir, "test", NULL);
 
     gchar* result = girara_fix_path(path);
-    fail_unless(g_strcmp0(result, eres) == 0, "Fix path result does not match");
+    fail_unless(g_strcmp0(result, eres) == 0,
+        "Fix path result does not match (got: %s, expected %s)", result, eres);
     g_free(result);
     g_free(eres);
     g_free(path);
@@ -130,7 +135,8 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   bool result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
   g_assert(output);
-  fail_unless(g_strcmp0(output, expected) == 0, "Output is not the same");
+  fail_unless(g_strcmp0(output, expected) == 0, "Output is not the same (got: %s, expected: %s)",
+      output, expected);
   g_free(output);
 
   g_free(envp[0]);
@@ -139,7 +145,8 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
   g_assert(output);
-  fail_unless(g_strcmp0(output, "~/xdg") == 0, "Output is not the same");
+  fail_unless(g_strcmp0(output, "~/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
+      output, "~/xdg");
 
   g_free(envp[0]);
   envp[0] = g_strdup_printf("%s=/home/test/xdg", envvar);
@@ -147,7 +154,8 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   result= g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
   g_assert(output);
-  fail_unless(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same");
+  fail_unless(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
+      output, "/home/test/xdg");
 
   g_free(argv[1]);
 }
@@ -175,25 +183,26 @@ START_TEST(test_file_read) {
 
   gchar* path = NULL;
   int fd = g_file_open_tmp("girara.test.XXXXXX", &path, NULL);
-  fail_unless(fd != -1);
-  fail_unless(g_strcmp0(path, "") != 0);
-  close(fd);
+  fail_unless(fd != -1, "Failed to open temporary file.");
+  fail_unless(g_strcmp0(path, "") != 0, "Failed to open temporary file.");
 
-  g_assert(g_file_set_contents(path, CONTENT, -1, NULL));
+  fail_unless(g_file_set_contents(path, CONTENT, -1, NULL) == TRUE, "Failed to set file content.");
 
   char* content = girara_file_read(path);
-  fail_unless(g_strcmp0(content, CONTENT) == 0);
+  fail_unless(g_strcmp0(content, CONTENT) == 0, "Reading file failed");
   free(content);
 
   FILE* file = girara_file_open(path, "r");
   fail_unless(file != NULL);
   for (size_t i = 0; i != NUMLINES; ++i) {
     char* line = girara_file_read_line(file);
-    fail_unless(g_strcmp0(line, LINES[i]) == 0);
+    fail_unless(g_strcmp0(line, LINES[i]) == 0, "Line doesn't match (got: %s, expected: %s)",
+        line, LINES[i]);
     free(line);
   }
   fclose(file);
 
+  close(fd);
   fail_unless(g_remove(path) == 0);
   g_free(path);
 } END_TEST
@@ -240,7 +249,8 @@ Suite* suite_utils()
 
   /* fix path */
   tcase = tcase_create("fix_path");
-  tcase_add_test(tcase, test_fix_path);
+  tcase_add_test(tcase, test_fix_path_basic);
+  tcase_add_test(tcase, test_fix_path_extended);
   suite_add_tcase(suite, tcase);
 
   /* xdg path */
