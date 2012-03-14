@@ -186,7 +186,11 @@ START_TEST(test_file_read) {
   fail_unless(fd != -1, "Failed to open temporary file.");
   fail_unless(g_strcmp0(path, "") != 0, "Failed to open temporary file.");
 
-  fail_unless(g_file_set_contents(path, CONTENT, -1, NULL) == TRUE, "Failed to set file content.");
+  GError* error = NULL;
+  if (g_file_set_contents(path, CONTENT, -1, &error) == FALSE) {
+    fail_unless(false, "Couldn't set content: %s", error->message);
+    g_error_free(error);
+  }
 
   char* content = girara_file_read(path);
   fail_unless(g_strcmp0(content, CONTENT) == 0, "Reading file failed");

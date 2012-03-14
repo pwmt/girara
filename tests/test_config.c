@@ -21,9 +21,13 @@ START_TEST(test_config_parse) {
   char* filename = NULL;
   int fd = g_file_open_tmp(NULL, &filename, NULL);
   fail_unless(fd != -1 && filename != NULL, "Couldn't open temporary file.");
-  fail_unless(g_file_set_contents(filename,
+  GError* error = NULL;
+  if (g_file_set_contents(filename,
         "set test1 config-string\n" \
-        "set test2 2\n", -1, NULL), "Couldn't set file content.");
+        "set test2 2\n", -1, &error) == FALSE) {
+    fail_unless(false, "Couldn't set content: %s", error->message);
+    g_error_free(error);
+  }
   girara_config_parse(session, filename);
 
   char* ptr = NULL;
