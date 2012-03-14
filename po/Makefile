@@ -33,7 +33,7 @@ update-po: ${GETTEXT_PACKAGE}.pot
 %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo: %.po
 	@mkdir -p $(@D)
 	$(ECHO) msgfmt $(shell echo $< | sed 's/\.po//')
-	$(QUIET)msgfmt $< -o $@ -f
+	$(QUIET)msgfmt $< -o $@ -f -c
 
 install: ${MOS}
 	$(ECHO) installing translations
