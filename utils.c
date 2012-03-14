@@ -230,6 +230,31 @@ girara_file_open(const char* path, const char* mode)
   /*return fp;*/
 }
 
+#if defined(__OpenBSD__)
+char*
+girara_file_read_line(FILE* file)
+{
+  if (file == NULL) {
+    return NULL;
+  }
+
+  size_t size = 0;
+  char* line = NULL;
+
+  if ((line = fgetln(file, &size)) == NULL) {
+    return NULL;
+  }
+
+  /* remove the trailing line deliminator */
+  g_strdelimit(line, "\n\r", '\0');
+  char* copy = strdup(line);
+  if (copy == NULL) {
+	  return NULL;
+  }
+
+  return copy;
+}
+#else
 char*
 girara_file_read_line(FILE* file)
 {
@@ -250,6 +275,7 @@ girara_file_read_line(FILE* file)
   g_strdelimit(line, "\n\r", '\0');
   return line;
 }
+#endif
 
 char*
 girara_file_read(const char* path)
