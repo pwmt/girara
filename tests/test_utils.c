@@ -203,7 +203,7 @@ START_TEST(test_file_read) {
   fclose(file);
 
   close(fd);
-  fail_unless(g_remove(path) == 0);
+  fail_unless(g_remove(path) == 0, "Failed to remove temporary file.");
   g_free(path);
 } END_TEST
 
