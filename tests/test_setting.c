@@ -7,7 +7,7 @@
 
 START_TEST(test_settings_basic) {
   girara_session_t* session = girara_session_create();
-  fail_unless(session != NULL);
+  fail_unless(session != NULL, "Couldn't create session.", NULL);
 
   fail_unless(girara_setting_add(session, "test", NULL, STRING, false, NULL, NULL, NULL));
   char* ptr = NULL;
