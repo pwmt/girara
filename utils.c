@@ -244,12 +244,13 @@ girara_file_read_line(FILE* file)
     return NULL;
   }
 
-  /* remove the trailing line deliminator */
-  g_strdelimit(line, "\n\r", '\0');
   char* copy = strndup(line, size);
   if (copy == NULL) {
 	  return NULL;
   }
+
+  /* remove the trailing line deliminator */
+  g_strdelimit(copy, "\n\r", '\0');
 
   return copy;
 }
