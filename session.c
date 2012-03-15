@@ -22,11 +22,13 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setti
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  GError* error = NULL;
-  gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), (const char*) value, &error);
-  if (error != NULL) {
-    girara_error("failed to load window icon: %s", error->message);
-    g_error_free(error);
+  if (session->gtk.window != NULL) {
+    GError* error = NULL;
+    gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), (const char*) value, &error);
+    if (error != NULL) {
+      girara_error("failed to load window icon: %s", error->message);
+      g_error_free(error);
+    }
   }
 }
 
@@ -425,6 +427,17 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
 
+  char* window_icon = NULL;
+  girara_setting_get(session, "window-icon", &window_icon);
+  if (window_icon != NULL) {
+    GError* error = NULL;
+    gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), window_icon, &error);
+    if (error != NULL) {
+      girara_error("failed to load window icon: %s", error->message);
+      g_error_free(error);
+    }
+    g_free(window_icon);
+  }
   return TRUE;
 }
 
