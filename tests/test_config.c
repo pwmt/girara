@@ -39,7 +39,7 @@ START_TEST(test_config_parse) {
   int real_val = 0;
   fail_unless(girara_setting_get(session, "test2", &real_val), "Failed to get setting 'test1'.", NULL);
   fail_unless(real_val == 2, "Value of 'test2' doesn't match (got: %d, expected: %d",
-      real_val, 2), NULL;
+      real_val, 2, NULL);
 
   close(fd);
   fail_unless(g_remove(filename) == 0, "Failed to remove temporary file.", NULL);
