@@ -239,15 +239,14 @@ girara_file_read_line(FILE* file)
   }
 
   size_t size = 0;
-  char* line = NULL;
-
-  if ((line = fgetln(file, &size)) == NULL) {
+  char* line = fgetln(file, &size);
+  if (line  == NULL) {
     return NULL;
   }
 
   /* remove the trailing line deliminator */
   g_strdelimit(line, "\n\r", '\0');
-  char* copy = strdup(line);
+  char* copy = strndup(line, size);
   if (copy == NULL) {
 	  return NULL;
   }
