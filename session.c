@@ -429,7 +429,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
-  if (window_icon != NULL) {
+  if (window_icon != NULL && strlen(window_icon) != 0) {
     GError* error = NULL;
     gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), window_icon, &error);
     if (error != NULL) {
