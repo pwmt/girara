@@ -25,7 +25,7 @@ msgstr ""
 #: ../commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr ""
+msgstr "Modus ist nicht registriert: %s"
 
 #: ../commands.c:156 ../commands.c:318
 #, c-format
@@ -100,75 +100,75 @@ msgstr "Schriftart"
 
 #: ../session.c:115
 msgid "Default foreground color"
-msgstr ""
+msgstr "Standardfarbe des Vordergrunds"
 
 #: ../session.c:116
 msgid "Default background color"
-msgstr ""
+msgstr "Standardfarbe des Hintergrunds"
 
 #: ../session.c:117
 msgid "Inputbar foreground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Eingabezeile"
 
 #: ../session.c:118
 msgid "Inputbar background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Eingabezeile"
 
 #: ../session.c:119
 msgid "Statusbar foreground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Statuszeile"
 
 #: ../session.c:120
 msgid "Statsubar background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Statuszeile"
 
 #: ../session.c:121
 msgid "Completion foeground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Vervollständigung"
 
 #: ../session.c:122
 msgid "Completion background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Vervollständigung"
 
 #: ../session.c:123
 msgid "Completion group foreground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
 
 #: ../session.c:124
 msgid "Completion group background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
 
 #: ../session.c:125
 msgid "Completion highlight foreground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
 
 #: ../session.c:126
 msgid "Completion highlight background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
 
 #: ../session.c:127
 msgid "Error notification foreground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
 
 #: ../session.c:128
 msgid "Error notification background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
 
 #: ../session.c:129
 msgid "Warning notification foreground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
 
 #: ../session.c:130
 msgid "Warning notifaction background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
 
 #: ../session.c:131
 msgid "Notification foreground color"
-msgstr ""
+msgstr "Vordergrundfarbe der Benachrichtigung"
 
 #: ../session.c:132
 msgid "Notification background color"
-msgstr ""
+msgstr "Hintergrundfarbe der Benachrichtigung"
 
 #: ../session.c:133
 msgid "Tab bar foreground color"
@@ -188,15 +188,15 @@ msgstr ""
 
 #: ../session.c:138
 msgid "Initial window width"
-msgstr ""
+msgstr "Ausgangsbreite des Fensters"
 
 #: ../session.c:139
 msgid "Initial window height"
-msgstr ""
+msgstr "Ausgangshöhe des Fensters"
 
 #: ../session.c:140
 msgid "Number of completion items"
-msgstr ""
+msgstr "Anzahl der Elemente in der Vervollständigung"
 
 #: ../session.c:141
 msgid "Show scrollbars"
@@ -205,7 +205,7 @@ msgstr ""
 #. window icon
 #: ../session.c:144
 msgid "Window icon"
-msgstr ""
+msgstr "Fenstericon"
 
 #. exec-command
 #: ../session.c:146
