@@ -2,7 +2,7 @@
 
 GIRARA_VERSION_MAJOR = 0
 GIRARA_VERSION_MINOR = 1
-GIRARA_VERSION_REV = 0
+GIRARA_VERSION_REV   = 1
 VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 # Rules for the SOMAJOR and SOMINOR.
 # Before a release check perform the following checks against the last release:
@@ -48,3 +48,9 @@ SFLAGS ?= -s
 
 # set to something != 0 if you want verbose build output
 VERBOSE ?= 0
+
+# gettext package name
+GETTEXT_PACKAGE ?= lib${PROJECTNV}.${SOMAJOR}
+
+# msgfmt
+MSGFMT ?= msgfmt

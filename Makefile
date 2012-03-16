@@ -8,19 +8,19 @@ PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 SOURCE    = $(wildcard *.c)
 OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
 DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
-HEADERS   = $(shell find . -maxdepth 1 -name "*.h" -a ! -name "internal.h" -a ! -name "version.h")
+HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
 
 ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
-CPPFLAGS += -DGETTEXT_PACKAGE=\"${PROJECTNV}\"
+CPPFLAGS += -DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"
 endif
 ifeq (,$(findstring -DLOCALEDIR,${CPPFLAGS}))
 CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
 
 
-all: options ${PROJECT}
+all: options ${PROJECT} po
 
 options:
 	@echo ${PROJECT} build options:
@@ -100,7 +100,7 @@ dist: clean
 		${HEADERS} internal.h version.h.in README AUTHORS Doxyfile \
 		${SOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)cp tests/*.c tests/Makefile tests/config.mk ${PROJECTNV}-${VERSION}/tests
-	$(QUIET)cp po/Makefile tests/*.po ${PROJECTNV}-${VERSION}/po
+	$(QUIET)cp po/Makefile po/*.po ${PROJECTNV}-${VERSION}/po
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
 	$(QUIET)rm -rf ${PROJECTNV}-${VERSION}
@@ -116,7 +116,10 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 po:
 	$(QUIET)${MAKE} -C po
 
-install: all ${PROJECT}.pc install-headers po
+update-po:
+	$(QUIET)${MAKE} -C po update-po
+
+install: all install-headers po
 	$(ECHO) installing library file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
@@ -125,12 +128,12 @@ install: all ${PROJECT}.pc install-headers po
 		echo "Failed to create lib${PROJECT}.so.${SOMAJOR}. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so || \
 		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
+	$(QUIET)${MAKE} -C po install
+
+install-headers: version.h ${PROJECT}.pc
 	$(ECHO) installing pkgconfig file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
-	$(QUIET)${MAKE} -C po install
-
-install-headers: version.h
 	$(ECHO) installing header files
 	$(QUIET)mkdir -p ${DESTDIR}${INCLUDEDIR}/girara
 	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${INCLUDEDIR}/girara
@@ -139,15 +142,16 @@ uninstall: uninstall-headers
 	$(ECHO) removing library file
 	$(QUIET)rm -f ${LIBDIR}/lib${PROJECT}.a ${LIBDIR}/lib${PROJECT}.so.${SOVERSION} \
 		${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} ${LIBDIR}/lib${PROJECT}.so
-	$(ECHO) removing pkgconfig file
-	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 	$(QUIET)${MAKE} -C po uninstall
 
 uninstall-headers:
 	$(ECHO) removing header files
 	$(QUIET)rm -rf ${INCLUDEDIR}/girara
+	$(ECHO) removing pkgconfig file
+	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 
-.PHONY: all options clean debug doc test dist install install-headers uninstall uninstall-headers ${PROJECT} ${PROJECT}-debug po
+.PHONY: all options clean debug doc test dist install install-headers uninstall \
+	uninstall-headers ${PROJECT} ${PROJECT}-debug po update-po
 
 TDEPENDS = ${OBJECTS:.o=.o.dep}
 DEPENDS = ${TDEPENDS:^=.depend/}
