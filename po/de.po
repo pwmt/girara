@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: girara 0.1.1\n"
-"Report-Msgid-Bugs-To: girara@lists.pwmt.org\n"
-"POT-Creation-Date: 2012-03-06 12:07+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-16 13:44+0100\n"
 "PO-Revision-Date: 2012-03-05 17:01+0100\n"
 "Last-Translator: Sebastian Ramacher <s.ramacher@gmx.at>\n"
 "Language-Team: pwmt.org <mail@pwmt.org>\n"
@@ -27,10 +27,11 @@ msgstr ""
 msgid "Unregistered mode specified: %s"
 msgstr ""
 
-#: ../commands.c:155
+#: ../commands.c:156 ../commands.c:318
 #, c-format
-msgid "Invalid number of arguments passed:         %zu instead of at least %d"
-msgstr "Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %d"
+msgid "Invalid number of arguments passed: %zu instead of at least %u"
+msgstr ""
+"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
 #: ../commands.c:184
 #, c-format
@@ -46,11 +47,6 @@ msgstr ""
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr ""
-
-#: ../commands.c:317
-#, c-format
-msgid "Invalid number of arguments passed:           %zu instead of at least %u"
-msgstr "Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
 #: ../commands.c:341
 #, c-format
@@ -98,142 +94,141 @@ msgid "Failed to execute command: %s"
 msgstr "Konnte Befehl nicht ausführen: %s"
 
 #. add default settings
-#: ../session.c:112
+#: ../session.c:114
 msgid "Font"
 msgstr "Schriftart"
 
-#: ../session.c:113
+#: ../session.c:115
 msgid "Default foreground color"
 msgstr ""
 
-#: ../session.c:114
+#: ../session.c:116
 msgid "Default background color"
 msgstr ""
 
-#: ../session.c:115
+#: ../session.c:117
 msgid "Inputbar foreground color"
 msgstr ""
 
-#: ../session.c:116
+#: ../session.c:118
 msgid "Inputbar background color"
 msgstr ""
 
-#: ../session.c:117
+#: ../session.c:119
 msgid "Statusbar foreground color"
 msgstr ""
 
-#: ../session.c:118
+#: ../session.c:120
 msgid "Statsubar background color"
 msgstr ""
 
-#: ../session.c:119
+#: ../session.c:121
 msgid "Completion foeground color"
 msgstr ""
 
-#: ../session.c:120
+#: ../session.c:122
 msgid "Completion background color"
 msgstr ""
 
-#: ../session.c:121
+#: ../session.c:123
 msgid "Completion group foreground color"
 msgstr ""
 
-#: ../session.c:122
+#: ../session.c:124
 msgid "Completion group background color"
 msgstr ""
 
-#: ../session.c:123
+#: ../session.c:125
 msgid "Completion highlight foreground color"
 msgstr ""
 
-#: ../session.c:124
+#: ../session.c:126
 msgid "Completion highlight background color"
 msgstr ""
 
-#: ../session.c:125
+#: ../session.c:127
 msgid "Error notification foreground color"
 msgstr ""
 
-#: ../session.c:126
+#: ../session.c:128
 msgid "Error notification background color"
 msgstr ""
 
-#: ../session.c:127
+#: ../session.c:129
 msgid "Warning notification foreground color"
 msgstr ""
 
-#: ../session.c:128
+#: ../session.c:130
 msgid "Warning notifaction background color"
 msgstr ""
 
-#: ../session.c:129
+#: ../session.c:131
 msgid "Notification foreground color"
 msgstr ""
 
-#: ../session.c:130
+#: ../session.c:132
 msgid "Notification background color"
 msgstr ""
 
-#: ../session.c:131
+#: ../session.c:133
 msgid "Tab bar foreground color"
 msgstr ""
 
-#: ../session.c:132
+#: ../session.c:134
 msgid "Tab bar background color"
 msgstr ""
 
-#: ../session.c:133
+#: ../session.c:135
 msgid "Tab bar foreground color (active)"
 msgstr ""
 
-#: ../session.c:134
+#: ../session.c:136
 msgid "Tab bar background color (active)"
 msgstr ""
 
-#: ../session.c:136
+#: ../session.c:138
 msgid "Initial window width"
 msgstr ""
 
-#: ../session.c:137
+#: ../session.c:139
 msgid "Initial window height"
 msgstr ""
 
-#: ../session.c:138
+#: ../session.c:140
 msgid "Number of completion items"
 msgstr ""
 
-#: ../session.c:139
+#: ../session.c:141
 msgid "Show scrollbars"
 msgstr ""
 
 #. window icon
-#: ../session.c:142
+#: ../session.c:144
 msgid "Window icon"
 msgstr ""
 
 #. exec-command
-#: ../session.c:144
+#: ../session.c:146
 msgid "Command to execute in :exec"
 msgstr "Befehl, der von :exec ausgeführt werden soll"
 
 #. default commands
-#: ../session.c:174
+#: ../session.c:176
 msgid "Execute a command"
 msgstr "Führe einen Befehl aus."
 
-#: ../session.c:175
+#: ../session.c:177
 msgid "Map a key sequence"
 msgstr ""
 
-#: ../session.c:176
+#: ../session.c:178
 msgid "Quit the program"
 msgstr "Beende das Programm"
 
-#: ../session.c:177
+#: ../session.c:179
 msgid "Set an option"
 msgstr "Setze eine Option"
 
-#: ../session.c:178
+#: ../session.c:180
 msgid "Unmap a key sequence"
 msgstr ""
-

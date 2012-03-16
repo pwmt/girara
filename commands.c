@@ -151,9 +151,9 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
   unsigned int limit = (unmap == true) ? 1 : 2;
   if (number_of_arguments < limit) {
-    girara_warning("Invalid number of arguments passed: %zu instead of at least %d", number_of_arguments, limit);
-    girara_notify(session, GIRARA_ERROR, _("Invalid number of arguments passed: \
-        %zu instead of at least %d"), number_of_arguments, limit);
+    girara_warning("Invalid number of arguments passed: %zu instead of at least %u", number_of_arguments, limit);
+    girara_notify(session, GIRARA_ERROR,
+        _("Invalid number of arguments passed: %zu instead of at least %u"), number_of_arguments, limit);
     return false;
   }
 
@@ -314,8 +314,8 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     limit = (mouse_mode == true) ? 3 : 2;
     if (number_of_arguments < limit) {
       girara_warning("Invalid number of arguments passed: %zu instead of at least %u", number_of_arguments, limit);
-      girara_notify(session, GIRARA_ERROR, _("Invalid number of arguments passed: \
-          %zu instead of at least %u"), number_of_arguments, limit);
+      girara_notify(session, GIRARA_ERROR,
+          _("Invalid number of arguments passed: %zu instead of at least %u"), number_of_arguments, limit);
       return false;
     }
 

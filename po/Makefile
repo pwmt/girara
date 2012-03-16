@@ -25,7 +25,7 @@ ${GETTEXT_PACKAGE}.pot: POTFILES.in
 	$(QUIET)intltool-update --pot --gettext-package=${GETTEXT_PACKAGE}
 
 update-po: ${GETTEXT_PACKAGE}.pot
-	$(ECHO) updating po: files ${CATALOGS}
+	$(ECHO) updating po files: ${CATALOGS}
 	$(QUIET)set -e && for f in ${CATALOGS} ; do \
 		intltool-update --dist --gettext-package=${GETTEXT_PACKAGE} `echo $$f | sed 's/\.po//'` ; \
 	done
