@@ -360,7 +360,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   for (unsigned i = 0; i < LENGTH(color_setting_mappings); i++) {
     char* tmp_value = NULL;
     girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
-    if (tmp_value) {
+    if (tmp_value != NULL) {
       gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
       g_free(tmp_value);
     }
@@ -418,7 +418,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   girara_setting_get(session, "window-width", &window_width);
   girara_setting_get(session, "window-height", &window_height);
 
-  if (window_width && window_height) {
+  if (window_width > 0&& window_height > 0) {
     gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), window_width, window_height);
   }
 
@@ -430,14 +430,10 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
   if (window_icon != NULL && strlen(window_icon) != 0) {
-    GError* error = NULL;
-    gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), window_icon, &error);
-    if (error != NULL) {
-      girara_error("failed to load window icon: %s", error->message);
-      g_error_free(error);
-    }
+    girara_setting_set(session, "window-icon", window_icon);
     g_free(window_icon);
   }
+
   return TRUE;
 }
 
