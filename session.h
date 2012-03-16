@@ -234,4 +234,14 @@ void girara_mode_set(girara_session_t* session, girara_mode_t mode);
  */
 girara_mode_t girara_mode_get(girara_session_t* session);
 
+/**
+ * Set name of the window title
+ *
+ * @param session The used girara session
+ * @param name The new name of the session
+ * @return true if no error occured
+ * @return false if an error occured
+ */
+bool girara_set_window_title(girara_session_t* session, const char* name);
+
 #endif

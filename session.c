@@ -198,7 +198,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   } else {
     session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   }
-  if (sessionname) {
+  if (sessionname != NULL) {
     gtk_widget_set_name(GTK_WIDGET(session->gtk.window), sessionname);
   }
 
@@ -655,3 +655,16 @@ girara_mode_get(girara_session_t* session)
 
   return session->modes.current_mode;
 }
+
+bool
+girara_set_window_title(girara_session_t* session, const char* name)
+{
+  if (session == NULL || session->gtk.window == NULL || name == NULL) {
+    return false;
+  }
+
+  gtk_window_set_title(GTK_WINDOW(session->gtk.window), name);
+
+  return true;
+}
+
