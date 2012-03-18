@@ -122,4 +122,17 @@ void* girara_safe_realloc(void** ptr, size_t size);
 void _girara_debug(const char* function, int line, girara_debug_level_t level,
     const char* format, ...) GIRARA_PRINTF(4, 5);
 
+/**
+ * Get the debug level.
+ * @returns The debug level.
+ */
+girara_debug_level_t girara_get_debug_level();
+
+/**
+ * Set the debug level. Any message with a level lower than the debug level will
+ * be discarded.
+ * @param level The new debug level.
+ */
+void girara_set_debug_level(girara_debug_level_t level);
+
 #endif

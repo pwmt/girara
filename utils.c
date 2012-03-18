@@ -391,9 +391,18 @@ error_free:
   return NULL;
 }
 
+static girara_debug_level_t debug_level = GIRARA_DEBUG;
+
 void
 _girara_debug(const char* function, int line, girara_debug_level_t level, const char* format, ...)
 {
+  /* This could be simplified if DEBUG, INFO, WARNING, ERROR were ordered. */
+  if ((debug_level == GIRARA_ERROR && level != GIRARA_ERROR) ||
+      (debug_level == GIRARA_WARNING && (level != GIRARA_ERROR && level != GIRARA_WARNING)) ||
+      (debug_level == GIRARA_INFO && level == GIRARA_DEBUG)) {
+    return;
+  }
+
   switch (level)
   {
     case GIRARA_WARNING:
@@ -417,4 +426,16 @@ _girara_debug(const char* function, int line, girara_debug_level_t level, const 
   va_end(ap);
 
   fprintf(stderr, "\n");
+}
+
+girara_debug_level_t
+girara_get_debug_level()
+{
+  return debug_level;
+}
+
+void
+girara_set_debug_level(girara_debug_level_t level)
+{
+  debug_level = level;
 }
