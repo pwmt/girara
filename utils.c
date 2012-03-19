@@ -230,7 +230,7 @@ girara_file_open(const char* path, const char* mode)
   /*return fp;*/
 }
 
-#if defined(__OpenBSD__)
+#if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__)
 char*
 girara_file_read_line(FILE* file)
 {
