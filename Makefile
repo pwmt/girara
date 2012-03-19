@@ -119,7 +119,7 @@ po:
 update-po:
 	$(QUIET)${MAKE} -C po update-po
 
-install: all install-headers po
+install: all install-headers
 	$(ECHO) installing library file
 	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
