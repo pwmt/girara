@@ -376,12 +376,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   /* inputbar */
 #if (GTK_MAJOR_VERSION == 3)
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar_entry),
+      GTK_STATE_NORMAL, &(session->style.inputbar_background));
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_entry),
+      GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar),
       GTK_STATE_NORMAL, &(session->style.inputbar_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_dialog),
       GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar_entry),
-      GTK_STATE_NORMAL, &(session->style.inputbar_background));
 
   /* notification area */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
