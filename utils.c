@@ -416,6 +416,7 @@ _girara_debug(const char* function, int line, girara_debug_level_t level, const 
       break;
     case GIRARA_DEBUG:
       fprintf(stderr, "debug: (%s:%d) ", function, line);
+      break;
     default:
       return;
   }
