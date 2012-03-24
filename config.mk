@@ -50,7 +50,7 @@ SFLAGS ?= -s
 VERBOSE ?= 0
 
 # gettext package name
-GETTEXT_PACKAGE ?= lib${PROJECT}.${SOMAJOR}
+GETTEXT_PACKAGE ?= lib${PROJECT}-${SOMAJOR}
 
 # msgfmt
 MSGFMT ?= msgfmt
