@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-16 13:44+0100\n"
+"POT-Creation-Date: 2012-03-24 20:24+0100\n"
 "PO-Revision-Date: 2012-03-05 17:01+0100\n"
 "Last-Translator: Sebastian Ramacher <s.ramacher@gmx.at>\n"
 "Language-Team: pwmt.org <mail@pwmt.org>\n"
@@ -48,47 +48,47 @@ msgstr ""
 msgid "Invalid special key value or mode %s"
 msgstr ""
 
-#: ../commands.c:341
+#: ../commands.c:340
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr ""
 
-#: ../commands.c:429
+#: ../commands.c:428
 msgid "Not enough arguments."
 msgstr "Zu wenige Argumente."
 
-#: ../commands.c:434
+#: ../commands.c:433
 msgid "Too many arguments."
 msgstr "Zu viele Argumente."
 
-#: ../commands.c:447
+#: ../commands.c:446
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Unbekannte Otion: %s"
 
-#: ../commands.c:461
+#: ../commands.c:460
 msgid "true"
 msgstr "wahr"
 
-#: ../commands.c:461
+#: ../commands.c:460
 msgid "false"
 msgstr "falsch"
 
-#: ../commands.c:493
+#: ../commands.c:492
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Kein Wert für Option definiert: %s"
 
-#: ../commands.c:508
+#: ../commands.c:507
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"
 
-#: ../commands.c:633
+#: ../commands.c:632
 msgid "exec-command is invalid."
 msgstr "exec-command ist ungültig."
 
-#: ../commands.c:652
+#: ../commands.c:651
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Konnte Befehl nicht ausführen: %s"
