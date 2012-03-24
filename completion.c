@@ -286,7 +286,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
           entry->group  = FALSE;
           entry->value  = g_strdup(command->command);
-          entry->widget = girara_completion_row_create(session, command->command, NULL, FALSE);
+          entry->widget = girara_completion_row_create(session, command->command, command->description, FALSE);
 
           entries = g_list_append(entries, entry);
 
