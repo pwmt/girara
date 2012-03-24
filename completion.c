@@ -303,8 +303,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
         girara_internal_completion_entry_t* entry = g_list_first(entries)->data;
 
         /* unset command mode */
-        command_mode = false;
-        current_command = entry->value;
+        command_mode           = false;
+        current_command        = entry->value;
         current_command_length = strlen(current_command);
 
         /* clear list */
@@ -317,8 +317,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       /* search matching command */
       girara_command_t* command = NULL;
       GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command_it)
-        if ( (command_it->command && !strncmp(current_command, command_it->command, current_command_length)) ||
-             (command_it->abbr    && !strncmp(current_command, command_it->abbr,    current_command_length))
+        if ( (current_command != NULL && command_it->command != NULL && !strncmp(current_command, command_it->command, current_command_length)) ||
+             (current_command != NULL && command_it->abbr != NULL    && !strncmp(current_command, command_it->abbr,    current_command_length))
           )
         {
           if (command_it->completion != NULL) {
