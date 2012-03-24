@@ -246,7 +246,7 @@ girara_file_read_line(FILE* file)
 
   char* copy = strndup(line, size);
   if (copy == NULL) {
-	  return NULL;
+    return NULL;
   }
 
   /* remove the trailing line deliminator */
