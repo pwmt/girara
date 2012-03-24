@@ -321,7 +321,6 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
     if (mouse_mode == true) {
       tmp = girara_list_nth(argument_list, ++current_command);
-      tmp_length = strlen(tmp);
     }
   }
 
