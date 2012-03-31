@@ -49,6 +49,7 @@ read_pwd_info(void)
     pwdinfo->name = g_strdup(pw->pw_name);
     pwdinfo->dir = g_strdup(pw->pw_dir);
     girara_list_append(list, pwdinfo);
+    errno = 0;
   }
   fail_unless(errno == 0, "Non-zero errno :%d", errno, NULL);
   endpwent();
