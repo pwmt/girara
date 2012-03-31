@@ -3,6 +3,7 @@
 #include <check.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <unistd.h>
 
 #include "../session.h"
 #include "../settings.h"
