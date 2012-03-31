@@ -118,7 +118,7 @@ girara_session_create()
   girara_setting_add(session, "inputbar-bg",              "#131313",            STRING,  TRUE,  _("Inputbar background color"), NULL, NULL);
   girara_setting_add(session, "statusbar-fg",             "#FFFFFF",            STRING,  TRUE,  _("Statusbar foreground color"), NULL, NULL);
   girara_setting_add(session, "statusbar-bg",             "#000000",            STRING,  TRUE,  _("Statsubar background color"), NULL, NULL);
-  girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING,  TRUE,  _("Completion foeground color"), NULL, NULL);
+  girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING,  TRUE,  _("Completion foreground color"), NULL, NULL);
   girara_setting_add(session, "completion-bg",            "#232323",            STRING,  TRUE,  _("Completion background color"), NULL, NULL);
   girara_setting_add(session, "completion-group-fg",      "#DEDEDE",            STRING,  TRUE,  _("Completion group foreground color"), NULL, NULL);
   girara_setting_add(session, "completion-group-bg",      "#000000",            STRING,  TRUE,  _("Completion group background color"), NULL, NULL);
