@@ -1,19 +1,18 @@
-# girara - language file (German)
+# girara - language file (Italian)
 # See LICENSE file for license and copyright information
 #
 # Translators:
-#   <cedric.sodhi@googlemail.com>, 2012.
-# Moritz Lipp <mlq@pwmt.org>, 2012.
+#   <segnalazionidalweb@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-03 17:07+0200\n"
-"PO-Revision-Date: 2012-03-26 18:26+0000\n"
-"Last-Translator: cedricsodhi <cedric.sodhi@googlemail.com>\n"
-"Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
-"de/)\n"
-"Language: de\n"
+"PO-Revision-Date: 2012-03-26 18:10+0000\n"
+"Last-Translator: TheLemonMan <segnalazionidalweb@gmail.com>\n"
+"Language-Team: Italian (http://www.transifex.net/projects/p/girara/language/"
+"it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,219 +20,218 @@ msgstr ""
 
 #: ../commands.c:108
 msgid "Usage: unmap <binding>"
-msgstr "Verwendung: unmap <schlüssel>"
+msgstr "Uso: unmap <binding>"
 
 #: ../commands.c:110
 msgid "Usage: map <binding> <function>"
-msgstr "Verwendung: map <schlüssel> <funktion>"
+msgstr "Uso: map <binding> <function>"
 
 #: ../commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr "Modus ist nicht registriert: %s"
+msgstr "Modalità non registrata:%s"
 
 #: ../commands.c:156 ../commands.c:318
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr ""
-"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
+msgstr "Numero degli argomenti non valido:%zu immessi, %u attesi"
 
 #: ../commands.c:184
 #, c-format
 msgid "Invalid modifier in %s"
-msgstr "Ungültiger Modifikator in %s"
+msgstr "Modificatore invalido:%s"
 
 #: ../commands.c:223
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr "Ungültige Sondertaste für %s"
+msgstr "Valore della chiave speciale %s non valido "
 
 #: ../commands.c:259
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr "Ungültige Sondertaste oder Modus %s"
+msgstr "Valore della chiave speciale o modalità %s non valida"
 
 #: ../commands.c:340
 #, c-format
 msgid "Not a valid shortcut function: %s"
-msgstr "Ungültige zugewiesene Funktion: %s"
+msgstr "Scorciatoia invalida:%s"
 
 #: ../commands.c:428
 msgid "Not enough arguments."
-msgstr "Zu wenige Argumente."
+msgstr "Non abbastanza argomenti specificati."
 
 #: ../commands.c:433
 msgid "Too many arguments."
-msgstr "Zu viele Argumente."
+msgstr "Troppi argomenti specificati."
 
 #: ../commands.c:446
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Unbekannte Otion: %s"
+msgstr "Opzione sconosciuta:%s"
 
 #: ../commands.c:460
 msgid "true"
-msgstr "wahr"
+msgstr "vero"
 
 #: ../commands.c:460
 msgid "false"
-msgstr "falsch"
+msgstr "falso"
 
 #: ../commands.c:492
 #, c-format
 msgid "No value defined for option: %s"
-msgstr "Kein Wert für Option definiert: %s"
+msgstr "Nessun valore definito per l' opzione:%s"
 
 #: ../commands.c:507
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr "Unbekannter Wert für Option: %s"
+msgstr "Valore sconosciuto per l' opzione:%s"
 
 #: ../commands.c:632
 msgid "exec-command is invalid."
-msgstr "exec-command ist ungültig."
+msgstr "exec-command invalido."
 
 #: ../commands.c:651
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Konnte Befehl nicht ausführen: %s"
+msgstr "Impossibile eseguire:%s"
 
 #. add default settings
 #: ../session.c:114
 msgid "Font"
-msgstr "Schriftart"
+msgstr "Font"
 
 #: ../session.c:115
 msgid "Default foreground color"
-msgstr "Standardfarbe des Vordergrunds"
+msgstr "Colore del testo di default"
 
 #: ../session.c:116
 msgid "Default background color"
-msgstr "Standardfarbe des Hintergrunds"
+msgstr "Colore di sfondo di default"
 
 #: ../session.c:117
 msgid "Inputbar foreground color"
-msgstr "Vordergrundfarbe der Eingabezeile"
+msgstr "Colore del testo della barra dei comandi"
 
 #: ../session.c:118
 msgid "Inputbar background color"
-msgstr "Hintergrundfarbe der Eingabezeile"
+msgstr "Colore di sfondo della barra dei comandi"
 
 #: ../session.c:119
 msgid "Statusbar foreground color"
-msgstr "Vordergrundfarbe der Statuszeile"
+msgstr "Colore del testo della barra di stato"
 
 #: ../session.c:120
 msgid "Statsubar background color"
-msgstr "Hintergrundfarbe der Statuszeile"
+msgstr "Colore di sfondo della barra di stato"
 
 #: ../session.c:121
 msgid "Completion foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung"
+msgstr "Colore del testo del completamento"
 
 #: ../session.c:122
 msgid "Completion background color"
-msgstr "Hintergrundfarbe der Vervollständigung"
+msgstr "Colore di sfondo del completamento"
 
 #: ../session.c:123
 msgid "Completion group foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
+msgstr ""
 
 #: ../session.c:124
 msgid "Completion group background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
+msgstr ""
 
 #: ../session.c:125
 msgid "Completion highlight foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr ""
 
 #: ../session.c:126
 msgid "Completion highlight background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr ""
 
 #: ../session.c:127
 msgid "Error notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Colore del testo della notifica di errore"
 
 #: ../session.c:128
 msgid "Error notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Colore di sfondo della notifica di errore"
 
 #: ../session.c:129
 msgid "Warning notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
+msgstr ""
 
 #: ../session.c:130
 msgid "Warning notifaction background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
+msgstr ""
 
 #: ../session.c:131
 msgid "Notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung"
+msgstr ""
 
 #: ../session.c:132
 msgid "Notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung"
+msgstr ""
 
 #: ../session.c:133
 msgid "Tab bar foreground color"
-msgstr "Registerleisten Vordergrundfarbe"
+msgstr ""
 
 #: ../session.c:134
 msgid "Tab bar background color"
-msgstr "Registerleisten Hintergrundfarbe"
+msgstr ""
 
 #: ../session.c:135
 msgid "Tab bar foreground color (active)"
-msgstr "Registerleisten Vordergrundfarbe (aktiv)"
+msgstr ""
 
 #: ../session.c:136
 msgid "Tab bar background color (active)"
-msgstr "Registerleisten Hintergrundfarbe (aktiv)"
+msgstr ""
 
 #: ../session.c:138
 msgid "Initial window width"
-msgstr "Ausgangsbreite des Fensters"
+msgstr "Larghezza iniziale della finestra"
 
 #: ../session.c:139
 msgid "Initial window height"
-msgstr "Ausgangshöhe des Fensters"
+msgstr "Altezza iniziale della finestra"
 
 #: ../session.c:140
 msgid "Number of completion items"
-msgstr "Anzahl der Elemente in der Vervollständigung"
+msgstr "Numero di possibili completamenti"
 
 #: ../session.c:141
 msgid "Show scrollbars"
-msgstr "Zeige Bildlaufleiste"
+msgstr "Mostra le scrollbar"
 
 #. window icon
 #: ../session.c:144
 msgid "Window icon"
-msgstr "Fenstericon"
+msgstr "Icona della finestra"
 
 #. exec-command
 #: ../session.c:146
 msgid "Command to execute in :exec"
-msgstr "Befehl, der von :exec ausgeführt werden soll"
+msgstr "Comando da eseguire in :exec"
 
 #. default commands
 #: ../session.c:176
 msgid "Execute a command"
-msgstr "Führe einen Befehl aus."
+msgstr "Esegui un comando"
 
 #: ../session.c:177
 msgid "Map a key sequence"
-msgstr "Tastenfolge zuweisen"
+msgstr "Mappa una sequenza di tasti"
 
 #: ../session.c:178
 msgid "Quit the program"
-msgstr "Beende das Programm"
+msgstr "Esci dal programma"
 
 #: ../session.c:179
 msgid "Set an option"
-msgstr "Setze eine Option"
+msgstr "Imposta un opzione"
 
 #: ../session.c:180
 msgid "Unmap a key sequence"
-msgstr "Tastenfolge entbinden"
+msgstr ""

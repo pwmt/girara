@@ -1,239 +1,238 @@
-# girara - language file (German)
+# girara - language file (Turkish)
 # See LICENSE file for license and copyright information
 #
 # Translators:
-#   <cedric.sodhi@googlemail.com>, 2012.
-# Moritz Lipp <mlq@pwmt.org>, 2012.
+#   <femnad@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-03 17:07+0200\n"
-"PO-Revision-Date: 2012-03-26 18:26+0000\n"
-"Last-Translator: cedricsodhi <cedric.sodhi@googlemail.com>\n"
-"Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
-"de/)\n"
-"Language: de\n"
+"PO-Revision-Date: 2012-04-01 20:55+0000\n"
+"Last-Translator: femnad <femnad@gmail.com>\n"
+"Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
+"tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 
 #: ../commands.c:108
 msgid "Usage: unmap <binding>"
-msgstr "Verwendung: unmap <schlüssel>"
+msgstr "Kullanım: unmap <tuş kombinasyonu>"
 
 #: ../commands.c:110
 msgid "Usage: map <binding> <function>"
-msgstr "Verwendung: map <schlüssel> <funktion>"
+msgstr "Kullanım: map <tuş kombinasyonu> <fonksiyon>"
 
 #: ../commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr "Modus ist nicht registriert: %s"
+msgstr "Kayıtlı olmayan mod belirtildi: %s"
 
 #: ../commands.c:156 ../commands.c:318
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr ""
-"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
+"Yanlış sayıda argüman geçildi: en az %u olması gerektiği halde %zu adet"
 
 #: ../commands.c:184
 #, c-format
 msgid "Invalid modifier in %s"
-msgstr "Ungültiger Modifikator in %s"
+msgstr "%s içinde geçersiz dönüştürücü"
 
 #: ../commands.c:223
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr "Ungültige Sondertaste für %s"
+msgstr "%s için geçersiz özel tuş"
 
 #: ../commands.c:259
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr "Ungültige Sondertaste oder Modus %s"
+msgstr "%s için geçersiz tuş özel veya mod"
 
 #: ../commands.c:340
 #, c-format
 msgid "Not a valid shortcut function: %s"
-msgstr "Ungültige zugewiesene Funktion: %s"
+msgstr "Geçerli bir kısayol fonksiyonu değil: %s"
 
 #: ../commands.c:428
 msgid "Not enough arguments."
-msgstr "Zu wenige Argumente."
+msgstr "Yeterince argüman geçilmedi."
 
 #: ../commands.c:433
 msgid "Too many arguments."
-msgstr "Zu viele Argumente."
+msgstr "Gereğinden fazla argüman."
 
 #: ../commands.c:446
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Unbekannte Otion: %s"
+msgstr "Bilinmeyen seçenek: %s"
 
 #: ../commands.c:460
 msgid "true"
-msgstr "wahr"
+msgstr "doğru"
 
 #: ../commands.c:460
 msgid "false"
-msgstr "falsch"
+msgstr "yanlış"
 
 #: ../commands.c:492
 #, c-format
 msgid "No value defined for option: %s"
-msgstr "Kein Wert für Option definiert: %s"
+msgstr "Seçenek için değer belirtilmedi: %s"
 
 #: ../commands.c:507
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr "Unbekannter Wert für Option: %s"
+msgstr "Seçenek için bilinmeyen değer: %s"
 
 #: ../commands.c:632
 msgid "exec-command is invalid."
-msgstr "exec-command ist ungültig."
+msgstr "exec komutu geçersiz."
 
 #: ../commands.c:651
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Konnte Befehl nicht ausführen: %s"
+msgstr "Komut yürütülemedi: %s"
 
 #. add default settings
 #: ../session.c:114
 msgid "Font"
-msgstr "Schriftart"
+msgstr "Yazı tipi"
 
 #: ../session.c:115
 msgid "Default foreground color"
-msgstr "Standardfarbe des Vordergrunds"
+msgstr "Varsayılan yazı tipi rengi"
 
 #: ../session.c:116
 msgid "Default background color"
-msgstr "Standardfarbe des Hintergrunds"
+msgstr "Varsayılan arka plan rengi"
 
 #: ../session.c:117
 msgid "Inputbar foreground color"
-msgstr "Vordergrundfarbe der Eingabezeile"
+msgstr "Giriş çubuğu yazı tipi rengi"
 
 #: ../session.c:118
 msgid "Inputbar background color"
-msgstr "Hintergrundfarbe der Eingabezeile"
+msgstr "Giriş çubuğu arka plan rengi"
 
 #: ../session.c:119
 msgid "Statusbar foreground color"
-msgstr "Vordergrundfarbe der Statuszeile"
+msgstr "Durum çubuğu yazı tipi rengi"
 
 #: ../session.c:120
 msgid "Statsubar background color"
-msgstr "Hintergrundfarbe der Statuszeile"
+msgstr "Durum çubuğu arka plan rengi"
 
 #: ../session.c:121
 msgid "Completion foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung"
+msgstr "Tamamlama yazı tipi rengi"
 
 #: ../session.c:122
 msgid "Completion background color"
-msgstr "Hintergrundfarbe der Vervollständigung"
+msgstr "Tamamlama arka plan rengi"
 
 #: ../session.c:123
 msgid "Completion group foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
+msgstr "Tamamlama grubu yazı tipi rengi"
 
 #: ../session.c:124
 msgid "Completion group background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
+msgstr "Tamamlama grubu arka plan rengi"
 
 #: ../session.c:125
 msgid "Completion highlight foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr "Tamamlama vurgulama yazı tipi rengi"
 
 #: ../session.c:126
 msgid "Completion highlight background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr "Tamamlama vurgulama arka plan rengi"
 
 #: ../session.c:127
 msgid "Error notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Hata bildirimi yazı tipi rengi"
 
 #: ../session.c:128
 msgid "Error notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Hata bildirimi arka plan rengi"
 
 #: ../session.c:129
 msgid "Warning notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
+msgstr "Uyarı bildirimi yazı tipi rengi"
 
 #: ../session.c:130
 msgid "Warning notifaction background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
+msgstr "Uyarı bildirimi arka plan rengi"
 
 #: ../session.c:131
 msgid "Notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung"
+msgstr "Bildirim yazı tipi rengi"
 
 #: ../session.c:132
 msgid "Notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung"
+msgstr "Bildirim arka plan rengi"
 
 #: ../session.c:133
 msgid "Tab bar foreground color"
-msgstr "Registerleisten Vordergrundfarbe"
+msgstr "Sekme çubuğu yazı tipi rengi"
 
 #: ../session.c:134
 msgid "Tab bar background color"
-msgstr "Registerleisten Hintergrundfarbe"
+msgstr "Sekme çubuğu arka plan rengi"
 
 #: ../session.c:135
 msgid "Tab bar foreground color (active)"
-msgstr "Registerleisten Vordergrundfarbe (aktiv)"
+msgstr "Seçme çubuğu yazı tipi rengi (etkin)"
 
 #: ../session.c:136
 msgid "Tab bar background color (active)"
-msgstr "Registerleisten Hintergrundfarbe (aktiv)"
+msgstr "Sekme çubuğu arka plan rengi (etkin)"
 
 #: ../session.c:138
 msgid "Initial window width"
-msgstr "Ausgangsbreite des Fensters"
+msgstr "Başlangıçtaki pencere genişliği"
 
 #: ../session.c:139
 msgid "Initial window height"
-msgstr "Ausgangshöhe des Fensters"
+msgstr "Başlangıçtaki pencere yüksekliği"
 
 #: ../session.c:140
 msgid "Number of completion items"
-msgstr "Anzahl der Elemente in der Vervollständigung"
+msgstr "Tamamlama öğelerinin sayısı"
 
 #: ../session.c:141
 msgid "Show scrollbars"
-msgstr "Zeige Bildlaufleiste"
+msgstr "Kaydırma çubuklarını göster"
 
 #. window icon
 #: ../session.c:144
 msgid "Window icon"
-msgstr "Fenstericon"
+msgstr "Pencere ikonu"
 
 #. exec-command
 #: ../session.c:146
 msgid "Command to execute in :exec"
-msgstr "Befehl, der von :exec ausgeführt werden soll"
+msgstr ":exec için yürütülecek komut"
 
 #. default commands
 #: ../session.c:176
 msgid "Execute a command"
-msgstr "Führe einen Befehl aus."
+msgstr "Komut yürüt"
 
 #: ../session.c:177
 msgid "Map a key sequence"
-msgstr "Tastenfolge zuweisen"
+msgstr "Tuş kombinasyonu eşleştir"
 
 #: ../session.c:178
 msgid "Quit the program"
-msgstr "Beende das Programm"
+msgstr "Programdan çık"
 
 #: ../session.c:179
 msgid "Set an option"
-msgstr "Setze eine Option"
+msgstr "Seçenekleri değiştir"
 
 #: ../session.c:180
 msgid "Unmap a key sequence"
-msgstr "Tastenfolge entbinden"
+msgstr "Tuş kombinasyonu eşleşimini kaldır"
