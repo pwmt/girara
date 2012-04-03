@@ -35,7 +35,6 @@ msgstr "Kayıtlı olmayan mod belirtildi: %s"
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr ""
-"Yanlış sayıda argüman geçildi: en az %u olması gerektiği halde %zu adet"
 
 #: ../commands.c:184
 #, c-format
