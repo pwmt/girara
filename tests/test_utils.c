@@ -110,6 +110,9 @@ START_TEST(test_fix_path_basic) {
 } END_TEST
 
 START_TEST(test_fix_path_extended) {
+  gchar* oldenv = g_getenv("HOME") ? g_strdup(g_getenv("HOME")) : NULL;
+  g_unsetenv("HOME");
+
   girara_list_t* list = read_pwd_info();
   GIRARA_LIST_FOREACH(list, pwd_info_t*, iter, pwdinfo)
     gchar* path = g_strdup_printf("~%s/test", pwdinfo->name);
@@ -123,6 +126,11 @@ START_TEST(test_fix_path_extended) {
     g_free(path);
   GIRARA_LIST_FOREACH_END(list, pwd_info_t*, iter, pwdinfo);
   girara_list_free(list);
+
+  if (oldenv) {
+    g_setenv("HOME", oldenv, TRUE);
+    g_free(oldenv);
+  }
 } END_TEST
 
 static void
