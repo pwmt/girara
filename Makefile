@@ -121,7 +121,7 @@ update-po:
 
 install: all install-headers
 	$(ECHO) installing library file
-	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}
+	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}
 	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} || \
@@ -132,10 +132,10 @@ install: all install-headers
 
 install-headers: version.h ${PROJECT}.pc
 	$(ECHO) installing pkgconfig file
-	$(QUIET)mkdir -p ${DESTDIR}${LIBDIR}/pkgconfig
+	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
 	$(ECHO) installing header files
-	$(QUIET)mkdir -p ${DESTDIR}${INCLUDEDIR}/girara
+	$(QUIET)mkdir -m 755 -p ${DESTDIR}${INCLUDEDIR}/girara
 	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${INCLUDEDIR}/girara
 
 uninstall: uninstall-headers
