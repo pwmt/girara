@@ -7,16 +7,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: http://bt.pwmt.org/\n"
 "POT-Creation-Date: 2012-04-03 17:07+0200\n"
-"PO-Revision-Date: 2012-03-26 18:26+0000\n"
-"Last-Translator: cedricsodhi <cedric.sodhi@googlemail.com>\n"
-"Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
-"de/)\n"
-"Language: de\n"
+"PO-Revision-Date: 2012-04-03 15:11+0000\n"
+"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"Language-Team: German (http://www.transifex.net/projects/p/girara/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: ../commands.c:108
@@ -35,8 +34,7 @@ msgstr "Modus ist nicht registriert: %s"
 #: ../commands.c:156 ../commands.c:318
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr ""
-"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
+msgstr "Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
 #: ../commands.c:184
 #, c-format
