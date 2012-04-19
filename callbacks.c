@@ -443,7 +443,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
   if (session->signals.inputbar_custom_key_press_event != NULL) {
-    return session->signals.inputbar_custom_key_press_event(entry, event, session);
+    return session->signals.inputbar_custom_key_press_event(entry, event, session->signals.inputbar_custom_data);
   }
 
   guint keyval             = 0;
