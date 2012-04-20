@@ -204,15 +204,24 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     gtk_widget_set_name(GTK_WIDGET(session->gtk.window), sessionname);
   }
 
+#if GTK_MAJOR_VERSION == 2
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
+  session->gtk.inputbar_box      = GTK_BOX(gtk_hbox_new(TRUE, 0));
+#else
+  session->gtk.box               = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session->gtk.statusbar_entries = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+  session->gtk.tabbar            = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+  session->gtk.inputbar_box      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+  gtk_box_set_homogeneous(GTK_BOX(session->gtk.tabbar), TRUE);
+  gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
+#endif
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
   session->gtk.statusbar         = gtk_event_box_new();
-  session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
   session->gtk.notification_area = gtk_event_box_new();
   session->gtk.notification_text = gtk_label_new(NULL);
-  session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
-  session->gtk.inputbar_box      = GTK_BOX(gtk_hbox_new(TRUE, 0));
   session->gtk.inputbar_dialog   = GTK_LABEL(gtk_label_new(NULL));
   session->gtk.inputbar_entry    = GTK_ENTRY(gtk_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
