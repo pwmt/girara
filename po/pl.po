@@ -6,94 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
-"Report-Msgid-Bugs-To: http://bt.pwmt.org/\n"
-"POT-Creation-Date: 2012-04-03 17:07+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-21 01:39+0200\n"
 "PO-Revision-Date: 2012-04-03 16:05+0000\n"
 "Last-Translator: p <poczciwiec@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.net/projects/p/girara/language/pl/)\n"
+"Language-Team: Polish (http://www.transifex.net/projects/p/girara/language/"
+"pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-
-#: ../commands.c:108
-msgid "Usage: unmap <binding>"
-msgstr "Użycie: unmap <wyrażenie>"
-
-#: ../commands.c:110
-msgid "Usage: map <binding> <function>"
-msgstr "Użycie: map <wyrażenie> <funkcja>"
-
-#: ../commands.c:145
-#, c-format
-msgid "Unregistered mode specified: %s"
-msgstr "Wybrano nieistniejący tryb: %s"
-
-#: ../commands.c:156 ../commands.c:318
-#, c-format
-msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr "Nieprawidłowa liczba parametrów polecenia: %zu zamiast co najmniej %u"
-
-#: ../commands.c:184
-#, c-format
-msgid "Invalid modifier in %s"
-msgstr "Nieprawidłowy klawisz modyfikujący: %s"
-
-#: ../commands.c:223
-#, c-format
-msgid "Invalid special key value for %s"
-msgstr "Nieprawidłowa wartość klawisza: %s"
-
-#: ../commands.c:259
-#, c-format
-msgid "Invalid special key value or mode %s"
-msgstr "Nieprawidłowa wartość klawisza lub trybu: %s"
-
-#: ../commands.c:340
-#, c-format
-msgid "Not a valid shortcut function: %s"
-msgstr "Nieprawidłowa funkcja skrótu: %s"
-
-#: ../commands.c:428
-msgid "Not enough arguments."
-msgstr "Za mało parametrów polecenia"
-
-#: ../commands.c:433
-msgid "Too many arguments."
-msgstr "Za dużo parametrów polecenia"
-
-#: ../commands.c:446
-#, c-format
-msgid "Unknown option: %s"
-msgstr "Nieznana opcja: %s"
-
-#: ../commands.c:460
-msgid "true"
-msgstr "prawda"
-
-#: ../commands.c:460
-msgid "false"
-msgstr "fałsz"
-
-#: ../commands.c:492
-#, c-format
-msgid "No value defined for option: %s"
-msgstr "Niezdefiniowana wartość opcji: %s"
-
-#: ../commands.c:507
-#, c-format
-msgid "Unknown value for option: %s"
-msgstr "Nieznana wartość opcji: %s"
-
-#: ../commands.c:632
-msgid "exec-command is invalid."
-msgstr "Niewłaściwe polecenie"
-
-#: ../commands.c:651
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "Nieudane uruchomienie polecenia: %s"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2)\n"
 
 #. add default settings
 #: ../session.c:114
@@ -234,3 +158,81 @@ msgstr "Ustaw opcję"
 #: ../session.c:180
 msgid "Unmap a key sequence"
 msgstr "Usuń sekwencję klawiszy"
+
+#: ../commands.c:108
+msgid "Usage: unmap <binding>"
+msgstr "Użycie: unmap <wyrażenie>"
+
+#: ../commands.c:110
+msgid "Usage: map <binding> <function>"
+msgstr "Użycie: map <wyrażenie> <funkcja>"
+
+#: ../commands.c:145
+#, c-format
+msgid "Unregistered mode specified: %s"
+msgstr "Wybrano nieistniejący tryb: %s"
+
+#: ../commands.c:156 ../commands.c:318
+#, c-format
+msgid "Invalid number of arguments passed: %zu instead of at least %u"
+msgstr "Nieprawidłowa liczba parametrów polecenia: %zu zamiast co najmniej %u"
+
+#: ../commands.c:184
+#, c-format
+msgid "Invalid modifier in %s"
+msgstr "Nieprawidłowy klawisz modyfikujący: %s"
+
+#: ../commands.c:223
+#, c-format
+msgid "Invalid special key value for %s"
+msgstr "Nieprawidłowa wartość klawisza: %s"
+
+#: ../commands.c:259
+#, c-format
+msgid "Invalid special key value or mode %s"
+msgstr "Nieprawidłowa wartość klawisza lub trybu: %s"
+
+#: ../commands.c:340
+#, c-format
+msgid "Not a valid shortcut function: %s"
+msgstr "Nieprawidłowa funkcja skrótu: %s"
+
+#: ../commands.c:428
+msgid "Not enough arguments."
+msgstr "Za mało parametrów polecenia"
+
+#: ../commands.c:433
+msgid "Too many arguments."
+msgstr "Za dużo parametrów polecenia"
+
+#: ../commands.c:446
+#, c-format
+msgid "Unknown option: %s"
+msgstr "Nieznana opcja: %s"
+
+#: ../commands.c:460
+msgid "true"
+msgstr "prawda"
+
+#: ../commands.c:460
+msgid "false"
+msgstr "fałsz"
+
+#: ../commands.c:492
+#, c-format
+msgid "No value defined for option: %s"
+msgstr "Niezdefiniowana wartość opcji: %s"
+
+#: ../commands.c:507
+#, c-format
+msgid "Unknown value for option: %s"
+msgstr "Nieznana wartość opcji: %s"
+
+#: ../commands.c:632
+msgid "exec-command is invalid."
+msgstr "Niewłaściwe polecenie"
+
+#: ../commands.c:651
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Nieudane uruchomienie polecenia: %s"

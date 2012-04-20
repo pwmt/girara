@@ -6,94 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
-"Report-Msgid-Bugs-To: http://bt.pwmt.org/\n"
-"POT-Creation-Date: 2012-04-03 17:07+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-21 01:39+0200\n"
 "PO-Revision-Date: 2012-04-03 15:11+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/girara/language/es/)\n"
+"Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/"
+"girara/language/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: ../commands.c:108
-msgid "Usage: unmap <binding>"
-msgstr "Uso: unmap"
-
-#: ../commands.c:110
-msgid "Usage: map <binding> <function>"
-msgstr "Uso: map"
-
-#: ../commands.c:145
-#, c-format
-msgid "Unregistered mode specified: %s"
-msgstr "Modo no registrado especificado: %s"
-
-#: ../commands.c:156 ../commands.c:318
-#, c-format
-msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr "Número de argumentos invalido: %zu, cuando se necesitan al menos %u"
-
-#: ../commands.c:184
-#, c-format
-msgid "Invalid modifier in %s"
-msgstr "Modificador inválido en %s"
-
-#: ../commands.c:223
-#, c-format
-msgid "Invalid special key value for %s"
-msgstr "Valor de tecla especial inválido para %s"
-
-#: ../commands.c:259
-#, c-format
-msgid "Invalid special key value or mode %s"
-msgstr "Valor o modo de tecla especial inválido para %s"
-
-#: ../commands.c:340
-#, c-format
-msgid "Not a valid shortcut function: %s"
-msgstr "Función 'atajo' no valida: %s"
-
-#: ../commands.c:428
-msgid "Not enough arguments."
-msgstr "Número de argumentos insuficiente."
-
-#: ../commands.c:433
-msgid "Too many arguments."
-msgstr "Demasiados argumentos."
-
-#: ../commands.c:446
-#, c-format
-msgid "Unknown option: %s"
-msgstr "Opción desconocida: %s"
-
-#: ../commands.c:460
-msgid "true"
-msgstr "cierto"
-
-#: ../commands.c:460
-msgid "false"
-msgstr "falso"
-
-#: ../commands.c:492
-#, c-format
-msgid "No value defined for option: %s"
-msgstr "Valor indefinido para la opción: %s"
-
-#: ../commands.c:507
-#, c-format
-msgid "Unknown value for option: %s"
-msgstr "Valor desconocido para la opción: %s"
-
-#: ../commands.c:632
-msgid "exec-command is invalid."
-msgstr "El 'exec-command' es inválido"
-
-#: ../commands.c:651
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "No se pudo ejecutar el comando: %s"
 
 #. add default settings
 #: ../session.c:114
@@ -234,3 +157,81 @@ msgstr "Asignar un valor a una opción"
 #: ../session.c:180
 msgid "Unmap a key sequence"
 msgstr "Quitar el mapeo de una secuencia de teclas"
+
+#: ../commands.c:108
+msgid "Usage: unmap <binding>"
+msgstr "Uso: unmap"
+
+#: ../commands.c:110
+msgid "Usage: map <binding> <function>"
+msgstr "Uso: map"
+
+#: ../commands.c:145
+#, c-format
+msgid "Unregistered mode specified: %s"
+msgstr "Modo no registrado especificado: %s"
+
+#: ../commands.c:156 ../commands.c:318
+#, c-format
+msgid "Invalid number of arguments passed: %zu instead of at least %u"
+msgstr "Número de argumentos invalido: %zu, cuando se necesitan al menos %u"
+
+#: ../commands.c:184
+#, c-format
+msgid "Invalid modifier in %s"
+msgstr "Modificador inválido en %s"
+
+#: ../commands.c:223
+#, c-format
+msgid "Invalid special key value for %s"
+msgstr "Valor de tecla especial inválido para %s"
+
+#: ../commands.c:259
+#, c-format
+msgid "Invalid special key value or mode %s"
+msgstr "Valor o modo de tecla especial inválido para %s"
+
+#: ../commands.c:340
+#, c-format
+msgid "Not a valid shortcut function: %s"
+msgstr "Función 'atajo' no valida: %s"
+
+#: ../commands.c:428
+msgid "Not enough arguments."
+msgstr "Número de argumentos insuficiente."
+
+#: ../commands.c:433
+msgid "Too many arguments."
+msgstr "Demasiados argumentos."
+
+#: ../commands.c:446
+#, c-format
+msgid "Unknown option: %s"
+msgstr "Opción desconocida: %s"
+
+#: ../commands.c:460
+msgid "true"
+msgstr "cierto"
+
+#: ../commands.c:460
+msgid "false"
+msgstr "falso"
+
+#: ../commands.c:492
+#, c-format
+msgid "No value defined for option: %s"
+msgstr "Valor indefinido para la opción: %s"
+
+#: ../commands.c:507
+#, c-format
+msgid "Unknown value for option: %s"
+msgstr "Valor desconocido para la opción: %s"
+
+#: ../commands.c:632
+msgid "exec-command is invalid."
+msgstr "El 'exec-command' es inválido"
+
+#: ../commands.c:651
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "No se pudo ejecutar el comando: %s"

@@ -6,94 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
-"Report-Msgid-Bugs-To: http://bt.pwmt.org/\n"
-"POT-Creation-Date: 2012-04-03 17:07+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-21 01:39+0200\n"
 "PO-Revision-Date: 2012-04-03 19:27+0000\n"
 "Last-Translator: femnad <femnad@gmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/tr/)\n"
+"Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
+"tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-
-#: ../commands.c:108
-msgid "Usage: unmap <binding>"
-msgstr "Kullanım: unmap <tuş kombinasyonu>"
-
-#: ../commands.c:110
-msgid "Usage: map <binding> <function>"
-msgstr "Kullanım: map <tuş kombinasyonu> <fonksiyon>"
-
-#: ../commands.c:145
-#, c-format
-msgid "Unregistered mode specified: %s"
-msgstr "Kayıtlı olmayan mod belirtildi: %s"
-
-#: ../commands.c:156 ../commands.c:318
-#, c-format
-msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr "Yanlış sayıda argüman geçildi: %zu adet argüman geçildi, oysa en az %u adet argüman olması gerekiyor"
-
-#: ../commands.c:184
-#, c-format
-msgid "Invalid modifier in %s"
-msgstr "%s içinde geçersiz dönüştürücü"
-
-#: ../commands.c:223
-#, c-format
-msgid "Invalid special key value for %s"
-msgstr "%s için geçersiz özel tuş"
-
-#: ../commands.c:259
-#, c-format
-msgid "Invalid special key value or mode %s"
-msgstr "%s için geçersiz tuş özel veya mod"
-
-#: ../commands.c:340
-#, c-format
-msgid "Not a valid shortcut function: %s"
-msgstr "Geçerli bir kısayol fonksiyonu değil: %s"
-
-#: ../commands.c:428
-msgid "Not enough arguments."
-msgstr "Yeterince argüman geçilmedi."
-
-#: ../commands.c:433
-msgid "Too many arguments."
-msgstr "Gereğinden fazla argüman."
-
-#: ../commands.c:446
-#, c-format
-msgid "Unknown option: %s"
-msgstr "Bilinmeyen seçenek: %s"
-
-#: ../commands.c:460
-msgid "true"
-msgstr "doğru"
-
-#: ../commands.c:460
-msgid "false"
-msgstr "yanlış"
-
-#: ../commands.c:492
-#, c-format
-msgid "No value defined for option: %s"
-msgstr "Seçenek için değer belirtilmedi: %s"
-
-#: ../commands.c:507
-#, c-format
-msgid "Unknown value for option: %s"
-msgstr "Seçenek için bilinmeyen değer: %s"
-
-#: ../commands.c:632
-msgid "exec-command is invalid."
-msgstr "exec komutu geçersiz."
-
-#: ../commands.c:651
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "Komut yürütülemedi: %s"
 
 #. add default settings
 #: ../session.c:114
@@ -234,3 +157,83 @@ msgstr "Seçenekleri değiştir"
 #: ../session.c:180
 msgid "Unmap a key sequence"
 msgstr "Tuş kombinasyonu eşleşimini kaldır"
+
+#: ../commands.c:108
+msgid "Usage: unmap <binding>"
+msgstr "Kullanım: unmap <tuş kombinasyonu>"
+
+#: ../commands.c:110
+msgid "Usage: map <binding> <function>"
+msgstr "Kullanım: map <tuş kombinasyonu> <fonksiyon>"
+
+#: ../commands.c:145
+#, c-format
+msgid "Unregistered mode specified: %s"
+msgstr "Kayıtlı olmayan mod belirtildi: %s"
+
+#: ../commands.c:156 ../commands.c:318
+#, c-format
+msgid "Invalid number of arguments passed: %zu instead of at least %u"
+msgstr ""
+"Yanlış sayıda argüman geçildi: %zu adet argüman geçildi, oysa en az %u adet "
+"argüman olması gerekiyor"
+
+#: ../commands.c:184
+#, c-format
+msgid "Invalid modifier in %s"
+msgstr "%s içinde geçersiz dönüştürücü"
+
+#: ../commands.c:223
+#, c-format
+msgid "Invalid special key value for %s"
+msgstr "%s için geçersiz özel tuş"
+
+#: ../commands.c:259
+#, c-format
+msgid "Invalid special key value or mode %s"
+msgstr "%s için geçersiz tuş özel veya mod"
+
+#: ../commands.c:340
+#, c-format
+msgid "Not a valid shortcut function: %s"
+msgstr "Geçerli bir kısayol fonksiyonu değil: %s"
+
+#: ../commands.c:428
+msgid "Not enough arguments."
+msgstr "Yeterince argüman geçilmedi."
+
+#: ../commands.c:433
+msgid "Too many arguments."
+msgstr "Gereğinden fazla argüman."
+
+#: ../commands.c:446
+#, c-format
+msgid "Unknown option: %s"
+msgstr "Bilinmeyen seçenek: %s"
+
+#: ../commands.c:460
+msgid "true"
+msgstr "doğru"
+
+#: ../commands.c:460
+msgid "false"
+msgstr "yanlış"
+
+#: ../commands.c:492
+#, c-format
+msgid "No value defined for option: %s"
+msgstr "Seçenek için değer belirtilmedi: %s"
+
+#: ../commands.c:507
+#, c-format
+msgid "Unknown value for option: %s"
+msgstr "Seçenek için bilinmeyen değer: %s"
+
+#: ../commands.c:632
+msgid "exec-command is invalid."
+msgstr "exec komutu geçersiz."
+
+#: ../commands.c:651
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Komut yürütülemedi: %s"

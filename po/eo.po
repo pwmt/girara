@@ -1,19 +1,17 @@
-# girara - language file (German)
+# girara - language file (Esperanto)
 # See LICENSE file for license and copyright information
 #
 # Translators:
-#   <cedric.sodhi@googlemail.com>, 2012.
-# Moritz Lipp <mlq@pwmt.org>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-21 01:39+0200\n"
-"PO-Revision-Date: 2012-04-03 15:11+0000\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
-"de/)\n"
-"Language: de\n"
+"PO-Revision-Date: 2012-04-20 23:35+0400\n"
+"Last-Translator: grimp3ur <grimp3ur@lavabit.com>\n"
+"Language-Team: Esperanto (http://www.transifex.net/projects/p/girara/"
+"language/eo/)\n"
+"Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,218 +20,217 @@ msgstr ""
 #. add default settings
 #: ../session.c:114
 msgid "Font"
-msgstr "Schriftart"
+msgstr "Tiparo"
 
 #: ../session.c:115
 msgid "Default foreground color"
-msgstr "Standardfarbe des Vordergrunds"
+msgstr "Defaŭlta malfona koloro"
 
 #: ../session.c:116
 msgid "Default background color"
-msgstr "Standardfarbe des Hintergrunds"
+msgstr "Defaŭlta fona koloro"
 
 #: ../session.c:117
 msgid "Inputbar foreground color"
-msgstr "Vordergrundfarbe der Eingabezeile"
+msgstr "Malfona koloro de enigbreto"
 
 #: ../session.c:118
 msgid "Inputbar background color"
-msgstr "Hintergrundfarbe der Eingabezeile"
+msgstr "Fona koloro de enigbreto"
 
 #: ../session.c:119
 msgid "Statusbar foreground color"
-msgstr "Vordergrundfarbe der Statuszeile"
+msgstr "Malfona koloro de statbreto"
 
 #: ../session.c:120
 msgid "Statsubar background color"
-msgstr "Hintergrundfarbe der Statuszeile"
+msgstr "Fona koloro de statbreto"
 
 #: ../session.c:121
 msgid "Completion foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung"
+msgstr "Malfona koloro de kompletigo"
 
 #: ../session.c:122
 msgid "Completion background color"
-msgstr "Hintergrundfarbe der Vervollständigung"
+msgstr "Fona koloro de kompletigo"
 
 #: ../session.c:123
 msgid "Completion group foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
+msgstr "Malfona koloro de kompletiga grupo"
 
 #: ../session.c:124
 msgid "Completion group background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
+msgstr "Fona koloro de kompletiga grupo"
 
 #: ../session.c:125
 msgid "Completion highlight foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr "Malfonluma koloro de kompletigo"
 
 #: ../session.c:126
 msgid "Completion highlight background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr "Fonluma koloro de kompletigo"
 
 #: ../session.c:127
 msgid "Error notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Malfona koloro de erarsciigo"
 
 #: ../session.c:128
 msgid "Error notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Fona koloro de erarsciigo"
 
 #: ../session.c:129
 msgid "Warning notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
+msgstr "Malfona koloro de avertsciigo"
 
 #: ../session.c:130
 msgid "Warning notifaction background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
+msgstr "Fona koloro de avertsciigo"
 
 #: ../session.c:131
 msgid "Notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung"
+msgstr "Malfona koloro de sciigo"
 
 #: ../session.c:132
 msgid "Notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung"
+msgstr "Fona koloro de sciigo"
 
 #: ../session.c:133
 msgid "Tab bar foreground color"
-msgstr "Registerleisten Vordergrundfarbe"
+msgstr "Malfona koloro de slipbreto"
 
 #: ../session.c:134
 msgid "Tab bar background color"
-msgstr "Registerleisten Hintergrundfarbe"
+msgstr "Fona koloro de slipbreto"
 
 #: ../session.c:135
 msgid "Tab bar foreground color (active)"
-msgstr "Registerleisten Vordergrundfarbe (aktiv)"
+msgstr "Malfona koloro de slipbreto (aktiva)"
 
 #: ../session.c:136
 msgid "Tab bar background color (active)"
-msgstr "Registerleisten Hintergrundfarbe (aktiv)"
+msgstr "Fona koloro de slipbreto (aktiva)"
 
 #: ../session.c:138
 msgid "Initial window width"
-msgstr "Ausgangsbreite des Fensters"
+msgstr "Larĝeco de inita fenestro"
 
 #: ../session.c:139
 msgid "Initial window height"
-msgstr "Ausgangshöhe des Fensters"
+msgstr "Alteco de inita fenestro"
 
 #: ../session.c:140
 msgid "Number of completion items"
-msgstr "Anzahl der Elemente in der Vervollständigung"
+msgstr "Nombro da kompletigeroj"
 
 #: ../session.c:141
 msgid "Show scrollbars"
-msgstr "Zeige Bildlaufleiste"
+msgstr "Montru rulumstangojn"
 
 #. window icon
 #: ../session.c:144
 msgid "Window icon"
-msgstr "Fenstericon"
+msgstr "Fenestra piktogramo"
 
 #. exec-command
 #: ../session.c:146
 msgid "Command to execute in :exec"
-msgstr "Befehl, der von :exec ausgeführt werden soll"
+msgstr "Komando por plenumi en :exec"
 
 #. default commands
 #: ../session.c:176
 msgid "Execute a command"
-msgstr "Führe einen Befehl aus."
+msgstr "Plenumi komandon"
 
 #: ../session.c:177
 msgid "Map a key sequence"
-msgstr "Tastenfolge zuweisen"
+msgstr "Mapu klavan sinsekvon"
 
 #: ../session.c:178
 msgid "Quit the program"
-msgstr "Beende das Programm"
+msgstr "Eliru el programo"
 
 #: ../session.c:179
 msgid "Set an option"
-msgstr "Setze eine Option"
+msgstr "Agordu opcion"
 
 #: ../session.c:180
 msgid "Unmap a key sequence"
-msgstr "Tastenfolge entbinden"
+msgstr "Malmapu klavan sinsekvon"
 
 #: ../commands.c:108
 msgid "Usage: unmap <binding>"
-msgstr "Verwendung: unmap <schlüssel>"
+msgstr "Uzado: unmap <bindado>"
 
 #: ../commands.c:110
 msgid "Usage: map <binding> <function>"
-msgstr "Verwendung: map <schlüssel> <funktion>"
+msgstr "Uzado: map <bindado> <funkcio>"
 
 #: ../commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr "Modus ist nicht registriert: %s"
+msgstr "Neregistrita modo specifita: %s"
 
 #: ../commands.c:156 ../commands.c:318
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr ""
-"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
+msgstr "Nevalida nombro da argumentoj transdonita: %zu anstataŭ de almenaŭ %u"
 
 #: ../commands.c:184
 #, c-format
 msgid "Invalid modifier in %s"
-msgstr "Ungültiger Modifikator in %s"
+msgstr "Nevalida modifilo en %s"
 
 #: ../commands.c:223
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr "Ungültige Sondertaste für %s"
+msgstr "Nevalida speciala klavvaloro por %s"
 
 #: ../commands.c:259
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr "Ungültige Sondertaste oder Modus %s"
+msgstr "Nevalida speciala klavvaloro aŭ reĝimo %s"
 
 #: ../commands.c:340
 #, c-format
 msgid "Not a valid shortcut function: %s"
-msgstr "Ungültige zugewiesene Funktion: %s"
+msgstr "Nevalida kurtnomo de funkcio: %s"
 
 #: ../commands.c:428
 msgid "Not enough arguments."
-msgstr "Zu wenige Argumente."
+msgstr "Ne sufiĉe da argumentoj."
 
 #: ../commands.c:433
 msgid "Too many arguments."
-msgstr "Zu viele Argumente."
+msgstr "Tro multe da argumentoj."
 
 #: ../commands.c:446
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Unbekannte Otion: %s"
+msgstr "Nekonata opcio: %s"
 
 #: ../commands.c:460
 msgid "true"
-msgstr "wahr"
+msgstr "vero"
 
 #: ../commands.c:460
 msgid "false"
-msgstr "falsch"
+msgstr "falso"
 
 #: ../commands.c:492
 #, c-format
 msgid "No value defined for option: %s"
-msgstr "Kein Wert für Option definiert: %s"
+msgstr "Neniu valoro difinita por opcio: %s"
 
 #: ../commands.c:507
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr "Unbekannter Wert für Option: %s"
+msgstr "Nekonata valoro por opcio: %s"
 
 #: ../commands.c:632
 msgid "exec-command is invalid."
-msgstr "exec-command ist ungültig."
+msgstr "exec-komando estas nevalida"
 
 #: ../commands.c:651
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Konnte Befehl nicht ausführen: %s"
+msgstr "Malsukcesis plenumo komandon: %s"
