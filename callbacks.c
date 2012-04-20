@@ -442,8 +442,15 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   g_return_val_if_fail(session != NULL, false);
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
+  bool custom_ret = false;
   if (session->signals.inputbar_custom_key_press_event != NULL) {
-    return session->signals.inputbar_custom_key_press_event(entry, event, session->signals.inputbar_custom_data);
+    custom_ret = session->signals.inputbar_custom_key_press_event(entry, event, session->signals.inputbar_custom_data);
+    if (custom_ret == true) {
+      girara_isc_abort(session, NULL, NULL, 0);
+
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
+    }
   }
 
   guint keyval             = 0;
@@ -463,18 +470,20 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   }
   const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
 
-  GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
-    if (inputbar_shortcut->key == keyval
-     && inputbar_shortcut->mask == clean)
-    {
-      if (inputbar_shortcut->function != NULL) {
-        inputbar_shortcut->function(session, &(inputbar_shortcut->argument), NULL, 0);
-      }
+  if (custom_ret == false) {
+    GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
+      if (inputbar_shortcut->key == keyval
+       && inputbar_shortcut->mask == clean)
+      {
+        if (inputbar_shortcut->function != NULL) {
+          inputbar_shortcut->function(session, &(inputbar_shortcut->argument), NULL, 0);
+        }
 
-      girara_list_iterator_free(iter);
-      return true;
-    }
-  GIRARA_LIST_FOREACH_END(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut);
+        girara_list_iterator_free(iter);
+        return true;
+      }
+    GIRARA_LIST_FOREACH_END(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut);
+  }
 
   if ((session->gtk.results != NULL) &&
      (gtk_widget_get_visible(GTK_WIDGET(session->gtk.results)) == TRUE) &&
@@ -483,7 +492,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     gtk_widget_hide(GTK_WIDGET(session->gtk.results));
   }
 
-  return false;
+  return custom_ret;
 }
 
 bool
