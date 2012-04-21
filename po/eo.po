@@ -233,4 +233,4 @@ msgstr "exec-komando estas nevalida"
 #: ../commands.c:651
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Malsukcesis plenumo komandon: %s"
+msgstr "Fiaskis plenumi komandon: %s"
