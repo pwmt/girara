@@ -101,6 +101,7 @@ struct girara_session_s
     int view_button_press_event; /**< Pressed button */
     int view_button_release_event; /**< Released button */
     int view_motion_notify_event; /**< Cursor movement event */
+    int view_scroll_event; /**< Scroll event */
     girara_callback_inputbar_activate_t inputbar_custom_activate; /**< Custom handler */
     girara_callback_inputbar_key_press_event_t inputbar_custom_key_press_event; /**< Custom handler */
     void* inputbar_custom_data; /**< Data for custom handler */
