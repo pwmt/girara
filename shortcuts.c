@@ -11,6 +11,7 @@
 #include <gtk/gtk.h>
 
 static void girara_toggle_widget_visibility(GtkWidget* widget);
+static bool simulate_key_press(girara_session_t* session, int state, int key);
 
 bool
 girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
@@ -416,6 +417,123 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
   return false;
 }
 
+bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
+    girara_event_t* UNUSED(event), unsigned int t)
+{
+  if (session == NULL || argument == NULL) {
+    return false;
+  }
+
+  typedef struct gdk_keyboard_button_s {
+    char* identifier;
+    int keyval;
+  } gdk_keyboard_button_t;
+
+  static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
+    {"BackSpace", GDK_KEY_BackSpace},
+    {"CapsLock",  GDK_KEY_Caps_Lock},
+    {"Down",      GDK_KEY_Down},
+    {"Esc",       GDK_KEY_Escape},
+    {"F10",       GDK_KEY_F10},
+    {"F11",       GDK_KEY_F11},
+    {"F12",       GDK_KEY_F12},
+    {"F1",        GDK_KEY_F1},
+    {"F2",        GDK_KEY_F2},
+    {"F3",        GDK_KEY_F3},
+    {"F4",        GDK_KEY_F4},
+    {"F5",        GDK_KEY_F5},
+    {"F6",        GDK_KEY_F6},
+    {"F7",        GDK_KEY_F7},
+    {"F8",        GDK_KEY_F8},
+    {"F9",        GDK_KEY_F9},
+    {"Left",      GDK_KEY_Left},
+    {"PageDown",  GDK_KEY_Page_Down},
+    {"PageUp",    GDK_KEY_Page_Up},
+    {"Return",    GDK_KEY_Return},
+    {"Right",     GDK_KEY_Right},
+    {"Space",     GDK_KEY_space},
+    {"Super",     GDK_KEY_Super_L},
+    {"Tab",       GDK_KEY_Tab},
+    {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
+    {"Up",        GDK_KEY_Up}
+  };
+
+  char* input               = (char*) argument->data;
+  unsigned int input_length = strlen(input);
+
+  t = (t == 0) ? 1 : t;
+  for (unsigned int c = 0; c < t; c++) {
+    for (unsigned i = 0; i < input_length; i++) {
+      int state  = 0;
+      int keyval = input[i];
+
+      /* possible special button */
+      if ((input_length - i) >= 3 && input[i] == '<') {
+        char* end = strchr(input + i, '>');
+        if (end == NULL) {
+          goto single_key;
+        }
+
+        int length = end - (input + i) - 1;
+        char* tmp  = g_strndup(input + i + 1, length);
+        bool found = false;
+
+        /* Multi key shortcut */
+        if (length > 2 && tmp[1] == '-') {
+          switch (tmp[0]) {
+            case 'S':
+              state = GDK_SHIFT_MASK;
+              break;
+            case 'A':
+              state = GDK_MOD1_MASK;
+              break;
+            case 'C':
+              state = GDK_CONTROL_MASK;
+              break;
+            default:
+              break;
+          }
+
+          if (length == 3) {
+            keyval = tmp[2];
+            found  = true;
+          } else {
+            for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
+              if (g_strcmp0(tmp + 2, gdk_keyboard_buttons[i].identifier) == 0) {
+                keyval = gdk_keyboard_buttons[i].keyval;
+                found = true;
+                break;
+              }
+            }
+          }
+        /* Possible special key */
+        } else {
+          for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
+            if (g_strcmp0(tmp, gdk_keyboard_buttons[i].identifier) == 0) {
+              keyval = gdk_keyboard_buttons[i].keyval;
+              found = true;
+              break;
+            }
+          }
+        }
+
+        g_free(tmp);
+
+        /* parsed special key */
+        if (found == true) {
+          i += length + 1;
+        }
+      }
+
+single_key:
+
+      simulate_key_press(session, state, keyval);
+    }
+  }
+
+  return true;
+}
+
 bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, girara_shortcut_function_t function)
 {
   g_return_val_if_fail(session  != NULL, false);
@@ -552,4 +670,42 @@ girara_mouse_event_free(girara_mouse_event_t* mouse_event)
     return;
   }
   g_slice_free(girara_mouse_event_t, mouse_event);
+}
+
+static bool
+simulate_key_press(girara_session_t* session, int state, int key)
+{
+	if (session == NULL || session->gtk.box == NULL) {
+		return false;
+	}
+
+  GdkEvent* event = gdk_event_new(GDK_KEY_PRESS);
+
+  event->key.type       = GDK_KEY_PRESS;
+  event->key.window     = gtk_widget_get_parent_window(GTK_WIDGET(session->gtk.box));
+  event->key.send_event = false;
+  event->key.time       = GDK_CURRENT_TIME;
+  event->key.state      = state;
+  event->key.keyval     = key;
+
+  g_object_ref(event->key.window);
+
+  GdkKeymapKey* keys;
+  gint number_of_keys;
+
+  if (gdk_keymap_get_entries_for_keyval(gdk_keymap_get_default(),
+        event->key.keyval, &keys, &number_of_keys) == FALSE) {
+    gdk_event_free(event);
+    return false;
+  }
+
+  event->key.hardware_keycode = keys[0].keycode;
+  event->key.group            = keys[0].group;
+
+  g_free(keys);
+
+  gdk_event_put(event);
+  gdk_event_free(event);
+
+	return true;
 }
