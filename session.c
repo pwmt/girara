@@ -188,6 +188,7 @@ girara_session_create()
   girara_shortcut_mapping_add(session, "focus_inputbar", girara_sc_focus_inputbar);
   girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
   girara_shortcut_mapping_add(session, "set",            girara_sc_set);
+  girara_shortcut_mapping_add(session, "feedkeys",       girara_sc_feedkeys);
 
   return session;
 }
