@@ -44,6 +44,8 @@ HIDDEN void girara_command_free(girara_command_t* command);
 
 HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
 
+HIDDEN void girara_config_load_default(girara_session_t* session);
+
 /**
  * Default complection function for the settings
  *
