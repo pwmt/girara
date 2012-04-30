@@ -116,6 +116,7 @@ struct girara_session_s
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
+    girara_list_t* command_history; /**< Command history */
   } global;
 
   struct
@@ -244,5 +245,13 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  * @return false if an error occured
  */
 bool girara_set_window_title(girara_session_t* session, const char* name);
+
+/**
+ * Returns the command history
+ *
+ * @param session The used girara session
+ * @return The command history (list of strings) or NULL
+ */
+girara_list_t* girara_get_command_history(girara_session_t* session);
 
 #endif

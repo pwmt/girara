@@ -42,18 +42,22 @@ girara_session_create()
       (girara_free_function_t) girara_shortcut_free);
   session->bindings.inputbar_shortcuts = girara_list_new2(
       (girara_free_function_t) girara_inputbar_shortcut_free);
-  session->elements.statusbar_items    = girara_list_new2(
+
+  session->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
-  session->settings                    = girara_sorted_list_new2(
+
+  session->settings = girara_sorted_list_new2(
       (girara_compare_function_t) cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
 
+  /* init modes */
   session->modes.identifiers  = girara_list_new2(
       (girara_free_function_t) girara_mode_string_free);
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   session->modes.normal       = normal_mode;
   session->modes.current_mode = normal_mode;
 
+  /* config handles */
   session->config.handles           = girara_list_new2(
       (girara_free_function_t) girara_config_handle_free);
   session->config.shortcut_mappings = girara_list_new2(
@@ -61,7 +65,9 @@ girara_session_create()
   session->config.argument_mappings = girara_list_new2(
       (girara_free_function_t) girara_argument_mapping_free);
 
-  session->style.font = NULL;
+  /* command history */
+  session->global.command_history = girara_list_new2(
+      (girara_free_function_t) g_free);
 
   /* load default values */
   girara_config_load_default(session);
@@ -392,6 +398,10 @@ girara_session_destroy(girara_session_t* session)
   session->buffer.command = NULL;
   session->global.buffer  = NULL;
 
+  /* clean up command history */
+  girara_list_free(session->global.command_history);
+  session->global.command_history = NULL;
+
   /* clean up session */
   g_slice_free(girara_session_t, session);
 
@@ -568,3 +578,10 @@ girara_set_window_title(girara_session_t* session, const char* name)
   return true;
 }
 
+girara_list_t*
+girara_get_command_history(girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, FALSE);
+
+  return session->global.command_history;
+}

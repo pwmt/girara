@@ -145,9 +145,12 @@ girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut)
 {
   g_slice_free(girara_inputbar_shortcut_t, inputbar_shortcut);
 }
+
 bool
 girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
+  g_return_val_if_fail(session != NULL, false);
+
   /* hide completion */
   girara_argument_t arg = { GIRARA_HIDE, NULL };
   girara_isc_completion(session, &arg, NULL, 0);
@@ -173,6 +176,8 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
 bool
 girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
+  g_return_val_if_fail(session != NULL, false);
+
   gchar *separator = NULL;
   girara_setting_get(session, "word-separator", &separator);
   gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
@@ -235,6 +240,39 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
   g_free(input);
 
   return false;
+}
+
+bool girara_isc_command_history(girara_session_t* session, girara_argument_t*
+    argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session                          != NULL, false);
+  g_return_val_if_fail(session->global.command_history != NULL, false);
+
+  static int current  = 0;
+  unsigned int length = girara_list_size(session->global.command_history);
+
+  if (length == 0) {
+    return false;
+  }
+
+  if (argument->n == GIRARA_NEXT) {
+    current = (length + current + 1) % length;
+  } else if (argument->n == GIRARA_PREVIOUS) {
+    current = (length + current - 1) % length;
+  } else {
+    return false;
+  }
+
+  char* command = (char*) girara_list_nth(session->global.command_history, current);
+  if (command == NULL) {
+    return false;
+  }
+
+  gtk_entry_set_text(session->gtk.inputbar_entry, command);
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
+  gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
+
+  return true;
 }
 
 /* default shortcut implementation */
@@ -675,9 +713,9 @@ girara_mouse_event_free(girara_mouse_event_t* mouse_event)
 static bool
 simulate_key_press(girara_session_t* session, int state, int key)
 {
-	if (session == NULL || session->gtk.box == NULL) {
-		return false;
-	}
+  if (session == NULL || session->gtk.box == NULL) {
+    return false;
+  }
 
   GdkEvent* event = gdk_event_new(GDK_KEY_PRESS);
 
@@ -707,5 +745,5 @@ simulate_key_press(girara_session_t* session, int state, int key)
   gdk_event_put(event);
   gdk_event_free(event);
 
-	return true;
+  return true;
 }

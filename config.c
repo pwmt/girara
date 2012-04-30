@@ -129,6 +129,8 @@ girara_config_load_default(girara_session_t* session)
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_b,            girara_isc_string_manipulation, GIRARA_PREVIOUS_CHAR,        NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_a,            girara_isc_string_manipulation, GIRARA_GOTO_START,           NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_e,            girara_isc_string_manipulation, GIRARA_GOTO_END,             NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Up,           girara_isc_command_history,     GIRARA_PREVIOUS,             NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Down,         girara_isc_command_history,     GIRARA_NEXT,                 NULL);
 
   /* commands */
   girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,  NULL,          _("Execute a command"));
@@ -147,7 +149,6 @@ girara_config_load_default(girara_session_t* session)
   girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
   girara_shortcut_mapping_add(session, "set",            girara_sc_set);
   girara_shortcut_mapping_add(session, "feedkeys",       girara_sc_feedkeys);
-
 }
 
 bool

@@ -358,6 +358,13 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     return false;
   }
 
+  /* append to command history */
+  if (session->global.command_history != NULL) {
+    const char* command = gtk_entry_get_text(entry);
+    girara_list_append(session->global.command_history, g_strdup(command));
+  }
+
+  /* parse input */
   gchar** argv = NULL;
   gint    argc = 0;
 
