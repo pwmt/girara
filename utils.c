@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdint.h>
+#include <gtk/gtk.h>
 
 #include "utils.h"
 #include "datastructures.h"
@@ -439,4 +440,20 @@ void
 girara_set_debug_level(girara_debug_level_t level)
 {
   debug_level = level;
+}
+
+void
+update_state_by_keyval(int *state, int keyval)
+{
+  if (state == NULL) {
+    return;
+  }
+
+  if ((keyval >= '!' && keyval <= '/')
+      || (keyval >= ':' && keyval <= '@')
+      || (keyval >= '[' && keyval <= '`')
+      || (keyval >= '{' && keyval <= '~')
+      ) {
+    *state |= GDK_SHIFT_MASK;
+  }
 }

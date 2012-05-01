@@ -567,6 +567,7 @@ bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
 
 single_key:
 
+      update_state_by_keyval(&state, keyval);
       simulate_key_press(session, state, keyval);
     }
   }
