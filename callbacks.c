@@ -45,8 +45,9 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
-  guint clean = 0;
+  guint clean  = 0;
   guint keyval = 0;
+
   if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
     return false;
   }
@@ -488,22 +489,12 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     }
   }
 
-  guint keyval             = 0;
-  GdkModifierType consumed = 0;
+  guint keyval = 0;
+  guint clean  = 0;
 
-  if (gdk_keymap_translate_keyboard_state(
-        gdk_keymap_get_default(),
-        event->hardware_keycode,
-        event->state,
-        event->group,
-        &keyval,
-        NULL,
-        NULL,
-        &consumed
-      ) == FALSE) {
+  if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
     return false;
   }
-  const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
 
   if (custom_ret == false) {
     GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
