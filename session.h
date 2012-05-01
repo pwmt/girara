@@ -109,7 +109,8 @@ struct girara_session_s
 
   struct
   {
-    void (*buffer_changed)(girara_session_t* session);
+    void (*buffer_changed)(girara_session_t* session); /**< Buffer changed */
+    bool (*unknown_command)(girara_session_t* session, const char* input); /**< Unknown command */
   } events;
 
   struct
