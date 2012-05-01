@@ -58,6 +58,48 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
   }
 }
 
+static void
+cb_guioptions(girara_session_t* session, const char* UNUSED(name),
+    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+{
+  g_return_if_fail(session != NULL && value != NULL);
+
+  /* set default values */
+  bool show_commandline = false;
+  bool show_statusbar   = false;
+
+  /* evaluate input */
+  char* input      = (char*) value;
+  int input_length = strlen(input);
+
+  for (int i = 0; i < input_length; i++) {
+    switch (input[i]) {
+      /* command line */
+      case 'c':
+        show_commandline = true;
+        break;
+      /* statusbar */
+      case 's':
+        show_statusbar = true;
+        break;
+    }
+  }
+
+  /* apply settings */
+  if (show_commandline == true) {
+    session->global.autohide_inputbar = false;
+    gtk_widget_show(session->gtk.inputbar);
+  } else {
+    session->global.autohide_inputbar = true;
+    gtk_widget_hide(session->gtk.inputbar);
+  }
+
+  if (show_statusbar == true) {
+    gtk_widget_show(session->gtk.statusbar);
+  } else {
+    gtk_widget_hide(session->gtk.statusbar);
+  }
+}
 
 void
 girara_config_load_default(girara_session_t* session)
@@ -72,6 +114,9 @@ girara_config_load_default(girara_session_t* session)
   int n_completion_items    = 15;
   bool show_scrollbars      = false;
   girara_mode_t normal_mode = session->modes.normal;
+
+  /* other values */
+  session->global.autohide_inputbar = true;
 
   /* settings */
   girara_setting_add(session, "font",                     "monospace normal 9", STRING,  FALSE, _("Font"), cb_font, NULL);
@@ -104,6 +149,7 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  _("Show scrollbars"), NULL, NULL);
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
+  girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);
 
   /* shortcuts */
   girara_shortcut_add(session, 0,                GDK_KEY_Escape, NULL, girara_sc_abort,           normal_mode, 0, NULL);

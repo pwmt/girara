@@ -319,8 +319,10 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
   gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
-  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
+  if (session->global.autohide_inputbar == true) {
+    gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+  }
 
   char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
@@ -461,7 +463,9 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
 
   /* update visibility */
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
-  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+  if (session->global.autohide_inputbar == true) {
+    gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+  }
 
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 }

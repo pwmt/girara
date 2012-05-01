@@ -117,6 +117,7 @@ struct girara_session_s
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
     girara_list_t* command_history; /**< Command history */
+    bool autohide_inputbar; /**< Auto-hide inputbar */
   } global;
 
   struct
