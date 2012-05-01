@@ -16,7 +16,8 @@
 #define COMMENT_PREFIX '#'
 
 static void
-cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+cb_window_icon(girara_session_t* session, const char* UNUSED(name),
+    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
@@ -31,7 +32,8 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setti
 }
 
 static void
-cb_font(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+cb_font(girara_session_t* session, const char* UNUSED(name),
+    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
