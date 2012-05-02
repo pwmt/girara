@@ -397,10 +397,7 @@ static girara_debug_level_t debug_level = GIRARA_DEBUG;
 void
 _girara_debug(const char* function, int line, girara_debug_level_t level, const char* format, ...)
 {
-  /* This could be simplified if DEBUG, INFO, WARNING, ERROR were ordered. */
-  if ((debug_level == GIRARA_ERROR && level != GIRARA_ERROR) ||
-      (debug_level == GIRARA_WARNING && (level != GIRARA_ERROR && level != GIRARA_WARNING)) ||
-      (debug_level == GIRARA_INFO && level == GIRARA_DEBUG)) {
+  if (level < debug_level) {
     return;
   }
 
