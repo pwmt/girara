@@ -567,6 +567,7 @@ bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
 
 single_key:
 
+      update_state_by_keyval(&state, keyval);
       simulate_key_press(session, state, keyval);
     }
   }
@@ -746,6 +747,8 @@ simulate_key_press(girara_session_t* session, int state, int key)
 
   gdk_event_put(event);
   gdk_event_free(event);
+
+  gtk_main_iteration_do(FALSE);
 
   return true;
 }

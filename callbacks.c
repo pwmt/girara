@@ -45,8 +45,9 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
-  guint clean = 0;
+  guint clean  = 0;
   guint keyval = 0;
+
   if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
     return false;
   }
@@ -442,8 +443,25 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     }
   GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
 
-  /* no known command */
+  /* check for unknown command event handler */
+  if (session->events.unknown_command != NULL) {
+    if (session->events.unknown_command(session, input) == true) {
+      g_strfreev(argv);
+      g_free(input);
+      girara_isc_abort(session, NULL, NULL, 0);
+
+      if (session->global.autohide_inputbar == true) {
+        gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+      }
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
+
+      return true;
+    }
+  }
+
+  /* unhandled command */
   girara_notify(session, GIRARA_ERROR, _("Not a valid command: %s"), cmd);
+  g_strfreev(argv);
   girara_isc_abort(session, NULL, NULL, 0);
 
   return false;
@@ -468,22 +486,12 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     }
   }
 
-  guint keyval             = 0;
-  GdkModifierType consumed = 0;
+  guint keyval = 0;
+  guint clean  = 0;
 
-  if (gdk_keymap_translate_keyboard_state(
-        gdk_keymap_get_default(),
-        event->hardware_keycode,
-        event->state,
-        event->group,
-        &keyval,
-        NULL,
-        NULL,
-        &consumed
-      ) == FALSE) {
+  if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
     return false;
   }
-  const guint clean = event->state & ~consumed & ALL_ACCELS_MASK;
 
   if (custom_ret == false) {
     GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
