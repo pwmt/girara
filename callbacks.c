@@ -443,9 +443,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, command);
 
   /* no known command */
-  char* error_message = g_strdup_printf(_("Not a valid command: %s"), cmd);
-  girara_notify(session, GIRARA_ERROR, error_message);
-  g_free(error_message);
+  girara_notify(session, GIRARA_ERROR, _("Not a valid command: %s"), cmd);
   girara_isc_abort(session, NULL, NULL, 0);
 
   return false;
