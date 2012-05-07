@@ -9,6 +9,7 @@
 #include "session.h"
 #include "settings.h"
 #include "datastructures.h"
+#include "utils.h"
 
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
