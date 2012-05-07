@@ -454,3 +454,21 @@ update_state_by_keyval(int *state, int keyval)
     *state |= GDK_SHIFT_MASK;
   }
 }
+
+char* girara_escape_string(const char* value)
+{
+  if (value == NULL) {
+    return NULL;
+  }
+
+  GString* str = g_string_new("");
+  while (*value != '\0') {
+    const char c = *value++;
+    if (strchr("\\ \t\"\'", c) != NULL) {
+      g_string_append_c(str, '\\');
+    }
+    g_string_append_c(str, c);
+  }
+
+  return g_string_free(str, FALSE);
+}
