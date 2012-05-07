@@ -95,8 +95,10 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   }
 
   if (show_statusbar == true) {
+    session->global.hide_statusbar = false;
     gtk_widget_show(session->gtk.statusbar);
   } else {
+    session->global.hide_statusbar = true;
     gtk_widget_hide(session->gtk.statusbar);
   }
 }

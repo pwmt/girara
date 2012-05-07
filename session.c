@@ -72,21 +72,7 @@ girara_session_create()
   /* load default values */
   girara_config_load_default(session);
 
-  return session;
-}
-
-bool
-girara_session_init(girara_session_t* session, const char* sessionname)
-{
-  if (session->gtk.embed){
-    session->gtk.window = gtk_plug_new(session->gtk.embed);
-  } else {
-    session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  }
-  if (sessionname != NULL) {
-    gtk_widget_set_name(GTK_WIDGET(session->gtk.window), sessionname);
-  }
-
+  /* create widgets */
 #if GTK_MAJOR_VERSION == 2
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
@@ -110,7 +96,27 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->gtk.inputbar          = gtk_event_box_new();
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
+  return session;
+}
+
+bool
+girara_session_init(girara_session_t* session, const char* sessionname)
+{
+  if (session == NULL) {
+    return false;
+  }
+
   /* window */
+  if (session->gtk.embed){
+    session->gtk.window = gtk_plug_new(session->gtk.embed);
+  } else {
+    session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  }
+
+  if (sessionname != NULL) {
+    gtk_widget_set_name(GTK_WIDGET(session->gtk.window), sessionname);
+  }
+
   GdkGeometry hints = {
     .base_height = 1,
     .base_width  = 1,
@@ -320,8 +326,13 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_show_all(GTK_WIDGET(session->gtk.window));
   gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
+
   if (session->global.autohide_inputbar == true) {
     gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+  }
+
+  if (session->global.hide_statusbar == true) {
+    gtk_widget_hide(GTK_WIDGET(session->gtk.statusbar));
   }
 
   char* window_icon = NULL;
@@ -333,7 +344,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     g_free(window_icon);
   }
 
-  return TRUE;
+  return true;
 }
 
 bool

@@ -119,6 +119,7 @@ struct girara_session_s
     void* data; /**< User data */
     girara_list_t* command_history; /**< Command history */
     bool autohide_inputbar; /**< Auto-hide inputbar */
+    bool hide_statusbar; /**< Hide statusbar */
   } global;
 
   struct
