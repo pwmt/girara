@@ -397,10 +397,7 @@ static girara_debug_level_t debug_level = GIRARA_DEBUG;
 void
 _girara_debug(const char* function, int line, girara_debug_level_t level, const char* format, ...)
 {
-  /* This could be simplified if DEBUG, INFO, WARNING, ERROR were ordered. */
-  if ((debug_level == GIRARA_ERROR && level != GIRARA_ERROR) ||
-      (debug_level == GIRARA_WARNING && (level != GIRARA_ERROR && level != GIRARA_WARNING)) ||
-      (debug_level == GIRARA_INFO && level == GIRARA_DEBUG)) {
+  if (level < debug_level) {
     return;
   }
 
@@ -456,4 +453,22 @@ update_state_by_keyval(int *state, int keyval)
       ) {
     *state |= GDK_SHIFT_MASK;
   }
+}
+
+char* girara_escape_string(const char* value)
+{
+  if (value == NULL) {
+    return NULL;
+  }
+
+  GString* str = g_string_new("");
+  while (*value != '\0') {
+    const char c = *value++;
+    if (strchr("\\ \t\"\'", c) != NULL) {
+      g_string_append_c(str, '\\');
+    }
+    g_string_append_c(str, c);
+  }
+
+  return g_string_free(str, FALSE);
 }

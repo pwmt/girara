@@ -9,6 +9,7 @@
 #include "session.h"
 #include "settings.h"
 #include "datastructures.h"
+#include "utils.h"
 
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
@@ -64,25 +65,6 @@ completion_element_free(girara_completion_element_t* element)
   g_free(element->value);
   g_free(element->description);
   g_slice_free(girara_completion_element_t,  element);
-}
-
-static char*
-escape(const char* value)
-{
-  if (value == NULL) {
-    return NULL;
-  }
-
-  GString* str = g_string_new("");
-  while (*value != '\0') {
-    const char c = *value++;
-    if (strchr("\\ \t\"\'", c) != NULL) {
-      g_string_append_c(str, '\\');
-    }
-    g_string_append_c(str, c);
-  }
-
-  return g_string_free(str, FALSE);
 }
 
 girara_completion_t*
@@ -472,7 +454,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 
     /* update text */
     char* temp;
-    char* escaped_value = escape(((girara_internal_completion_entry_t *) entries_current->data)->value);
+    char* escaped_value = girara_escape_string(((girara_internal_completion_entry_t *) entries_current->data)->value);
     if (command_mode == true) {
       char* space = (n_elements == 1) ? " " : "";
       temp = g_strconcat(":", escaped_value, space, NULL);

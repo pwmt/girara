@@ -56,9 +56,9 @@ enum
  */
 typedef enum girara_debug_level_e
 {
+  GIRARA_DEBUG, /**> Debug messages */
   GIRARA_INFO, /**> Information debug output */
   GIRARA_WARNING, /**> Warning level */
-  GIRARA_DEBUG, /**> Debug messages */
   GIRARA_ERROR /**> Error */
 } girara_debug_level_t;
 
