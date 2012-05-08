@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-21 01:39+0200\n"
+"POT-Creation-Date: 2012-05-08 19:06+0200\n"
 "PO-Revision-Date: 2012-04-03 16:05+0000\n"
 "Last-Translator: p <poczciwiec@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.net/projects/p/girara/language/"
@@ -19,145 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2)\n"
 
-#. add default settings
-#: ../session.c:114
-msgid "Font"
-msgstr "Font"
-
-#: ../session.c:115
-msgid "Default foreground color"
-msgstr "Domyślny kolor pierwszoplanowy"
-
-#: ../session.c:116
-msgid "Default background color"
-msgstr "Domyślny kolor tła"
-
-#: ../session.c:117
-msgid "Inputbar foreground color"
-msgstr "Kolor tekstu w polu wprowadzania"
-
-#: ../session.c:118
-msgid "Inputbar background color"
-msgstr "Kolor tła pola wprowadzania"
-
-#: ../session.c:119
-msgid "Statusbar foreground color"
-msgstr "Kolor tekstu w pasku stanu"
-
-#: ../session.c:120
-msgid "Statsubar background color"
-msgstr "Kolor tła paska stanu"
-
-#: ../session.c:121
-msgid "Completion foreground color"
-msgstr "Kolor tekstu wyróżnienia"
-
-#: ../session.c:122
-msgid "Completion background color"
-msgstr "Kolor tła wyróżnienia"
-
-#: ../session.c:123
-msgid "Completion group foreground color"
-msgstr "Kolor tekstu wyróżnionej grupy "
-
-#: ../session.c:124
-msgid "Completion group background color"
-msgstr "Kolor tła wyróżnionej grupy"
-
-#: ../session.c:125
-msgid "Completion highlight foreground color"
-msgstr "Kolor tekstu bieżącego wyróżnienia"
-
-#: ../session.c:126
-msgid "Completion highlight background color"
-msgstr "Kolor tła bieżącego wyróżnienia"
-
-#: ../session.c:127
-msgid "Error notification foreground color"
-msgstr "Kolor tekstu powiadomienia o błędzie"
-
-#: ../session.c:128
-msgid "Error notification background color"
-msgstr "Kolor tła powiadomienia o błędzie"
-
-#: ../session.c:129
-msgid "Warning notification foreground color"
-msgstr "Kolor tekstu ostrzeżenia"
-
-#: ../session.c:130
-msgid "Warning notifaction background color"
-msgstr "Kolor tła ostrzeżenia"
-
-#: ../session.c:131
-msgid "Notification foreground color"
-msgstr "Kolor tekstu powiadomienia"
-
-#: ../session.c:132
-msgid "Notification background color"
-msgstr "Kolor tła powiadomienia"
-
-#: ../session.c:133
-msgid "Tab bar foreground color"
-msgstr "Kolor tekstu paska kart"
-
-#: ../session.c:134
-msgid "Tab bar background color"
-msgstr "Kolor tła paska kart"
-
-#: ../session.c:135
-msgid "Tab bar foreground color (active)"
-msgstr "Kolor tekstu bieżącej karty"
-
-#: ../session.c:136
-msgid "Tab bar background color (active)"
-msgstr "Kolor tła bieżącej karty"
-
-#: ../session.c:138
-msgid "Initial window width"
-msgstr "Początkowa szerokość okna"
-
-#: ../session.c:139
-msgid "Initial window height"
-msgstr "Początkowa wysokość okna"
-
-#: ../session.c:140
-msgid "Number of completion items"
-msgstr "Liczba wyróżnień"
-
-#: ../session.c:141
-msgid "Show scrollbars"
-msgstr "Wyświetl paski przewijania"
-
-#. window icon
-#: ../session.c:144
-msgid "Window icon"
-msgstr "Ikona okna"
-
-#. exec-command
-#: ../session.c:146
-msgid "Command to execute in :exec"
-msgstr "Polecenie uruchomienia w :exec"
-
-#. default commands
-#: ../session.c:176
-msgid "Execute a command"
-msgstr "Wykonaj polecenie"
-
-#: ../session.c:177
-msgid "Map a key sequence"
-msgstr "Dowiąż sekwencję klawiszy"
-
-#: ../session.c:178
-msgid "Quit the program"
-msgstr "Zakończ program"
-
-#: ../session.c:179
-msgid "Set an option"
-msgstr "Ustaw opcję"
-
-#: ../session.c:180
-msgid "Unmap a key sequence"
-msgstr "Usuń sekwencję klawiszy"
+#. unhandled command
+#: ../callbacks.c:498
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Nieprawidłowa funkcja skrótu: %s"
 
 #: ../commands.c:108
 msgid "Usage: unmap <binding>"
@@ -228,11 +94,149 @@ msgstr "Niezdefiniowana wartość opcji: %s"
 msgid "Unknown value for option: %s"
 msgstr "Nieznana wartość opcji: %s"
 
-#: ../commands.c:632
-msgid "exec-command is invalid."
-msgstr "Niewłaściwe polecenie"
-
-#: ../commands.c:651
+#: ../commands.c:655
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Nieudane uruchomienie polecenia: %s"
+
+#. settings
+#: ../config.c:124
+msgid "Font"
+msgstr "Font"
+
+#: ../config.c:125
+msgid "Default foreground color"
+msgstr "Domyślny kolor pierwszoplanowy"
+
+#: ../config.c:126
+msgid "Default background color"
+msgstr "Domyślny kolor tła"
+
+#: ../config.c:127
+msgid "Inputbar foreground color"
+msgstr "Kolor tekstu w polu wprowadzania"
+
+#: ../config.c:128
+msgid "Inputbar background color"
+msgstr "Kolor tła pola wprowadzania"
+
+#: ../config.c:129
+msgid "Statusbar foreground color"
+msgstr "Kolor tekstu w pasku stanu"
+
+#: ../config.c:130
+msgid "Statsubar background color"
+msgstr "Kolor tła paska stanu"
+
+#: ../config.c:131
+msgid "Completion foreground color"
+msgstr "Kolor tekstu wyróżnienia"
+
+#: ../config.c:132
+msgid "Completion background color"
+msgstr "Kolor tła wyróżnienia"
+
+#: ../config.c:133
+msgid "Completion group foreground color"
+msgstr "Kolor tekstu wyróżnionej grupy "
+
+#: ../config.c:134
+msgid "Completion group background color"
+msgstr "Kolor tła wyróżnionej grupy"
+
+#: ../config.c:135
+msgid "Completion highlight foreground color"
+msgstr "Kolor tekstu bieżącego wyróżnienia"
+
+#: ../config.c:136
+msgid "Completion highlight background color"
+msgstr "Kolor tła bieżącego wyróżnienia"
+
+#: ../config.c:137
+msgid "Error notification foreground color"
+msgstr "Kolor tekstu powiadomienia o błędzie"
+
+#: ../config.c:138
+msgid "Error notification background color"
+msgstr "Kolor tła powiadomienia o błędzie"
+
+#: ../config.c:139
+msgid "Warning notification foreground color"
+msgstr "Kolor tekstu ostrzeżenia"
+
+#: ../config.c:140
+msgid "Warning notifaction background color"
+msgstr "Kolor tła ostrzeżenia"
+
+#: ../config.c:141
+msgid "Notification foreground color"
+msgstr "Kolor tekstu powiadomienia"
+
+#: ../config.c:142
+msgid "Notification background color"
+msgstr "Kolor tła powiadomienia"
+
+#: ../config.c:143
+msgid "Tab bar foreground color"
+msgstr "Kolor tekstu paska kart"
+
+#: ../config.c:144
+msgid "Tab bar background color"
+msgstr "Kolor tła paska kart"
+
+#: ../config.c:145
+msgid "Tab bar foreground color (active)"
+msgstr "Kolor tekstu bieżącej karty"
+
+#: ../config.c:146
+msgid "Tab bar background color (active)"
+msgstr "Kolor tła bieżącej karty"
+
+#: ../config.c:148
+msgid "Initial window width"
+msgstr "Początkowa szerokość okna"
+
+#: ../config.c:149
+msgid "Initial window height"
+msgstr "Początkowa wysokość okna"
+
+#: ../config.c:150
+msgid "Number of completion items"
+msgstr "Liczba wyróżnień"
+
+#: ../config.c:151
+msgid "Show scrollbars"
+msgstr "Wyświetl paski przewijania"
+
+#: ../config.c:152
+msgid "Window icon"
+msgstr "Ikona okna"
+
+#: ../config.c:153
+msgid "Command to execute in :exec"
+msgstr "Polecenie uruchomienia w :exec"
+
+#: ../config.c:154
+msgid "Show or hide certain GUI elements"
+msgstr ""
+
+#. commands
+#: ../config.c:186
+msgid "Execute a command"
+msgstr "Wykonaj polecenie"
+
+#: ../config.c:187
+msgid "Map a key sequence"
+msgstr "Dowiąż sekwencję klawiszy"
+
+#: ../config.c:188
+msgid "Quit the program"
+msgstr "Zakończ program"
+
+#: ../config.c:189
+msgid "Set an option"
+msgstr "Ustaw opcję"
+
+#: ../config.c:190
+msgid "Unmap a key sequence"
+msgstr "Usuń sekwencję klawiszy"

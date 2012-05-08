@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-21 01:39+0200\n"
+"POT-Creation-Date: 2012-05-08 19:06+0200\n"
 "PO-Revision-Date: 2012-04-03 15:11+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
@@ -19,145 +19,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#. add default settings
-#: ../session.c:114
-msgid "Font"
-msgstr "Schriftart"
-
-#: ../session.c:115
-msgid "Default foreground color"
-msgstr "Standardfarbe des Vordergrunds"
-
-#: ../session.c:116
-msgid "Default background color"
-msgstr "Standardfarbe des Hintergrunds"
-
-#: ../session.c:117
-msgid "Inputbar foreground color"
-msgstr "Vordergrundfarbe der Eingabezeile"
-
-#: ../session.c:118
-msgid "Inputbar background color"
-msgstr "Hintergrundfarbe der Eingabezeile"
-
-#: ../session.c:119
-msgid "Statusbar foreground color"
-msgstr "Vordergrundfarbe der Statuszeile"
-
-#: ../session.c:120
-msgid "Statsubar background color"
-msgstr "Hintergrundfarbe der Statuszeile"
-
-#: ../session.c:121
-msgid "Completion foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung"
-
-#: ../session.c:122
-msgid "Completion background color"
-msgstr "Hintergrundfarbe der Vervollständigung"
-
-#: ../session.c:123
-msgid "Completion group foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
-
-#: ../session.c:124
-msgid "Completion group background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
-
-#: ../session.c:125
-msgid "Completion highlight foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
-
-#: ../session.c:126
-msgid "Completion highlight background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
-
-#: ../session.c:127
-msgid "Error notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
-
-#: ../session.c:128
-msgid "Error notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
-
-#: ../session.c:129
-msgid "Warning notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
-
-#: ../session.c:130
-msgid "Warning notifaction background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
-
-#: ../session.c:131
-msgid "Notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung"
-
-#: ../session.c:132
-msgid "Notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung"
-
-#: ../session.c:133
-msgid "Tab bar foreground color"
-msgstr "Registerleisten Vordergrundfarbe"
-
-#: ../session.c:134
-msgid "Tab bar background color"
-msgstr "Registerleisten Hintergrundfarbe"
-
-#: ../session.c:135
-msgid "Tab bar foreground color (active)"
-msgstr "Registerleisten Vordergrundfarbe (aktiv)"
-
-#: ../session.c:136
-msgid "Tab bar background color (active)"
-msgstr "Registerleisten Hintergrundfarbe (aktiv)"
-
-#: ../session.c:138
-msgid "Initial window width"
-msgstr "Ausgangsbreite des Fensters"
-
-#: ../session.c:139
-msgid "Initial window height"
-msgstr "Ausgangshöhe des Fensters"
-
-#: ../session.c:140
-msgid "Number of completion items"
-msgstr "Anzahl der Elemente in der Vervollständigung"
-
-#: ../session.c:141
-msgid "Show scrollbars"
-msgstr "Zeige Bildlaufleiste"
-
-#. window icon
-#: ../session.c:144
-msgid "Window icon"
-msgstr "Fenstericon"
-
-#. exec-command
-#: ../session.c:146
-msgid "Command to execute in :exec"
-msgstr "Befehl, der von :exec ausgeführt werden soll"
-
-#. default commands
-#: ../session.c:176
-msgid "Execute a command"
-msgstr "Führe einen Befehl aus."
-
-#: ../session.c:177
-msgid "Map a key sequence"
-msgstr "Tastenfolge zuweisen"
-
-#: ../session.c:178
-msgid "Quit the program"
-msgstr "Beende das Programm"
-
-#: ../session.c:179
-msgid "Set an option"
-msgstr "Setze eine Option"
-
-#: ../session.c:180
-msgid "Unmap a key sequence"
-msgstr "Tastenfolge entbinden"
+#. unhandled command
+#: ../callbacks.c:498
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Ungültige zugewiesene Funktion: %s"
 
 #: ../commands.c:108
 msgid "Usage: unmap <binding>"
@@ -229,11 +95,149 @@ msgstr "Kein Wert für Option definiert: %s"
 msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"
 
-#: ../commands.c:632
-msgid "exec-command is invalid."
-msgstr "exec-command ist ungültig."
-
-#: ../commands.c:651
+#: ../commands.c:655
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Konnte Befehl nicht ausführen: %s"
+
+#. settings
+#: ../config.c:124
+msgid "Font"
+msgstr "Schriftart"
+
+#: ../config.c:125
+msgid "Default foreground color"
+msgstr "Standardfarbe des Vordergrunds"
+
+#: ../config.c:126
+msgid "Default background color"
+msgstr "Standardfarbe des Hintergrunds"
+
+#: ../config.c:127
+msgid "Inputbar foreground color"
+msgstr "Vordergrundfarbe der Eingabezeile"
+
+#: ../config.c:128
+msgid "Inputbar background color"
+msgstr "Hintergrundfarbe der Eingabezeile"
+
+#: ../config.c:129
+msgid "Statusbar foreground color"
+msgstr "Vordergrundfarbe der Statuszeile"
+
+#: ../config.c:130
+msgid "Statsubar background color"
+msgstr "Hintergrundfarbe der Statuszeile"
+
+#: ../config.c:131
+msgid "Completion foreground color"
+msgstr "Vordergrundfarbe der Vervollständigung"
+
+#: ../config.c:132
+msgid "Completion background color"
+msgstr "Hintergrundfarbe der Vervollständigung"
+
+#: ../config.c:133
+msgid "Completion group foreground color"
+msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
+
+#: ../config.c:134
+msgid "Completion group background color"
+msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
+
+#: ../config.c:135
+msgid "Completion highlight foreground color"
+msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
+
+#: ../config.c:136
+msgid "Completion highlight background color"
+msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
+
+#: ../config.c:137
+msgid "Error notification foreground color"
+msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
+
+#: ../config.c:138
+msgid "Error notification background color"
+msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
+
+#: ../config.c:139
+msgid "Warning notification foreground color"
+msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
+
+#: ../config.c:140
+msgid "Warning notifaction background color"
+msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
+
+#: ../config.c:141
+msgid "Notification foreground color"
+msgstr "Vordergrundfarbe der Benachrichtigung"
+
+#: ../config.c:142
+msgid "Notification background color"
+msgstr "Hintergrundfarbe der Benachrichtigung"
+
+#: ../config.c:143
+msgid "Tab bar foreground color"
+msgstr "Registerleisten Vordergrundfarbe"
+
+#: ../config.c:144
+msgid "Tab bar background color"
+msgstr "Registerleisten Hintergrundfarbe"
+
+#: ../config.c:145
+msgid "Tab bar foreground color (active)"
+msgstr "Registerleisten Vordergrundfarbe (aktiv)"
+
+#: ../config.c:146
+msgid "Tab bar background color (active)"
+msgstr "Registerleisten Hintergrundfarbe (aktiv)"
+
+#: ../config.c:148
+msgid "Initial window width"
+msgstr "Ausgangsbreite des Fensters"
+
+#: ../config.c:149
+msgid "Initial window height"
+msgstr "Ausgangshöhe des Fensters"
+
+#: ../config.c:150
+msgid "Number of completion items"
+msgstr "Anzahl der Elemente in der Vervollständigung"
+
+#: ../config.c:151
+msgid "Show scrollbars"
+msgstr "Zeige Bildlaufleiste"
+
+#: ../config.c:152
+msgid "Window icon"
+msgstr "Fenstericon"
+
+#: ../config.c:153
+msgid "Command to execute in :exec"
+msgstr "Befehl, der von :exec ausgeführt werden soll"
+
+#: ../config.c:154
+msgid "Show or hide certain GUI elements"
+msgstr ""
+
+#. commands
+#: ../config.c:186
+msgid "Execute a command"
+msgstr "Führe einen Befehl aus."
+
+#: ../config.c:187
+msgid "Map a key sequence"
+msgstr "Tastenfolge zuweisen"
+
+#: ../config.c:188
+msgid "Quit the program"
+msgstr "Beende das Programm"
+
+#: ../config.c:189
+msgid "Set an option"
+msgstr "Setze eine Option"
+
+#: ../config.c:190
+msgid "Unmap a key sequence"
+msgstr "Tastenfolge entbinden"

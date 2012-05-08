@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-21 01:39+0200\n"
+"POT-Creation-Date: 2012-05-08 19:06+0200\n"
 "PO-Revision-Date: 2012-04-03 19:27+0000\n"
 "Last-Translator: femnad <femnad@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
@@ -18,145 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#. add default settings
-#: ../session.c:114
-msgid "Font"
-msgstr "Yazı tipi"
-
-#: ../session.c:115
-msgid "Default foreground color"
-msgstr "Varsayılan yazı tipi rengi"
-
-#: ../session.c:116
-msgid "Default background color"
-msgstr "Varsayılan arka plan rengi"
-
-#: ../session.c:117
-msgid "Inputbar foreground color"
-msgstr "Giriş çubuğu yazı tipi rengi"
-
-#: ../session.c:118
-msgid "Inputbar background color"
-msgstr "Giriş çubuğu arka plan rengi"
-
-#: ../session.c:119
-msgid "Statusbar foreground color"
-msgstr "Durum çubuğu yazı tipi rengi"
-
-#: ../session.c:120
-msgid "Statsubar background color"
-msgstr "Durum çubuğu arka plan rengi"
-
-#: ../session.c:121
-msgid "Completion foreground color"
-msgstr "Tamamlama yazı tipi rengi"
-
-#: ../session.c:122
-msgid "Completion background color"
-msgstr "Tamamlama arka plan rengi"
-
-#: ../session.c:123
-msgid "Completion group foreground color"
-msgstr "Tamamlama grubu yazı tipi rengi"
-
-#: ../session.c:124
-msgid "Completion group background color"
-msgstr "Tamamlama grubu arka plan rengi"
-
-#: ../session.c:125
-msgid "Completion highlight foreground color"
-msgstr "Tamamlama vurgulama yazı tipi rengi"
-
-#: ../session.c:126
-msgid "Completion highlight background color"
-msgstr "Tamamlama vurgulama arka plan rengi"
-
-#: ../session.c:127
-msgid "Error notification foreground color"
-msgstr "Hata bildirimi yazı tipi rengi"
-
-#: ../session.c:128
-msgid "Error notification background color"
-msgstr "Hata bildirimi arka plan rengi"
-
-#: ../session.c:129
-msgid "Warning notification foreground color"
-msgstr "Uyarı bildirimi yazı tipi rengi"
-
-#: ../session.c:130
-msgid "Warning notifaction background color"
-msgstr "Uyarı bildirimi arka plan rengi"
-
-#: ../session.c:131
-msgid "Notification foreground color"
-msgstr "Bildirim yazı tipi rengi"
-
-#: ../session.c:132
-msgid "Notification background color"
-msgstr "Bildirim arka plan rengi"
-
-#: ../session.c:133
-msgid "Tab bar foreground color"
-msgstr "Sekme çubuğu yazı tipi rengi"
-
-#: ../session.c:134
-msgid "Tab bar background color"
-msgstr "Sekme çubuğu arka plan rengi"
-
-#: ../session.c:135
-msgid "Tab bar foreground color (active)"
-msgstr "Seçme çubuğu yazı tipi rengi (etkin)"
-
-#: ../session.c:136
-msgid "Tab bar background color (active)"
-msgstr "Sekme çubuğu arka plan rengi (etkin)"
-
-#: ../session.c:138
-msgid "Initial window width"
-msgstr "Başlangıçtaki pencere genişliği"
-
-#: ../session.c:139
-msgid "Initial window height"
-msgstr "Başlangıçtaki pencere yüksekliği"
-
-#: ../session.c:140
-msgid "Number of completion items"
-msgstr "Tamamlama öğelerinin sayısı"
-
-#: ../session.c:141
-msgid "Show scrollbars"
-msgstr "Kaydırma çubuklarını göster"
-
-#. window icon
-#: ../session.c:144
-msgid "Window icon"
-msgstr "Pencere ikonu"
-
-#. exec-command
-#: ../session.c:146
-msgid "Command to execute in :exec"
-msgstr ":exec için yürütülecek komut"
-
-#. default commands
-#: ../session.c:176
-msgid "Execute a command"
-msgstr "Komut yürüt"
-
-#: ../session.c:177
-msgid "Map a key sequence"
-msgstr "Tuş kombinasyonu eşleştir"
-
-#: ../session.c:178
-msgid "Quit the program"
-msgstr "Programdan çık"
-
-#: ../session.c:179
-msgid "Set an option"
-msgstr "Seçenekleri değiştir"
-
-#: ../session.c:180
-msgid "Unmap a key sequence"
-msgstr "Tuş kombinasyonu eşleşimini kaldır"
+#. unhandled command
+#: ../callbacks.c:498
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Geçerli bir kısayol fonksiyonu değil: %s"
 
 #: ../commands.c:108
 msgid "Usage: unmap <binding>"
@@ -229,11 +95,149 @@ msgstr "Seçenek için değer belirtilmedi: %s"
 msgid "Unknown value for option: %s"
 msgstr "Seçenek için bilinmeyen değer: %s"
 
-#: ../commands.c:632
-msgid "exec-command is invalid."
-msgstr "exec komutu geçersiz."
-
-#: ../commands.c:651
+#: ../commands.c:655
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Komut yürütülemedi: %s"
+
+#. settings
+#: ../config.c:124
+msgid "Font"
+msgstr "Yazı tipi"
+
+#: ../config.c:125
+msgid "Default foreground color"
+msgstr "Varsayılan yazı tipi rengi"
+
+#: ../config.c:126
+msgid "Default background color"
+msgstr "Varsayılan arka plan rengi"
+
+#: ../config.c:127
+msgid "Inputbar foreground color"
+msgstr "Giriş çubuğu yazı tipi rengi"
+
+#: ../config.c:128
+msgid "Inputbar background color"
+msgstr "Giriş çubuğu arka plan rengi"
+
+#: ../config.c:129
+msgid "Statusbar foreground color"
+msgstr "Durum çubuğu yazı tipi rengi"
+
+#: ../config.c:130
+msgid "Statsubar background color"
+msgstr "Durum çubuğu arka plan rengi"
+
+#: ../config.c:131
+msgid "Completion foreground color"
+msgstr "Tamamlama yazı tipi rengi"
+
+#: ../config.c:132
+msgid "Completion background color"
+msgstr "Tamamlama arka plan rengi"
+
+#: ../config.c:133
+msgid "Completion group foreground color"
+msgstr "Tamamlama grubu yazı tipi rengi"
+
+#: ../config.c:134
+msgid "Completion group background color"
+msgstr "Tamamlama grubu arka plan rengi"
+
+#: ../config.c:135
+msgid "Completion highlight foreground color"
+msgstr "Tamamlama vurgulama yazı tipi rengi"
+
+#: ../config.c:136
+msgid "Completion highlight background color"
+msgstr "Tamamlama vurgulama arka plan rengi"
+
+#: ../config.c:137
+msgid "Error notification foreground color"
+msgstr "Hata bildirimi yazı tipi rengi"
+
+#: ../config.c:138
+msgid "Error notification background color"
+msgstr "Hata bildirimi arka plan rengi"
+
+#: ../config.c:139
+msgid "Warning notification foreground color"
+msgstr "Uyarı bildirimi yazı tipi rengi"
+
+#: ../config.c:140
+msgid "Warning notifaction background color"
+msgstr "Uyarı bildirimi arka plan rengi"
+
+#: ../config.c:141
+msgid "Notification foreground color"
+msgstr "Bildirim yazı tipi rengi"
+
+#: ../config.c:142
+msgid "Notification background color"
+msgstr "Bildirim arka plan rengi"
+
+#: ../config.c:143
+msgid "Tab bar foreground color"
+msgstr "Sekme çubuğu yazı tipi rengi"
+
+#: ../config.c:144
+msgid "Tab bar background color"
+msgstr "Sekme çubuğu arka plan rengi"
+
+#: ../config.c:145
+msgid "Tab bar foreground color (active)"
+msgstr "Seçme çubuğu yazı tipi rengi (etkin)"
+
+#: ../config.c:146
+msgid "Tab bar background color (active)"
+msgstr "Sekme çubuğu arka plan rengi (etkin)"
+
+#: ../config.c:148
+msgid "Initial window width"
+msgstr "Başlangıçtaki pencere genişliği"
+
+#: ../config.c:149
+msgid "Initial window height"
+msgstr "Başlangıçtaki pencere yüksekliği"
+
+#: ../config.c:150
+msgid "Number of completion items"
+msgstr "Tamamlama öğelerinin sayısı"
+
+#: ../config.c:151
+msgid "Show scrollbars"
+msgstr "Kaydırma çubuklarını göster"
+
+#: ../config.c:152
+msgid "Window icon"
+msgstr "Pencere ikonu"
+
+#: ../config.c:153
+msgid "Command to execute in :exec"
+msgstr ":exec için yürütülecek komut"
+
+#: ../config.c:154
+msgid "Show or hide certain GUI elements"
+msgstr ""
+
+#. commands
+#: ../config.c:186
+msgid "Execute a command"
+msgstr "Komut yürüt"
+
+#: ../config.c:187
+msgid "Map a key sequence"
+msgstr "Tuş kombinasyonu eşleştir"
+
+#: ../config.c:188
+msgid "Quit the program"
+msgstr "Programdan çık"
+
+#: ../config.c:189
+msgid "Set an option"
+msgstr "Seçenekleri değiştir"
+
+#: ../config.c:190
+msgid "Unmap a key sequence"
+msgstr "Tuş kombinasyonu eşleşimini kaldır"
