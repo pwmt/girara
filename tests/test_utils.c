@@ -1,7 +1,9 @@
 // See LICENSE file for license and copyright information
 
 #define _BSD_SOURCE
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
 #define _POSIX_SOURCE
+#endif
 
 #include <check.h>
 
