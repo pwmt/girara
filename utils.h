@@ -136,7 +136,7 @@ girara_debug_level_t girara_get_debug_level();
 void girara_set_debug_level(girara_debug_level_t level);
 
 /**
- * Escape \, \t, ", ' and spaces in strings.
+ * Escape \\, \\t, ", ' and spaces in strings.
  * @param value The string to be escaped.
  * @returns The escaped string. Needs to be freed with g_free.
  */
