@@ -66,6 +66,8 @@ START_TEST(test_settings_callback) {
   girara_session_destroy(session);
 } END_TEST
 
+extern void setup(void);
+
 Suite* suite_settings()
 {
   TCase* tcase = NULL;
@@ -73,11 +75,13 @@ Suite* suite_settings()
 
   /* basic */
   tcase = tcase_create("basic");
+  tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_settings_basic);
   suite_add_tcase(suite, tcase);
 
   /* callback */
   tcase = tcase_create("callback");
+  tcase_add_checked_fixture(tcase, setup, NULL);
   suite_add_tcase(suite, tcase);
   tcase_add_test(tcase, test_settings_callback);
 
