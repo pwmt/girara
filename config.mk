@@ -11,8 +11,8 @@ VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 # * If any of the exported datastructures have changed in a incompatible way
 # 	bump SOMAJOR and set SOMINOR to 0.
 # * If a function has been added bump SOMINOR.
-SOMAJOR = 0
-SOMINOR = 1
+SOMAJOR = 1
+SOMINOR = 0
 SOVERSION = ${SOMAJOR}.${SOMINOR}
 
 # paths
