@@ -3,6 +3,7 @@
 #include <check.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <unistd.h>
 
 #include "../session.h"
 #include "../settings.h"
@@ -17,7 +18,7 @@ START_TEST(test_config_parse) {
       "Failed to add setting 'test1'", NULL);
   fail_unless(girara_setting_add(session, "test2", &default_val, INT, false, NULL, NULL, NULL),
       "Failed to add setting 'test2'", NULL);
-  
+
   char* filename = NULL;
   int fd = g_file_open_tmp(NULL, &filename, NULL);
   fail_unless(fd != -1 && filename != NULL, "Couldn't open temporary file.", NULL);
@@ -47,6 +48,8 @@ START_TEST(test_config_parse) {
   girara_session_destroy(session);
 } END_TEST
 
+extern void setup(void);
+
 Suite* suite_config()
 {
   TCase* tcase = NULL;
@@ -54,6 +57,7 @@ Suite* suite_config()
 
   /* parse */
   tcase = tcase_create("parse");
+  tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_config_parse);
   suite_add_tcase(suite, tcase);
 

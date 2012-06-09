@@ -44,6 +44,10 @@ HIDDEN void girara_command_free(girara_command_t* command);
 
 HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
 
+HIDDEN void girara_config_load_default(girara_session_t* session);
+
+HIDDEN void update_state_by_keyval(int *state, int keyval);
+
 /**
  * Default complection function for the settings
  *
@@ -106,6 +110,19 @@ HIDDEN bool girara_cmd_set(girara_session_t* session,
  */
 HIDDEN bool girara_cmd_exec(girara_session_t* session,
     girara_list_t* argument_list);
+
+/**
+ * Process argument as a sequence of keys that were typed by the user
+ *
+ * @param session The session
+ * @param argument The argument
+ * @param event Event type
+ * @param t Number of times
+ * @return true No error occured
+ * @return false An error occured
+ */
+HIDDEN bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
+    girara_event_t* event, unsigned int t);
 
 /**
  * Structure of a command

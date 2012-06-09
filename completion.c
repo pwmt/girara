@@ -9,6 +9,7 @@
 #include "session.h"
 #include "settings.h"
 #include "datastructures.h"
+#include "utils.h"
 
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
@@ -64,25 +65,6 @@ completion_element_free(girara_completion_element_t* element)
   g_free(element->value);
   g_free(element->description);
   g_slice_free(girara_completion_element_t,  element);
-}
-
-static char*
-escape(const char* value)
-{
-  if (value == NULL) {
-    return NULL;
-  }
-
-  GString* str = g_string_new("");
-  while (*value != '\0') {
-    const char c = *value++;
-    if (strchr("\\ \t\"\'", c) != NULL) {
-      g_string_append_c(str, '\\');
-    }
-    g_string_append_c(str, c);
-  }
-
-  return g_string_free(str, FALSE);
 }
 
 girara_completion_t*
@@ -261,7 +243,11 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
    *  there is no current list
    */
   if (session->gtk.results == NULL) {
+#if GTK_MAJOR_VERSION == 2
     session->gtk.results = GTK_BOX(gtk_vbox_new(FALSE, 0));
+#else
+    session->gtk.results = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+#endif
 
     if (session->gtk.results == NULL) {
       g_free(current_command);
@@ -468,7 +454,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 
     /* update text */
     char* temp;
-    char* escaped_value = escape(((girara_internal_completion_entry_t *) entries_current->data)->value);
+    char* escaped_value = girara_escape_string(((girara_internal_completion_entry_t *) entries_current->data)->value);
     if (command_mode == true) {
       char* space = (n_elements == 1) ? " " : "";
       temp = g_strconcat(":", escaped_value, space, NULL);
@@ -500,7 +486,12 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 static GtkEventBox*
 girara_completion_row_create(girara_session_t* session, const char* command, const char* description, bool group)
 {
-  GtkBox      *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
+#if GTK_MAJOR_VERSION == 2
+  GtkBox *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
+#else
+  GtkBox *col = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+#endif
+
   GtkEventBox *row = GTK_EVENT_BOX(gtk_event_box_new());
 
   GtkLabel *show_command     = GTK_LABEL(gtk_label_new(NULL));

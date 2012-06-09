@@ -1,7 +1,9 @@
 // See LICENSE file for license and copyright information
 
 #define _BSD_SOURCE
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
 #define _POSIX_SOURCE
+#endif
 
 #include <check.h>
 
@@ -49,6 +51,7 @@ read_pwd_info(void)
     pwdinfo->name = g_strdup(pw->pw_name);
     pwdinfo->dir = g_strdup(pw->pw_dir);
     girara_list_append(list, pwdinfo);
+    errno = 0;
   }
   fail_unless(errno == 0, "Non-zero errno :%d", errno, NULL);
   endpwent();
@@ -109,6 +112,9 @@ START_TEST(test_fix_path_basic) {
 } END_TEST
 
 START_TEST(test_fix_path_extended) {
+  gchar* oldenv = g_getenv("HOME") ? g_strdup(g_getenv("HOME")) : NULL;
+  g_unsetenv("HOME");
+
   girara_list_t* list = read_pwd_info();
   GIRARA_LIST_FOREACH(list, pwd_info_t*, iter, pwdinfo)
     gchar* path = g_strdup_printf("~%s/test", pwdinfo->name);
@@ -122,6 +128,11 @@ START_TEST(test_fix_path_extended) {
     g_free(path);
   GIRARA_LIST_FOREACH_END(list, pwd_info_t*, iter, pwdinfo);
   girara_list_free(list);
+
+  if (oldenv) {
+    g_setenv("HOME", oldenv, TRUE);
+    g_free(oldenv);
+  }
 } END_TEST
 
 static void

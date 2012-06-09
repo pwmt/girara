@@ -226,6 +226,19 @@ bool girara_isc_string_manipulation(girara_session_t* session,
     girara_argument_t* argument, girara_event_t* event, unsigned int t);
 
 /**
+ * Default inputbar shortcut to navigate through the command history
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param event Girara event
+ * @param t Number of executions
+ * @return true No error occured
+ * @return false An error occured (abort execution)
+ */
+bool girara_isc_command_history(girara_session_t* session,
+    girara_argument_t* argument, girara_event_t* event, unsigned int t);
+
+/**
  * Creates a mapping between a shortcut function and an identifier and is used
  * to evaluate the mapping command
  *

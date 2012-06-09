@@ -101,6 +101,7 @@ struct girara_session_s
     int view_button_press_event; /**< Pressed button */
     int view_button_release_event; /**< Released button */
     int view_motion_notify_event; /**< Cursor movement event */
+    int view_scroll_event; /**< Scroll event */
     girara_callback_inputbar_activate_t inputbar_custom_activate; /**< Custom handler */
     girara_callback_inputbar_key_press_event_t inputbar_custom_key_press_event; /**< Custom handler */
     void* inputbar_custom_data; /**< Data for custom handler */
@@ -108,13 +109,17 @@ struct girara_session_s
 
   struct
   {
-    void (*buffer_changed)(girara_session_t* session);
+    void (*buffer_changed)(girara_session_t* session); /**< Buffer changed */
+    bool (*unknown_command)(girara_session_t* session, const char* input); /**< Unknown command */
   } events;
 
   struct
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
+    girara_list_t* command_history; /**< Command history */
+    bool autohide_inputbar; /**< Auto-hide inputbar */
+    bool hide_statusbar; /**< Hide statusbar */
   } global;
 
   struct
@@ -243,5 +248,13 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  * @return false if an error occured
  */
 bool girara_set_window_title(girara_session_t* session, const char* name);
+
+/**
+ * Returns the command history
+ *
+ * @param session The used girara session
+ * @return The command history (list of strings) or NULL
+ */
+girara_list_t* girara_get_command_history(girara_session_t* session);
 
 #endif

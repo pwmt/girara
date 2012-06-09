@@ -18,6 +18,8 @@ START_TEST(test_init) {
   girara_session_destroy(session);
 } END_TEST
 
+extern void setup(void);
+
 Suite* suite_session()
 {
   TCase* tcase = NULL;
@@ -25,6 +27,7 @@ Suite* suite_session()
 
   /* basic */
   tcase = tcase_create("basic");
+  tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_create);
   tcase_add_test(tcase, test_init);
   suite_add_tcase(suite, tcase);

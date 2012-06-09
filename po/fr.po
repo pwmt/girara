@@ -1,243 +1,240 @@
-# girara - language file (German)
+# girara - language file (French)
 # See LICENSE file for license and copyright information
 #
 # Translators:
-#   <cedric.sodhi@googlemail.com>, 2012.
-# Moritz Lipp <mlq@pwmt.org>, 2012.
+# Richard Gill <richard@houbathecat.fr>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: http://bt.pwmt.org/\n"
 "POT-Creation-Date: 2012-05-08 19:06+0200\n"
-"PO-Revision-Date: 2012-04-03 15:11+0000\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
-"de/)\n"
-"Language: de\n"
+"PO-Revision-Date: 2012-05-10 08:44+0000\n"
+"Last-Translator: Richard Gill <richard@houbathecat.fr>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #. unhandled command
 #: ../callbacks.c:498
 #, c-format
 msgid "Not a valid command: %s"
-msgstr "Ungültige zugewiesene Funktion: %s"
+msgstr "La fonction suivante n'est pas valide : %s"
 
 #: ../commands.c:108
 msgid "Usage: unmap <binding>"
-msgstr "Verwendung: unmap <schlüssel>"
+msgstr "Usage: unmap <association>"
 
 #: ../commands.c:110
 msgid "Usage: map <binding> <function>"
-msgstr "Verwendung: map <schlüssel> <funktion>"
+msgstr "Usage: map <association> <fonction>"
 
 #: ../commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr "Modus ist nicht registriert: %s"
+msgstr "Mode non enregistré spécifié : %s"
 
 #: ../commands.c:156 ../commands.c:318
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr ""
-"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
+msgstr "Nombre d'arguments invalide : %zu à la place d'au moins %u"
 
 #: ../commands.c:184
 #, c-format
 msgid "Invalid modifier in %s"
-msgstr "Ungültiger Modifikator in %s"
+msgstr "Modificateur invalide dans %s"
 
 #: ../commands.c:223
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr "Ungültige Sondertaste für %s"
+msgstr "Valeur de clé spéciale invalide pour %s"
 
 #: ../commands.c:259
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr "Ungültige Sondertaste oder Modus %s"
+msgstr "Valeur de clé spéciale ou mode %s invalide"
 
 #: ../commands.c:340
 #, c-format
 msgid "Not a valid shortcut function: %s"
-msgstr "Ungültige zugewiesene Funktion: %s"
+msgstr "Pas une fonction raccourci valide : %s"
 
 #: ../commands.c:428
 msgid "Not enough arguments."
-msgstr "Zu wenige Argumente."
+msgstr "Pas assez d'arguments."
 
 #: ../commands.c:433
 msgid "Too many arguments."
-msgstr "Zu viele Argumente."
+msgstr "Trop d'arguments."
 
 #: ../commands.c:446
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Unbekannte Otion: %s"
+msgstr "Option inconnue : %s"
 
 #: ../commands.c:460
 msgid "true"
-msgstr "wahr"
+msgstr "vrai"
 
 #: ../commands.c:460
 msgid "false"
-msgstr "falsch"
+msgstr "faux"
 
 #: ../commands.c:492
 #, c-format
 msgid "No value defined for option: %s"
-msgstr "Kein Wert für Option definiert: %s"
+msgstr "Aucune valeur définie pour l'option : %s"
 
 #: ../commands.c:507
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr "Unbekannter Wert für Option: %s"
+msgstr "Valeur inconnue pour l'option : %s"
 
 #: ../commands.c:655
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Konnte Befehl nicht ausführen: %s"
+msgstr "Echec d'exécution de la commande : %s"
 
 #. settings
 #: ../config.c:124
 msgid "Font"
-msgstr "Schriftart"
+msgstr "Police"
 
 #: ../config.c:125
 msgid "Default foreground color"
-msgstr "Standardfarbe des Vordergrunds"
+msgstr "Couleur par défaut du texte"
 
 #: ../config.c:126
 msgid "Default background color"
-msgstr "Standardfarbe des Hintergrunds"
+msgstr "Couleur par défaut du fond"
 
 #: ../config.c:127
 msgid "Inputbar foreground color"
-msgstr "Vordergrundfarbe der Eingabezeile"
+msgstr "Couleur du texte de la barre de saisie"
 
 #: ../config.c:128
 msgid "Inputbar background color"
-msgstr "Hintergrundfarbe der Eingabezeile"
+msgstr "Couleur de fond de la barre de saisie"
 
 #: ../config.c:129
 msgid "Statusbar foreground color"
-msgstr "Vordergrundfarbe der Statuszeile"
+msgstr "Couleur du texte de la barre d'état"
 
 #: ../config.c:130
 msgid "Statsubar background color"
-msgstr "Hintergrundfarbe der Statuszeile"
+msgstr "Couleur de fond de la barre d'état"
 
 #: ../config.c:131
 msgid "Completion foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung"
+msgstr "Couleur du texte de la complétion"
 
 #: ../config.c:132
 msgid "Completion background color"
-msgstr "Hintergrundfarbe der Vervollständigung"
+msgstr "Couleur de fond de la complétion"
 
 #: ../config.c:133
 msgid "Completion group foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
+msgstr "Couleur du texte du groupe de complétion"
 
 #: ../config.c:134
 msgid "Completion group background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
+msgstr "Couleur de fond du groupe de complétion"
 
 #: ../config.c:135
 msgid "Completion highlight foreground color"
-msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr "Couleur du texte du surlignage de complétion"
 
 #: ../config.c:136
 msgid "Completion highlight background color"
-msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
+msgstr "Couleur de fond du surlignage de complétion"
 
 #: ../config.c:137
 msgid "Error notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Couleur du texte des notifications d'erreur"
 
 #: ../config.c:138
 msgid "Error notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
+msgstr "Couleur de fond des notifications d'erreur"
 
 #: ../config.c:139
 msgid "Warning notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
+msgstr "Couleur du texte des notifications d'avertissement"
 
 #: ../config.c:140
 msgid "Warning notifaction background color"
-msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
+msgstr "Couleur de fond des notifications d'avertissement"
 
 #: ../config.c:141
 msgid "Notification foreground color"
-msgstr "Vordergrundfarbe der Benachrichtigung"
+msgstr "Couleur du texte des notifications"
 
 #: ../config.c:142
 msgid "Notification background color"
-msgstr "Hintergrundfarbe der Benachrichtigung"
+msgstr "Couleur de fond des notifications"
 
 #: ../config.c:143
 msgid "Tab bar foreground color"
-msgstr "Registerleisten Vordergrundfarbe"
+msgstr "Couleur du texte des onglets"
 
 #: ../config.c:144
 msgid "Tab bar background color"
-msgstr "Registerleisten Hintergrundfarbe"
+msgstr "Couleur de fond des onglets"
 
 #: ../config.c:145
 msgid "Tab bar foreground color (active)"
-msgstr "Registerleisten Vordergrundfarbe (aktiv)"
+msgstr "Couleur du texte de l'onglet actif"
 
 #: ../config.c:146
 msgid "Tab bar background color (active)"
-msgstr "Registerleisten Hintergrundfarbe (aktiv)"
+msgstr "Couleur de fond de l'onglet actif"
 
 #: ../config.c:148
 msgid "Initial window width"
-msgstr "Ausgangsbreite des Fensters"
+msgstr "Largeur initiale de la fenêtre"
 
 #: ../config.c:149
 msgid "Initial window height"
-msgstr "Ausgangshöhe des Fensters"
+msgstr "Hauteur initiale de la fenêtre"
 
 #: ../config.c:150
 msgid "Number of completion items"
-msgstr "Anzahl der Elemente in der Vervollständigung"
+msgstr "Nombre d'éléments de complétion"
 
 #: ../config.c:151
 msgid "Show scrollbars"
-msgstr "Zeige Bildlaufleiste"
+msgstr "Afficher les ascenceurs"
 
 #: ../config.c:152
 msgid "Window icon"
-msgstr "Fenstericon"
+msgstr "Icône de fenêtre"
 
 #: ../config.c:153
 msgid "Command to execute in :exec"
-msgstr "Befehl, der von :exec ausgeführt werden soll"
+msgstr "Commande à exécuter dans :exec"
 
 #: ../config.c:154
 msgid "Show or hide certain GUI elements"
-msgstr ""
+msgstr "Afficher ou cacher certains éléments de l'interace"
 
 #. commands
 #: ../config.c:186
 msgid "Execute a command"
-msgstr "Führe einen Befehl aus."
+msgstr "Exécuter une commande"
 
 #: ../config.c:187
 msgid "Map a key sequence"
-msgstr "Tastenfolge zuweisen"
+msgstr "Associer une séquence clé"
 
 #: ../config.c:188
 msgid "Quit the program"
-msgstr "Beende das Programm"
+msgstr "Quitter le programme"
 
 #: ../config.c:189
 msgid "Set an option"
-msgstr "Setze eine Option"
+msgstr "Placer une option"
 
 #: ../config.c:190
 msgid "Unmap a key sequence"
-msgstr "Tastenfolge entbinden"
+msgstr "Désassocier une séquence clé"

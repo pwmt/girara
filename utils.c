@@ -1,7 +1,9 @@
 /* See LICENSE file for license and copyright information */
 
 #define _BSD_SOURCE
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
 #define _XOPEN_SOURCE 700
+#endif
 #define _FILE_OFFSET_BITS 64
 
 #include <ctype.h>
@@ -17,6 +19,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdint.h>
+#include <gtk/gtk.h>
 
 #include "utils.h"
 #include "datastructures.h"
@@ -396,10 +399,7 @@ static girara_debug_level_t debug_level = GIRARA_DEBUG;
 void
 _girara_debug(const char* function, int line, girara_debug_level_t level, const char* format, ...)
 {
-  /* This could be simplified if DEBUG, INFO, WARNING, ERROR were ordered. */
-  if ((debug_level == GIRARA_ERROR && level != GIRARA_ERROR) ||
-      (debug_level == GIRARA_WARNING && (level != GIRARA_ERROR && level != GIRARA_WARNING)) ||
-      (debug_level == GIRARA_INFO && level == GIRARA_DEBUG)) {
+  if (level < debug_level) {
     return;
   }
 
@@ -439,4 +439,38 @@ void
 girara_set_debug_level(girara_debug_level_t level)
 {
   debug_level = level;
+}
+
+void
+update_state_by_keyval(int *state, int keyval)
+{
+  if (state == NULL) {
+    return;
+  }
+
+  if ((keyval >= '!' && keyval <= '/')
+      || (keyval >= ':' && keyval <= '@')
+      || (keyval >= '[' && keyval <= '`')
+      || (keyval >= '{' && keyval <= '~')
+      ) {
+    *state |= GDK_SHIFT_MASK;
+  }
+}
+
+char* girara_escape_string(const char* value)
+{
+  if (value == NULL) {
+    return NULL;
+  }
+
+  GString* str = g_string_new("");
+  while (*value != '\0') {
+    const char c = *value++;
+    if (strchr("\\ \t\"\'", c) != NULL) {
+      g_string_append_c(str, '\\');
+    }
+    g_string_append_c(str, c);
+  }
+
+  return g_string_free(str, FALSE);
 }

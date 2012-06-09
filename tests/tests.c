@@ -10,6 +10,11 @@ Suite* suite_settings();
 Suite* suite_session();
 Suite* suite_config();
 
+void setup(void)
+{
+  gtk_init(NULL, NULL);
+}
+
 int main(int argc, char *argv[])
 {
   Suite* suite          = NULL;
@@ -45,7 +50,6 @@ int main(int argc, char *argv[])
   srunner_free(suite_runner);
 
   /* test session */
-  gtk_init(&argc, &argv);
   suite        = suite_session();
   suite_runner = srunner_create(suite);
   srunner_run_all(suite_runner, CK_NORMAL);

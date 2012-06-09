@@ -628,23 +628,27 @@ girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list)
   char* cmd = NULL;
   girara_setting_get(session, "exec-command", &cmd);
   if (cmd == NULL || strlen(cmd) == 0) {
-    girara_warning("exec-command is invalid.");
-    girara_notify(session, GIRARA_ERROR, _("exec-command is invalid."));
+    girara_debug("exec-command is empty, executing directly.");
     g_free(cmd);
-    return false;
+    cmd = NULL;
   }
 
-  GString* command = g_string_new(cmd);
+  bool dont_append_first_space = cmd == NULL;
+  GString* command = g_string_new(cmd ? cmd : "");
   g_free(cmd);
 
   GIRARA_LIST_FOREACH(argument_list, char*, iter, value)
-    g_string_append_c(command, ' ');
+    if (dont_append_first_space == false) {
+      g_string_append_c(command, ' ');
+    }
+    dont_append_first_space = false;
     char* tmp = g_shell_quote(value);
     g_string_append(command, tmp);
     g_free(tmp);
   GIRARA_LIST_FOREACH_END(argument_list, char*, iter, value);
 
   GError* error = NULL;
+  girara_info("executing: %s", command->str);
   gboolean ret = g_spawn_command_line_async(command->str, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
