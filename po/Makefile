@@ -6,7 +6,8 @@ include ../common.mk
 PROJECTNV = girara
 PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
 CATALOGS  = $(wildcard *.po)
-MOS = $(patsubst %.po, %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo, $(CATALOGS))
+LINGUAS  ?= $(patsubst %.po, %, $(CATALOGS))
+MOS = $(patsubst %, %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo, $(LINGUAS))
 
 all: ${MOS}
 
