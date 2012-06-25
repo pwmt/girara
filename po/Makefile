@@ -3,11 +3,12 @@
 include ../config.mk
 include ../common.mk
 
-PROJECTNV = girara
-PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
-CATALOGS  = $(wildcard *.po)
-LINGUAS  ?= $(patsubst %.po, %, $(CATALOGS))
-MOS = $(patsubst %, %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo, $(LINGUAS))
+PROJECTNV  = girara
+PROJECT    = girara-gtk${GIRARA_GTK_VERSION}
+CATALOGS   = $(wildcard *.po)
+LINGUAS   ?= $(patsubst %.po, %, $(CATALOGS))
+ALINGUAS   = $(shell find $(patsubst %, %.po, $(LINGUAS)) 2>/dev/null)
+MOS = $(patsubst %, %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo, $(patsubst %.po, %, $(ALINGUAS)))
 
 all: ${MOS}
 
