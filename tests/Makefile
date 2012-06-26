@@ -37,7 +37,7 @@ options:
 ${XDG_HELPER}: ${XDG_HELPER_SOURCE} ../libgirara-gtk${GIRARA_GTK_VERSION}.a
 	@mkdir -p .depend
 	$(ECHO) CC $<
-	$(QUIET)${CC}  -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC}  -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a ${LDFLAGS} ${LIBS} -MMD -MF .depend/$@.dep
 
 %-gtk${GIRARA_GTK_VERSION}.do: %.c
 	@mkdir -p .depend
