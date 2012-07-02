@@ -47,7 +47,9 @@ version.h: version.h.in config.mk
 ${OBJECTS}:  config.mk version.h
 ${DOBJECTS}: config.mk version.h
 
-${PROJECT}: lib${PROJECT}.a lib${PROJECT}.so.${SOVERSION}
+${PROJECT}: static shared
+static: lib${PROJECT}.a
+shared: lib${PROJECT}.so.${SOVERSION}
 
 lib${PROJECT}.a: ${OBJECTS}
 	$(ECHO) AR rcs $@
@@ -119,16 +121,22 @@ po:
 update-po:
 	$(QUIET)${MAKE} -C po update-po
 
-install: all install-headers
-	$(ECHO) installing library file
+install-static: static
+	$(ECHO) installing static library
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
+
+install-shared: shared
+	$(ECHO) installing shared library
+	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}
 	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} || \
 		echo "Failed to create lib${PROJECT}.so.${SOMAJOR}. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 	$(QUIET)ln -s lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so || \
 		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
-	$(QUIET)${MAKE} -C po install
+
+install: options po install-static install-shared install-headers
+		$(QUIET)${MAKE} -C po install
 
 install-headers: version.h ${PROJECT}.pc
 	$(ECHO) installing pkgconfig file
@@ -151,7 +159,8 @@ uninstall-headers:
 	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 
 .PHONY: all options clean debug doc test dist install install-headers uninstall \
-	uninstall-headers ${PROJECT} ${PROJECT}-debug po update-po
+	uninstall-headers ${PROJECT} ${PROJECT}-debug po update-po \
+	static shared install-static install-shared
 
 TDEPENDS = ${OBJECTS:.o=.o.dep}
 DEPENDS = ${TDEPENDS:^=.depend/}
