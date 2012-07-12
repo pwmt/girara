@@ -511,6 +511,9 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
   gtk_label_set_use_markup(show_command,     TRUE);
   gtk_label_set_use_markup(show_description, TRUE);
 
+  gtk_label_set_ellipsize(show_command, TRUE);
+  gtk_label_set_ellipsize(show_description, TRUE);
+
   gchar* c = g_markup_printf_escaped(FORMAT_COMMAND,     command ? command : "");
   gchar* d = g_markup_printf_escaped(FORMAT_DESCRIPTION, description ? description : "");
   gtk_label_set_markup(show_command,     c);
