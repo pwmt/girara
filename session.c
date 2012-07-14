@@ -136,6 +136,12 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_window_set_has_resize_grip(GTK_WINDOW(session->gtk.window), FALSE);
 #endif
 
+#if (GTK_MAJOR_VERSION == 3)
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.window), GTK_STATE_NORMAL, &(session->style.default_background));
+#else
+  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.window), GTK_STATE_NORMAL, &(session->style.default_background));
+#endif
+
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
       G_CALLBACK(girara_callback_view_key_press_event), session);
@@ -165,6 +171,12 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   /* viewport */
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
   gtk_viewport_set_shadow_type(GTK_VIEWPORT(session->gtk.viewport), GTK_SHADOW_NONE);
+
+#if (GTK_MAJOR_VERSION == 3)
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
+#else
+  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
+#endif
 
   /* box */
   gtk_box_set_spacing(session->gtk.box, 0);
