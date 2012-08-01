@@ -237,14 +237,14 @@ girara_config_handle_free(girara_config_handle_t* handle)
   g_slice_free(girara_config_handle_t, handle);
 }
 
-void
-girara_config_parse(girara_session_t* session, const char* path)
+static bool
+config_parse(girara_session_t* session, const char* path)
 {
   /* open file */
   FILE* file = girara_file_open(path, "r");
 
   if (file == NULL) {
-    return;
+    return false;
   }
 
   /* read lines */
@@ -264,7 +264,7 @@ girara_config_parse(girara_session_t* session, const char* path)
     if (argument_list == NULL) {
       free(line);
       fclose(file);
-      return;
+      return false;
     }
 
     girara_list_set_free_function(argument_list, g_free);
@@ -277,23 +277,51 @@ girara_config_parse(girara_session_t* session, const char* path)
       girara_list_free(argument_list);
       fclose(file);
       free(line);
-      return;
+      return false;
     }
 
-    /* search for config handle */
-    girara_config_handle_t* handle = NULL;
-    GIRARA_LIST_FOREACH(session->config.handles, girara_config_handle_t*, iter, tmp)
-      handle = tmp;
-      if (strcmp(handle->identifier, argv[0]) == 0) {
-        handle->handle(session, argument_list);
-        break;
+    /* include gets a special treatment */
+    if (strcmp(argv[0], "include") == 0) {
+      if (argc != 2) {
+        girara_warning("Could not process line %d in '%s': usage: include path.", line_number, path);
       } else {
-        handle = NULL;
-      }
-    GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, tmp);
+        char* newpath = NULL;
+        if (g_path_is_absolute(argv[1]) == TRUE) {
+          newpath = g_strdup(argv[1]);
+        } else {
+          char* basename = g_path_get_dirname(path);
+          char* tmp = g_build_filename(basename, argv[1], NULL);
+          newpath = girara_fix_path(tmp);
+          g_free(tmp);
+          g_free(basename);
+        }
 
-    if (handle == NULL) {
-      girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);
+        if (strcmp(newpath, path) == 0) {
+          girara_warning("Could not process line %d in '%s': trying to include itself.", line_number, path);
+        } else {
+          girara_debug("Loading config file '%s'.", newpath);
+          if (config_parse(session, newpath) == FALSE) {
+            girara_warning("Could not process line %d in '%s': failed to load '%s'.", line_number, path, newpath);
+          }
+        }
+        g_free(newpath);
+      }
+    } else {
+      /* search for config handle */
+      girara_config_handle_t* handle = NULL;
+      GIRARA_LIST_FOREACH(session->config.handles, girara_config_handle_t*, iter, tmp)
+        handle = tmp;
+        if (strcmp(handle->identifier, argv[0]) == 0) {
+          handle->handle(session, argument_list);
+          break;
+        } else {
+          handle = NULL;
+        }
+      GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, tmp);
+
+      if (handle == NULL) {
+        girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);
+      }
     }
 
     line_number++;
@@ -303,4 +331,12 @@ girara_config_parse(girara_session_t* session, const char* path)
   }
 
   fclose(file);
+  return true;
 }
+
+void
+girara_config_parse(girara_session_t* session, const char* path)
+{
+  config_parse(session, path);
+}
+
