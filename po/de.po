@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-08 19:06+0200\n"
+"POT-Creation-Date: 2012-08-05 15:42+0200\n"
 "PO-Revision-Date: 2012-04-03 15:11+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:498
+#: ../callbacks.c:499
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
@@ -219,7 +219,7 @@ msgstr "Befehl, der von :exec ausgeführt werden soll"
 
 #: ../config.c:154
 msgid "Show or hide certain GUI elements"
-msgstr ""
+msgstr "Zeige oder verstecke bestimmte GUI Elemente"
 
 #. commands
 #: ../config.c:186
