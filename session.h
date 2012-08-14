@@ -127,6 +127,7 @@ struct girara_session_s
     girara_mode_t current_mode; /**< Current mode */
     girara_list_t *identifiers; /**< List of modes with its string identifiers */
     girara_mode_t normal; /**< The normal mode */
+    girara_mode_t inputbar; /**< The inputbar mode */
   } modes;
 
   struct
