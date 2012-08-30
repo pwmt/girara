@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-08 19:06+0200\n"
+"POT-Creation-Date: 2012-08-30 19:53+0200\n"
 "PO-Revision-Date: 2012-04-03 19:27+0000\n"
 "Last-Translator: femnad <femnad@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 
 #. unhandled command
-#: ../callbacks.c:498
+#: ../callbacks.c:500
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Geçerli bir kısayol fonksiyonu değil: %s"
@@ -94,11 +94,6 @@ msgstr "Seçenek için değer belirtilmedi: %s"
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Seçenek için bilinmeyen değer: %s"
-
-#: ../commands.c:655
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "Komut yürütülemedi: %s"
 
 #. settings
 #: ../config.c:124
@@ -241,3 +236,8 @@ msgstr "Seçenekleri değiştir"
 #: ../config.c:190
 msgid "Unmap a key sequence"
 msgstr "Tuş kombinasyonu eşleşimini kaldır"
+
+#: ../utils.c:515
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Komut yürütülemedi: %s"

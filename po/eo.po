@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-08 19:06+0200\n"
+"POT-Creation-Date: 2012-08-30 19:53+0200\n"
 "PO-Revision-Date: 2012-04-21 13:55+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:498
+#: ../callbacks.c:500
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Nevalida kurtnomo de funkcio: %s"
@@ -90,11 +90,6 @@ msgstr "Neniu valoro difinita por opcio: %s"
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Nekonata valoro por opcio: %s"
-
-#: ../commands.c:655
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "Fiaskis plenumi komandon: %s"
 
 #. settings
 #: ../config.c:124
@@ -237,3 +232,8 @@ msgstr "Agordu opcion"
 #: ../config.c:190
 msgid "Unmap a key sequence"
 msgstr "Malmapu klavan sinsekvon"
+
+#: ../utils.c:515
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Fiaskis plenumi komandon: %s"
