@@ -3,7 +3,7 @@
 #
 # Translators:
 #   <cedric.sodhi@googlemail.com>, 2012.
-# Moritz Lipp <mlq@pwmt.org>, 2012.
+#   Moritz Lipp <mlq@pwmt.org>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
