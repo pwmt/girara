@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-08 19:06+0200\n"
-"PO-Revision-Date: 2012-04-03 15:11+0000\n"
+"POT-Creation-Date: 2012-08-30 19:53+0200\n"
+"PO-Revision-Date: 2012-08-05 14:14+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"Language-Team: German (http://www.transifex.net/projects/p/girara/language/"
+"Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
 "de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:498
+#: ../callbacks.c:500
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
@@ -94,11 +94,6 @@ msgstr "Kein Wert für Option definiert: %s"
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"
-
-#: ../commands.c:655
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "Konnte Befehl nicht ausführen: %s"
 
 #. settings
 #: ../config.c:124
@@ -219,7 +214,7 @@ msgstr "Befehl, der von :exec ausgeführt werden soll"
 
 #: ../config.c:154
 msgid "Show or hide certain GUI elements"
-msgstr ""
+msgstr "Zeige oder verstecke bestimmte GUI Elemente"
 
 #. commands
 #: ../config.c:186
@@ -241,3 +236,8 @@ msgstr "Setze eine Option"
 #: ../config.c:190
 msgid "Unmap a key sequence"
 msgstr "Tastenfolge entbinden"
+
+#: ../utils.c:515
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Konnte Befehl nicht ausführen: %s"

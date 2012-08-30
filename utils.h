@@ -142,4 +142,13 @@ void girara_set_debug_level(girara_debug_level_t level);
  */
 char* girara_escape_string(const char* value);
 
+/**
+ * Execute command from argument list
+ *
+ * @param session The used girara session
+ * @param argument_list The argument list
+ * @return true if no error occured
+ */
+bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list);
+
 #endif
