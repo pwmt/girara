@@ -152,6 +152,14 @@ void* girara_list_find(girara_list_t* list, girara_compare_function_t compare,
 girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
 
 /**
+ * Create an iterator pointing to the same element as iter.
+ *
+ * @param list The girara list object
+ * @return The list iterator or NULL if an error occured
+ */
+girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter);
+
+/**
  * Move iterator to next element.
  *
  * @param iter The list iterator
@@ -166,6 +174,31 @@ girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
  * @return true if iterator has a next element, false otherwise
  */
 bool girara_list_iterator_has_next(girara_list_iterator_t* iter);
+
+/**
+ * Move iterator to previous element.
+ *
+ * @param iter The list iterator
+ * @return The moved iterator or NULL if an error occured
+ */
+girara_list_iterator_t* girara_list_iterator_previous(girara_list_iterator_t* iter);
+
+/**
+ * Check if iterator has previous element.
+ *
+ * @param iter The list iterator
+ * @return true if iterator has a previous element, false otherwise
+ */
+bool girara_list_iterator_has_previous(girara_list_iterator_t* iter);
+
+/**
+ * Remove element pointed by the iterator, and updates the iterator
+ * to the next element
+ *
+ * @param iter The list iterator
+ */
+void girara_list_iterator_remove(girara_list_iterator_t* iter);
+
 
 /**
  * Check if iterator is valid
