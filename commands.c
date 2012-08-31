@@ -509,7 +509,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
         break;
       case FLOAT:
       {
-        float f = strtof(value, NULL);
+        float f = g_ascii_strtod(value, NULL);
         girara_setting_set_value(session, setting, &f);
         break;
       }
