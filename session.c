@@ -358,6 +358,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     g_free(window_icon);
   }
 
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
+
   return true;
 }
 
