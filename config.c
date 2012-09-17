@@ -13,7 +13,7 @@
 #include "shortcuts.h"
 #include "utils.h"
 
-#define COMMENT_PREFIX '#'
+#define COMMENT_PREFIX "\"#"
 
 static void
 cb_window_icon(girara_session_t* session, const char* UNUSED(name),
@@ -252,7 +252,7 @@ config_parse(girara_session_t* session, const char* path)
   unsigned int line_number = 1;
   while ((line = girara_file_read_line(file)) != NULL) {
     /* skip empty lines and comments */
-    if (strlen(line) == 0 || line[0] == COMMENT_PREFIX) {
+    if (strlen(line) == 0 || strchr(COMMENT_PREFIX, line[0]) != NULL) {
       free(line);
       continue;
     }
