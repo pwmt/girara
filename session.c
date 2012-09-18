@@ -490,9 +490,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
 
   /* update visibility */
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
-  if (session->global.autohide_inputbar == true) {
-    gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
-  }
+  gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
 
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 }
