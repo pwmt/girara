@@ -174,6 +174,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
           shortcut_mask = GDK_SHIFT_MASK;
           break;
         case 'A':
+        case 'M':
           shortcut_mask = GDK_MOD1_MASK;
           break;
         case 'C':
