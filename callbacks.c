@@ -239,7 +239,7 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
         && button->button == mouse_event->button
         && state  == mouse_event->mask
         && mouse_event->event_type == event.type
-        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+        && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
         girara_list_iterator_free(iter);
@@ -270,7 +270,7 @@ girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventBut
         && button->button == mouse_event->button
         && state  == mouse_event->mask
         && mouse_event->event_type == GIRARA_EVENT_BUTTON_RELEASE
-        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+        && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
         girara_list_iterator_free(iter);
@@ -300,7 +300,7 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
     if (mouse_event->function != NULL
         && state  == mouse_event->mask
         && mouse_event->event_type == event.type
-        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+        && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
         girara_list_iterator_free(iter);
@@ -347,7 +347,7 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
     if (mouse_event->function != NULL
         && state  == mouse_event->mask
         && mouse_event->event_type == event.type
-        && (session->modes.current_mode & mouse_event->mode || mouse_event->mode == 0)
+        && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
         girara_list_iterator_free(iter);
