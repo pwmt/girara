@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2012-08-30 19:53+0200\n"
 "PO-Revision-Date: 2012-04-17 19:55+0000\n"
 "Last-Translator: TheLemonMan <segnalazionidalweb@gmail.com>\n"
