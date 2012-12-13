@@ -7,7 +7,11 @@ PROJECTNV  = girara
 PROJECT    = girara-gtk${GIRARA_GTK_VERSION}
 CATALOGS   = $(wildcard *.po)
 LINGUAS   ?= $(patsubst %.po, %, $(CATALOGS))
+ifeq ($(LINGUAS),)
+ALINGUAS   =
+else
 ALINGUAS   = $(shell find $(patsubst %, %.po, $(LINGUAS)) 2>/dev/null)
+endif
 MOS = $(patsubst %, %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo, $(patsubst %.po, %, $(ALINGUAS)))
 
 all: ${MOS}
