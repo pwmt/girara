@@ -361,6 +361,9 @@ girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, g
   g_return_val_if_fail(session != NULL, false);
 
   unsigned int number_of_tabs = girara_get_number_of_tabs(session);
+  if (number_of_tabs == 0)
+    return false;
+
   unsigned int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
   unsigned int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
   unsigned int new_tab        = (current_tab + step) % number_of_tabs;
