@@ -244,7 +244,8 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
   return false;
 }
 
-bool girara_isc_command_history(girara_session_t* session, girara_argument_t*
+bool
+girara_isc_command_history(girara_session_t* session, girara_argument_t*
     argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session                          != NULL, false);
@@ -465,7 +466,8 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
   return false;
 }
 
-bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
+bool
+girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* UNUSED(event), unsigned int t)
 {
   if (session == NULL || argument == NULL) {
@@ -585,7 +587,8 @@ single_key:
   return true;
 }
 
-bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, girara_shortcut_function_t function)
+bool
+girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, girara_shortcut_function_t function)
 {
   g_return_val_if_fail(session  != NULL, false);
 
@@ -622,7 +625,8 @@ girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping)
   g_slice_free(girara_shortcut_mapping_t, mapping);
 }
 
-bool girara_argument_mapping_add(girara_session_t* session, const char* identifier, int value)
+bool
+girara_argument_mapping_add(girara_session_t* session, const char* identifier, int value)
 {
   g_return_val_if_fail(session  != NULL, false);
 
