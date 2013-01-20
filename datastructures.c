@@ -219,6 +219,16 @@ girara_list_iterator(girara_list_t* list)
 }
 
 girara_list_iterator_t*
+girara_list_iterator_copy(girara_list_iterator_t* iter) {
+  g_return_val_if_fail(iter, NULL);
+  girara_list_iterator_t* iter2 = g_malloc0(sizeof(girara_list_iterator_t));
+
+  iter2->list = iter->list;
+  iter2->element = iter->element;
+  return iter2;
+}
+
+girara_list_iterator_t*
 girara_list_iterator_next(girara_list_iterator_t* iter)
 {
   if (!iter || !iter->element) {
@@ -238,6 +248,41 @@ bool
 girara_list_iterator_has_next(girara_list_iterator_t* iter)
 {
   return iter && iter->element && g_list_next(iter->element);
+}
+
+girara_list_iterator_t*
+girara_list_iterator_previous(girara_list_iterator_t* iter)
+{
+  if (!iter || !iter->element) {
+    return NULL;
+  }
+
+  iter->element = g_list_previous(iter->element);
+
+  if (!iter->element) {
+    return NULL;
+  }
+
+  return iter;
+}
+
+bool
+girara_list_iterator_has_previous(girara_list_iterator_t* iter)
+{
+  return iter && iter->element && g_list_previous(iter->element);
+}
+
+void
+girara_list_iterator_remove(girara_list_iterator_t* iter) {
+  if (iter && iter->element) {
+    GList *el = iter->element;
+    if (iter->list && iter->list->free) {
+      (iter->list->free)(iter->element->data);
+    }
+
+    iter->element = el->next;
+    iter->list->start = g_list_delete_link(iter->list->start, el);
+  }
 }
 
 bool

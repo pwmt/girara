@@ -47,6 +47,8 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     {"Left",      GDK_KEY_Left},
     {"PageDown",  GDK_KEY_Page_Down},
     {"PageUp",    GDK_KEY_Page_Up},
+    {"Home",      GDK_KEY_Home},
+    {"End",       GDK_KEY_End},
     {"Return",    GDK_KEY_Return},
     {"Right",     GDK_KEY_Right},
     {"Space",     GDK_KEY_space},
@@ -174,6 +176,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
           shortcut_mask = GDK_SHIFT_MASK;
           break;
         case 'A':
+        case 'M':
           shortcut_mask = GDK_MOD1_MASK;
           break;
         case 'C':
@@ -509,7 +512,7 @@ girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
         break;
       case FLOAT:
       {
-        float f = strtof(value, NULL);
+        float f = g_ascii_strtod(value, NULL);
         girara_setting_set_value(session, setting, &f);
         break;
       }

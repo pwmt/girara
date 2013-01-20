@@ -3,12 +3,12 @@
 #
 # Translators:
 #   <cedric.sodhi@googlemail.com>, 2012.
-# Moritz Lipp <mlq@pwmt.org>, 2012.
+#   Moritz Lipp <mlq@pwmt.org>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-30 19:53+0200\n"
+"Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
+"POT-Creation-Date: 2013-01-13 15:07+0100\n"
 "PO-Revision-Date: 2012-08-05 14:14+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
@@ -20,77 +20,77 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:500
+#: ../callbacks.c:499
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
 
-#: ../commands.c:108
+#: ../commands.c:110
 msgid "Usage: unmap <binding>"
 msgstr "Verwendung: unmap <schlüssel>"
 
-#: ../commands.c:110
+#: ../commands.c:112
 msgid "Usage: map <binding> <function>"
 msgstr "Verwendung: map <schlüssel> <funktion>"
 
-#: ../commands.c:145
+#: ../commands.c:147
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Modus ist nicht registriert: %s"
 
-#: ../commands.c:156 ../commands.c:318
+#: ../commands.c:158 ../commands.c:321
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr ""
 "Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
-#: ../commands.c:184
+#: ../commands.c:187
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Ungültiger Modifikator in %s"
 
-#: ../commands.c:223
+#: ../commands.c:226
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Ungültige Sondertaste für %s"
 
-#: ../commands.c:259
+#: ../commands.c:262
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Ungültige Sondertaste oder Modus %s"
 
-#: ../commands.c:340
+#: ../commands.c:343
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
 
-#: ../commands.c:428
+#: ../commands.c:431
 msgid "Not enough arguments."
 msgstr "Zu wenige Argumente."
 
-#: ../commands.c:433
+#: ../commands.c:436
 msgid "Too many arguments."
 msgstr "Zu viele Argumente."
 
-#: ../commands.c:446
+#: ../commands.c:449
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Unbekannte Otion: %s"
 
-#: ../commands.c:460
+#: ../commands.c:463
 msgid "true"
 msgstr "wahr"
 
-#: ../commands.c:460
+#: ../commands.c:463
 msgid "false"
 msgstr "falsch"
 
-#: ../commands.c:492
+#: ../commands.c:495
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Kein Wert für Option definiert: %s"
 
-#: ../commands.c:507
+#: ../commands.c:510
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"

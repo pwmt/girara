@@ -244,7 +244,8 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
   return false;
 }
 
-bool girara_isc_command_history(girara_session_t* session, girara_argument_t*
+bool
+girara_isc_command_history(girara_session_t* session, girara_argument_t*
     argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session                          != NULL, false);
@@ -318,7 +319,12 @@ girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), 
   g_return_val_if_fail(session != NULL, false);
 
   girara_isc_abort(session, NULL, NULL, 0);
+
   gtk_widget_hide(GTK_WIDGET(session->gtk.notification_area));
+
+  if (session->global.autohide_inputbar == false) {
+    gtk_widget_show(GTK_WIDGET(session->gtk.inputbar));
+  }
 
   return false;
 }
@@ -356,6 +362,9 @@ girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, g
   g_return_val_if_fail(session != NULL, false);
 
   unsigned int number_of_tabs = girara_get_number_of_tabs(session);
+  if (number_of_tabs == 0)
+    return false;
+
   unsigned int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
   unsigned int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
   unsigned int new_tab        = (current_tab + step) % number_of_tabs;
@@ -457,7 +466,8 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
   return false;
 }
 
-bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
+bool
+girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* UNUSED(event), unsigned int t)
 {
   if (session == NULL || argument == NULL) {
@@ -489,6 +499,8 @@ bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     {"Left",      GDK_KEY_Left},
     {"PageDown",  GDK_KEY_Page_Down},
     {"PageUp",    GDK_KEY_Page_Up},
+    {"Home",      GDK_KEY_Home},
+    {"End",       GDK_KEY_End},
     {"Return",    GDK_KEY_Return},
     {"Right",     GDK_KEY_Right},
     {"Space",     GDK_KEY_space},
@@ -575,7 +587,8 @@ single_key:
   return true;
 }
 
-bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, girara_shortcut_function_t function)
+bool
+girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, girara_shortcut_function_t function)
 {
   g_return_val_if_fail(session  != NULL, false);
 
@@ -612,7 +625,8 @@ girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping)
   g_slice_free(girara_shortcut_mapping_t, mapping);
 }
 
-bool girara_argument_mapping_add(girara_session_t* session, const char* identifier, int value)
+bool
+girara_argument_mapping_add(girara_session_t* session, const char* identifier, int value)
 {
   g_return_val_if_fail(session  != NULL, false);
 

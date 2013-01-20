@@ -7,7 +7,11 @@ PROJECTNV  = girara
 PROJECT    = girara-gtk${GIRARA_GTK_VERSION}
 CATALOGS   = $(wildcard *.po)
 LINGUAS   ?= $(patsubst %.po, %, $(CATALOGS))
+ifeq ($(LINGUAS),)
+ALINGUAS   =
+else
 ALINGUAS   = $(shell find $(patsubst %, %.po, $(LINGUAS)) 2>/dev/null)
+endif
 MOS = $(patsubst %, %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo, $(patsubst %.po, %, $(ALINGUAS)))
 
 all: ${MOS}
@@ -30,6 +34,7 @@ update-po: ${GETTEXT_PACKAGE}.pot
 	$(ECHO) updating po files: ${CATALOGS}
 	$(QUIET)set -e && for f in ${CATALOGS} ; do \
 		intltool-update --dist --gettext-package=${GETTEXT_PACKAGE} `echo $$f | sed 's/\.po//'` ; \
+		sed -i 's/Report-Msgid-Bugs-To: \\n/Report-Msgid-Bugs-To: http:\/\/bugs.pwmt.org\\n/'  "$$f" ; \
 	done
 
 %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo: %.po
