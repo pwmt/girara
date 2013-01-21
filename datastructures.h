@@ -154,7 +154,7 @@ girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
 /**
  * Create an iterator pointing to the same element as iter.
  *
- * @param list The girara list object
+ * @param iter The girara list iterator to be copied
  * @return The list iterator or NULL if an error occured
  */
 girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter);
