@@ -1,0 +1,240 @@
+# girara - language file (Portuguese (Brazil))
+# See LICENSE file for license and copyright information
+# 
+# Translators:
+#   <shorterfire@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: girara\n"
+"Report-Msgid-Bugs-To: http://bt.pwmt.org/\n"
+"POT-Creation-Date: 2013-01-13 15:07+0100\n"
+"PO-Revision-Date: 2012-09-25 12:47+0000\n"
+"Last-Translator: salmora8 <shorterfire@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/girara/language/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. unhandled command
+#: ../callbacks.c:499
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Nenhum comando válido: %s"
+
+#: ../commands.c:110
+msgid "Usage: unmap <binding>"
+msgstr "Uso: unmap <binding>"
+
+#: ../commands.c:112
+msgid "Usage: map <binding> <function>"
+msgstr "Uso: map <binding> <function>"
+
+#: ../commands.c:147
+#, c-format
+msgid "Unregistered mode specified: %s"
+msgstr "Modo não registrado especificado: %s"
+
+#: ../commands.c:158 ../commands.c:321
+#, c-format
+msgid "Invalid number of arguments passed: %zu instead of at least %u"
+msgstr "Número de argumentos passados inválidos: %zu em vez de %u no minimo"
+
+#: ../commands.c:187
+#, c-format
+msgid "Invalid modifier in %s"
+msgstr "Modificador inválido em %s"
+
+#: ../commands.c:226
+#, c-format
+msgid "Invalid special key value for %s"
+msgstr "Valor de tecla especial inválido para %s"
+
+#: ../commands.c:262
+#, c-format
+msgid "Invalid special key value or mode %s"
+msgstr "Valor de tecla especial inválido ou modo %s"
+
+#: ../commands.c:343
+#, c-format
+msgid "Not a valid shortcut function: %s"
+msgstr "Não é uma função de atalho válida: %s"
+
+#: ../commands.c:431
+msgid "Not enough arguments."
+msgstr "Argumento não suficientes."
+
+#: ../commands.c:436
+msgid "Too many arguments."
+msgstr "Muitos argumentos."
+
+#: ../commands.c:449
+#, c-format
+msgid "Unknown option: %s"
+msgstr "Opção desconhecida: %s"
+
+#: ../commands.c:463
+msgid "true"
+msgstr "verdadeiro"
+
+#: ../commands.c:463
+msgid "false"
+msgstr "falso"
+
+#: ../commands.c:495
+#, c-format
+msgid "No value defined for option: %s"
+msgstr "Não há valor definido para a opção: %s"
+
+#: ../commands.c:510
+#, c-format
+msgid "Unknown value for option: %s"
+msgstr "Valor desconhecido para opção: %s"
+
+#. settings
+#: ../config.c:124
+msgid "Font"
+msgstr "Fonte"
+
+#: ../config.c:125
+msgid "Default foreground color"
+msgstr "Cor de primeiro plano padrão"
+
+#: ../config.c:126
+msgid "Default background color"
+msgstr "Cor de fundo padrão"
+
+#: ../config.c:127
+msgid "Inputbar foreground color"
+msgstr "Cor da barra de entrada"
+
+#: ../config.c:128
+msgid "Inputbar background color"
+msgstr "Cor de fundo da barra de entrada"
+
+#: ../config.c:129
+msgid "Statusbar foreground color"
+msgstr "Cor da barra de status"
+
+#: ../config.c:130
+msgid "Statsubar background color"
+msgstr "Cor de fundo da barra de status"
+
+#: ../config.c:131
+msgid "Completion foreground color"
+msgstr "Acabamento de cor"
+
+#: ../config.c:132
+msgid "Completion background color"
+msgstr "Cor de fundo de acabamento"
+
+#: ../config.c:133
+msgid "Completion group foreground color"
+msgstr "Cor dos grupos de acabamento"
+
+#: ../config.c:134
+msgid "Completion group background color"
+msgstr "Cor de fundo dos grupos de acabamento"
+
+#: ../config.c:135
+msgid "Completion highlight foreground color"
+msgstr "Acabamento de entrada destacada"
+
+#: ../config.c:136
+msgid "Completion highlight background color"
+msgstr "Acabamento cor de fundo destacada"
+
+#: ../config.c:137
+msgid "Error notification foreground color"
+msgstr "Cor das notificações de erro"
+
+#: ../config.c:138
+msgid "Error notification background color"
+msgstr "Cor de fundo das notificações de erro"
+
+#: ../config.c:139
+msgid "Warning notification foreground color"
+msgstr "Cor dos avisos"
+
+#: ../config.c:140
+msgid "Warning notifaction background color"
+msgstr "Cor de fundo dos avisos"
+
+#: ../config.c:141
+msgid "Notification foreground color"
+msgstr "Cor das notificações"
+
+#: ../config.c:142
+msgid "Notification background color"
+msgstr "Cor de fundo das notificação"
+
+#: ../config.c:143
+msgid "Tab bar foreground color"
+msgstr "Cor da barra de abas"
+
+#: ../config.c:144
+msgid "Tab bar background color"
+msgstr "Cor de fundo da barra de abas"
+
+#: ../config.c:145
+msgid "Tab bar foreground color (active)"
+msgstr "Cor da barra de abas (ativo)"
+
+#: ../config.c:146
+msgid "Tab bar background color (active)"
+msgstr "Cor de fundo da barra de abas (ativo)"
+
+#: ../config.c:148
+msgid "Initial window width"
+msgstr "Largura de janela inicial"
+
+#: ../config.c:149
+msgid "Initial window height"
+msgstr "Altura de janela inicial"
+
+#: ../config.c:150
+msgid "Number of completion items"
+msgstr "Número de itens de acabamento"
+
+#: ../config.c:151
+msgid "Show scrollbars"
+msgstr "Mostrar barras de rolagem"
+
+#: ../config.c:152
+msgid "Window icon"
+msgstr "Ícone de janela"
+
+#: ../config.c:153
+msgid "Command to execute in :exec"
+msgstr "Comando para executar em :exec"
+
+#: ../config.c:154
+msgid "Show or hide certain GUI elements"
+msgstr "Mostrar ou ocultar certos elementos da GUI"
+
+#. commands
+#: ../config.c:186
+msgid "Execute a command"
+msgstr "Executar um comando"
+
+#: ../config.c:187
+msgid "Map a key sequence"
+msgstr "Mapear uma sequencia de teclas"
+
+#: ../config.c:188
+msgid "Quit the program"
+msgstr "Sair do programa"
+
+#: ../config.c:189
+msgid "Set an option"
+msgstr "Definir uma opção"
+
+#: ../config.c:190
+msgid "Unmap a key sequence"
+msgstr "Desmapear uma sequencia de teclas"
+
+#: ../utils.c:515
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Falha ao executar comando: %s"
