@@ -105,12 +105,11 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
   size_t number_of_arguments = girara_list_size(argument_list);
 
-  if (number_of_arguments < ((unmap == true) ? 1 : 2)) {
-    if (unmap == true) {
-      girara_notify(session, GIRARA_WARNING, _("Usage: unmap <binding>"));
-    } else {
-      girara_notify(session, GIRARA_WARNING, _("Usage: map <binding> <function>"));
-    }
+  unsigned int limit = (unmap == true) ? 1 : 2;
+  if (number_of_arguments < limit) {
+    girara_warning("Invalid number of arguments passed: %zu instead of at least %u", number_of_arguments, limit);
+    girara_notify(session, GIRARA_ERROR,
+        _("Invalid number of arguments passed: %zu instead of at least %u"), number_of_arguments, limit);
     return false;
   }
 
@@ -149,14 +148,6 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
       return false;
     }
     g_free(tmp_inner);
-  }
-
-  unsigned int limit = (unmap == true) ? 1 : 2;
-  if (number_of_arguments < limit) {
-    girara_warning("Invalid number of arguments passed: %zu instead of at least %u", number_of_arguments, limit);
-    girara_notify(session, GIRARA_ERROR,
-        _("Invalid number of arguments passed: %zu instead of at least %u"), number_of_arguments, limit);
-    return false;
   }
 
   if (is_mode == true) {
