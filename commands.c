@@ -161,7 +161,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     tmp_length = strlen(tmp);
 
     /* Multi key shortcut */
-    if (strchr(tmp, '-') != NULL && tmp_length > 2) {
+    if (strchr(tmp, '-') != NULL && tmp[1] == '-' && tmp_length > 2) {
       switch (tmp[0]) {
         case 'S':
           shortcut_mask = GDK_SHIFT_MASK;
