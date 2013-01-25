@@ -14,7 +14,7 @@ typedef enum {
   XDG_CONFIG, /**< XDG_CONFIG_HOME */
   XDG_DATA, /**< XDG_DATA_HOME */
   XDG_CONFIG_DIRS, /**< XDG_CONFIG_DIRS */
-  XDG_DATA_DIRS, /** < XDG_DATA_DIRS */
+  XDG_DATA_DIRS, /**< XDG_DATA_DIRS */
 } girara_xdg_path_t;
 
 /**
@@ -112,13 +112,34 @@ void girara_clean_line(char* line);
 void* girara_safe_realloc(void** ptr, size_t size);
 
 /**
- * Prints a debug message
+ * Prints a debug message. The arguments are passed to @ref _girara_debug as
+ * last argument.
  */
 #define girara_debug(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_DEBUG,   __VA_ARGS__)
+/**
+ * Prints an info message. The arguments are passed to @ref _girara_debug as
+ * last argument.
+ */
 #define girara_info(...)    _girara_debug(__FUNCTION__, __LINE__, GIRARA_INFO,    __VA_ARGS__)
+/**
+ * Prints a warning message. The arguments are passed to @ref _girara_debug as
+ * last argument.
+ */
 #define girara_warning(...) _girara_debug(__FUNCTION__, __LINE__, GIRARA_WARNING, __VA_ARGS__)
+/**
+ * Prints an error message. The arguments are passed to @ref _girara_debug as
+ * last argument.
+ */
 #define girara_error(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_ERROR,   __VA_ARGS__)
 
+/**
+ * Print a message.
+ *
+ * @param function The calling function
+ * @param line The line of the call
+ * @param level The debug level of the message.
+ * @param format printf like format string
+ */
 void _girara_debug(const char* function, int line, girara_debug_level_t level,
     const char* format, ...) GIRARA_PRINTF(4, 5);
 
