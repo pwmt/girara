@@ -189,11 +189,14 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
 
   switch (argument->n) {
     case GIRARA_DELETE_LAST_WORD:
-      i = pos - 1;
-
-      if (!pos) {
+      if (pos == 1 && (input[0] == ':' || input[0] == '/')) {
         break;
       }
+      if (!pos){
+	break;
+      }
+
+      i = pos - 1;
 
       /* remove trailing spaces */
       for (; i >= 0 && input[i] == ' '; i--);
@@ -207,6 +210,9 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), i + 1);
       break;
     case GIRARA_DELETE_LAST_CHAR:
+      if (pos == 1 && (input[0] == ':' || input[0] == '/')) {
+        break;
+      }
       if ((length - 1) <= 0) {
         girara_isc_abort(session, argument, NULL, 0);
       }
@@ -222,6 +228,9 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 0) ? 0 : pos - 1);
       break;
     case GIRARA_DELETE_CURR_CHAR:
+      if (length == 1 && pos == 1 && (input[0] == ':' || input[0] == '/')){
+	break;
+      }
       if((length - 1) <= 0) {
         girara_isc_abort(session, argument, NULL, 0);
       }
