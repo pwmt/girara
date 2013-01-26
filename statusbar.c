@@ -3,19 +3,11 @@
 #include "statusbar.h"
 #include "session.h"
 #include "datastructures.h"
+#include "internal.h"
 
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
 #endif
-
-/**
- * Structure of a statusbar item
- */
-struct girara_statusbar_item_s
-{
-  GtkWidget* box; /**< Event box */
-  GtkLabel *text; /**< Text label */
-};
 
 girara_statusbar_item_t*
 girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback)
