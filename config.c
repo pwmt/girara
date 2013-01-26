@@ -56,6 +56,12 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
   if (session->gtk.notification_text != NULL) {
     gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
   }
+
+  GIRARA_LIST_FOREACH(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item)
+    if (item != NULL){
+      gtk_widget_override_font(GTK_WIDGET(item->text), font);
+    }
+  GIRARA_LIST_FOREACH_END(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item);
 }
 
 static void
