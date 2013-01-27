@@ -404,6 +404,9 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     girara_list_append(session->global.command_history, g_strdup(command));
   }
 
+  /* Reset the current position in the command history */
+  session->global.history_show_most_recent = true;
+
   /* parse input */
   gchar** argv = NULL;
   gint    argc = 0;

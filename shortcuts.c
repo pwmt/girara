@@ -167,6 +167,9 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
     gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
   }
 
+  /* Reset the current position in the command history */
+  session->global.history_show_most_recent = true;
+
   /* reset custom functions */
   session->signals.inputbar_custom_activate        = NULL;
   session->signals.inputbar_custom_key_press_event = NULL;
@@ -267,8 +270,12 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
     return false;
   }
 
-  if (argument->n == GIRARA_NEXT) {
-    current = (length + current + 1) % length;
+  if (session->global.history_show_most_recent == true){
+    current = length - 1;
+    session->global.history_show_most_recent = false;
+  }
+  else if (argument->n == GIRARA_NEXT) {
+    current = (current + 1) % length;
   } else if (argument->n == GIRARA_PREVIOUS) {
     current = (length + current - 1) % length;
   } else {
