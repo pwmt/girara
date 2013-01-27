@@ -275,9 +275,17 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
     session->global.history_show_most_recent = false;
   }
   else if (argument->n == GIRARA_NEXT) {
-    current = (current + 1) % length;
+    if (current + 1 >= length){
+      return false;
+    } else {
+      ++current;
+    }
   } else if (argument->n == GIRARA_PREVIOUS) {
-    current = (length + current - 1) % length;
+    if (current - 1 < 0){
+      return false;
+    } else {
+      --current;
+    }
   } else {
     return false;
   }
