@@ -117,7 +117,7 @@ START_TEST(test_datastructures_list_merge) {
   girara_list_free(list2);
 } END_TEST
 
-START_TEST(test_datastructures_list_free) {
+START_TEST(test_datastructures_list_free_empty) {
   // free empty list
   girara_list_t* list = girara_list_new();
   fail_unless((list != NULL), NULL);
@@ -130,27 +130,34 @@ START_TEST(test_datastructures_list_free) {
   list = girara_list_new2(g_free);
   fail_unless((list != NULL), NULL);
   girara_list_free(list);
+} END_TEST
 
+START_TEST(test_datastructures_list_free_already_cleared) {
   // free cleared list
-  list = girara_list_new();
+  girara_list_t* list = girara_list_new();
   fail_unless((list != NULL), NULL);
   girara_list_append(list, (void*) 0xDEAD);
   fail_unless((girara_list_size(list) == 1), NULL);
   girara_list_clear(list);
   fail_unless((girara_list_size(list) == 0), NULL);
   girara_list_free(list);
+} END_TEST
 
+START_TEST(test_datastructures_list_free_free_function) {
   // free function
-  list = girara_list_new();
+  girara_list_t* list = girara_list_new();
+  list_free_called = 0;
   fail_unless((list != NULL), NULL);
   girara_list_set_free_function(list, list_free);
   girara_list_append(list, (void*) 0xDEAD);
   girara_list_free(list);
   fail_unless((list_free_called == 1), NULL);
+} END_TEST
 
+START_TEST(test_datastructures_list_free_free_function_remove) {
   // remove with free function
   list_free_called = 0;
-  list = girara_list_new2(list_free);
+  girara_list_t* list = girara_list_new2(list_free);
   fail_unless((list != NULL), NULL);
   girara_list_append(list, (void*)0xDEAD);
   girara_list_remove(list, (void*)0xDEAD);
@@ -159,12 +166,14 @@ START_TEST(test_datastructures_list_free) {
   fail_unless((list_free_called == 1), NULL);
 } END_TEST
 
-START_TEST(test_datastructures_sorted_list) {
+START_TEST(test_datastructures_sorted_list_basic) {
   girara_list_t* list = girara_sorted_list_new(NULL);
   fail_unless((list != NULL), NULL);
   girara_list_free(list);
+} END_TEST
 
-  list = girara_sorted_list_new2((girara_compare_function_t) g_strcmp0,
+START_TEST(test_datastructures_sorted_list) {
+  girara_list_t* list = girara_sorted_list_new2((girara_compare_function_t) g_strcmp0,
       (girara_free_function_t) g_free);
   fail_unless((list != NULL), NULL);
   girara_list_t* unsorted_list = girara_list_new2((girara_free_function_t) g_free);
@@ -357,7 +366,10 @@ Suite* suite_datastructures()
 
   /* list free */
   tcase = tcase_create("list_free_function");
-  tcase_add_test(tcase, test_datastructures_list_free);
+  tcase_add_test(tcase, test_datastructures_list_free_empty);
+  tcase_add_test(tcase, test_datastructures_list_free_already_cleared);
+  tcase_add_test(tcase, test_datastructures_list_free_free_function);
+  tcase_add_test(tcase, test_datastructures_list_free_free_function_remove);
   suite_add_tcase(suite, tcase);
 
   /* list create */
@@ -367,6 +379,7 @@ Suite* suite_datastructures()
 
   /* sorted list */
   tcase = tcase_create("list_sorted");
+  tcase_add_test(tcase, test_datastructures_sorted_list_basic);
   tcase_add_test(tcase, test_datastructures_sorted_list);
   suite_add_tcase(suite, tcase);
 
