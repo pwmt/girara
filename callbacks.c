@@ -401,6 +401,13 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   /* append to command history */
   if (session->global.command_history != NULL) {
     const char* command = gtk_entry_get_text(entry);
+
+    GIRARA_LIST_FOREACH(session->global.command_history, char *, iter, data)
+      if (!strcmp(command, data)) {
+        girara_list_remove(session->global.command_history, data);
+      }
+    GIRARA_LIST_FOREACH_END(session->global.command_history, char *, iter, data);
+
     girara_list_append(session->global.command_history, g_strdup(command));
   }
 
