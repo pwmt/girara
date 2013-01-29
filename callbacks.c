@@ -583,7 +583,7 @@ girara_callback_inputbar_changed_event(GtkEditable* entry, girara_session_t* ses
       special_command->function(session, input, &(special_command->argument));
       g_free(input);
       girara_list_iterator_free(iter);
-      return false;
+      return true;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, special_command);
 
