@@ -245,7 +245,7 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback,
   do { \
     girara_list_iterator_t* iter = girara_list_iterator(list); \
     while (girara_list_iterator_is_valid(iter)) { \
-      type data = girara_list_iterator_data(iter);
+      type data = (type)girara_list_iterator_data(iter);
 
 #define GIRARA_LIST_FOREACH_END(list, type, iter, data) \
       girara_list_iterator_next(iter); \

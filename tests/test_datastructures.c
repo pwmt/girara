@@ -225,6 +225,29 @@ START_TEST(test_datastructures_sorted_list) {
   girara_list_free(unsorted_list);
 } END_TEST
 
+START_TEST(test_datastructures_list_iterator_remove) {
+  girara_list_t* list = girara_list_new();
+  for (intptr_t i = 0; i != 10; ++i) {
+    girara_list_append(list, (void*)i);
+  }
+  fail_unless(girara_list_size(list) == 10);
+
+  intptr_t next = 0;
+  GIRARA_LIST_FOREACH(list, intptr_t, iter, data)
+    fail_unless(next++ == data);
+    if (data == 5) {
+      girara_list_remove(list, (void*)data);
+    }
+  GIRARA_LIST_FOREACH_END(list, intptr_t, iter, data);
+
+  for (intptr_t s = 0; s != 5; ++s) {
+    fail_unless((intptr_t)girara_list_nth(list, s) == s);
+  }
+  for (intptr_t s = 5; s != 9; ++s) {
+    fail_unless((intptr_t)girara_list_nth(list, s) == s + 1);
+  }
+} END_TEST
+
 static void
 node_free(void* data)
 {
@@ -393,9 +416,14 @@ Suite* suite_datastructures()
   tcase_add_test(tcase, test_datastructures_list_find);
   suite_add_tcase(suite, tcase);
 
-  /* prepend ists */
+  /* prepend lists */
   tcase = tcase_create("list_prepend");
   tcase_add_test(tcase, test_datastructures_list_prepend);
+  suite_add_tcase(suite, tcase);
+
+  /* list iterators */
+  tcase = tcase_create("list_iterators");
+  tcase_add_test(tcase, test_datastructures_list_iterator_remove);
   suite_add_tcase(suite, tcase);
 
   /* node free */
