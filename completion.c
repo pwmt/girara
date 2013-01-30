@@ -498,7 +498,7 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
   GtkLabel *show_description = GTK_LABEL(gtk_label_new(NULL));
 
   gtk_misc_set_alignment(GTK_MISC(show_command),     0.0, 0.0);
-  gtk_misc_set_alignment(GTK_MISC(show_description), 0.0, 0.0);
+  gtk_misc_set_alignment(GTK_MISC(show_description), 1.0, 0.0);
 
   if (group == true) {
     gtk_misc_set_padding(GTK_MISC(show_command),     2, 4);
@@ -535,7 +535,7 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
   gtk_widget_override_font(GTK_WIDGET(show_description), session->style.font);
 
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command),     TRUE,  TRUE,  2);
-  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), FALSE, FALSE, 2);
+  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), TRUE, TRUE, 2);
 
   gtk_container_add(GTK_CONTAINER(row), GTK_WIDGET(col));
   gtk_widget_show_all(GTK_WIDGET(row));
