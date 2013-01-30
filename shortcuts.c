@@ -262,22 +262,38 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
 
   static int current  = 0;
   unsigned int length = girara_list_size(session->global.command_history);
+  char *command;
+  char *prefix = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, 1);
+  unsigned int i = 0;
 
   if (length == 0) {
     return false;
   }
 
-  if (argument->n == GIRARA_NEXT) {
-    current = (length + current + 1) % length;
-  } else if (argument->n == GIRARA_PREVIOUS) {
-    current = (length + current - 1) % length;
-  } else {
-    return false;
+  while (i < length) {
+    if (argument->n == GIRARA_NEXT) {
+      current = (current + 1) % length;
+    } else if (argument->n == GIRARA_PREVIOUS) {
+      current = (length + current - 1) % length;
+    } else {
+      return false;
+    }
+
+    command = (char*) girara_list_nth(session->global.command_history, current);
+
+    if (command == NULL) {
+      return false;
+    }
+
+    if (command[0] == *prefix) {
+      break;
+    }
+
+    ++i;
   }
 
-  char* command = (char*) girara_list_nth(session->global.command_history, current);
-  if (command == NULL) {
-    return false;
+  if (i == length) {
+    return true;
   }
 
   gtk_entry_set_text(session->gtk.inputbar_entry, command);
