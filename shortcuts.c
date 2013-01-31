@@ -167,6 +167,9 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
     gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
   }
 
+  /* Begin from the last command when navigating through history */
+  session->global.history_show_most_recent = true;
+
   /* reset custom functions */
   session->signals.inputbar_custom_activate        = NULL;
   session->signals.inputbar_custom_key_press_event = NULL;
@@ -273,11 +276,16 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
     return false;
   }
 
+  if (session->global.history_show_most_recent == true) {
+    current = length;
+  }
+
   while (i < length) {
-    if (argument->n == GIRARA_NEXT) {
-      current = (current + 1) % length;
-    } else if (argument->n == GIRARA_PREVIOUS) {
+    if (session->global.history_show_most_recent == true || argument->n == GIRARA_PREVIOUS) {
       current = (length + current - 1) % length;
+    }
+    else if (argument->n == GIRARA_NEXT) {
+      current = (current + 1) % length;
     } else {
       return false;
     }
@@ -288,6 +296,9 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
     }
 
     if (command[0] == prefix) {
+      if (session->global.history_show_most_recent == true) {
+        session->global.history_show_most_recent = false;
+      }
       break;
     }
 
