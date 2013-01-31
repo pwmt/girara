@@ -263,8 +263,11 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
   static int current  = 0;
   unsigned int length = girara_list_size(session->global.command_history);
   char* command = NULL;
-  char* prefix = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, 1);
+  char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, 1);
+  char prefix = *temp;
   unsigned int i = 0;
+
+  g_free(temp);
 
   if (length == 0) {
     return false;
@@ -284,7 +287,7 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
       return false;
     }
 
-    if (command[0] == *prefix) {
+    if (command[0] == prefix) {
       break;
     }
 
