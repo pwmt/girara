@@ -120,7 +120,7 @@ struct girara_session_s
     girara_list_t* command_history; /**< Command history */
     bool autohide_inputbar; /**< Auto-hide inputbar */
     bool hide_statusbar; /**< Hide statusbar */
-    bool history_show_most_recent; /**< Show the command history starting from the most recent command */
+    bool history_show_most_recent; /**< Show history starting from the most recent command */
   } global;
 
   struct
