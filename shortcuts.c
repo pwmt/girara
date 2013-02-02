@@ -264,13 +264,13 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
   g_return_val_if_fail(session->global.command_history != NULL, false);
 
   static ssize_t current = 0;
-  unsigned int length = girara_list_size(session->global.command_history);
+  static ssize_t current_match = 0;
+  size_t length = girara_list_size(session->global.command_history);
+  size_t i = 0;
+
   char* command = NULL;
   char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, 1);
   char prefix = *temp;
-  static unsigned int current_match = 0;
-  unsigned int i = 0;
-
   g_free(temp);
 
   if (length == 0) {
@@ -294,7 +294,7 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
     }
     else if (argument->n == GIRARA_NEXT) {
       if (current + 1 == length) {
-	current = current_match;
+        current = current_match;
         return true;
       } else {
         ++current;
@@ -303,11 +303,10 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
       return false;
     }
 
-    for (; i < length; ++i) {
-      command = girara_list_nth(session->global.command_history, current);
-      if (command == NULL) {
-        return false;
-      }
+    command = girara_list_nth(session->global.command_history, current);
+    if (command == NULL) {
+      return false;
+    }
 
     if (command[0] == prefix) {
       if (session->global.history_show_most_recent == true) {
@@ -316,30 +315,13 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
       current_match = current;
       break;
     }
-  } else {
-    for (; i < length; ++i) {
-      if (argument->n == GIRARA_NEXT) {
-        current = (current + 1) % length;
-      } else if (argument->n == GIRARA_PREVIOUS) {
-        current = (length + current - 1) % length;
-      } else {
-        return false;
-      }
 
-      command = girara_list_nth(session->global.command_history, current);
-      if (command == NULL) {
-        return false;
-      }
-
-      if (command[0] == *prefix) {
-        break;
-      }
-    }
+    ++i;
   }
 
-if (i == length) {
-      return true;
-    }
+  if (i == length) {
+    return true;
+  }
 
   gtk_entry_set_text(session->gtk.inputbar_entry, command);
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
