@@ -17,13 +17,6 @@
 
 #define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
 
-/**
- * Free girara_setting_t struct
- *
- * @param setting The setting to free.
- */
-HIDDEN void girara_setting_free(girara_setting_t* setting);
-
 HIDDEN void girara_config_handle_free(girara_config_handle_t* handle);
 
 HIDDEN void girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping);

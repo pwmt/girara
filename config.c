@@ -9,17 +9,21 @@
 #include "datastructures.h"
 #include "internal.h"
 #include "session.h"
-#include "settings.h"
+#include "settings-manager.h"
 #include "shortcuts.h"
 #include "utils.h"
 
 #define COMMENT_PREFIX "\"#"
 
 static void
-cb_window_icon(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+cb_window_icon(GiraraSettingsManager* manager, const char* name, void* value, void* data)
 {
-  g_return_if_fail(session != NULL && value != NULL);
+  if (g_strcmp0(name, "window-icon") != 0) {
+    return;
+  }
+
+  girara_session_t* session = data;
+  g_return_if_fail(session != NULL && manager != NULL && value != NULL);
 
   if (session->gtk.window != NULL) {
     GError* error = NULL;
@@ -32,15 +36,19 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name),
 }
 
 static void
-cb_font(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+cb_font(GiraraSettingsManager* manager, const char* name, void* value, void* data)
 {
-  g_return_if_fail(session != NULL && value != NULL);
+  if (g_strcmp0(name, "font") != 0) {
+    return;
+  }
+
+  girara_session_t* session = data;
+  g_return_if_fail(session != NULL && manager != NULL && value != NULL);
 
   pango_font_description_free(session->style.font);
 
   /* parse font */
-  PangoFontDescription* font = pango_font_description_from_string(value);
+  PangoFontDescription* font = pango_font_description_from_string((const char*) value);
   session->style.font = font;
 
   /* inputbar */
@@ -65,20 +73,23 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
 }
 
 static void
-cb_guioptions(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+cb_guioptions(GiraraSettingsManager* manager, const char* name, void* value, void* data)
 {
-  g_return_if_fail(session != NULL && value != NULL);
+  if (g_strcmp0(name, "guioptions") != 0) {
+    return;
+  }
 
-  /* set default values */
+  girara_session_t* session = data;
+  g_return_if_fail(session != NULL && manager != NULL && value != NULL);
+
+    /* set default values */
   bool show_commandline = false;
   bool show_statusbar   = false;
 
   /* evaluate input */
-  char* input      = (char*) value;
-  int input_length = strlen(input);
-
-  for (int i = 0; i < input_length; i++) {
+  const char* input = value;
+  const size_t input_length = strlen(input);
+  for (size_t i = 0; i < input_length; i++) {
     switch (input[i]) {
       /* command line */
       case 'c':
@@ -126,38 +137,44 @@ girara_config_load_default(girara_session_t* session)
   /* other values */
   session->global.autohide_inputbar = true;
 
+  /* signals from settings manager */
+  GiraraSettingsManager* manager = session->settings;
+  g_signal_connect(manager, "value-changed", G_CALLBACK(cb_guioptions), session);
+  g_signal_connect(manager, "value-changed", G_CALLBACK(cb_font), session);
+  g_signal_connect(manager, "value-changed", G_CALLBACK(cb_window_icon), session);
+
   /* settings */
-  girara_setting_add(session, "font",                     "monospace normal 9", STRING,  FALSE, _("Font"), cb_font, NULL);
-  girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING,  TRUE,  _("Default foreground color"), NULL, NULL);
-  girara_setting_add(session, "default-bg",               "#000000",            STRING,  TRUE,  _("Default background color"), NULL, NULL);
-  girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING,  TRUE,  _("Inputbar foreground color"), NULL, NULL);
-  girara_setting_add(session, "inputbar-bg",              "#131313",            STRING,  TRUE,  _("Inputbar background color"), NULL, NULL);
-  girara_setting_add(session, "statusbar-fg",             "#FFFFFF",            STRING,  TRUE,  _("Statusbar foreground color"), NULL, NULL);
-  girara_setting_add(session, "statusbar-bg",             "#000000",            STRING,  TRUE,  _("Statsubar background color"), NULL, NULL);
-  girara_setting_add(session, "completion-fg",            "#DDDDDD",            STRING,  TRUE,  _("Completion foreground color"), NULL, NULL);
-  girara_setting_add(session, "completion-bg",            "#232323",            STRING,  TRUE,  _("Completion background color"), NULL, NULL);
-  girara_setting_add(session, "completion-group-fg",      "#DEDEDE",            STRING,  TRUE,  _("Completion group foreground color"), NULL, NULL);
-  girara_setting_add(session, "completion-group-bg",      "#000000",            STRING,  TRUE,  _("Completion group background color"), NULL, NULL);
-  girara_setting_add(session, "completion-highlight-fg",  "#232323",            STRING,  TRUE,  _("Completion highlight foreground color"), NULL, NULL);
-  girara_setting_add(session, "completion-highlight-bg",  "#9FBC00",            STRING,  TRUE,  _("Completion highlight background color"), NULL, NULL);
-  girara_setting_add(session, "notification-error-fg",    "#FFFFFF",            STRING,  TRUE,  _("Error notification foreground color"), NULL, NULL);
-  girara_setting_add(session, "notification-error-bg",    "#FF1212",            STRING,  TRUE,  _("Error notification background color"), NULL, NULL);
-  girara_setting_add(session, "notification-warning-fg",  "#000000",            STRING,  TRUE,  _("Warning notification foreground color"), NULL, NULL);
-  girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  TRUE,  _("Warning notifaction background color"), NULL, NULL);
-  girara_setting_add(session, "notification-fg",          "#000000",            STRING,  TRUE,  _("Notification foreground color"), NULL, NULL);
-  girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  _("Notification background color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-fg",                "#939393",            STRING,  TRUE,  _("Tab bar foreground color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  _("Tab bar background color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  _("Tab bar foreground color (active)"), NULL, NULL);
-  girara_setting_add(session, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  _("Tab bar background color (active)"), NULL, NULL);
-  girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
-  girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
-  girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
-  girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"), NULL, NULL);
-  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  _("Show scrollbars"), NULL, NULL);
-  girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
-  girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
-  girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);
+  girara_settings_manager_add(manager, "font",                     "monospace normal 9", STRING,  FALSE, _("Font"));
+  girara_settings_manager_add(manager, "default-fg",               "#DDDDDD",            STRING,  TRUE,  _("Default foreground color"));
+  girara_settings_manager_add(manager, "default-bg",               "#000000",            STRING,  TRUE,  _("Default background color"));
+  girara_settings_manager_add(manager, "inputbar-fg",              "#9FBC00",            STRING,  TRUE,  _("Inputbar foreground color"));
+  girara_settings_manager_add(manager, "inputbar-bg",              "#131313",            STRING,  TRUE,  _("Inputbar background color"));
+  girara_settings_manager_add(manager, "statusbar-fg",             "#FFFFFF",            STRING,  TRUE,  _("Statusbar foreground color"));
+  girara_settings_manager_add(manager, "statusbar-bg",             "#000000",            STRING,  TRUE,  _("Statsubar background color"));
+  girara_settings_manager_add(manager, "completion-fg",            "#DDDDDD",            STRING,  TRUE,  _("Completion foreground color"));
+  girara_settings_manager_add(manager, "completion-bg",            "#232323",            STRING,  TRUE,  _("Completion background color"));
+  girara_settings_manager_add(manager, "completion-group-fg",      "#DEDEDE",            STRING,  TRUE,  _("Completion group foreground color"));
+  girara_settings_manager_add(manager, "completion-group-bg",      "#000000",            STRING,  TRUE,  _("Completion group background color"));
+  girara_settings_manager_add(manager, "completion-highlight-fg",  "#232323",            STRING,  TRUE,  _("Completion highlight foreground color"));
+  girara_settings_manager_add(manager, "completion-highlight-bg",  "#9FBC00",            STRING,  TRUE,  _("Completion highlight background color"));
+  girara_settings_manager_add(manager, "notification-error-fg",    "#FFFFFF",            STRING,  TRUE,  _("Error notification foreground color"));
+  girara_settings_manager_add(manager, "notification-error-bg",    "#FF1212",            STRING,  TRUE,  _("Error notification background color"));
+  girara_settings_manager_add(manager, "notification-warning-fg",  "#000000",            STRING,  TRUE,  _("Warning notification foreground color"));
+  girara_settings_manager_add(manager, "notification-warning-bg",  "#F3F000",            STRING,  TRUE,  _("Warning notifaction background color"));
+  girara_settings_manager_add(manager, "notification-fg",          "#000000",            STRING,  TRUE,  _("Notification foreground color"));
+  girara_settings_manager_add(manager, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  _("Notification background color"));
+  girara_settings_manager_add(manager, "tabbar-fg",                "#939393",            STRING,  TRUE,  _("Tab bar foreground color"));
+  girara_settings_manager_add(manager, "tabbar-bg",                "#000000",            STRING,  TRUE,  _("Tab bar background color"));
+  girara_settings_manager_add(manager, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  _("Tab bar foreground color (active)"));
+  girara_settings_manager_add(manager, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  _("Tab bar background color (active)"));
+  girara_settings_manager_add(manager, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL);
+  girara_settings_manager_add(manager, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"));
+  girara_settings_manager_add(manager, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"));
+  girara_settings_manager_add(manager, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"));
+  girara_settings_manager_add(manager, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  _("Show scrollbars"));
+  girara_settings_manager_add(manager, "window-icon",              "",                   STRING,  FALSE, _("Window icon"));
+  girara_settings_manager_add(manager, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"));
+  girara_settings_manager_add(manager, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"));
 
   /* shortcuts */
   girara_shortcut_add(session, 0,                GDK_KEY_Escape, NULL, girara_sc_abort,           normal_mode, 0, NULL);
