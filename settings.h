@@ -4,7 +4,6 @@
 #define GIRARA_SETTINGS_H
 
 #include "types.h"
-#include "macros.h"
 
 /**
  * Adds an additional entry in the settings list
@@ -44,5 +43,51 @@ bool girara_setting_set(girara_session_t* session, const char* name, void* value
  * @return true if the setting exists, false otherwise.
  */
 bool girara_setting_get(girara_session_t* session, const char* name, void* dest);
+
+/**
+ * Find a setting.
+ *
+ * @param session The girara session
+ * @param name name of the setting
+ * @return the setting or NULL if it doesn't exist
+ */
+girara_setting_t* girara_setting_find(girara_session_t* session, const char* name);
+
+/**
+ * Get the setting's name.
+ *
+ * @param setting The setting
+ * @return the setting's name
+ */
+const char* girara_setting_get_name(girara_setting_t* setting);
+
+/**
+ * Get the setting's value. If the setting is a string, the value stored
+ * in dest has to be deallocated with g_free.
+ *
+ * @param setting The setting
+ * @param dest A pointer to the destination of the result.
+ * @return true if the setting exists, false otherwise.
+ */
+bool girara_setting_get_value(girara_setting_t* setting, void* dest);
+
+/**
+ * Get the setting's value.
+ *
+ * @param setting The setting
+ * @return the value
+ */
+girara_setting_type_t girara_setting_get_type(girara_setting_t* setting);
+
+/**
+ * Set the setting's value. If session is NULL, the setting's callback won't be
+ * called.
+ *
+ * @param session The girara session
+ * @param setting The setting
+ * @param value The new value
+ */
+void girara_setting_set_value(girara_session_t* session,
+    girara_setting_t* setting, void* value);
 
 #endif

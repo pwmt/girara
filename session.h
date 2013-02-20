@@ -90,7 +90,7 @@ struct girara_session_s
   /**
    * List of settings
    */
-  GiraraSettingsManager* settings;
+  girara_list_t* settings;
 
   struct
   {

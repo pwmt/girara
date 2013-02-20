@@ -17,6 +17,12 @@
 #include "gtk2-compat.h"
 #endif
 
+static int
+cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
+{
+  return g_strcmp0(girara_setting_get_name(lhs), girara_setting_get_name(rhs));
+}
+
 girara_session_t*
 girara_session_create()
 {
@@ -40,7 +46,9 @@ girara_session_create()
   session->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
 
-  session->settings = GIRARA_SETTINGS_MANAGER(girara_settings_manager_new());
+  session->settings = girara_sorted_list_new2(
+      (girara_compare_function_t) cb_sort_settings,
+      (girara_free_function_t) girara_setting_free);
 
   /* init modes */
   session->modes.identifiers  = girara_list_new2(
@@ -153,7 +161,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       G_CALLBACK(girara_callback_view_scroll_event), session);
 
   bool tmp_bool_value = false;
-  girara_settings_manager_get(session->settings, "show-scrollbars", &tmp_bool_value);
+  girara_setting_get(session, "show-scrollbars", &tmp_bool_value);
   if (tmp_bool_value == true) {
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
         GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -384,7 +392,7 @@ girara_session_destroy(girara_session_t* session)
   session->bindings.mouse_events = NULL;
 
   /* clean up settings */
-  g_object_unref(session->settings);
+  girara_list_free(session->settings);
   session->settings = NULL;
 
   /* clean up statusbar items */

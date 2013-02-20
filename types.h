@@ -209,7 +209,4 @@ struct girara_event_s
   double y; /**< Y coordinates where the event occured */
 };
 
-typedef struct girara_settings_manager_s GiraraSettingsManager;
-typedef struct girara_settings_manager_class_s  GiraraSettingsManagerClass;
-
 #endif
