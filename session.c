@@ -23,11 +23,21 @@ cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
   return g_strcmp0(girara_setting_get_name(lhs), girara_setting_get_name(rhs));
 }
 
+static void
+ensure_gettext_initialized(void)
+{
+  static gsize initialized = 0;
+  if (g_once_init_enter(&initialized) == TRUE) {
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    g_once_init_leave(&initialized, 1);
+  }
+}
+
 girara_session_t*
 girara_session_create()
 {
-  bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-  bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+  ensure_gettext_initialized();
 
   girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
 
