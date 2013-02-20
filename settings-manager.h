@@ -37,7 +37,7 @@ GType girara_settings_manager_get_type(void);
  * Create new session manager object.
  * @returns a session manager object
  */
-GObject* girara_settings_manager_new(void);
+GiraraSettingsManager* girara_settings_manager_new(void);
 
 /**
  * Adds an additional setting

@@ -111,10 +111,10 @@ girara_settings_manager_finalize(GObject* object)
   G_OBJECT_CLASS(girara_settings_manager_parent_class)->finalize(object);
 }
 
-GObject*
+GiraraSettingsManager*
 girara_settings_manager_new(void)
 {
-  return g_object_new(GIRARA_TYPE_SETTINGS_MANAGER, 0);
+  return GIRARA_SETTINGS_MANAGER(g_object_new(GIRARA_TYPE_SETTINGS_MANAGER, 0));
 }
 
 bool

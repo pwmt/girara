@@ -32,9 +32,9 @@
 
 #ifndef GIRARA_DEPRECATED
 # if defined(__GNUC__)
-#  define GIRARA_DEPRECATED(x) x __attribute__((deprecated))
+#  define GIRARA_DEPRECATED __attribute__((deprecated))
 # else
-#  define GIRARA_DEPRECATED(x) x
+#  define GIRARA_DEPRECATED
 # endif
 #endif
 

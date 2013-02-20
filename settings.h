@@ -22,7 +22,7 @@
  */
 bool girara_setting_add(girara_session_t* session, const char* name,
     void* value, girara_setting_type_t type, bool init_only,
-    const char* description, girara_setting_callback_t callback, void* data);
+    const char* description, girara_setting_callback_t callback, void* data) GIRARA_DEPRECATED;
 
 /**
  * Sets the value of a setting
@@ -33,7 +33,7 @@ bool girara_setting_add(girara_session_t* session, const char* name,
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
-bool girara_setting_set(girara_session_t* session, const char* name, void* value);
+bool girara_setting_set(girara_session_t* session, const char* name, void* value) GIRARA_DEPRECATED;
 
 /**
  * Retreive the value of a setting. If the setting is a string, the value stored
@@ -43,6 +43,6 @@ bool girara_setting_set(girara_session_t* session, const char* name, void* value
  * @param dest A pointer to the destination of the result.
  * @return true if the setting exists, false otherwise.
  */
-bool girara_setting_get(girara_session_t* session, const char* name, void* dest);
+bool girara_setting_get(girara_session_t* session, const char* name, void* dest) GIRARA_DEPRECATED;
 
 #endif

@@ -4,7 +4,7 @@
 #include <glib/gi18n-lib.h>
 
 #include "session.h"
-#include "settings.h"
+#include "settings-manager.h"
 #include "datastructures.h"
 #include "internal.h"
 #include "commands.h"
@@ -40,7 +40,7 @@ girara_session_create()
   session->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
 
-  session->settings = GIRARA_SETTINGS_MANAGER(girara_settings_manager_new());
+  session->settings = girara_settings_manager_new();
 
   /* init modes */
   session->modes.identifiers  = girara_list_new2(
@@ -263,7 +263,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   for (unsigned i = 0; i < LENGTH(color_setting_mappings); i++) {
     char* tmp_value = NULL;
-    girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
+    girara_settings_manager_get(session->settings, color_setting_mappings[i].identifier, &tmp_value);
     if (tmp_value != NULL) {
       gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
       g_free(tmp_value);
@@ -312,7 +312,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   if (session->style.font == NULL) {
     /* set default font */
-    girara_setting_set(session, "font", "monospace normal 9");
+    girara_settings_manager_set(session->settings, "font", "monospace normal 9");
   } else {
     gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_entry),    session->style.font);
     gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_dialog),   session->style.font);
@@ -322,8 +322,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   /* set window size */
   int window_width = 0;
   int window_height = 0;
-  girara_setting_get(session, "window-width", &window_width);
-  girara_setting_get(session, "window-height", &window_height);
+  girara_settings_manager_get(session->settings, "window-width", &window_width);
+  girara_settings_manager_get(session->settings, "window-height", &window_height);
 
   if (window_width > 0&& window_height > 0) {
     gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), window_width, window_height);
@@ -342,10 +342,10 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   }
 
   char* window_icon = NULL;
-  girara_setting_get(session, "window-icon", &window_icon);
+  girara_settings_manager_get(session->settings, "window-icon", &window_icon);
   if (window_icon != NULL) {
     if (strlen(window_icon) != 0) {
-      girara_setting_set(session, "window-icon", window_icon);
+      girara_settings_manager_set(session->settings, "window-icon", window_icon);
     }
     g_free(window_icon);
   }
