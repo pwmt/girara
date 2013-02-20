@@ -9,7 +9,7 @@
 #include "session.h"
 #include "internal.h"
 #include "utils.h"
-#include "settings-manager.h"
+#include "settings.h"
 #include "shortcuts.h"
 
 #if GTK_MAJOR_VERSION == 2
