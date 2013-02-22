@@ -12,6 +12,7 @@
 #include "shortcuts.h"
 #include "config.h"
 #include "utils.h"
+#include "input-history.h"
 
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
@@ -78,8 +79,7 @@ girara_session_create()
       (girara_free_function_t) girara_argument_mapping_free);
 
   /* command history */
-  session->global.command_history = girara_list_new2(
-      (girara_free_function_t) g_free);
+  session->global.command_history = girara_input_history_new();
 
   /* load default values */
   girara_config_load_default(session);
@@ -379,7 +379,9 @@ girara_session_destroy(girara_session_t* session)
   g_return_val_if_fail(session != NULL, FALSE);
 
   /* clean up style */
-  pango_font_description_free(session->style.font);
+  if (session->style.font) {
+    pango_font_description_free(session->style.font);
+  }
 
   /* clean up shortcuts */
   girara_list_free(session->bindings.shortcuts);
@@ -404,6 +406,10 @@ girara_session_destroy(girara_session_t* session)
   /* clean up settings */
   girara_list_free(session->settings);
   session->settings = NULL;
+
+  /* clean up input histry */
+  g_object_unref(session->global.command_history);
+  session->global.command_history = NULL;
 
   /* clean up statusbar items */
   girara_list_free(session->elements.statusbar_items);
@@ -436,10 +442,6 @@ girara_session_destroy(girara_session_t* session)
 
   session->buffer.command = NULL;
   session->global.buffer  = NULL;
-
-  /* clean up command history */
-  girara_list_free(session->global.command_history);
-  session->global.command_history = NULL;
 
   /* clean up session */
   g_slice_free(girara_session_t, session);
@@ -621,6 +623,5 @@ girara_list_t*
 girara_get_command_history(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
-
   return session->global.command_history;
 }

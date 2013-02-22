@@ -117,10 +117,9 @@ struct girara_session_s
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
-    girara_list_t* command_history; /**< Command history */
+    GiraraInputHistory* command_history; /**< Command history */
     bool autohide_inputbar; /**< Auto-hide inputbar */
     bool hide_statusbar; /**< Hide statusbar */
-    bool history_show_most_recent; /**< Show history starting from the most recent command */
   } global;
 
   struct
@@ -250,6 +249,7 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  * @return false if an error occured
  */
 bool girara_set_window_title(girara_session_t* session, const char* name);
+
 
 /**
  * Returns the command history

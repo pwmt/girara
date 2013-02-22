@@ -6,6 +6,7 @@
 #include "session.h"
 #include "settings.h"
 #include "tabs.h"
+#include "input-history.h"
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -168,7 +169,7 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   }
 
   /* Begin from the last command when navigating through history */
-  session->global.history_show_most_recent = true;
+  girara_input_history_reset(session->global.command_history);
 
   /* reset custom functions */
   session->signals.inputbar_custom_activate        = NULL;
@@ -260,72 +261,19 @@ bool
 girara_isc_command_history(girara_session_t* session, girara_argument_t*
     argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
-  g_return_val_if_fail(session                         != NULL, false);
-  g_return_val_if_fail(session->global.command_history != NULL, false);
+  g_return_val_if_fail(session != NULL, false);
 
-  static ssize_t current = 0;
-  static ssize_t current_match = 0;
-  size_t length = girara_list_size(session->global.command_history);
-  size_t i = 0;
-
-  char* command = NULL;
   char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, 1);
-  char prefix = *temp;
+  const char* command = argument->n == GIRARA_NEXT ?
+    girara_input_history_next(session->global.command_history, temp) :
+    girara_input_history_previous(session->global.command_history, temp);
   g_free(temp);
 
-  if (length == 0) {
-    return false;
+  if (command != NULL) {
+    gtk_entry_set_text(session->gtk.inputbar_entry, command);
+    gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
   }
-
-  if (session->global.history_show_most_recent == true) {
-    current = length;
-    current_match = current;
-  }
-
-  while (i < length) {
-    if (session->global.history_show_most_recent == true || argument->n == GIRARA_PREVIOUS) {
-      if (current - 1 < 0) {
-        session->global.history_show_most_recent = false;
-        current = current_match;
-        return true;
-      } else {
-        --current;
-      }
-    }
-    else if (argument->n == GIRARA_NEXT) {
-      if (current + 1 == length) {
-        current = current_match;
-        return true;
-      } else {
-        ++current;
-      }
-    } else {
-      return false;
-    }
-
-    command = girara_list_nth(session->global.command_history, current);
-    if (command == NULL) {
-      return false;
-    }
-
-    if (command[0] == prefix) {
-      if (session->global.history_show_most_recent == true) {
-        session->global.history_show_most_recent = false;
-      }
-      current_match = current;
-      break;
-    }
-
-    ++i;
-  }
-
-  if (i == length) {
-    return true;
-  }
-
-  gtk_entry_set_text(session->gtk.inputbar_entry, command);
-  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
-  gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
 
   return true;
 }
