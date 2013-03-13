@@ -80,14 +80,18 @@ ih_append(GiraraInputHistory* history, const char* input)
     return;
   }
 
-  girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
-  GIRARA_LIST_FOREACH(priv->history, char*, iter, data)
-    if (g_strcmp0(input, data) == 0) {
-        girara_list_remove(priv->history, data);
-    }
-  GIRARA_LIST_FOREACH_END(priv->history, char*, iter, data);
+  girara_list_t* list = girara_input_history_list(history);
+  if (list == NULL) {
+    return;
+  }
 
-  girara_list_append(priv->history, g_strdup(input));
+  GIRARA_LIST_FOREACH(list, char*, iter, data)
+    if (g_strcmp0(input, data) == 0) {
+        girara_list_remove(list, data);
+    }
+  GIRARA_LIST_FOREACH_END(list, char*, iter, data);
+
+  girara_list_append(list, g_strdup(input));
 
   /* begin from the last command when navigating through history */
   girara_input_history_reset(history);
@@ -104,7 +108,13 @@ static const char*
 find_next(GiraraInputHistory* history, const char* current_input, bool next)
 {
   girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
-  size_t length = girara_list_size(priv->history);
+
+  girara_list_t* list = girara_input_history_list(history);
+  if (list == NULL) {
+    return NULL;
+  }
+
+  size_t length = girara_list_size(list);
   if (length == 0) {
     return NULL;
   }
@@ -137,7 +147,7 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
       return NULL;
     }
 
-    command = girara_list_nth(priv->history, priv->current);
+    command = girara_list_nth(list, priv->current);
     if (command == NULL) {
       return NULL;
     }
@@ -213,4 +223,3 @@ girara_input_history_reset(GiraraInputHistory* history)
   g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
   GIRARA_INPUT_HISTORY_GET_CLASS(history)->reset(history);
 }
-

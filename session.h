@@ -250,7 +250,6 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  */
 bool girara_set_window_title(girara_session_t* session, const char* name);
 
-
 /**
  * Returns the command history
  *
