@@ -20,11 +20,14 @@ typedef struct girara_input_history_private_s {
                                 girara_input_history_private_t))
 
 /* Methods */
-static void girara_input_history_finalize(GObject* object);
+static void ih_finalize(GObject* object);
+static void ih_append(GiraraInputHistory* history, const char* input);
+static girara_list_t* ih_list(GiraraInputHistory* history);
+static const char* ih_next(GiraraInputHistory* history, const char* current_input);
+static const char* ih_previous(GiraraInputHistory* history, const char* current_input);
+static void ih_reset(GiraraInputHistory* history);
 
-/**
- * Class init
- */
+/* Class init */
 static void
 girara_input_history_class_init(GiraraInputHistoryClass* class)
 {
@@ -33,12 +36,16 @@ girara_input_history_class_init(GiraraInputHistoryClass* class)
 
   /* overwrite methods */
   GObjectClass* object_class = G_OBJECT_CLASS(class);
-  object_class->finalize     = girara_input_history_finalize;
+  object_class->finalize     = ih_finalize;
+
+  class->append = ih_append;
+  class->list = ih_list;
+  class->next = ih_next;
+  class->previous = ih_previous;
+  class->reset = ih_reset;
 }
 
-/**
- * Object init
- */
+/* Object init */
 static void
 girara_input_history_init(GiraraInputHistory* history)
 {
@@ -47,11 +54,9 @@ girara_input_history_init(GiraraInputHistory* history)
   priv->reset = true;
 }
 
-/**
- * Object finalize
- */
+/* Object finalize */
 static void
-girara_input_history_finalize(GObject* object)
+ih_finalize(GObject* object)
 {
   girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
   girara_list_free(priv->history);
@@ -59,22 +64,23 @@ girara_input_history_finalize(GObject* object)
   G_OBJECT_CLASS(girara_input_history_parent_class)->finalize(object);
 }
 
+/*Object new */
 GiraraInputHistory*
 girara_input_history_new(void)
 {
   return GIRARA_INPUT_HISTORY(g_object_new(GIRARA_TYPE_INPUT_HISTORY, 0));
 }
 
-void
-girara_input_history_append(GiraraInputHistory* history, const char* input)
-{
-  g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
-  girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+/* Method implementions */
 
+static void
+ih_append(GiraraInputHistory* history, const char* input)
+{
   if (input == NULL) {
     return;
   }
 
+  girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
   GIRARA_LIST_FOREACH(priv->history, char*, iter, data)
     if (g_strcmp0(input, data) == 0) {
         girara_list_remove(priv->history, data);
@@ -84,14 +90,20 @@ girara_input_history_append(GiraraInputHistory* history, const char* input)
   girara_list_append(priv->history, g_strdup(input));
 
   /* begin from the last command when navigating through history */
-  priv->reset = true;
+  girara_input_history_reset(history);
+}
+
+static girara_list_t*
+ih_list(GiraraInputHistory* history)
+{
+  girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+  return priv->history;
 }
 
 static const char*
 find_next(GiraraInputHistory* history, const char* current_input, bool next)
 {
   girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
-
   size_t length = girara_list_size(priv->history);
   if (length == 0) {
     return NULL;
@@ -146,27 +158,59 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
   return command;
 }
 
-const char*
-girara_input_history_next(GiraraInputHistory* history,
-    const char* current_input)
+static const char*
+ih_next(GiraraInputHistory* history, const char* current_input)
 {
-  g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
   return find_next(history, current_input, true);
 }
 
-const char*
-girara_input_history_previous(GiraraInputHistory* history,
-    const char* current_input)
+static const char*
+ih_previous(GiraraInputHistory* history, const char* current_input)
+{
+  return find_next(history, current_input, false);
+}
+
+static void
+ih_reset(GiraraInputHistory* history)
+{
+  girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+  priv->reset = true;
+}
+
+/* Wrapper functions for the members */
+
+void
+girara_input_history_append(GiraraInputHistory* history, const char* input)
+{
+  g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
+  GIRARA_INPUT_HISTORY_GET_CLASS(history)->append(history, input);
+}
+
+girara_list_t*
+girara_input_history_list(GiraraInputHistory* history)
 {
   g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
-  return find_next(history, current_input, false);
+  return GIRARA_INPUT_HISTORY_GET_CLASS(history)->list(history);
+}
+
+const char*
+girara_input_history_next(GiraraInputHistory* history, const char* current_input)
+{
+  g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
+  return GIRARA_INPUT_HISTORY_GET_CLASS(history)->next(history, current_input);
+}
+
+const char*
+girara_input_history_previous(GiraraInputHistory* history, const char* current_input)
+{
+  g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
+  return GIRARA_INPUT_HISTORY_GET_CLASS(history)->previous(history, current_input);
 }
 
 void
 girara_input_history_reset(GiraraInputHistory* history)
 {
   g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
-  girara_input_history_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
-  priv->reset = true;
+  GIRARA_INPUT_HISTORY_GET_CLASS(history)->reset(history);
 }
 

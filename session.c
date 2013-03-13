@@ -623,5 +623,5 @@ girara_list_t*
 girara_get_command_history(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
-  return session->global.command_history;
+  return girara_input_history_list(session->global.command_history);
 }

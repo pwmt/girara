@@ -12,6 +12,50 @@ struct girara_input_history_s {
 
 struct girara_input_history_class_s {
   GObjectClass parent_class;
+
+  /* methods */
+
+  /**
+   * Append a new line of input.
+   *
+   * @param history an input history instance
+   * @param input the input
+  */
+  void (*append)(GiraraInputHistory* history, const char* input);
+
+  /**
+   * Get a list of all the inputs stored.
+   *
+   * @param history an input history instance
+   * @returns a list containing all inputs
+   */
+  girara_list_t* (*list)(GiraraInputHistory* history);
+
+  /**
+   * Get the "next" input from the history
+   *
+   * @param history an input history instance
+   * @param current_input input used to find the "next" input
+   * @returns "next" input
+   */
+  const char* (*next)(GiraraInputHistory* history, const char* current_input);
+
+  /**
+   * Get the "previous" input from the history
+   *
+   * @param history an input history instance
+   * @param current_input input used to find the "next" input
+   * @returns "previous" input
+   */
+  const char* (*previous)(GiraraInputHistory* history, const char* current_input);
+
+  /**
+   * Reset state of the input history, i.e reset any information used to
+   * determine the next input.
+   *
+   * @param history an input history instance
+   */
+  void (*reset)(GiraraInputHistory* history);
 };
 
 #define GIRARA_TYPE_INPUT_HISTORY \
@@ -24,7 +68,7 @@ struct girara_input_history_class_s {
   (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GIRARA_TYPE_INPUT_HISTORY))
 #define GIRARA_IS_INPUT_HISTORY_CLASS(obj) \
   (G_TYPE_CHECK_CLASS_TYPE ((obj), GIRARA_TYPE_INPUT_HISTORY))
-#define GIRARA_INPUT_HISTORY_GET_CLASS \
+#define GIRARA_INPUT_HISTORY_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), GIRARA_TYPE_INPUT_HISTORY, GiraraInputHistoryClass))
 
 /**
@@ -75,5 +119,13 @@ const char* girara_input_history_previous(GiraraInputHistory* history,
  * @param history an input history instance
  */
 void girara_input_history_reset(GiraraInputHistory* history);
+
+/**
+ * Get a list of all the inputs stored.
+ *
+ * @param history an input history instance
+ * @returns a list containing all inputs
+ */
+girara_list_t* girara_input_history_list(GiraraInputHistory* history);
 
 #endif
