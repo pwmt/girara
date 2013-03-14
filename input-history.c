@@ -110,6 +110,7 @@ ih_set_property(GObject* object, guint prop_id, const GValue* value,
       } else {
         priv->io = NULL;
       }
+      girara_input_history_reset(GIRARA_INPUT_HISTORY(object));
       break;
     }
     default:
@@ -270,9 +271,9 @@ ih_reset(GiraraInputHistory* history)
 
     girara_list_t* newlist = girara_input_history_io_read(priv->io);
     if (newlist != NULL) {
-      GIRARA_LIST_FOREACH(list, const char*, iter, data)
-        girara_list_append(newlist, g_strdup(data));
-      GIRARA_LIST_FOREACH_END(list, const char*, iter, data);
+      GIRARA_LIST_FOREACH(newlist, const char*, iter, data)
+        girara_list_append(list, g_strdup(data));
+      GIRARA_LIST_FOREACH_END(newlist, const char*, iter, data);
       girara_list_free(newlist);
     }
   }
