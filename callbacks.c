@@ -4,6 +4,7 @@
 #include "datastructures.h"
 #include "session.h"
 #include "shortcuts.h"
+#include "input-history.h"
 #include <string.h>
 #include <glib/gi18n-lib.h>
 

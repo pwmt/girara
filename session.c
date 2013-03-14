@@ -79,7 +79,7 @@ girara_session_create()
       (girara_free_function_t) girara_argument_mapping_free);
 
   /* command history */
-  session->global.command_history = girara_input_history_new();
+  session->global.command_history = girara_input_history_new(NULL);
 
   /* load default values */
   girara_config_load_default(session);

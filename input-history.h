@@ -6,6 +6,44 @@
 #include <glib-object.h>
 #include "types.h"
 
+struct girara_input_history_io_interface_s {
+  GTypeInterface parent_iface;
+
+  /* interface methords */
+
+  /**
+   * Write a line of input to the input history storage.
+   *
+   * @param io a GiraraInputHistoryIO object
+   * @param input the input
+   */
+  void (*append)(GiraraInputHistoryIO* io, const char* input);
+
+  /**
+   * Read all items from the input history storage.
+   *
+   * @param io a GiraraInputHistoryIO object
+   * @returns a list of inputs
+   */
+  girara_list_t* (*read)(GiraraInputHistoryIO* io);
+};
+
+#define GIRARA_TYPE_INPUT_HISTORY_IO \
+  (girara_input_history_io_get_type())
+#define GIRARA_INPUT_HISTORY_IO(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), GIRARA_TYPE_INPUT_HISTORY_IO, GiraraInputHistoryIO))
+#define GIRARA_IS_INPUT_HISTORY_IO(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), GIRARA_TYPE_INPUT_HISTORY_IO))
+#define GIRARA_INPUT_HISTORY_IO_GET_INTERFACE(obj) \
+  (G_TYPE_INSTANCE_GET_INTERFACE((obj), GIRARA_TYPE_INPUT_HISTORY_IO, GiraraInputHistoryIOInterface))
+
+GType girara_input_history_io_get_type(void);
+
+void girara_input_history_io_append(GiraraInputHistoryIO* io, const char* input);
+
+girara_list_t* girara_input_history_io_read(GiraraInputHistoryIO* io);
+
+
 struct girara_input_history_s {
   GObject parent;
 };
@@ -16,7 +54,8 @@ struct girara_input_history_class_s {
   /* methods */
 
   /**
-   * Append a new line of input.
+   * Append a new line of input. If the io property is set, the input will
+   * be passed on to @ref girara_input_history_io_append.
    *
    * @param history an input history instance
    * @param input the input
@@ -51,7 +90,8 @@ struct girara_input_history_class_s {
 
   /**
    * Reset state of the input history, i.e reset any information used to
-   * determine the next input.
+   * determine the next input. If the io property is set, the history will be
+   * re-read with @ref girara_input_history_io_read.
    *
    * @param history an input history instance
    */
@@ -81,9 +121,10 @@ GType girara_input_history_get_type(void);
 /**
  * Create new input history object.
  *
+ * @param io a GiraraInputHistoryIO instance, may be NULL
  * @returns an input history object
  */
-GiraraInputHistory* girara_input_history_new(void);
+GiraraInputHistory* girara_input_history_new(GiraraInputHistoryIO* io);
 
 /**
  * Append a new line of input.
