@@ -530,8 +530,9 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 
   if (keyval == GDK_KEY_BackSpace) {
     gchar *input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
-    if (strlen(input) == 0)
+    if (strlen(input) == 0) {
       girara_isc_abort(session, NULL, NULL, 0);
+    }
     g_free(input);
   }
 
