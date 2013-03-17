@@ -528,14 +528,6 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
     return false;
   }
 
-  if (keyval == GDK_KEY_BackSpace) {
-    gchar *input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
-    if (strlen(input) == 0) {
-      girara_isc_abort(session, NULL, NULL, 0);
-    }
-    g_free(input);
-  }
-
   if (custom_ret == false) {
     GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
       if (inputbar_shortcut->key == keyval
