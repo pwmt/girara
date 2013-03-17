@@ -401,7 +401,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 
   /* append to command history */
   const char* command = gtk_entry_get_text(entry);
-  girara_input_history_append(session->global.command_history, command);
+  girara_input_history_append(session->command_history, command);
 
   /* parse input */
   gchar** argv = NULL;

@@ -169,7 +169,7 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   }
 
   /* Begin from the last command when navigating through history */
-  girara_input_history_reset(session->global.command_history);
+  girara_input_history_reset(session->command_history);
 
   /* reset custom functions */
   session->signals.inputbar_custom_activate        = NULL;
@@ -265,8 +265,8 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
 
   char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, 1);
   const char* command = argument->n == GIRARA_NEXT ?
-    girara_input_history_next(session->global.command_history, temp) :
-    girara_input_history_previous(session->global.command_history, temp);
+    girara_input_history_next(session->command_history, temp) :
+    girara_input_history_previous(session->command_history, temp);
   g_free(temp);
 
   if (command != NULL) {
