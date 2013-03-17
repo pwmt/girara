@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-01-13 15:07+0100\n"
+"POT-Creation-Date: 2013-03-17 15:20+0000\n"
 "PO-Revision-Date: 2012-04-03 19:27+0000\n"
 "Last-Translator: femnad <femnad@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
@@ -19,221 +19,213 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 
 #. unhandled command
-#: ../callbacks.c:499
+#: ../callbacks.c:506
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Geçerli bir kısayol fonksiyonu değil: %s"
 
-#: ../commands.c:110
-msgid "Usage: unmap <binding>"
-msgstr "Kullanım: unmap <tuş kombinasyonu>"
-
-#: ../commands.c:112
-msgid "Usage: map <binding> <function>"
-msgstr "Kullanım: map <tuş kombinasyonu> <fonksiyon>"
-
-#: ../commands.c:147
-#, c-format
-msgid "Unregistered mode specified: %s"
-msgstr "Kayıtlı olmayan mod belirtildi: %s"
-
-#: ../commands.c:158 ../commands.c:321
+#: ../commands.c:112 ../commands.c:312
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr ""
 "Yanlış sayıda argüman geçildi: %zu adet argüman geçildi, oysa en az %u adet "
 "argüman olması gerekiyor"
 
-#: ../commands.c:187
+#: ../commands.c:146
+#, c-format
+msgid "Unregistered mode specified: %s"
+msgstr "Kayıtlı olmayan mod belirtildi: %s"
+
+#: ../commands.c:178
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "%s içinde geçersiz dönüştürücü"
 
-#: ../commands.c:226
+#: ../commands.c:217
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "%s için geçersiz özel tuş"
 
-#: ../commands.c:262
+#: ../commands.c:253
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "%s için geçersiz tuş özel veya mod"
 
-#: ../commands.c:343
+#: ../commands.c:334
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Geçerli bir kısayol fonksiyonu değil: %s"
 
-#: ../commands.c:431
+#: ../commands.c:422
 msgid "Not enough arguments."
 msgstr "Yeterince argüman geçilmedi."
 
-#: ../commands.c:436
+#: ../commands.c:427
 msgid "Too many arguments."
 msgstr "Gereğinden fazla argüman."
 
-#: ../commands.c:449
+#: ../commands.c:440
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Bilinmeyen seçenek: %s"
 
-#: ../commands.c:463
+#: ../commands.c:454
 msgid "true"
 msgstr "doğru"
 
-#: ../commands.c:463
+#: ../commands.c:454
 msgid "false"
 msgstr "yanlış"
 
-#: ../commands.c:495
+#: ../commands.c:486
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Seçenek için değer belirtilmedi: %s"
 
-#: ../commands.c:510
+#: ../commands.c:501
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Seçenek için bilinmeyen değer: %s"
 
 #. settings
-#: ../config.c:124
+#: ../config.c:145
 msgid "Font"
 msgstr "Yazı tipi"
 
-#: ../config.c:125
+#: ../config.c:146
 msgid "Default foreground color"
 msgstr "Varsayılan yazı tipi rengi"
 
-#: ../config.c:126
+#: ../config.c:147
 msgid "Default background color"
 msgstr "Varsayılan arka plan rengi"
 
-#: ../config.c:127
+#: ../config.c:148
 msgid "Inputbar foreground color"
 msgstr "Giriş çubuğu yazı tipi rengi"
 
-#: ../config.c:128
+#: ../config.c:149
 msgid "Inputbar background color"
 msgstr "Giriş çubuğu arka plan rengi"
 
-#: ../config.c:129
+#: ../config.c:150
 msgid "Statusbar foreground color"
 msgstr "Durum çubuğu yazı tipi rengi"
 
-#: ../config.c:130
+#: ../config.c:151
 msgid "Statsubar background color"
 msgstr "Durum çubuğu arka plan rengi"
 
-#: ../config.c:131
+#: ../config.c:152
 msgid "Completion foreground color"
 msgstr "Tamamlama yazı tipi rengi"
 
-#: ../config.c:132
+#: ../config.c:153
 msgid "Completion background color"
 msgstr "Tamamlama arka plan rengi"
 
-#: ../config.c:133
+#: ../config.c:154
 msgid "Completion group foreground color"
 msgstr "Tamamlama grubu yazı tipi rengi"
 
-#: ../config.c:134
+#: ../config.c:155
 msgid "Completion group background color"
 msgstr "Tamamlama grubu arka plan rengi"
 
-#: ../config.c:135
+#: ../config.c:156
 msgid "Completion highlight foreground color"
 msgstr "Tamamlama vurgulama yazı tipi rengi"
 
-#: ../config.c:136
+#: ../config.c:157
 msgid "Completion highlight background color"
 msgstr "Tamamlama vurgulama arka plan rengi"
 
-#: ../config.c:137
+#: ../config.c:158
 msgid "Error notification foreground color"
 msgstr "Hata bildirimi yazı tipi rengi"
 
-#: ../config.c:138
+#: ../config.c:159
 msgid "Error notification background color"
 msgstr "Hata bildirimi arka plan rengi"
 
-#: ../config.c:139
+#: ../config.c:160
 msgid "Warning notification foreground color"
 msgstr "Uyarı bildirimi yazı tipi rengi"
 
-#: ../config.c:140
+#: ../config.c:161
 msgid "Warning notifaction background color"
 msgstr "Uyarı bildirimi arka plan rengi"
 
-#: ../config.c:141
+#: ../config.c:162
 msgid "Notification foreground color"
 msgstr "Bildirim yazı tipi rengi"
 
-#: ../config.c:142
+#: ../config.c:163
 msgid "Notification background color"
 msgstr "Bildirim arka plan rengi"
 
-#: ../config.c:143
+#: ../config.c:164
 msgid "Tab bar foreground color"
 msgstr "Sekme çubuğu yazı tipi rengi"
 
-#: ../config.c:144
+#: ../config.c:165
 msgid "Tab bar background color"
 msgstr "Sekme çubuğu arka plan rengi"
 
-#: ../config.c:145
+#: ../config.c:166
 msgid "Tab bar foreground color (active)"
 msgstr "Seçme çubuğu yazı tipi rengi (etkin)"
 
-#: ../config.c:146
+#: ../config.c:167
 msgid "Tab bar background color (active)"
 msgstr "Sekme çubuğu arka plan rengi (etkin)"
 
-#: ../config.c:148
+#: ../config.c:169
 msgid "Initial window width"
 msgstr "Başlangıçtaki pencere genişliği"
 
-#: ../config.c:149
+#: ../config.c:170
 msgid "Initial window height"
 msgstr "Başlangıçtaki pencere yüksekliği"
 
-#: ../config.c:150
+#: ../config.c:171
 msgid "Number of completion items"
 msgstr "Tamamlama öğelerinin sayısı"
 
-#: ../config.c:151
+#: ../config.c:172
 msgid "Show scrollbars"
 msgstr "Kaydırma çubuklarını göster"
 
-#: ../config.c:152
+#: ../config.c:173
 msgid "Window icon"
 msgstr "Pencere ikonu"
 
-#: ../config.c:153
+#: ../config.c:174
 msgid "Command to execute in :exec"
 msgstr ":exec için yürütülecek komut"
 
-#: ../config.c:154
+#: ../config.c:175
 msgid "Show or hide certain GUI elements"
 msgstr ""
 
 #. commands
-#: ../config.c:186
+#: ../config.c:209
 msgid "Execute a command"
 msgstr "Komut yürüt"
 
-#: ../config.c:187
+#: ../config.c:210
 msgid "Map a key sequence"
 msgstr "Tuş kombinasyonu eşleştir"
 
-#: ../config.c:188
+#: ../config.c:211
 msgid "Quit the program"
 msgstr "Programdan çık"
 
-#: ../config.c:189
+#: ../config.c:212
 msgid "Set an option"
 msgstr "Seçenekleri değiştir"
 
-#: ../config.c:190
+#: ../config.c:213
 msgid "Unmap a key sequence"
 msgstr "Tuş kombinasyonu eşleşimini kaldır"
 
@@ -241,3 +233,9 @@ msgstr "Tuş kombinasyonu eşleşimini kaldır"
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Komut yürütülemedi: %s"
+
+#~ msgid "Usage: unmap <binding>"
+#~ msgstr "Kullanım: unmap <tuş kombinasyonu>"
+
+#~ msgid "Usage: map <binding> <function>"
+#~ msgstr "Kullanım: map <tuş kombinasyonu> <fonksiyon>"
