@@ -229,7 +229,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), pos + 1);
       break;
     case GIRARA_PREVIOUS_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 0) ? 0 : pos - 1);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 1) ? 1 : pos - 1);
       break;
     case GIRARA_DELETE_CURR_CHAR:
       if (length == 1 && pos == 1 && (input[0] == ':' || input[0] == '/')){
