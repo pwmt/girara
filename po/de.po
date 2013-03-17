@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-03-17 15:20+0000\n"
-"PO-Revision-Date: 2012-08-05 14:14+0000\n"
+"PO-Revision-Date: 2013-03-17 22:03+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
 "de/)\n"
@@ -233,9 +233,3 @@ msgstr "Tastenfolge entbinden"
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Konnte Befehl nicht ausführen: %s"
-
-#~ msgid "Usage: unmap <binding>"
-#~ msgstr "Verwendung: unmap <schlüssel>"
-
-#~ msgid "Usage: map <binding> <function>"
-#~ msgstr "Verwendung: map <schlüssel> <funktion>"

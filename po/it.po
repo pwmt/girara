@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-03-17 15:20+0000\n"
-"PO-Revision-Date: 2012-04-17 19:55+0000\n"
+"PO-Revision-Date: 2013-03-17 22:04+0100\n"
 "Last-Translator: TheLemonMan <segnalazionidalweb@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.net/projects/p/girara/language/"
 "it/)\n"
@@ -231,9 +231,3 @@ msgstr "Cancella mappatura di una sequenza di tasti"
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Impossibile eseguire:%s"
-
-#~ msgid "Usage: unmap <binding>"
-#~ msgstr "Uso: unmap <binding>"
-
-#~ msgid "Usage: map <binding> <function>"
-#~ msgstr "Uso: map <binding> <function>"

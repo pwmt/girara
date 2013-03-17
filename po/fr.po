@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-03-17 15:20+0000\n"
-"PO-Revision-Date: 2013-03-17 16:30+0100\n"
+"PO-Revision-Date: 2013-03-17 22:04+0100\n"
 "Last-Translator: Benoît Knecht <benoit.knecht@fsfe.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -231,9 +231,3 @@ msgstr "Désassocier une séquence de touches"
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Échec d'exécution de la commande : %s"
-
-#~ msgid "Usage: unmap <binding>"
-#~ msgstr "Usage: unmap <association>"
-
-#~ msgid "Usage: map <binding> <function>"
-#~ msgstr "Usage: map <association> <fonction>"

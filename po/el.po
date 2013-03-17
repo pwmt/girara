@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-03-17 15:20+0000\n"
-"PO-Revision-Date: 2012-08-14 19:09+0000\n"
+"PO-Revision-Date: 2013-03-17 22:03+0100\n"
 "Last-Translator: Nisok Kosin <nikos.efthimiou@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/girara/language/"
 "el/)\n"
@@ -232,9 +232,3 @@ msgstr "Απόχαρτογράφηση / unmap αλληλουχίας πλήκτ
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Αποτυχία στην εκτέλεση της εντολής: %s"
-
-#~ msgid "Usage: unmap <binding>"
-#~ msgstr "Χρήση: unmap <συντόμευση>"
-
-#~ msgid "Usage: map <binding> <function>"
-#~ msgstr "Χρήση: map <συντόμευση> <λειτουργία>"

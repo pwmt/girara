@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-03-17 15:20+0000\n"
-"PO-Revision-Date: 2012-04-03 19:27+0000\n"
+"PO-Revision-Date: 2013-03-17 22:04+0100\n"
 "Last-Translator: femnad <femnad@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
 "tr/)\n"
@@ -233,9 +233,3 @@ msgstr "Tuş kombinasyonu eşleşimini kaldır"
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Komut yürütülemedi: %s"
-
-#~ msgid "Usage: unmap <binding>"
-#~ msgstr "Kullanım: unmap <tuş kombinasyonu>"
-
-#~ msgid "Usage: map <binding> <function>"
-#~ msgstr "Kullanım: map <tuş kombinasyonu> <fonksiyon>"
