@@ -79,7 +79,8 @@ girara_session_create()
       (girara_free_function_t) girara_argument_mapping_free);
 
   /* command history */
-  session->global.command_history = girara_input_history_new(NULL);
+  session->command_history = girara_input_history_new(NULL);
+  session->global.command_history = girara_get_command_history(session);
 
   /* load default values */
   girara_config_load_default(session);
@@ -408,8 +409,8 @@ girara_session_destroy(girara_session_t* session)
   session->settings = NULL;
 
   /* clean up input histry */
-  g_object_unref(session->global.command_history);
-  session->global.command_history = NULL;
+  g_object_unref(session->command_history);
+  session->command_history = NULL;
 
   /* clean up statusbar items */
   girara_list_free(session->elements.statusbar_items);
@@ -623,5 +624,5 @@ girara_list_t*
 girara_get_command_history(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
-  return girara_input_history_list(session->global.command_history);
+  return girara_input_history_list(session->command_history);
 }
