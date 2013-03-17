@@ -3,13 +3,14 @@
 #
 # Translators:
 # Richard Gill <richard@houbathecat.fr>, 2012.
+# Benoît Knecht <benoit.knecht@fsfe.org>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-03-17 15:20+0000\n"
-"PO-Revision-Date: 2012-05-10 08:44+0000\n"
-"Last-Translator: Richard Gill <richard@houbathecat.fr>\n"
+"PO-Revision-Date: 2013-03-17 16:30+0100\n"
+"Last-Translator: Benoît Knecht <benoit.knecht@fsfe.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: ../callbacks.c:506
 #, c-format
 msgid "Not a valid command: %s"
-msgstr "La fonction suivante n'est pas valide : %s"
+msgstr "Pas une commande valide : %s"
 
 #: ../commands.c:112 ../commands.c:312
 #, c-format
@@ -41,12 +42,12 @@ msgstr "Modificateur invalide dans %s"
 #: ../commands.c:217
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr "Valeur de clé spéciale invalide pour %s"
+msgstr "Valeur de touche spéciale invalide pour %s"
 
 #: ../commands.c:253
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr "Valeur de clé spéciale ou mode %s invalide"
+msgstr "Valeur de touche spéciale ou mode %s invalide"
 
 #: ../commands.c:334
 #, c-format
@@ -191,7 +192,7 @@ msgstr "Nombre d'éléments de complétion"
 
 #: ../config.c:172
 msgid "Show scrollbars"
-msgstr "Afficher les ascenceurs"
+msgstr "Afficher les ascenseurs"
 
 #: ../config.c:173
 msgid "Window icon"
@@ -203,7 +204,7 @@ msgstr "Commande à exécuter dans :exec"
 
 #: ../config.c:175
 msgid "Show or hide certain GUI elements"
-msgstr "Afficher ou cacher certains éléments de l'interace"
+msgstr "Afficher ou cacher certains éléments de l'interface"
 
 #. commands
 #: ../config.c:209
@@ -212,7 +213,7 @@ msgstr "Exécuter une commande"
 
 #: ../config.c:210
 msgid "Map a key sequence"
-msgstr "Associer une séquence clé"
+msgstr "Associer une séquence de touches"
 
 #: ../config.c:211
 msgid "Quit the program"
@@ -224,12 +225,12 @@ msgstr "Placer une option"
 
 #: ../config.c:213
 msgid "Unmap a key sequence"
-msgstr "Désassocier une séquence clé"
+msgstr "Désassocier une séquence de touches"
 
 #: ../utils.c:515
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Echec d'exécution de la commande : %s"
+msgstr "Échec d'exécution de la commande : %s"
 
 #~ msgid "Usage: unmap <binding>"
 #~ msgstr "Usage: unmap <association>"
