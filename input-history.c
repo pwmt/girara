@@ -14,6 +14,7 @@ typedef struct ih_private_s {
   size_t current;
   size_t current_match;
   GiraraInputHistoryIO* io;
+  char* command_line;
 } ih_private_t;
 
 #define GIRARA_INPUT_HISTORY_GET_PRIVATE(obj) \
@@ -83,6 +84,7 @@ ih_finalize(GObject* object)
 {
   ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
   girara_list_free(priv->history);
+  g_free(priv->command_line);
 
   if (priv->io != NULL) {
     g_object_unref(priv->io);
@@ -200,8 +202,13 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
     priv->current_match = priv->current;
   }
 
+  /* Before moving into the history, save the current command-line. */
+  if (priv->current_match == length) {
+    g_free(priv->command_line);
+    priv->command_line = g_strdup(current_input);
+  }
+
   size_t i = 0;
-  const char prefix = *current_input;
   const char* command = NULL;
   while (i < length) {
     if (priv->reset == true || next == false) {
@@ -213,9 +220,11 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
         --priv->current;
       }
     } else if (next == true) {
-      if (priv->current + 1 == length) {
+      if (priv->current + 1 >= length) {
+        /* At the bottom of the history, return what the command-line was. */
+        priv->current_match = length;
         priv->current = priv->current_match;
-        return NULL;
+        return priv->command_line;
       } else {
         ++priv->current;
       }
@@ -228,7 +237,8 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
       return NULL;
     }
 
-    if (command[0] == prefix) {
+    /* Only match history items starting with what was on the command-line. */
+    if (g_str_has_prefix(command, priv->command_line)) {
       priv->reset = false;
       priv->current_match = priv->current;
       break;

@@ -263,7 +263,7 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
 {
   g_return_val_if_fail(session != NULL, false);
 
-  char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, 1);
+  char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
   const char* command = argument->n == GIRARA_NEXT ?
     girara_input_history_next(session->command_history, temp) :
     girara_input_history_previous(session->command_history, temp);
