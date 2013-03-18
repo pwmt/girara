@@ -196,8 +196,8 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       if (pos == 1 && (input[0] == ':' || input[0] == '/')) {
         break;
       }
-      if (!pos){
-	break;
+      if (pos == 0) {
+	      break;
       }
 
       i = pos - 1;
