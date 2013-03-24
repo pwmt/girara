@@ -158,11 +158,10 @@ ih_append(GiraraInputHistory* history, const char* input)
     return;
   }
 
-  GIRARA_LIST_FOREACH(list, char*, iter, data)
-    if (g_strcmp0(input, data) == 0) {
-        girara_list_remove(list, data);
-    }
-  GIRARA_LIST_FOREACH_END(list, char*, iter, data);
+  void* data = NULL;
+  while ((data = girara_list_find(list, (girara_compare_function_t) g_strcmp0, data)) != NULL) {
+    girara_list_remove(list, data);
+  }
 
   girara_list_append(list, g_strdup(input));
 
