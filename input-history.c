@@ -65,7 +65,7 @@ girara_input_history_class_init(GiraraInputHistoryClass* class)
     g_param_spec_object("io", "history reader/writer",
       "GiraraInputHistoryIO object used to read and write history",
       girara_input_history_io_get_type(),
-      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT));
+      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS));
 }
 
 /* Object init */
