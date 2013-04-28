@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-03-17 15:20+0000\n"
+"POT-Creation-Date: 2013-04-28 14:54+0200\n"
 "PO-Revision-Date: 2013-03-17 22:04+0100\n"
 "Last-Translator: p <poczciwiec@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.net/projects/p/girara/language/"
@@ -20,7 +20,7 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2)\n"
 
 #. unhandled command
-#: ../callbacks.c:506
+#: ../callbacks.c:498
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Nieprawidłowa funkcja skrótu: %s"
@@ -208,23 +208,23 @@ msgid "Show or hide certain GUI elements"
 msgstr "Pokaż/ukryj niektóre elementy interfejsu."
 
 #. commands
-#: ../config.c:209
+#: ../config.c:211
 msgid "Execute a command"
 msgstr "Wykonaj polecenie"
 
-#: ../config.c:210
+#: ../config.c:212
 msgid "Map a key sequence"
 msgstr "Dowiąż sekwencję klawiszy"
 
-#: ../config.c:211
+#: ../config.c:213
 msgid "Quit the program"
 msgstr "Zakończ program"
 
-#: ../config.c:212
+#: ../config.c:214
 msgid "Set an option"
 msgstr "Ustaw opcję"
 
-#: ../config.c:213
+#: ../config.c:215
 msgid "Unmap a key sequence"
 msgstr "Usuń sekwencję klawiszy"
 

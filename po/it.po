@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-03-17 15:20+0000\n"
+"POT-Creation-Date: 2013-04-28 14:54+0200\n"
 "PO-Revision-Date: 2013-03-17 22:04+0100\n"
 "Last-Translator: TheLemonMan <segnalazionidalweb@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.net/projects/p/girara/language/"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:506
+#: ../callbacks.c:498
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Scorciatoia invalida:%s"
@@ -207,23 +207,23 @@ msgid "Show or hide certain GUI elements"
 msgstr ""
 
 #. commands
-#: ../config.c:209
+#: ../config.c:211
 msgid "Execute a command"
 msgstr "Esegui un comando"
 
-#: ../config.c:210
+#: ../config.c:212
 msgid "Map a key sequence"
 msgstr "Mappa una sequenza di tasti"
 
-#: ../config.c:211
+#: ../config.c:213
 msgid "Quit the program"
 msgstr "Esci dal programma"
 
-#: ../config.c:212
+#: ../config.c:214
 msgid "Set an option"
 msgstr "Imposta un opzione"
 
-#: ../config.c:213
+#: ../config.c:215
 msgid "Unmap a key sequence"
 msgstr "Cancella mappatura di una sequenza di tasti"
 

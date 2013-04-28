@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-03-17 15:20+0000\n"
+"POT-Creation-Date: 2013-04-28 14:54+0200\n"
 "PO-Revision-Date: 2013-03-17 22:03+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:506
+#: ../callbacks.c:498
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Nevalida kurtnomo de funkcio: %s"
@@ -205,23 +205,23 @@ msgid "Show or hide certain GUI elements"
 msgstr ""
 
 #. commands
-#: ../config.c:209
+#: ../config.c:211
 msgid "Execute a command"
 msgstr "Plenumi komandon"
 
-#: ../config.c:210
+#: ../config.c:212
 msgid "Map a key sequence"
 msgstr "Mapu klavan sinsekvon"
 
-#: ../config.c:211
+#: ../config.c:213
 msgid "Quit the program"
 msgstr "Eliru el programo"
 
-#: ../config.c:212
+#: ../config.c:214
 msgid "Set an option"
 msgstr "Agordu opcion"
 
-#: ../config.c:213
+#: ../config.c:215
 msgid "Unmap a key sequence"
 msgstr "Malmapu klavan sinsekvon"
 
