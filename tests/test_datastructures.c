@@ -237,7 +237,7 @@ START_TEST(test_datastructures_list_iterator_remove) {
     fail_unless(next++ == data);
     if (data == 5) {
       /* this is broken … this will cause an invalid read */
-      girara_list_remove(list, (void* data) data);
+      girara_list_remove(list, (void*) data);
     }
   GIRARA_LIST_FOREACH_END(list, intptr_t, iter, data);
 

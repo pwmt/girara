@@ -15,5 +15,6 @@
 #include "shortcuts.h"
 #include "commands.h"
 #include "callbacks.h"
+#include "input-history.h"
 
 #endif
