@@ -26,6 +26,12 @@ struct girara_input_history_io_interface_s {
    * @returns a list of inputs
    */
   girara_list_t* (*read)(GiraraInputHistoryIO* io);
+
+  /* reserved for further methods */
+  void (*reserved1)(void);
+  void (*reserved2)(void);
+  void (*reserved3)(void);
+  void (*reserved4)(void);
 };
 
 #define GIRARA_TYPE_INPUT_HISTORY_IO \
@@ -96,6 +102,12 @@ struct girara_input_history_class_s {
    * @param history an input history instance
    */
   void (*reset)(GiraraInputHistory* history);
+
+    /* reserved for further methods */
+  void (*reserved1)(void);
+  void (*reserved2)(void);
+  void (*reserved3)(void);
+  void (*reserved4)(void);
 };
 
 #define GIRARA_TYPE_INPUT_HISTORY \
