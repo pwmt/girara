@@ -3,9 +3,11 @@
 #ifndef GIRARA_INTERNAL_H
 #define GIRARA_INTERNAL_H
 
+#include <glib.h>
+#include <gtk/gtk.h>
+
 #include "types.h"
 #include "macros.h"
-#include <glib.h>
 
 #define FORMAT_COMMAND "<b>%s</b>"
 #define FORMAT_DESCRIPTION "<i>%s</i>"
@@ -215,6 +217,15 @@ struct girara_config_handle_s
 {
   char* identifier;
   girara_command_function_t handle;
+};
+
+/**
+ * Structure of a statusbar item
+ */
+struct girara_statusbar_item_s
+{
+  GtkWidget* box; /**< Event box */
+  GtkLabel *text; /**< Text label */
 };
 
 #endif

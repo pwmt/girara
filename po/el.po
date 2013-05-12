@@ -1,0 +1,234 @@
+# girara - language file (Greek)
+# See LICENSE file for license and copyright information
+#
+# Translators:
+# Nisok Kosin <nikos.efthimiou@gmail.com>, 2012.
+# Nisok Kosin <nisok@in.gr>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: girara\n"
+"Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
+"POT-Creation-Date: 2013-04-28 14:54+0200\n"
+"PO-Revision-Date: 2013-03-17 22:03+0100\n"
+"Last-Translator: Nisok Kosin <nikos.efthimiou@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/projects/p/girara/language/"
+"el/)\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. unhandled command
+#: ../callbacks.c:498
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Μη έγγυρη εντολή: %s"
+
+#: ../commands.c:112 ../commands.c:312
+#, c-format
+msgid "Invalid number of arguments passed: %zu instead of at least %u"
+msgstr "Εισαγωγή μη έγγυρου αριθμού παραμέτρων: %zu αντί κατ'ελάχιστο %u"
+
+#: ../commands.c:146
+#, c-format
+msgid "Unregistered mode specified: %s"
+msgstr "Επιλέχθηκε μη καταχωρημένη λειτουργία: %s"
+
+#: ../commands.c:178
+#, c-format
+msgid "Invalid modifier in %s"
+msgstr "Μη έγγυρος τροποποιητής στο %s"
+
+#: ../commands.c:217
+#, c-format
+msgid "Invalid special key value for %s"
+msgstr "Μη έγγυρη επιλογή ειδικού πλήκτρου στο %s"
+
+#: ../commands.c:253
+#, c-format
+msgid "Invalid special key value or mode %s"
+msgstr "Μη έγγυρη τιμή ειδικού πλήκτρου %s"
+
+#: ../commands.c:334
+#, c-format
+msgid "Not a valid shortcut function: %s"
+msgstr "Μη έγγυρη συντόμευση λειτουργίας: %s"
+
+#: ../commands.c:422
+msgid "Not enough arguments."
+msgstr "Ανεπαρκείς παράμετροι"
+
+#: ../commands.c:427
+msgid "Too many arguments."
+msgstr "Πολλές παράμετροι"
+
+#: ../commands.c:440
+#, c-format
+msgid "Unknown option: %s"
+msgstr "Μή έγγυρη επιλογή: %s"
+
+#: ../commands.c:454
+msgid "true"
+msgstr "Αληθές"
+
+#: ../commands.c:454
+msgid "false"
+msgstr "Ψευδές"
+
+#: ../commands.c:486
+#, c-format
+msgid "No value defined for option: %s"
+msgstr "Καμία τιμή δεν έχει καθοριστεί για την επιλογή: %s"
+
+#: ../commands.c:501
+#, c-format
+msgid "Unknown value for option: %s"
+msgstr "Άγνωστη τιμή για την επιλογή: %s"
+
+#. settings
+#: ../config.c:145
+msgid "Font"
+msgstr "Γραμματοσειρά"
+
+#: ../config.c:146
+msgid "Default foreground color"
+msgstr "Προεπιλεγμένο χρώμα προσκηνίου"
+
+#: ../config.c:147
+msgid "Default background color"
+msgstr "Προεπιλεγμένο χρώμα πρασκηνίου"
+
+#: ../config.c:148
+msgid "Inputbar foreground color"
+msgstr "Χρώμα μπάρας εισαγωγής"
+
+#: ../config.c:149
+msgid "Inputbar background color"
+msgstr "Χρώμα φόντου μπάρας εισαγωγής"
+
+#: ../config.c:150
+msgid "Statusbar foreground color"
+msgstr "Χρώμα μπάρας κατάστασης"
+
+#: ../config.c:151
+msgid "Statsubar background color"
+msgstr "Χρώμα φόντου μπάρας κατάστασης"
+
+#: ../config.c:152
+msgid "Completion foreground color"
+msgstr "Χρώμα επιλογών συμπλήρωσης"
+
+#: ../config.c:153
+msgid "Completion background color"
+msgstr "Χρώμα συμπλήρωσης λέξεων"
+
+#: ../config.c:154
+msgid "Completion group foreground color"
+msgstr "Χρώμα μενού συμπλήρωσης λέξεων"
+
+#: ../config.c:155
+msgid "Completion group background color"
+msgstr "Χρώμα φόντου του μενού συμπλήρωσης λέξεων"
+
+#: ../config.c:156
+msgid "Completion highlight foreground color"
+msgstr "Χρώμα τονισμού συμπλήρωσης λέξεων"
+
+#: ../config.c:157
+msgid "Completion highlight background color"
+msgstr "Χρώμα φόντου τονισμού συμπλήρωσης λέξεων"
+
+#: ../config.c:158
+msgid "Error notification foreground color"
+msgstr "Χρώμα ειδοποίησης σφάλματος"
+
+#: ../config.c:159
+msgid "Error notification background color"
+msgstr "Χρώμα φόντου ειδοποίησης σφάλματος"
+
+#: ../config.c:160
+msgid "Warning notification foreground color"
+msgstr "Χρώμα ειδοποίησης προειδοποίησης"
+
+#: ../config.c:161
+msgid "Warning notifaction background color"
+msgstr "Χρώμα φόντου ειδοποίησης προειδοποίησης"
+
+#: ../config.c:162
+msgid "Notification foreground color"
+msgstr "Χρώμα ειδοποίησης"
+
+#: ../config.c:163
+msgid "Notification background color"
+msgstr "Χρώμα φόντου ειδοποίησης"
+
+#: ../config.c:164
+msgid "Tab bar foreground color"
+msgstr "Χρώμα μπάρας καρτελών"
+
+#: ../config.c:165
+msgid "Tab bar background color"
+msgstr "Χρώμα φόντου μπάρας καρτελών"
+
+#: ../config.c:166
+msgid "Tab bar foreground color (active)"
+msgstr "Χρώμα μπάρας καρτελών (ενεργό)"
+
+#: ../config.c:167
+msgid "Tab bar background color (active)"
+msgstr "Χρώμα φόντου μπάρας καρτελών (ενεργό)"
+
+#: ../config.c:169
+msgid "Initial window width"
+msgstr "Αρχικό πλάτος παραθύρου"
+
+#: ../config.c:170
+msgid "Initial window height"
+msgstr "Αρχικό ύψος παραθύρου"
+
+#: ../config.c:171
+msgid "Number of completion items"
+msgstr "Αριθμός στοιχείων συμπλήρωσης"
+
+#: ../config.c:172
+msgid "Show scrollbars"
+msgstr "Εμφάνιση μπαρών κύλησης"
+
+#: ../config.c:173
+msgid "Window icon"
+msgstr "Εικονίδιο παραθύρου"
+
+#: ../config.c:174
+msgid "Command to execute in :exec"
+msgstr "Η εντολή που θα εκτελεστεί στο :exec"
+
+#: ../config.c:175
+msgid "Show or hide certain GUI elements"
+msgstr "Εμφάνιση είτε απόκριψη συγκεκριμένω στοιχείων του GUI"
+
+#. commands
+#: ../config.c:211
+msgid "Execute a command"
+msgstr "Εκτέλεση εντολής"
+
+#: ../config.c:212
+msgid "Map a key sequence"
+msgstr "Χαρτογράφηση / map αλληλουχίας πλήκτρων"
+
+#: ../config.c:213
+msgid "Quit the program"
+msgstr "Εγκατάληψη της εφαρμογής"
+
+#: ../config.c:214
+msgid "Set an option"
+msgstr "Ρύθμιση επιλογής"
+
+#: ../config.c:215
+msgid "Unmap a key sequence"
+msgstr "Απόχαρτογράφηση / unmap αλληλουχίας πλήκτρων"
+
+#: ../utils.c:515
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Αποτυχία στην εκτέλεση της εντολής: %s"

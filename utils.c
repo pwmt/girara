@@ -168,7 +168,7 @@ girara_split_path_array(const char* patharray)
 
   girara_list_t* res = girara_list_new2(g_free);
   char** paths = g_strsplit(patharray, ":", 0);
-  for (unsigned int i = 0; paths[i] != '\0'; ++i) {
+  for (size_t i = 0; paths[i] != NULL; ++i) {
     girara_list_append(res, g_strdup(paths[i]));
   }
   g_strfreev(paths);

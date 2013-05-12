@@ -117,7 +117,7 @@ struct girara_session_s
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
-    girara_list_t* command_history; /**< Command history */
+    girara_list_t* GIRARA_DEPRECATED(command_history); /**< Command history (deprecated) */
     bool autohide_inputbar; /**< Auto-hide inputbar */
     bool hide_statusbar; /**< Hide statusbar */
   } global;
@@ -142,6 +142,8 @@ struct girara_session_s
     girara_list_t* shortcut_mappings;
     girara_list_t* argument_mappings;
   } config;
+
+  GiraraInputHistory* command_history; /**< Command history */
 };
 
 /**

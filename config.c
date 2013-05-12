@@ -56,6 +56,12 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
   if (session->gtk.notification_text != NULL) {
     gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
   }
+
+  GIRARA_LIST_FOREACH(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item)
+    if (item != NULL){
+      gtk_widget_override_font(GTK_WIDGET(item->text), font);
+    }
+  GIRARA_LIST_FOREACH_END(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item);
 }
 
 static void
@@ -100,6 +106,21 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   } else {
     session->global.hide_statusbar = true;
     gtk_widget_hide(session->gtk.statusbar);
+  }
+}
+
+static void
+cb_scrollbars(girara_session_t* session, const char* UNUSED(name),
+    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+{
+  g_return_if_fail(session != NULL && value != NULL);
+
+  if (*(bool*) value == true) {
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  } else {
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
   }
 }
 
@@ -148,7 +169,7 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"), NULL, NULL);
-  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, TRUE,  _("Show scrollbars"), NULL, NULL);
+  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show scrollbars"), cb_scrollbars, NULL);
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
   girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);
@@ -177,10 +198,14 @@ girara_config_load_default(girara_session_t* session)
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_w,            girara_isc_string_manipulation, GIRARA_DELETE_LAST_WORD,     NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_f,            girara_isc_string_manipulation, GIRARA_NEXT_CHAR,            NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_b,            girara_isc_string_manipulation, GIRARA_PREVIOUS_CHAR,        NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Right,        girara_isc_string_manipulation, GIRARA_NEXT_CHAR,            NULL);
+  girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Left,         girara_isc_string_manipulation, GIRARA_PREVIOUS_CHAR,        NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_a,            girara_isc_string_manipulation, GIRARA_GOTO_START,           NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_e,            girara_isc_string_manipulation, GIRARA_GOTO_END,             NULL);
   girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Up,           girara_isc_command_history,     GIRARA_PREVIOUS,             NULL);
   girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Down,         girara_isc_command_history,     GIRARA_NEXT,                 NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_p,            girara_isc_command_history,     GIRARA_PREVIOUS,             NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_n,            girara_isc_command_history,     GIRARA_NEXT,                 NULL);
 
   /* commands */
   girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,  NULL,          _("Execute a command"));

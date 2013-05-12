@@ -1,234 +1,233 @@
-# girara - language file (Polish)
+# girara - language file (Russian)
 # See LICENSE file for license and copyright information
 #
 # Translators:
-# p  <poczciwiec@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-04-28 14:54+0200\n"
-"PO-Revision-Date: 2013-03-17 22:04+0100\n"
-"Last-Translator: p <poczciwiec@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.net/projects/p/girara/language/"
-"pl/)\n"
-"Language: pl\n"
+"PO-Revision-Date: 2012-05-08 17:17+0000\n"
+"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/girara/language/"
+"ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. unhandled command
 #: ../callbacks.c:498
 #, c-format
 msgid "Not a valid command: %s"
-msgstr "Nieprawidłowa funkcja skrótu: %s"
+msgstr ""
 
 #: ../commands.c:112 ../commands.c:312
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr "Nieprawidłowa liczba parametrów polecenia: %zu zamiast co najmniej %u"
+msgstr ""
 
 #: ../commands.c:146
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr "Wybrano nieistniejący tryb: %s"
+msgstr ""
 
 #: ../commands.c:178
 #, c-format
 msgid "Invalid modifier in %s"
-msgstr "Nieprawidłowy klawisz modyfikujący: %s"
+msgstr ""
 
 #: ../commands.c:217
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr "Nieprawidłowa wartość klawisza: %s"
+msgstr ""
 
 #: ../commands.c:253
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr "Nieprawidłowa wartość klawisza lub trybu: %s"
+msgstr ""
 
 #: ../commands.c:334
 #, c-format
 msgid "Not a valid shortcut function: %s"
-msgstr "Nieprawidłowa funkcja skrótu: %s"
+msgstr ""
 
 #: ../commands.c:422
 msgid "Not enough arguments."
-msgstr "Za mało parametrów polecenia"
+msgstr ""
 
 #: ../commands.c:427
 msgid "Too many arguments."
-msgstr "Za dużo parametrów polecenia"
+msgstr ""
 
 #: ../commands.c:440
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Nieznana opcja: %s"
+msgstr ""
 
 #: ../commands.c:454
 msgid "true"
-msgstr "prawda"
+msgstr ""
 
 #: ../commands.c:454
 msgid "false"
-msgstr "fałsz"
+msgstr ""
 
 #: ../commands.c:486
 #, c-format
 msgid "No value defined for option: %s"
-msgstr "Niezdefiniowana wartość opcji: %s"
+msgstr ""
 
 #: ../commands.c:501
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr "Nieznana wartość opcji: %s"
+msgstr ""
 
 #. settings
 #: ../config.c:145
 msgid "Font"
-msgstr "Font"
+msgstr ""
 
 #: ../config.c:146
 msgid "Default foreground color"
-msgstr "Domyślny kolor pierwszoplanowy"
+msgstr ""
 
 #: ../config.c:147
 msgid "Default background color"
-msgstr "Domyślny kolor tła"
+msgstr ""
 
 #: ../config.c:148
 msgid "Inputbar foreground color"
-msgstr "Kolor tekstu w polu wprowadzania"
+msgstr ""
 
 #: ../config.c:149
 msgid "Inputbar background color"
-msgstr "Kolor tła pola wprowadzania"
+msgstr ""
 
 #: ../config.c:150
 msgid "Statusbar foreground color"
-msgstr "Kolor tekstu w pasku stanu"
+msgstr ""
 
 #: ../config.c:151
 msgid "Statsubar background color"
-msgstr "Kolor tła paska stanu"
+msgstr ""
 
 #: ../config.c:152
 msgid "Completion foreground color"
-msgstr "Kolor tekstu wyróżnienia"
+msgstr ""
 
 #: ../config.c:153
 msgid "Completion background color"
-msgstr "Kolor tła wyróżnienia"
+msgstr ""
 
 #: ../config.c:154
 msgid "Completion group foreground color"
-msgstr "Kolor tekstu wyróżnionej grupy "
+msgstr ""
 
 #: ../config.c:155
 msgid "Completion group background color"
-msgstr "Kolor tła wyróżnionej grupy"
+msgstr ""
 
 #: ../config.c:156
 msgid "Completion highlight foreground color"
-msgstr "Kolor tekstu bieżącego wyróżnienia"
+msgstr ""
 
 #: ../config.c:157
 msgid "Completion highlight background color"
-msgstr "Kolor tła bieżącego wyróżnienia"
+msgstr ""
 
 #: ../config.c:158
 msgid "Error notification foreground color"
-msgstr "Kolor tekstu powiadomienia o błędzie"
+msgstr ""
 
 #: ../config.c:159
 msgid "Error notification background color"
-msgstr "Kolor tła powiadomienia o błędzie"
+msgstr ""
 
 #: ../config.c:160
 msgid "Warning notification foreground color"
-msgstr "Kolor tekstu ostrzeżenia"
+msgstr ""
 
 #: ../config.c:161
 msgid "Warning notifaction background color"
-msgstr "Kolor tła ostrzeżenia"
+msgstr ""
 
 #: ../config.c:162
 msgid "Notification foreground color"
-msgstr "Kolor tekstu powiadomienia"
+msgstr ""
 
 #: ../config.c:163
 msgid "Notification background color"
-msgstr "Kolor tła powiadomienia"
+msgstr ""
 
 #: ../config.c:164
 msgid "Tab bar foreground color"
-msgstr "Kolor tekstu paska kart"
+msgstr ""
 
 #: ../config.c:165
 msgid "Tab bar background color"
-msgstr "Kolor tła paska kart"
+msgstr ""
 
 #: ../config.c:166
 msgid "Tab bar foreground color (active)"
-msgstr "Kolor tekstu bieżącej karty"
+msgstr ""
 
 #: ../config.c:167
 msgid "Tab bar background color (active)"
-msgstr "Kolor tła bieżącej karty"
+msgstr ""
 
 #: ../config.c:169
 msgid "Initial window width"
-msgstr "Początkowa szerokość okna"
+msgstr ""
 
 #: ../config.c:170
 msgid "Initial window height"
-msgstr "Początkowa wysokość okna"
+msgstr ""
 
 #: ../config.c:171
 msgid "Number of completion items"
-msgstr "Liczba wyróżnień"
+msgstr ""
 
 #: ../config.c:172
 msgid "Show scrollbars"
-msgstr "Wyświetl paski przewijania"
+msgstr ""
 
 #: ../config.c:173
 msgid "Window icon"
-msgstr "Ikona okna"
+msgstr ""
 
 #: ../config.c:174
 msgid "Command to execute in :exec"
-msgstr "Polecenie uruchomienia w :exec"
+msgstr ""
 
 #: ../config.c:175
 msgid "Show or hide certain GUI elements"
-msgstr "Pokaż/ukryj niektóre elementy interfejsu."
+msgstr ""
 
 #. commands
 #: ../config.c:211
 msgid "Execute a command"
-msgstr "Wykonaj polecenie"
+msgstr ""
 
 #: ../config.c:212
 msgid "Map a key sequence"
-msgstr "Dowiąż sekwencję klawiszy"
+msgstr ""
 
 #: ../config.c:213
 msgid "Quit the program"
-msgstr "Zakończ program"
+msgstr ""
 
 #: ../config.c:214
 msgid "Set an option"
-msgstr "Ustaw opcję"
+msgstr ""
 
 #: ../config.c:215
 msgid "Unmap a key sequence"
-msgstr "Usuń sekwencję klawiszy"
+msgstr ""
 
 #: ../utils.c:515
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Nieudane uruchomienie polecenia: %s"
+msgstr ""

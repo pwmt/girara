@@ -6,6 +6,7 @@
 #include "session.h"
 #include "settings.h"
 #include "tabs.h"
+#include "input-history.h"
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -167,6 +168,9 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
     gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
   }
 
+  /* Begin from the last command when navigating through history */
+  girara_input_history_reset(session->command_history);
+
   /* reset custom functions */
   session->signals.inputbar_custom_activate        = NULL;
   session->signals.inputbar_custom_key_press_event = NULL;
@@ -189,11 +193,14 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
 
   switch (argument->n) {
     case GIRARA_DELETE_LAST_WORD:
-      i = pos - 1;
-
-      if (!pos) {
+      if (pos == 1 && (input[0] == ':' || input[0] == '/')) {
         break;
       }
+      if (pos == 0) {
+	      break;
+      }
+
+      i = pos - 1;
 
       /* remove trailing spaces */
       for (; i >= 0 && input[i] == ' '; i--);
@@ -207,7 +214,10 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), i + 1);
       break;
     case GIRARA_DELETE_LAST_CHAR:
-      if ((length - 1) <= 0) {
+      if (length != 1 && pos == 1 && (input[0] == ':' || input[0] == '/')) {
+        break;
+      }
+      if (length == 1 && pos == 1) {
         girara_isc_abort(session, argument, NULL, 0);
       }
       gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos - 1, pos);
@@ -219,10 +229,13 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), pos + 1);
       break;
     case GIRARA_PREVIOUS_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 0) ? 0 : pos - 1);
+      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 1) ? 1 : pos - 1);
       break;
     case GIRARA_DELETE_CURR_CHAR:
-      if((length - 1) <= 0) {
+      if (length != 1 && pos == 0 && (input[0] == ':' || input[0] == '/')){
+	break;
+      }
+      if(length == 1 && pos == 0) {
         girara_isc_abort(session, argument, NULL, 0);
       }
       gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos, pos + 1);
@@ -248,32 +261,19 @@ bool
 girara_isc_command_history(girara_session_t* session, girara_argument_t*
     argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
-  g_return_val_if_fail(session                          != NULL, false);
-  g_return_val_if_fail(session->global.command_history != NULL, false);
+  g_return_val_if_fail(session != NULL, false);
 
-  static int current  = 0;
-  unsigned int length = girara_list_size(session->global.command_history);
+  char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
+  const char* command = argument->n == GIRARA_NEXT ?
+    girara_input_history_next(session->command_history, temp) :
+    girara_input_history_previous(session->command_history, temp);
+  g_free(temp);
 
-  if (length == 0) {
-    return false;
+  if (command != NULL) {
+    gtk_entry_set_text(session->gtk.inputbar_entry, command);
+    gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
   }
-
-  if (argument->n == GIRARA_NEXT) {
-    current = (length + current + 1) % length;
-  } else if (argument->n == GIRARA_PREVIOUS) {
-    current = (length + current - 1) % length;
-  } else {
-    return false;
-  }
-
-  char* command = (char*) girara_list_nth(session->global.command_history, current);
-  if (command == NULL) {
-    return false;
-  }
-
-  gtk_entry_set_text(session->gtk.inputbar_entry, command);
-  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
-  gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
 
   return true;
 }

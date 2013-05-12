@@ -4,7 +4,7 @@
 #define GIRARA_MACROS_H
 
 #ifndef GIRARA_PRINTF
-# if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
+# if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4) || defined(__clang__)
 #  define GIRARA_PRINTF(format_idx, arg_idx) \
     __attribute__((__format__ (__printf__, format_idx, arg_idx)))
 # else
@@ -13,7 +13,7 @@
 #endif
 
 #ifndef GIRARA_UNUSED
-# if defined(__GNUC__)
+# if defined(__GNUC__) || defined(__clang__)
 #  define GIRARA_UNUSED(x) UNUSED_ ## x __attribute__((unused))
 # elif defined(__LCLINT__)
 #  define GIRARA_UNUSED(x) /*@unused@*/ x
@@ -23,8 +23,10 @@
 #endif
 
 #ifndef GIRARA_HIDDEN
-# if defined(__GNUC__) && (__GNUC__ >= 4)
+# if (defined(__GNUC__) && (__GNUC__ >= 4)) || defined(__clang__)
 #  define GIRARA_HIDDEN __attribute__((visibility("hidden")))
+# elif defined(__SUNPRO_C)
+#  define GIRARA_HIDDEN __hidden
 # else
 #  define GIRARA_HIDDEN
 # endif

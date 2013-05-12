@@ -15,7 +15,7 @@ void setup(void)
   gtk_init(NULL, NULL);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   Suite* suite          = NULL;
   SRunner* suite_runner = NULL;

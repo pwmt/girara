@@ -4,6 +4,7 @@
 #include "datastructures.h"
 #include "session.h"
 #include "shortcuts.h"
+#include "input-history.h"
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
@@ -399,10 +400,8 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   }
 
   /* append to command history */
-  if (session->global.command_history != NULL) {
-    const char* command = gtk_entry_get_text(entry);
-    girara_list_append(session->global.command_history, g_strdup(command));
-  }
+  const char* command = gtk_entry_get_text(entry);
+  girara_input_history_append(session->command_history, command);
 
   /* parse input */
   gchar** argv = NULL;
@@ -576,7 +575,7 @@ girara_callback_inputbar_changed_event(GtkEditable* entry, girara_session_t* ses
       special_command->function(session, input, &(special_command->argument));
       g_free(input);
       girara_list_iterator_free(iter);
-      return false;
+      return true;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, special_command);
 
