@@ -110,17 +110,41 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
 }
 
 static void
-cb_scrollbars(girara_session_t* session, const char* UNUSED(name),
+cb_scrollbars(girara_session_t* session, const char* name,
     girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  if (*(bool*) value == true) {
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  } else {
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+  GtkPolicyType h_policy, v_policy;
+  bool val = *(bool*) value;
+
+  gtk_scrolled_window_get_policy(GTK_SCROLLED_WINDOW(session->gtk.view), &h_policy, &v_policy);
+
+  if (!strcmp(name, "show-scrollbars")) {
+    if (val == true) {
+      h_policy = v_policy = GTK_POLICY_AUTOMATIC;
+    } else {
+      h_policy = v_policy = GTK_POLICY_NEVER;
+    }
+
+    girara_setting_set(session, "show-h-scrollbar", &val);
+    girara_setting_set(session, "show-v-scrollbar", &val);
+
+  } else if (!strcmp(name, "show-h-scrollbar")) {
+    h_policy = val ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  } else if (!strcmp(name, "show-v-scrollbar")) {
+    v_policy = val ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  }
+
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), h_policy, v_policy);
+  girara_setting_get(session, "show-scrollbars", &val);
+
+  if (h_policy == GTK_POLICY_AUTOMATIC && v_policy == GTK_POLICY_AUTOMATIC && val == false) {
+    val = true;
+    girara_setting_set(session, "show-scrollbars", &val);
+  } else if (h_policy == GTK_POLICY_NEVER && v_policy == GTK_POLICY_NEVER && val == true) {
+    val = false;
+    girara_setting_set(session, "show-scrollbars", &val);
   }
 }
 
@@ -169,7 +193,9 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"), NULL, NULL);
-  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show scrollbars"), cb_scrollbars, NULL);
+  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show both the horizontal and vertical scrollbars"), cb_scrollbars, NULL);
+  girara_setting_add(session, "show-h-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the horizontal scrollbar"), cb_scrollbars, NULL);
+  girara_setting_add(session, "show-v-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the vertical scrollbar"), cb_scrollbars, NULL);
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
   girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);

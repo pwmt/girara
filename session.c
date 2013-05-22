@@ -171,15 +171,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->signals.view_scroll_event = g_signal_connect(G_OBJECT(session->gtk.view), "scroll-event",
       G_CALLBACK(girara_callback_view_scroll_event), session);
 
-  bool tmp_bool_value = false;
-  girara_setting_get(session, "show-scrollbars", &tmp_bool_value);
-  if (tmp_bool_value == true) {
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  } else {
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-  }
+  bool show_hscrollbar = false;
+  bool show_vscrollbar = false;
+  GtkPolicyType hpolicy, vpolicy;
+
+  girara_setting_get(session, "show-h-scrollbar", &show_hscrollbar);
+  girara_setting_get(session, "show-v-scrollbar", &show_vscrollbar);
+  hpolicy = show_hscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  vpolicy = show_vscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), hpolicy, vpolicy);
 
   /* viewport */
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
