@@ -88,15 +88,17 @@ START_TEST(test_home_directory) {
   girara_list_iterator_free(iter);
   girara_list_free(list);
 
-  g_setenv("HOME", "/home/test", TRUE);
-  result = girara_get_home_directory(NULL);
-  fail_unless(g_strcmp0(result, "/home/test") == 0, "Home directory is not the same", NULL);
-  g_free(result);
-
   if (oldenv) {
     g_setenv("HOME", oldenv, TRUE);
     g_free(oldenv);
   }
+} END_TEST
+
+START_TEST(test_home_directory_set_HOME) {
+  g_setenv("HOME", "/home/test", TRUE);
+  char* result = girara_get_home_directory(NULL);
+  fail_unless(g_strcmp0(result, "/home/test") == 0, "Home directory is not the same", NULL);
+  g_free(result);
 } END_TEST
 
 START_TEST(test_fix_path_basic) {
@@ -284,6 +286,7 @@ Suite* suite_utils()
   /* home directory */
   tcase = tcase_create("home_directory");
   tcase_add_test(tcase, test_home_directory);
+  tcase_add_test(tcase, test_home_directory_set_HOME);
   suite_add_tcase(suite, tcase);
 
   /* fix path */

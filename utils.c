@@ -94,8 +94,12 @@ char*
 girara_get_home_directory(const char* user)
 {
   if (user == NULL || g_strcmp0(user, g_get_user_name()) == 0) {
+#if GLIB_CHECK_VERSION(2, 35, 3)
+    return g_strdup(g_get_home_dir());
+#else
     const char* homedir = g_getenv("HOME");
     return g_strdup(homedir ? homedir : g_get_home_dir());
+#endif
   }
 
   // XXX: The following code is very unportable.
