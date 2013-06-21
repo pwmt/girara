@@ -250,6 +250,8 @@ girara_config_load_default(girara_session_t* session)
   girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
   girara_shortcut_mapping_add(session, "set",            girara_sc_set);
   girara_shortcut_mapping_add(session, "feedkeys",       girara_sc_feedkeys);
+  girara_shortcut_mapping_add(session, "tab_next",       girara_sc_tab_navigate_next);
+  girara_shortcut_mapping_add(session, "tab_prev",       girara_sc_tab_navigate_prev);
 }
 
 bool
