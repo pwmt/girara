@@ -228,8 +228,9 @@ girara_session_init(girara_session_t* session, const char* sessionname)
      the same. We need to get rid of the builtin padding in the GtkEntry
      widget. */
 
-  guint ypadding = 2;     /* total amount of padding (top + bottom) */
-  guint leftpadding = 4;  /* left padding */
+  guint ypadding = 2;         /* total amount of padding (top + bottom) */
+  guint leftpadding = 4;      /* left padding */
+  girara_setting_get(session, "statusbar-padding", &ypadding);
 
 #if (GTK_MAJOR_VERSION == 3)
   /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
