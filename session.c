@@ -88,12 +88,14 @@ girara_session_create()
   /* create widgets */
 #if GTK_MAJOR_VERSION == 2
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  session->gtk.overlay           = NULL;
   session->gtk.bottom_box        = GTK_BOX(gtk_vbox_new(FALSE, 0));
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
   session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
   session->gtk.inputbar_box      = GTK_BOX(gtk_hbox_new(TRUE, 0));
 #else
   session->gtk.box               = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session->gtk.overlay           = gtk_overlay_new();
   session->gtk.bottom_box        = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session->gtk.statusbar_entries = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   session->gtk.tabbar            = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -209,10 +211,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
 #endif
 
-  /* box */
-  gtk_box_set_spacing(session->gtk.box, 0);
-  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.box));
-
   /* statusbar */
   gtk_container_add(GTK_CONTAINER(session->gtk.statusbar), GTK_WIDGET(session->gtk.statusbar_entries));
 
@@ -318,10 +316,31 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
   gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
 
+#if (GTK_MAJOR_VERSION == 3)
   /* packing */
+  gtk_box_set_spacing(session->gtk.box, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
+
+  /* box */
+  gtk_container_add(GTK_CONTAINER(session->gtk.overlay), GTK_WIDGET(session->gtk.box));
+  /* overlay */
+  g_object_set(session->gtk.bottom_box, "halign", GTK_ALIGN_FILL, NULL);
+  g_object_set(session->gtk.bottom_box, "valign", GTK_ALIGN_END, NULL);
+
+  gtk_overlay_add_overlay(GTK_OVERLAY(session->gtk.overlay), GTK_WIDGET(session->gtk.bottom_box));
+  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.overlay));
+
+#else
+  /* packing */
+  gtk_box_set_spacing(session->gtk.box, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
   gtk_box_pack_end(session->gtk.box, GTK_WIDGET(session->gtk.bottom_box),          FALSE, FALSE, 0);
+
+  /* box */
+  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.box));
+#endif
 
   /* parse color values */
   typedef struct color_setting_mapping_s

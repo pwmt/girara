@@ -27,6 +27,7 @@ struct girara_session_s
     GtkBox          *box; /**< A box that contains all widgets */
     GtkWidget       *view; /**< The view area of the applications widgets */
     GtkWidget       *viewport; /**< The viewport of view */
+    GtkWidget       *overlay; /**< So we can overlay bottom_box on top of view */
     GtkBox          *bottom_box; /**< Box grouping input, status and notification */
     GtkWidget       *statusbar; /**< The statusbar */
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
