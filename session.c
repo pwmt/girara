@@ -173,13 +173,29 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   bool show_hscrollbar = false;
   bool show_vscrollbar = false;
-  GtkPolicyType hpolicy, vpolicy;
 
   girara_setting_get(session, "show-h-scrollbar", &show_hscrollbar);
   girara_setting_get(session, "show-v-scrollbar", &show_vscrollbar);
-  hpolicy = show_hscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  vpolicy = show_vscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), hpolicy, vpolicy);
+
+#if (GTK_MAJOR_VERSION == 3)
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
+  GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
+
+  if (vscrollbar != NULL) {
+    gtk_widget_set_visible(GTK_WIDGET(vscrollbar), show_vscrollbar);
+  }
+
+  if (hscrollbar != NULL) {
+    gtk_widget_set_visible(GTK_WIDGET(hscrollbar), show_hscrollbar);
+  }
+#else
+  GtkPolicyType h_policy, v_policy;
+  h_policy = show_hscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  v_policy = show_vscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), h_policy, v_policy);
+#endif
 
   /* viewport */
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
