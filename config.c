@@ -116,7 +116,7 @@ cb_scrollbars(girara_session_t* session, const char* name,
   g_return_if_fail(session != NULL && value != NULL);
 
   bool val = *(bool*) value;
-  bool show_hscrollbar=false;
+  bool show_hscrollbar = false;
   bool show_vscrollbar = false;
   GtkPolicyType h_policy, v_policy;
 
@@ -170,7 +170,7 @@ cb_scrollbars(girara_session_t* session, const char* name,
   if (show_hscrollbar && show_vscrollbar && !val) {
     val = true;
     girara_setting_set(session, "show-scrollbars", &val);
-  } else if (!(show_hscrollbar && show_vscrollbar) && val) {
+  } else if (!show_hscrollbar && !show_vscrollbar && val) {
     val = false;
     girara_setting_set(session, "show-scrollbars", &val);
   }
