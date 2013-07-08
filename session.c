@@ -236,7 +236,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
   GtkCssProvider* provider = gtk_css_provider_new();
   char css[256];
-  const char* css_pattern = "#bottom_box { padding:%dpx 0px %dpx %dpx; }";
+  const char* css_pattern = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx 0px %dpx %dpx; }";
   sprintf(css, css_pattern, ypadding - ypadding/2, ypadding/2, leftpadding);
 
   gtk_css_provider_load_from_data(provider, css, strlen(css), NULL);
@@ -250,7 +250,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_set_name(session->gtk.inputbar_entry, "bottom_box");
   gtk_widget_set_name(session->gtk.notification_text, "bottom_box");
 #else
-  // TODO: test this GTK2 block
   GtkBorder inner_border = {
       .left = leftpadding,
       .right = 0,
