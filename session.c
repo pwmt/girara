@@ -18,6 +18,18 @@
 #include "gtk2-compat.h"
 #endif
 
+#if defined(__GNUC__) || defined(__clang__)
+#define DO_PRAGMA(x) _Pragma(#x)
+#else
+#define DO_PRAGMA(x)
+#endif
+
+#define IGNORE_DEPRECATED \
+  DO_PRAGMA(GCC diagnostic push) \
+  DO_PRAGMA(GCC diagnostic ignored "-Wdeprecated-declarations")
+#define UNIGNORE \
+  DO_PRAGMA(GCC diagnostic pop)
+
 static int
 cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
 {
@@ -80,7 +92,9 @@ girara_session_create()
 
   /* command history */
   session->command_history = girara_input_history_new(NULL);
+  IGNORE_DEPRECATED
   session->global.command_history = girara_get_command_history(session);
+  UNIGNORE
 
   /* load default values */
   girara_config_load_default(session);
