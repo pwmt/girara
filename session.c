@@ -253,17 +253,18 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 #if (GTK_MAJOR_VERSION == 3)
   /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
   GtkCssProvider* provider = gtk_css_provider_new();
-  char css[256];
-  const char* css_pattern = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx 0px %dpx %dpx; }";
-  sprintf(css, css_pattern, ypadding - ypadding/2, ypadding/2, leftpadding);
 
+  static const char CSS_PATTERN[] = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx 0px %dpx %dpx; }";
+  char* css = g_strdup_printf(CSS_PATTERN, ypadding - ypadding/2, ypadding/2, leftpadding);
   gtk_css_provider_load_from_data(provider, css, strlen(css), NULL);
-  GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen *screen = gdk_display_get_default_screen (display);
-  gtk_style_context_add_provider_for_screen (screen,
-                                             GTK_STYLE_PROVIDER (provider),
-                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-  g_object_unref (provider);
+  g_free(css);
+
+  GdkDisplay* display = gdk_display_get_default();
+  GdkScreen* screen = gdk_display_get_default_screen(display);
+  gtk_style_context_add_provider_for_screen(screen,
+                                            GTK_STYLE_PROVIDER(provider),
+                                            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  g_object_unref(provider);
 
   gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
   gtk_widget_set_name(GTK_WIDGET(session->gtk.notification_text), "bottom_box");
