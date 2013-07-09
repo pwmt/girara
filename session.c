@@ -100,19 +100,18 @@ girara_session_create()
 
   /* create widgets */
 #if GTK_MAJOR_VERSION == 2
-  session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
-  session->private_data->gtk.overlay      = NULL;
-  session->private_data->gtk.bottom_box   = GTK_BOX(gtk_vbox_new(FALSE, 0));
-  session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
-  session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
-  session->gtk.inputbar_box      = GTK_BOX(gtk_hbox_new(TRUE, 0));
+  session->gtk.box                      = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  session->private_data->gtk.bottom_box = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  session->gtk.statusbar_entries        = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  session->gtk.tabbar                   = gtk_hbox_new(TRUE, 0);
+  session->gtk.inputbar_box             = GTK_BOX(gtk_hbox_new(TRUE, 0));
 #else
-  session->gtk.box               = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-  session->private_data->gtk.overlay      = gtk_overlay_new();
-  session->private_data->gtk.bottom_box   = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-  session->gtk.statusbar_entries = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-  session->gtk.tabbar            = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-  session->gtk.inputbar_box      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+  session->gtk.box                      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session->private_data->gtk.overlay    = gtk_overlay_new();
+  session->private_data->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session->gtk.statusbar_entries        = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+  session->gtk.tabbar                   = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+  session->gtk.inputbar_box             = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   gtk_box_set_homogeneous(GTK_BOX(session->gtk.tabbar), TRUE);
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
 #endif
@@ -353,9 +352,9 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 #else
   /* packing */
   gtk_box_set_spacing(session->gtk.box, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
-  gtk_box_pack_end(session->gtk.box, GTK_WIDGET(session->private_data->gtk.bottom_box),     FALSE, FALSE, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),                 FALSE, FALSE, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),                   TRUE,  TRUE, 0);
+  gtk_box_pack_end(session->gtk.box, GTK_WIDGET(session->private_data->gtk.bottom_box), FALSE, FALSE, 0);
 
   /* box */
   gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.box));
