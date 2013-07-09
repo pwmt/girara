@@ -118,7 +118,6 @@ cb_scrollbars(girara_session_t* session, const char* name,
   bool val = *(bool*) value;
   bool show_hscrollbar = false;
   bool show_vscrollbar = false;
-  GtkPolicyType h_policy, v_policy;
 
 #if (GTK_MAJOR_VERSION == 3)
   GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
@@ -132,6 +131,7 @@ cb_scrollbars(girara_session_t* session, const char* name,
     show_hscrollbar = gtk_widget_get_visible(hscrollbar);
   }
 #else
+  GtkPolicyType h_policy, v_policy;
   gtk_scrolled_window_get_policy(GTK_SCROLLED_WINDOW(session->gtk.view), &h_policy, &v_policy);
   show_vscrollbar = (v_policy == GTK_POLICY_AUTOMATIC);
   show_hscrollbar = (h_policy == GTK_POLICY_AUTOMATIC);
