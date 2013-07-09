@@ -380,7 +380,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 
     if (entries != NULL) {
       entries_current = (argument->n == GIRARA_NEXT) ? g_list_last(entries) : entries;
-      gtk_box_pack_start(session->gtk.bottom_box, GTK_WIDGET(session->gtk.results), FALSE, FALSE, 0);
+      gtk_box_pack_start(session->private->bottom_box, GTK_WIDGET(session->gtk.results), FALSE, FALSE, 0);
       gtk_widget_show(GTK_WIDGET(session->gtk.results));
     }
   }

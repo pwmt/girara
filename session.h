@@ -19,6 +19,13 @@
 /**
  * Structure of a girara session
  */
+
+typedef struct girara_session_private_s
+{
+  GtkWidget         *overlay; /**< So we can overlay bottom_box on top of view */
+  GtkBox            *bottom_box; /**< Box grouping input, status and notification */
+} girara_session_private_t;
+
 struct girara_session_s
 {
   struct
@@ -27,8 +34,6 @@ struct girara_session_s
     GtkBox          *box; /**< A box that contains all widgets */
     GtkWidget       *view; /**< The view area of the applications widgets */
     GtkWidget       *viewport; /**< The viewport of view */
-    GtkWidget       *overlay; /**< So we can overlay bottom_box on top of view */
-    GtkBox          *bottom_box; /**< Box grouping input, status and notification */
     GtkWidget       *statusbar; /**< The statusbar */
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
     GtkWidget       *notification_area; /**< The notification area */
@@ -46,6 +51,7 @@ struct girara_session_s
 #else
     GdkNativeWindow embed; /**< Embedded window */
 #endif // (GTK_MAJOR_VERSION == 3)
+
   } gtk;
 
   struct
@@ -146,6 +152,8 @@ struct girara_session_s
   } config;
 
   GiraraInputHistory* command_history; /**< Command history */
+
+  girara_session_private_t* private;
 };
 
 /**

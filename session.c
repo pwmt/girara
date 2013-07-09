@@ -41,6 +41,7 @@ girara_session_create()
   ensure_gettext_initialized();
 
   girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
+  session->private = g_slice_alloc0(sizeof(girara_session_private_t));
 
   /* init values */
   session->bindings.mouse_events       = girara_list_new2(
@@ -88,15 +89,15 @@ girara_session_create()
   /* create widgets */
 #if GTK_MAJOR_VERSION == 2
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
-  session->gtk.overlay           = NULL;
-  session->gtk.bottom_box        = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  session->private->overlay      = NULL;
+  session->private->bottom_box   = GTK_BOX(gtk_vbox_new(FALSE, 0));
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
   session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
   session->gtk.inputbar_box      = GTK_BOX(gtk_hbox_new(TRUE, 0));
 #else
   session->gtk.box               = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-  session->gtk.overlay           = gtk_overlay_new();
-  session->gtk.bottom_box        = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session->private->overlay      = gtk_overlay_new();
+  session->private->bottom_box   = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session->gtk.statusbar_entries = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   session->gtk.tabbar            = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   session->gtk.inputbar_box      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
@@ -306,11 +307,11 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_container_add(GTK_CONTAINER(session->gtk.inputbar), GTK_WIDGET(session->gtk.inputbar_box));
 
   /* bottom box */
-  gtk_box_set_spacing(session->gtk.bottom_box, 0);
+  gtk_box_set_spacing(session->private->bottom_box, 0);
 
-  gtk_box_pack_end(GTK_BOX(session->gtk.bottom_box), GTK_WIDGET(session->gtk.inputbar), TRUE, TRUE, 0);
-  gtk_box_pack_end(GTK_BOX(session->gtk.bottom_box), GTK_WIDGET(session->gtk.notification_area), TRUE, TRUE, 0);
-  gtk_box_pack_end(GTK_BOX(session->gtk.bottom_box), GTK_WIDGET(session->gtk.statusbar), TRUE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(session->private->bottom_box), GTK_WIDGET(session->gtk.inputbar), TRUE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(session->private->bottom_box), GTK_WIDGET(session->gtk.notification_area), TRUE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(session->private->bottom_box), GTK_WIDGET(session->gtk.statusbar), TRUE, TRUE, 0);
 
   /* tabs */
   gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
@@ -323,20 +324,20 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
 
   /* box */
-  gtk_container_add(GTK_CONTAINER(session->gtk.overlay), GTK_WIDGET(session->gtk.box));
+  gtk_container_add(GTK_CONTAINER(session->private->overlay), GTK_WIDGET(session->gtk.box));
   /* overlay */
-  g_object_set(session->gtk.bottom_box, "halign", GTK_ALIGN_FILL, NULL);
-  g_object_set(session->gtk.bottom_box, "valign", GTK_ALIGN_END, NULL);
+  g_object_set(session->private->bottom_box, "halign", GTK_ALIGN_FILL, NULL);
+  g_object_set(session->private->bottom_box, "valign", GTK_ALIGN_END, NULL);
 
-  gtk_overlay_add_overlay(GTK_OVERLAY(session->gtk.overlay), GTK_WIDGET(session->gtk.bottom_box));
-  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.overlay));
+  gtk_overlay_add_overlay(GTK_OVERLAY(session->private->overlay), GTK_WIDGET(session->private->bottom_box));
+  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->private->overlay));
 
 #else
   /* packing */
   gtk_box_set_spacing(session->gtk.box, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
-  gtk_box_pack_end(session->gtk.box, GTK_WIDGET(session->gtk.bottom_box),          FALSE, FALSE, 0);
+  gtk_box_pack_end(session->gtk.box, GTK_WIDGET(session->private->bottom_box),     FALSE, FALSE, 0);
 
   /* box */
   gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.box));
@@ -539,6 +540,7 @@ girara_session_destroy(girara_session_t* session)
   session->global.buffer  = NULL;
 
   /* clean up session */
+  g_slice_free(girara_session_private_t, session->private);
   g_slice_free(girara_session_t, session);
 
   return TRUE;
