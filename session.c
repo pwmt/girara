@@ -101,11 +101,15 @@ girara_session_create()
   /* create widgets */
 #if GTK_MAJOR_VERSION == 2
   session->gtk.box               = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  session->private_data->gtk.overlay      = NULL;
+  session->private_data->gtk.bottom_box   = GTK_BOX(gtk_vbox_new(FALSE, 0));
   session->gtk.statusbar_entries = GTK_BOX(gtk_hbox_new(FALSE, 0));
   session->gtk.tabbar            = gtk_hbox_new(TRUE, 0);
   session->gtk.inputbar_box      = GTK_BOX(gtk_hbox_new(TRUE, 0));
 #else
   session->gtk.box               = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session->private_data->gtk.overlay      = gtk_overlay_new();
+  session->private_data->gtk.bottom_box   = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session->gtk.statusbar_entries = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   session->gtk.tabbar            = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   session->gtk.inputbar_box      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
@@ -226,23 +230,70 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
 #endif
 
-  /* box */
-  gtk_box_set_spacing(session->gtk.box, 0);
-  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.box));
-
   /* statusbar */
   gtk_container_add(GTK_CONTAINER(session->gtk.statusbar), GTK_WIDGET(session->gtk.statusbar_entries));
 
   /* notification area */
   gtk_container_add(GTK_CONTAINER(session->gtk.notification_area), GTK_WIDGET(session->gtk.notification_text));
-  gtk_misc_set_alignment(GTK_MISC(session->gtk.notification_text), 0.0, 0.0);
-  gtk_misc_set_padding(GTK_MISC(session->gtk.notification_text), 2, 2);
+  gtk_misc_set_alignment(GTK_MISC(session->gtk.notification_text), 0.0, 0.5);
   gtk_label_set_use_markup(GTK_LABEL(session->gtk.notification_text), TRUE);
 
   /* inputbar */
-  gtk_entry_set_inner_border(session->gtk.inputbar_entry, NULL);
   gtk_entry_set_has_frame(session->gtk.inputbar_entry, FALSE);
   gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar_entry), TRUE);
+
+  /* we want inputbar_entry the same height as notification_text and statusbar,
+     so that when inputbar_entry is hidden, the size of the bottom_box remains
+     the same. We need to get rid of the builtin padding in the GtkEntry
+     widget. */
+
+  guint ypadding = 2;         /* total amount of padding (top + bottom) */
+  guint leftpadding = 4;      /* left padding */
+  girara_setting_get(session, "statusbar-padding", &ypadding);
+
+#if (GTK_MAJOR_VERSION == 3)
+  /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
+  GtkCssProvider* provider = gtk_css_provider_new();
+  char css[256];
+  const char* css_pattern = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx 0px %dpx %dpx; }";
+  sprintf(css, css_pattern, ypadding - ypadding/2, ypadding/2, leftpadding);
+
+  gtk_css_provider_load_from_data(provider, css, strlen(css), NULL);
+  GdkDisplay *display = gdk_display_get_default ();
+  GdkScreen *screen = gdk_display_get_default_screen (display);
+  gtk_style_context_add_provider_for_screen (screen,
+                                             GTK_STYLE_PROVIDER (provider),
+                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  g_object_unref (provider);
+
+  gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
+  gtk_widget_set_name(GTK_WIDGET(session->gtk.notification_text), "bottom_box");
+#else
+  GtkBorder inner_border = {
+      .left = leftpadding,
+      .right = 0,
+      .top = ypadding - ypadding/2,
+      .bottom = ypadding/2
+  };
+
+  gtk_entry_set_inner_border(session->gtk.inputbar_entry, &inner_border);
+
+  /* obtain the actual inputbar height */
+  /* TODO: for some reason does not match */
+  GtkRequisition req;
+  gtk_widget_size_request(GTK_WIDGET(session->gtk.inputbar_entry), &req);
+  /* have no idea where the extra 5 pixels come from. without this, the other
+     widgets get larger than the inputbar */
+  guint statusbar_height = req.height - 5;
+
+  /* force all widgets to have the same height as inputbar */
+  gtk_widget_set_size_request(GTK_WIDGET(session->gtk.inputbar_entry), -1, statusbar_height);
+  gtk_widget_set_size_request(GTK_WIDGET(session->gtk.statusbar_entries), -1, statusbar_height);
+  gtk_widget_set_size_request(GTK_WIDGET(session->gtk.notification_text), -1, statusbar_height);
+
+  /* set horizontal padding. same for statusbar entries in statusbar.c */
+  gtk_misc_set_padding(GTK_MISC(session->gtk.notification_text), leftpadding, 0);
+#endif
 
   session->signals.inputbar_key_pressed = g_signal_connect(
       G_OBJECT(session->gtk.inputbar_entry),
@@ -268,20 +319,47 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_box_set_homogeneous(session->gtk.inputbar_box, FALSE);
   gtk_box_set_spacing(session->gtk.inputbar_box, 5);
 
+  /* inputbar box */
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_dialog), FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(session->gtk.inputbar_box),  GTK_WIDGET(session->gtk.inputbar_entry),  TRUE,  TRUE,  0);
   gtk_container_add(GTK_CONTAINER(session->gtk.inputbar), GTK_WIDGET(session->gtk.inputbar_box));
+
+  /* bottom box */
+  gtk_box_set_spacing(session->private_data->gtk.bottom_box, 0);
+
+  gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.inputbar), TRUE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.notification_area), TRUE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.statusbar), TRUE, TRUE, 0);
 
   /* tabs */
   gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
   gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
 
+#if (GTK_MAJOR_VERSION == 3)
   /* packing */
+  gtk_box_set_spacing(session->gtk.box, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.statusbar),         FALSE, FALSE, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.notification_area), FALSE, FALSE, 0);
-  gtk_box_pack_end(  session->gtk.box, GTK_WIDGET(session->gtk.inputbar),          FALSE, FALSE, 0);
+
+  /* box */
+  gtk_container_add(GTK_CONTAINER(session->private_data->gtk.overlay), GTK_WIDGET(session->gtk.box));
+  /* overlay */
+  g_object_set(session->private_data->gtk.bottom_box, "halign", GTK_ALIGN_FILL, NULL);
+  g_object_set(session->private_data->gtk.bottom_box, "valign", GTK_ALIGN_END, NULL);
+
+  gtk_overlay_add_overlay(GTK_OVERLAY(session->private_data->gtk.overlay), GTK_WIDGET(session->private_data->gtk.bottom_box));
+  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->private_data->gtk.overlay));
+
+#else
+  /* packing */
+  gtk_box_set_spacing(session->gtk.box, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
+  gtk_box_pack_end(session->gtk.box, GTK_WIDGET(session->private_data->gtk.bottom_box),     FALSE, FALSE, 0);
+
+  /* box */
+  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.box));
+#endif
 
   /* parse color values */
   typedef struct color_setting_mapping_s

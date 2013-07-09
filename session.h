@@ -16,9 +16,6 @@
 #include "gtk2-compat.h"
 #endif
 
-/**
- * Structure of a girara session
- */
 struct girara_session_s
 {
   struct
@@ -44,6 +41,7 @@ struct girara_session_s
 #else
     GdkNativeWindow embed; /**< Embedded window */
 #endif // (GTK_MAJOR_VERSION == 3)
+
   } gtk;
 
   struct
