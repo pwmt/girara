@@ -30,7 +30,7 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
 
 #if (GTK_MAJOR_VERSION == 3)
   /* add name so it uses a custom style */
-  gtk_widget_set_name(item->text, "bottom_box");
+  gtk_widget_set_name(GTK_WIDGET(item->text), "bottom_box");
 #else
   /* set padding */
   gtk_misc_set_padding(GTK_MISC(item->text), 4, 0);

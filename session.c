@@ -248,8 +248,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   g_object_unref (provider);
 
-  gtk_widget_set_name(session->gtk.inputbar_entry, "bottom_box");
-  gtk_widget_set_name(session->gtk.notification_text, "bottom_box");
+  gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
+  gtk_widget_set_name(GTK_WIDGET(session->gtk.notification_text), "bottom_box");
 #else
   GtkBorder inner_border = {
       .left = leftpadding,
