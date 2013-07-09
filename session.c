@@ -53,6 +53,7 @@ girara_session_create()
   ensure_gettext_initialized();
 
   girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
+  session->private_data     = g_slice_alloc0(sizeof(girara_session_private_t));
 
   /* init values */
   session->bindings.mouse_events       = girara_list_new2(
@@ -69,7 +70,8 @@ girara_session_create()
   session->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
 
-  session->settings = girara_sorted_list_new2(
+  /* settings */
+  session->private_data->settings = girara_sorted_list_new2(
       (girara_compare_function_t) cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
 
@@ -92,9 +94,6 @@ girara_session_create()
 
   /* command history */
   session->command_history = girara_input_history_new(NULL);
-  IGNORE_DEPRECATED
-  session->global.command_history = girara_get_command_history(session);
-  UNIGNORE
 
   /* load default values */
   girara_config_load_default(session);
@@ -122,6 +121,12 @@ girara_session_create()
   session->gtk.inputbar_entry    = GTK_ENTRY(gtk_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
+
+  /* deprecated members */
+  IGNORE_DEPRECATED
+  session->settings               = session->private_data->settings;
+  session->global.command_history = girara_get_command_history(session);
+  UNIGNORE
 
   return session;
 }
@@ -404,6 +409,18 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   return true;
 }
 
+static void
+girara_session_private_free(girara_session_private_t* session)
+{
+  g_return_if_fail(session != NULL);
+
+  /* clean up settings */
+  girara_list_free(session->settings);
+  session->settings = NULL;
+
+  g_slice_free(girara_session_private_t, session);
+}
+
 bool
 girara_session_destroy(girara_session_t* session)
 {
@@ -433,10 +450,6 @@ girara_session_destroy(girara_session_t* session)
   /* clean up mouse events */
   girara_list_free(session->bindings.mouse_events);
   session->bindings.mouse_events = NULL;
-
-  /* clean up settings */
-  girara_list_free(session->settings);
-  session->settings = NULL;
 
   /* clean up input histry */
   g_object_unref(session->command_history);
@@ -473,6 +486,13 @@ girara_session_destroy(girara_session_t* session)
 
   session->buffer.command = NULL;
   session->global.buffer  = NULL;
+
+  /* clean up private data */
+  girara_session_private_free(session->private_data);
+  session->private_data = NULL;
+  IGNORE_DEPRECATED
+  session->settings = NULL;
+  UNIGNORE
 
   /* clean up session */
   g_slice_free(girara_session_t, session);

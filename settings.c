@@ -86,7 +86,7 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
   setting->data        = data;
   girara_setting_set_value(NULL, setting, value);
 
-  girara_list_append(session->settings, setting);
+  girara_list_append(session->private_data->settings, setting);
 
   return true;
 }
@@ -171,12 +171,12 @@ girara_setting_find(girara_session_t* session, const char* name)
   g_return_val_if_fail(name != NULL, NULL);
 
   girara_setting_t* result = NULL;
-  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH(session->private_data->settings, girara_setting_t*, iter, setting)
     if (g_strcmp0(setting->name, name) == 0) {
       result = setting;
       break;
     }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
+  GIRARA_LIST_FOREACH_END(session->private_data->settings, girara_setting_t*, iter, setting);
 
   return result;
 }
@@ -213,12 +213,12 @@ girara_cc_set(girara_session_t* session, const char* input)
 
   unsigned int input_length = strlen(input);
 
-  GIRARA_LIST_FOREACH(session->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH(session->private_data->settings, girara_setting_t*, iter, setting)
     if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
         !strncmp(input, setting->name, input_length)) {
       girara_completion_group_add_element(group, setting->name, setting->description);
     }
-  GIRARA_LIST_FOREACH_END(session->settings, girara_setting_t*, iter, setting);
+  GIRARA_LIST_FOREACH_END(session->private_data->settings, girara_setting_t*, iter, setting);
 
   return completion;
 }

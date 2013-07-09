@@ -11,6 +11,7 @@ typedef struct girara_list_s girara_list_t;
 typedef struct girara_list_iterator_s girara_list_iterator_t;
 typedef struct girara_setting_s girara_setting_t;
 typedef struct girara_session_s girara_session_t;
+typedef struct girara_session_private_s girara_session_private_t;
 typedef struct girara_command_s girara_command_t;
 typedef struct girara_mouse_event_s girara_mouse_event_t;
 typedef struct girara_config_handle_s girara_config_handle_t;

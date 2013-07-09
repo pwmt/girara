@@ -228,4 +228,15 @@ struct girara_statusbar_item_s
   GtkLabel *text; /**< Text label */
 };
 
+/**
+ * Private data of the girara session
+ */
+struct girara_session_private_s
+{
+  /**
+   * List of all settings
+   */
+  girara_list_t* settings;
+};
+
 #endif
