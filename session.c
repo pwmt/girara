@@ -310,7 +310,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
   };
 
-  for (unsigned i = 0; i < LENGTH(color_setting_mappings); i++) {
+  for (size_t i = 0; i < LENGTH(color_setting_mappings); i++) {
     char* tmp_value = NULL;
     girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
     if (tmp_value != NULL) {
@@ -374,7 +374,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   girara_setting_get(session, "window-width", &window_width);
   girara_setting_get(session, "window-height", &window_height);
 
-  if (window_width > 0&& window_height > 0) {
+  if (window_width > 0 && window_height > 0) {
     gtk_window_set_default_size(GTK_WINDOW(session->gtk.window), window_width, window_height);
   }
 
@@ -622,7 +622,7 @@ girara_mode_add(girara_session_t* session, const char* name)
 void
 girara_mode_string_free(girara_mode_string_t* mode)
 {
-  if (!mode) {
+  if (mode == NULL) {
     return;
   }
 
@@ -653,6 +653,6 @@ girara_set_window_title(girara_session_t* session, const char* name)
 girara_list_t*
 girara_get_command_history(girara_session_t* session)
 {
-  g_return_val_if_fail(session != NULL, FALSE);
+  g_return_val_if_fail(session != NULL, NULL);
   return girara_input_history_list(session->command_history);
 }
