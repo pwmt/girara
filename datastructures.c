@@ -105,7 +105,7 @@ girara_list_clear(girara_list_t* list)
 void
 girara_list_free(girara_list_t* list)
 {
-  if (!list) {
+  if (list == NULL) {
     return;
   }
 
@@ -116,9 +116,9 @@ girara_list_free(girara_list_t* list)
 void
 girara_list_append(girara_list_t* list, void* data)
 {
-  g_return_if_fail(list);
+  g_return_if_fail(list != NULL);
 
-  if (list->cmp) {
+  if (list->cmp != NULL) {
     list->start = g_list_insert_sorted(list->start, data, list->cmp);
   } else {
     list->start = g_list_append(list->start, data);
@@ -128,9 +128,9 @@ girara_list_append(girara_list_t* list, void* data)
 void
 girara_list_prepend(girara_list_t* list, void* data)
 {
-  g_return_if_fail(list);
+  g_return_if_fail(list != NULL);
 
-  if (list->cmp) {
+  if (list->cmp != NULL) {
     girara_list_append(list, data);
   } else {
     list->start = g_list_prepend(list->start, data);
@@ -140,17 +140,17 @@ girara_list_prepend(girara_list_t* list, void* data)
 void
 girara_list_remove(girara_list_t* list, void* data)
 {
-  g_return_if_fail(list);
-  if (!list->start) {
+  g_return_if_fail(list != NULL);
+  if (list->start == NULL) {
     return;
   }
 
   GList* tmp = g_list_find(list->start, data);
-  if (!tmp) {
+  if (tmp == NULL) {
     return;
   }
 
-  if (list->free) {
+  if (list->free != NULL) {
     (list->free)(tmp->data);
   }
   list->start = g_list_delete_link(list->start, tmp);
