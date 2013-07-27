@@ -16,9 +16,6 @@
 #include "gtk2-compat.h"
 #endif
 
-/**
- * Structure of a girara session
- */
 struct girara_session_s
 {
   struct
@@ -44,6 +41,7 @@ struct girara_session_s
 #else
     GdkNativeWindow embed; /**< Embedded window */
 #endif // (GTK_MAJOR_VERSION == 3)
+
   } gtk;
 
   struct
@@ -88,9 +86,9 @@ struct girara_session_s
   } elements;
 
   /**
-   * List of settings
+   * List of settings (deprecated)
    */
-  girara_list_t* settings;
+  girara_list_t* GIRARA_DEPRECATED(settings);
 
   struct
   {
@@ -144,6 +142,7 @@ struct girara_session_s
   } config;
 
   GiraraInputHistory* command_history; /**< Command history */
+  girara_session_private_t* private_data; /**< Private data of a girara session */
 };
 
 /**

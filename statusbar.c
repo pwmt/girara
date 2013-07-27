@@ -25,9 +25,16 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_widget_override_font(GTK_WIDGET(item->text),             session->style.font);
 
   /* set properties */
-  gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.0);
-  gtk_misc_set_padding(GTK_MISC(item->text),       2, 4);
+  gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.5);
   gtk_label_set_use_markup(item->text,             TRUE);
+
+#if (GTK_MAJOR_VERSION == 3)
+  /* add name so it uses a custom style */
+  gtk_widget_set_name(GTK_WIDGET(item->text), "bottom_box");
+#else
+  /* set padding */
+  gtk_misc_set_padding(GTK_MISC(item->text), 4, 0);
+#endif
 
   if (callback != NULL) {
     g_signal_connect(G_OBJECT(item->box), "button-press-event", G_CALLBACK(callback), session);
@@ -85,4 +92,3 @@ girara_statusbar_set_background(girara_session_t* session, const char* color)
 
   return true;
 }
-
