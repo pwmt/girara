@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-04-28 14:54+0200\n"
-"PO-Revision-Date: 2013-03-17 22:03+0100\n"
+"POT-Creation-Date: 2013-08-15 00:23+0200\n"
+"PO-Revision-Date: 2013-08-15 00:24+0200\n"
 "Last-Translator: Nisok Kosin <nikos.efthimiou@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/girara/language/"
 "el/)\n"
@@ -87,148 +87,160 @@ msgid "Unknown value for option: %s"
 msgstr "Άγνωστη τιμή για την επιλογή: %s"
 
 #. settings
-#: ../config.c:145
+#: ../config.c:202
 msgid "Font"
 msgstr "Γραμματοσειρά"
 
-#: ../config.c:146
+#: ../config.c:203
 msgid "Default foreground color"
 msgstr "Προεπιλεγμένο χρώμα προσκηνίου"
 
-#: ../config.c:147
+#: ../config.c:204
 msgid "Default background color"
 msgstr "Προεπιλεγμένο χρώμα πρασκηνίου"
 
-#: ../config.c:148
+#: ../config.c:205
 msgid "Inputbar foreground color"
 msgstr "Χρώμα μπάρας εισαγωγής"
 
-#: ../config.c:149
+#: ../config.c:206
 msgid "Inputbar background color"
 msgstr "Χρώμα φόντου μπάρας εισαγωγής"
 
-#: ../config.c:150
+#: ../config.c:207
 msgid "Statusbar foreground color"
 msgstr "Χρώμα μπάρας κατάστασης"
 
-#: ../config.c:151
+#: ../config.c:208
 msgid "Statsubar background color"
 msgstr "Χρώμα φόντου μπάρας κατάστασης"
 
-#: ../config.c:152
+#: ../config.c:209
 msgid "Completion foreground color"
 msgstr "Χρώμα επιλογών συμπλήρωσης"
 
-#: ../config.c:153
+#: ../config.c:210
 msgid "Completion background color"
 msgstr "Χρώμα συμπλήρωσης λέξεων"
 
-#: ../config.c:154
+#: ../config.c:211
 msgid "Completion group foreground color"
 msgstr "Χρώμα μενού συμπλήρωσης λέξεων"
 
-#: ../config.c:155
+#: ../config.c:212
 msgid "Completion group background color"
 msgstr "Χρώμα φόντου του μενού συμπλήρωσης λέξεων"
 
-#: ../config.c:156
+#: ../config.c:213
 msgid "Completion highlight foreground color"
 msgstr "Χρώμα τονισμού συμπλήρωσης λέξεων"
 
-#: ../config.c:157
+#: ../config.c:214
 msgid "Completion highlight background color"
 msgstr "Χρώμα φόντου τονισμού συμπλήρωσης λέξεων"
 
-#: ../config.c:158
+#: ../config.c:215
 msgid "Error notification foreground color"
 msgstr "Χρώμα ειδοποίησης σφάλματος"
 
-#: ../config.c:159
+#: ../config.c:216
 msgid "Error notification background color"
 msgstr "Χρώμα φόντου ειδοποίησης σφάλματος"
 
-#: ../config.c:160
+#: ../config.c:217
 msgid "Warning notification foreground color"
 msgstr "Χρώμα ειδοποίησης προειδοποίησης"
 
-#: ../config.c:161
+#: ../config.c:218
 msgid "Warning notifaction background color"
 msgstr "Χρώμα φόντου ειδοποίησης προειδοποίησης"
 
-#: ../config.c:162
+#: ../config.c:219
 msgid "Notification foreground color"
 msgstr "Χρώμα ειδοποίησης"
 
-#: ../config.c:163
+#: ../config.c:220
 msgid "Notification background color"
 msgstr "Χρώμα φόντου ειδοποίησης"
 
-#: ../config.c:164
+#: ../config.c:221
 msgid "Tab bar foreground color"
 msgstr "Χρώμα μπάρας καρτελών"
 
-#: ../config.c:165
+#: ../config.c:222
 msgid "Tab bar background color"
 msgstr "Χρώμα φόντου μπάρας καρτελών"
 
-#: ../config.c:166
+#: ../config.c:223
 msgid "Tab bar foreground color (active)"
 msgstr "Χρώμα μπάρας καρτελών (ενεργό)"
 
-#: ../config.c:167
+#: ../config.c:224
 msgid "Tab bar background color (active)"
 msgstr "Χρώμα φόντου μπάρας καρτελών (ενεργό)"
 
-#: ../config.c:169
+#: ../config.c:226
 msgid "Initial window width"
 msgstr "Αρχικό πλάτος παραθύρου"
 
-#: ../config.c:170
+#: ../config.c:227
 msgid "Initial window height"
 msgstr "Αρχικό ύψος παραθύρου"
 
-#: ../config.c:171
+#: ../config.c:228
+msgid "Vertical padding for the status input and notification bars"
+msgstr ""
+
+#: ../config.c:229
 msgid "Number of completion items"
 msgstr "Αριθμός στοιχείων συμπλήρωσης"
 
-#: ../config.c:172
-msgid "Show scrollbars"
-msgstr "Εμφάνιση μπαρών κύλησης"
+#: ../config.c:230
+msgid "Show both the horizontal and vertical scrollbars"
+msgstr ""
 
-#: ../config.c:173
+#: ../config.c:231
+msgid "Show the horizontal scrollbar"
+msgstr ""
+
+#: ../config.c:232
+msgid "Show the vertical scrollbar"
+msgstr ""
+
+#: ../config.c:233
 msgid "Window icon"
 msgstr "Εικονίδιο παραθύρου"
 
-#: ../config.c:174
+#: ../config.c:234
 msgid "Command to execute in :exec"
 msgstr "Η εντολή που θα εκτελεστεί στο :exec"
 
-#: ../config.c:175
+#: ../config.c:235
 msgid "Show or hide certain GUI elements"
 msgstr "Εμφάνιση είτε απόκριψη συγκεκριμένω στοιχείων του GUI"
 
 #. commands
-#: ../config.c:211
+#: ../config.c:271
 msgid "Execute a command"
 msgstr "Εκτέλεση εντολής"
 
-#: ../config.c:212
+#: ../config.c:272
 msgid "Map a key sequence"
 msgstr "Χαρτογράφηση / map αλληλουχίας πλήκτρων"
 
-#: ../config.c:213
+#: ../config.c:273
 msgid "Quit the program"
 msgstr "Εγκατάληψη της εφαρμογής"
 
-#: ../config.c:214
+#: ../config.c:274
 msgid "Set an option"
 msgstr "Ρύθμιση επιλογής"
 
-#: ../config.c:215
+#: ../config.c:275
 msgid "Unmap a key sequence"
 msgstr "Απόχαρτογράφηση / unmap αλληλουχίας πλήκτρων"
 
-#: ../utils.c:515
+#: ../utils.c:519
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Αποτυχία στην εκτέλεση της εντολής: %s"
