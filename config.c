@@ -22,12 +22,16 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name),
   g_return_if_fail(session != NULL && value != NULL);
 
   if (session->gtk.window != NULL) {
+    char* path = girara_fix_path(value); // value != NULL
+
     GError* error = NULL;
-    gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), (const char*) value, &error);
+    gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), path, &error);
     if (error != NULL) {
       girara_error("failed to load window icon: %s", error->message);
       g_error_free(error);
     }
+
+    free(path);
   }
 }
 
@@ -110,17 +114,69 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
 }
 
 static void
-cb_scrollbars(girara_session_t* session, const char* UNUSED(name),
+cb_scrollbars(girara_session_t* session, const char* name,
     girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  if (*(bool*) value == true) {
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  } else {
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
-        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+  bool val = *(bool*) value;
+  bool show_hscrollbar = false;
+  bool show_vscrollbar = false;
+
+#if (GTK_MAJOR_VERSION == 3)
+  GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
+  GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
+
+  if (vscrollbar != NULL) {
+    show_vscrollbar = gtk_widget_get_visible(vscrollbar);
+  }
+
+  if (hscrollbar != NULL) {
+    show_hscrollbar = gtk_widget_get_visible(hscrollbar);
+  }
+#else
+  GtkPolicyType h_policy, v_policy;
+  gtk_scrolled_window_get_policy(GTK_SCROLLED_WINDOW(session->gtk.view), &h_policy, &v_policy);
+  show_vscrollbar = (v_policy == GTK_POLICY_AUTOMATIC);
+  show_hscrollbar = (h_policy == GTK_POLICY_AUTOMATIC);
+#endif
+
+  if (!strcmp(name, "show-scrollbars")) {
+    show_hscrollbar = show_vscrollbar = val;
+
+    girara_setting_set(session, "show-h-scrollbar", &val);
+    girara_setting_set(session, "show-v-scrollbar", &val);
+
+  } else if (!strcmp(name, "show-h-scrollbar")) {
+    show_hscrollbar = val;
+
+  } else if (!strcmp(name, "show-v-scrollbar")) {
+    show_vscrollbar = val;
+  }
+
+#if (GTK_MAJOR_VERSION == 3)
+  if (vscrollbar != NULL) {
+    gtk_widget_set_visible(vscrollbar, show_vscrollbar);
+  }
+
+  if (hscrollbar != NULL) {
+    gtk_widget_set_visible(hscrollbar, show_hscrollbar);
+  }
+#else
+  h_policy = show_hscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  v_policy = show_vscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), h_policy, v_policy);
+#endif
+
+  /* be careful to avoid infinite recursion as changing settings triggers
+     cb_scrollbars call */
+  girara_setting_get(session, "show-scrollbars", &val);
+  if (show_hscrollbar && show_vscrollbar && !val) {
+    val = true;
+    girara_setting_set(session, "show-scrollbars", &val);
+  } else if (!show_hscrollbar && !show_vscrollbar && val) {
+    val = false;
+    girara_setting_set(session, "show-scrollbars", &val);
   }
 }
 
@@ -132,6 +188,7 @@ girara_config_load_default(girara_session_t* session)
   }
 
   /* values */
+  int statusbar_padding     = 2;
   int window_width          = 800;
   int window_height         = 600;
   int n_completion_items    = 15;
@@ -168,8 +225,11 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
+  girara_setting_add(session, "statusbar-padding",        &statusbar_padding,   INT,     TRUE,  _("Vertical padding for the status input and notification bars"), NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"), NULL, NULL);
-  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show scrollbars"), cb_scrollbars, NULL);
+  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show both the horizontal and vertical scrollbars"), cb_scrollbars, NULL);
+  girara_setting_add(session, "show-h-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the horizontal scrollbar"), cb_scrollbars, NULL);
+  girara_setting_add(session, "show-v-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the vertical scrollbar"), cb_scrollbars, NULL);
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
   girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);
@@ -224,6 +284,8 @@ girara_config_load_default(girara_session_t* session)
   girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
   girara_shortcut_mapping_add(session, "set",            girara_sc_set);
   girara_shortcut_mapping_add(session, "feedkeys",       girara_sc_feedkeys);
+  girara_shortcut_mapping_add(session, "tab_next",       girara_sc_tab_navigate_next);
+  girara_shortcut_mapping_add(session, "tab_prev",       girara_sc_tab_navigate_prev);
 }
 
 bool
@@ -364,4 +426,3 @@ girara_config_parse(girara_session_t* session, const char* path)
 {
   config_parse(session, path);
 }
-

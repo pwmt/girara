@@ -384,6 +384,24 @@ girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, g
   return false;
 }
 
+bool
+girara_sc_tab_navigate_next(girara_session_t* session,
+                            girara_argument_t* argument,
+                            girara_event_t* event, unsigned int t)
+{
+  argument->n = GIRARA_NEXT;
+  return girara_sc_tab_navigate(session, argument, event, t);
+}
+
+bool
+girara_sc_tab_navigate_prev(girara_session_t* session,
+                            girara_argument_t* argument,
+                            girara_event_t* event, unsigned int t)
+{
+  argument->n = GIRARA_PREVIOUS;
+  return girara_sc_tab_navigate(session, argument, event, t);
+}
+
 static void
 girara_toggle_widget_visibility(GtkWidget* widget)
 {

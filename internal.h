@@ -228,4 +228,23 @@ struct girara_statusbar_item_s
   GtkLabel *text; /**< Text label */
 };
 
+/**
+ * Private data of the girara session
+ */
+struct girara_session_private_s
+{
+  /**
+   * List of all settings
+   */
+  girara_list_t* settings;
+
+  struct
+  {
+#if GTK_MAJOR_VERSION == 3
+    GtkWidget         *overlay; /**< So we can overlay bottom_box on top of view */
+#endif
+    GtkBox            *bottom_box; /**< Box grouping input, status and notification */
+  } gtk;
+};
+
 #endif

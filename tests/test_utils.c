@@ -88,15 +88,17 @@ START_TEST(test_home_directory) {
   girara_list_iterator_free(iter);
   girara_list_free(list);
 
-  g_setenv("HOME", "/home/test", TRUE);
-  result = girara_get_home_directory(NULL);
-  fail_unless(g_strcmp0(result, "/home/test") == 0, "Home directory is not the same", NULL);
-  g_free(result);
-
   if (oldenv) {
     g_setenv("HOME", oldenv, TRUE);
     g_free(oldenv);
   }
+} END_TEST
+
+START_TEST(test_home_directory_set_HOME) {
+  g_setenv("HOME", "/home/test", TRUE);
+  char* result = girara_get_home_directory(NULL);
+  fail_unless(g_strcmp0(result, "/home/test") == 0, "Home directory is not the same", NULL);
+  g_free(result);
 } END_TEST
 
 START_TEST(test_fix_path_basic) {
@@ -139,7 +141,25 @@ static void
 xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
     const gchar* expected)
 {
-  gchar* envp[] = { g_strdup_printf("%s=", envvar) , NULL };
+#if GLIB_CHECK_VERSION(2, 35, 3)
+  const gchar* home = g_getenv("HOME");
+  gchar* home_env_var = NULL;
+  gchar** envp = NULL;
+
+  if (home != NULL) {
+    home_env_var = g_strdup_printf("HOME=%s", home);
+    envp = calloc(3, sizeof(gchar*));
+    fail_unless(envp != NULL, "Failed to allocate memory for ENV");
+    envp[1] = home_env_var;
+  } else {
+    envp = calloc(2, sizeof(gchar*));
+    fail_unless(envp != NULL, "Failed to allocate memory for ENV");
+  }
+
+  envp[0] = g_strdup_printf("%s=", envvar);
+#else
+  gchar* envp[] = { g_strdup_printf("%s=", envvar), NULL };
+#endif
   gchar* argv[] = { "./xdg_test_helper", g_strdup_printf("%d", path), NULL };
 
   gchar* output = NULL;
@@ -168,7 +188,13 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   fail_unless(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
       output, "/home/test/xdg", NULL);
 
+  g_free(envp[0]);
   g_free(argv[1]);
+
+#if GLIB_CHECK_VERSION(2, 35, 3)
+  g_free(home_env_var);
+  g_free(envp);
+#endif
 }
 
 START_TEST(test_xdg_path) {
@@ -260,6 +286,7 @@ Suite* suite_utils()
   /* home directory */
   tcase = tcase_create("home_directory");
   tcase_add_test(tcase, test_home_directory);
+  tcase_add_test(tcase, test_home_directory_set_HOME);
   suite_add_tcase(suite, tcase);
 
   /* fix path */
