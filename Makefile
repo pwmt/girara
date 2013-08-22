@@ -30,9 +30,9 @@ options:
 	@echo "CC      = ${CC}"
 
 version.h: version.h.in config.mk
-	$(QUIET)sed 's/GVMAJOR/${GIRARA_VERSION_MAJOR}/' < version.h.in | \
-		sed 's/GVMINOR/${GIRARA_VERSION_MINOR}/' | \
-		sed 's/GVREV/${GIRARA_VERSION_REV}/' > version.h
+	$(QUIET)sed -e 's/GVMAJOR/${GIRARA_VERSION_MAJOR}/' \
+		-e 's/GVMINOR/${GIRARA_VERSION_MINOR}/' \
+		-e 's/GVREV/${GIRARA_VERSION_REV}/' version.h.in > version.h
 
 %-gtk${GIRARA_GTK_VERSION}.o: %.c
 	@mkdir -p .depend
