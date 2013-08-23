@@ -4,6 +4,7 @@
 #include "session.h"
 #include "datastructures.h"
 #include "internal.h"
+#include "settings.h"
 
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
@@ -33,7 +34,12 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_widget_set_name(GTK_WIDGET(item->text), "bottom_box");
 #else
   /* set padding */
-  gtk_misc_set_padding(GTK_MISC(item->text), 4, 0);
+  guint ypadding = 2;         /* total amount of padding (top + bottom) */
+  guint xpadding = 8;         /* total amount of padding (left + right) */
+  girara_setting_get(session, "statusbar-h-padding", &xpadding);
+  girara_setting_get(session, "statusbar-v-padding", &ypadding);
+
+  gtk_misc_set_padding(GTK_MISC(item->text), xpadding/2, ypadding/2);
 #endif
 
   if (callback != NULL) {

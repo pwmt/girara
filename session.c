@@ -248,7 +248,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   guint ypadding = 2;         /* total amount of padding (top + bottom) */
   guint xpadding = 8;         /* total amount of padding (left + right) */
-  girara_setting_get(session, "statusbar-padding", &ypadding);
+  girara_setting_get(session, "statusbar-h-padding", &xpadding);
+  girara_setting_get(session, "statusbar-v-padding", &ypadding);
 
 #if (GTK_MAJOR_VERSION == 3)
   /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
@@ -279,16 +280,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   /* set inner borders for inputbar and notification_text */
   gtk_entry_set_inner_border(session->gtk.inputbar_entry, &inner_border);
   gtk_misc_set_padding(GTK_MISC(session->gtk.notification_text), xpadding/2, ypadding/2);
-
-  /* obtain the actual inputbar height */
-  GtkRequisition req;
-  gtk_widget_size_request(GTK_WIDGET(session->gtk.inputbar_entry), &req);
-  /* have no idea where the extra 5 pixels come from. without this, the statusbar
-     gets larger than the inputbar */
-  guint statusbar_height = req.height - 5;
-
-  /* force statusbar to have same height as inputbar */
-  gtk_widget_set_size_request(GTK_WIDGET(session->gtk.statusbar_entries), -1, statusbar_height);
 #endif
 
   session->signals.inputbar_key_pressed = g_signal_connect(
