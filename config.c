@@ -188,8 +188,8 @@ girara_config_load_default(girara_session_t* session)
   }
 
   /* values */
-  int statusbar_h_padding     = 8;
-  int statusbar_v_padding     = 2;
+  int statusbar_h_padding   = 8;
+  int statusbar_v_padding   = 2;
   int window_width          = 800;
   int window_height         = 600;
   int n_completion_items    = 15;
