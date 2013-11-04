@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-08-15 00:23+0200\n"
+"POT-Creation-Date: 2013-11-04 20:02+0100\n"
 "PO-Revision-Date: 2012-03-26 16:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Hebrew (http://www.transifex.com/projects/p/girara/language/"
@@ -85,156 +85,160 @@ msgid "Unknown value for option: %s"
 msgstr ""
 
 #. settings
-#: ../config.c:202
+#: ../config.c:203
 msgid "Font"
 msgstr ""
 
-#: ../config.c:203
+#: ../config.c:204
 msgid "Default foreground color"
 msgstr ""
 
-#: ../config.c:204
+#: ../config.c:205
 msgid "Default background color"
 msgstr ""
 
-#: ../config.c:205
+#: ../config.c:206
 msgid "Inputbar foreground color"
 msgstr ""
 
-#: ../config.c:206
+#: ../config.c:207
 msgid "Inputbar background color"
 msgstr ""
 
-#: ../config.c:207
+#: ../config.c:208
 msgid "Statusbar foreground color"
 msgstr ""
 
-#: ../config.c:208
+#: ../config.c:209
 msgid "Statsubar background color"
 msgstr ""
 
-#: ../config.c:209
+#: ../config.c:210
 msgid "Completion foreground color"
 msgstr ""
 
-#: ../config.c:210
+#: ../config.c:211
 msgid "Completion background color"
 msgstr ""
 
-#: ../config.c:211
+#: ../config.c:212
 msgid "Completion group foreground color"
 msgstr ""
 
-#: ../config.c:212
+#: ../config.c:213
 msgid "Completion group background color"
 msgstr ""
 
-#: ../config.c:213
+#: ../config.c:214
 msgid "Completion highlight foreground color"
 msgstr ""
 
-#: ../config.c:214
+#: ../config.c:215
 msgid "Completion highlight background color"
 msgstr ""
 
-#: ../config.c:215
+#: ../config.c:216
 msgid "Error notification foreground color"
 msgstr ""
 
-#: ../config.c:216
+#: ../config.c:217
 msgid "Error notification background color"
 msgstr ""
 
-#: ../config.c:217
+#: ../config.c:218
 msgid "Warning notification foreground color"
 msgstr ""
 
-#: ../config.c:218
+#: ../config.c:219
 msgid "Warning notifaction background color"
 msgstr ""
 
-#: ../config.c:219
+#: ../config.c:220
 msgid "Notification foreground color"
 msgstr ""
 
-#: ../config.c:220
+#: ../config.c:221
 msgid "Notification background color"
 msgstr ""
 
-#: ../config.c:221
+#: ../config.c:222
 msgid "Tab bar foreground color"
 msgstr ""
 
-#: ../config.c:222
+#: ../config.c:223
 msgid "Tab bar background color"
 msgstr ""
 
-#: ../config.c:223
+#: ../config.c:224
 msgid "Tab bar foreground color (active)"
 msgstr ""
 
-#: ../config.c:224
+#: ../config.c:225
 msgid "Tab bar background color (active)"
 msgstr ""
 
-#: ../config.c:226
+#: ../config.c:227
 msgid "Initial window width"
 msgstr ""
 
-#: ../config.c:227
+#: ../config.c:228
 msgid "Initial window height"
 msgstr ""
 
-#: ../config.c:228
-msgid "Vertical padding for the status input and notification bars"
-msgstr ""
-
 #: ../config.c:229
-msgid "Number of completion items"
+msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
 #: ../config.c:230
-msgid "Show both the horizontal and vertical scrollbars"
+msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
 #: ../config.c:231
-msgid "Show the horizontal scrollbar"
+msgid "Number of completion items"
 msgstr ""
 
 #: ../config.c:232
-msgid "Show the vertical scrollbar"
+msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
 #: ../config.c:233
-msgid "Window icon"
+msgid "Show the horizontal scrollbar"
 msgstr ""
 
 #: ../config.c:234
-msgid "Command to execute in :exec"
+msgid "Show the vertical scrollbar"
 msgstr ""
 
 #: ../config.c:235
+msgid "Window icon"
+msgstr ""
+
+#: ../config.c:236
+msgid "Command to execute in :exec"
+msgstr ""
+
+#: ../config.c:237
 msgid "Show or hide certain GUI elements"
 msgstr ""
 
 #. commands
-#: ../config.c:271
+#: ../config.c:273
 msgid "Execute a command"
 msgstr ""
 
-#: ../config.c:272
+#: ../config.c:274
 msgid "Map a key sequence"
 msgstr ""
 
-#: ../config.c:273
+#: ../config.c:275
 msgid "Quit the program"
 msgstr ""
 
-#: ../config.c:274
+#: ../config.c:276
 msgid "Set an option"
 msgstr ""
 
-#: ../config.c:275
+#: ../config.c:277
 msgid "Unmap a key sequence"
 msgstr ""
 
