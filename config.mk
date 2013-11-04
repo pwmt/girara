@@ -22,7 +22,7 @@ INCLUDEDIR ?= ${PREFIX}/include
 # locale directory
 LOCALEDIR ?= ${PREFIX}/share/locale
 
-GIRARA_GTK_VERSION ?= 2
+GIRARA_GTK_VERSION ?= 3
 
 # libs
 GTK_INC ?= $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
