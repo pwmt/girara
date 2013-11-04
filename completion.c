@@ -549,19 +549,23 @@ girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int
   g_return_if_fail(session != NULL);
   g_return_if_fail(row     != NULL);
 
-  GtkBox *col    = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
+  GtkBox* col    = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
   GList* items   = gtk_container_get_children(GTK_CONTAINER(col));
-  GtkLabel *cmd  = GTK_LABEL(g_list_nth_data(items, 0));
-  GtkLabel *desc = GTK_LABEL(g_list_nth_data(items, 1));
+  GtkLabel* cmd  = GTK_LABEL(g_list_nth_data(items, 0));
+  GtkLabel* desc = GTK_LABEL(g_list_nth_data(items, 1));
 
   if (mode == GIRARA_HIGHLIGHT) {
-    gtk_widget_override_color(GTK_WIDGET(cmd),            GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
-    gtk_widget_override_color(GTK_WIDGET(desc),           GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
-    gtk_widget_override_background_color(GTK_WIDGET(row), GTK_STATE_NORMAL, &(session->style.completion_highlight_background));
+    gtk_widget_override_color(GTK_WIDGET(cmd),             GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
+    gtk_widget_override_color(GTK_WIDGET(desc),            GTK_STATE_NORMAL, &(session->style.completion_highlight_foreground));
+    gtk_widget_override_background_color(GTK_WIDGET(cmd),  GTK_STATE_NORMAL, &(session->style.completion_highlight_background));
+    gtk_widget_override_background_color(GTK_WIDGET(desc), GTK_STATE_NORMAL, &(session->style.completion_highlight_background));
+    gtk_widget_override_background_color(GTK_WIDGET(row),  GTK_STATE_NORMAL, &(session->style.completion_highlight_background));
   } else {
-    gtk_widget_override_color(GTK_WIDGET(cmd),            GTK_STATE_NORMAL, &(session->style.completion_foreground));
-    gtk_widget_override_color(GTK_WIDGET(desc),           GTK_STATE_NORMAL, &(session->style.completion_foreground));
-    gtk_widget_override_background_color(GTK_WIDGET(row), GTK_STATE_NORMAL, &(session->style.completion_background));
+    gtk_widget_override_color(GTK_WIDGET(cmd),             GTK_STATE_NORMAL, &(session->style.completion_foreground));
+    gtk_widget_override_color(GTK_WIDGET(desc),            GTK_STATE_NORMAL, &(session->style.completion_foreground));
+    gtk_widget_override_background_color(GTK_WIDGET(cmd),  GTK_STATE_NORMAL, &(session->style.completion_background));
+    gtk_widget_override_background_color(GTK_WIDGET(desc), GTK_STATE_NORMAL, &(session->style.completion_background));
+    gtk_widget_override_background_color(GTK_WIDGET(row),  GTK_STATE_NORMAL, &(session->style.completion_background));
   }
 
   g_list_free(items);
