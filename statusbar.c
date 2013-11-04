@@ -22,7 +22,10 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
 
   /* set style */
   gtk_widget_override_background_color(GTK_WIDGET(item->box),  GTK_STATE_NORMAL, &(session->style.statusbar_background));
+  gtk_widget_override_color(GTK_WIDGET(item->box),             GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+  gtk_widget_override_background_color(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &(session->style.statusbar_background));
   gtk_widget_override_color(GTK_WIDGET(item->text),            GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+
   gtk_widget_override_font(GTK_WIDGET(item->text),             session->style.font);
 
   /* set properties */
