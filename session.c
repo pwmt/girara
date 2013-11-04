@@ -584,28 +584,33 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
+  const GdkRGBA* foreground = NULL;
+  const GdkRGBA* background = NULL;
   switch (level) {
     case GIRARA_ERROR:
-      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_error_background));
-      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_error_foreground));
+      foreground = &session->style.notification_error_foreground;
+      background = &session->style.notification_error_background;
       break;
     case GIRARA_WARNING:
-      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_warning_background));
-      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
+      foreground = &session->style.notification_warning_foreground;
+      background = &session->style.notification_warning_background;
       break;
     case GIRARA_INFO:
-      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_default_background));
-      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+      foreground = &session->style.notification_default_foreground;
+      background = &session->style.notification_default_background;
       break;
     default:
       return;
   }
+
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, background);
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, background);
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, foreground);
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, foreground);
 
   /* prepare message */
   va_list ap;
