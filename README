@@ -34,3 +34,8 @@ Uninstall
 To delete girara from your system, type:
 
   make uninstall
+
+Bugs
+----
+Please report bugs at http://bugs.pwmt.org or contact us on our mailing list at
+girara@lists.pwmt.org.
