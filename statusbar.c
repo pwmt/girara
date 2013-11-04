@@ -83,9 +83,16 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(item    != NULL, false);
 
+#if (GTK_MAJOR_VERSION == 3)
+  GdkRGBA gdk_color;
+  gdk_rgba_parse(&gdk_color, color);
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_entry),
+      GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+#else
   GdkColor gdk_color;
   gdk_color_parse(color, &gdk_color);
   gtk_widget_modify_fg(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &gdk_color);
+#endif
 
   return true;
 }
