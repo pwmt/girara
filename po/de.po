@@ -2,8 +2,9 @@
 # See LICENSE file for license and copyright information
 #
 # Translators:
-#   <cedric.sodhi@googlemail.com>, 2012.
-#   Moritz Lipp <mlq@pwmt.org>, 2012.
+#   <cedric.sodhi@googlemail.com>, 2012
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2012
+# Moritz Lipp <mlq@pwmt.org>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
