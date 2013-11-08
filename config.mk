@@ -2,8 +2,9 @@
 
 GIRARA_VERSION_MAJOR = 0
 GIRARA_VERSION_MINOR = 1
-GIRARA_VERSION_REV   = 7
+GIRARA_VERSION_REV   = 8
 VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
+
 # Rules for the SOMAJOR and SOMINOR.
 # Before a release check perform the following checks against the last release:
 # * If a function has been removed or the paramaters of a function have changed
@@ -19,6 +20,7 @@ SOVERSION = ${SOMAJOR}.${SOMINOR}
 PREFIX ?= /usr
 LIBDIR ?= ${PREFIX}/lib
 INCLUDEDIR ?= ${PREFIX}/include
+
 # locale directory
 LOCALEDIR ?= ${PREFIX}/share/locale
 
