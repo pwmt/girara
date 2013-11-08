@@ -247,15 +247,16 @@ girara_session_init(girara_session_t* session, const char* sessionname)
      widget. */
 
   guint ypadding = 2;         /* total amount of padding (top + bottom) */
-  guint leftpadding = 4;      /* left padding */
-  girara_setting_get(session, "statusbar-padding", &ypadding);
+  guint xpadding = 8;         /* total amount of padding (left + right) */
+  girara_setting_get(session, "statusbar-h-padding", &xpadding);
+  girara_setting_get(session, "statusbar-v-padding", &ypadding);
 
 #if (GTK_MAJOR_VERSION == 3)
   /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
   GtkCssProvider* provider = gtk_css_provider_new();
 
-  static const char CSS_PATTERN[] = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx 0px %dpx %dpx; }";
-  char* css = g_strdup_printf(CSS_PATTERN, ypadding - ypadding/2, ypadding/2, leftpadding);
+  static const char CSS_PATTERN[] = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx %dpx %dpx %dpx; }";
+  char* css = g_strdup_printf(CSS_PATTERN, ypadding - ypadding/2, xpadding/2, ypadding/2, xpadding - xpadding/2);
   gtk_css_provider_load_from_data(provider, css, strlen(css), NULL);
   g_free(css);
 
@@ -270,29 +271,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_widget_set_name(GTK_WIDGET(session->gtk.notification_text), "bottom_box");
 #else
   GtkBorder inner_border = {
-      .left = leftpadding,
-      .right = 0,
+      .left = xpadding - xpadding/2,
+      .right = xpadding/2,
       .top = ypadding - ypadding/2,
       .bottom = ypadding/2
   };
 
+  /* set inner borders for inputbar and notification_text */
   gtk_entry_set_inner_border(session->gtk.inputbar_entry, &inner_border);
-
-  /* obtain the actual inputbar height */
-  /* TODO: for some reason does not match */
-  GtkRequisition req;
-  gtk_widget_size_request(GTK_WIDGET(session->gtk.inputbar_entry), &req);
-  /* have no idea where the extra 5 pixels come from. without this, the other
-     widgets get larger than the inputbar */
-  guint statusbar_height = req.height - 5;
-
-  /* force all widgets to have the same height as inputbar */
-  gtk_widget_set_size_request(GTK_WIDGET(session->gtk.inputbar_entry), -1, statusbar_height);
-  gtk_widget_set_size_request(GTK_WIDGET(session->gtk.statusbar_entries), -1, statusbar_height);
-  gtk_widget_set_size_request(GTK_WIDGET(session->gtk.notification_text), -1, statusbar_height);
-
-  /* set horizontal padding. same for statusbar entries in statusbar.c */
-  gtk_misc_set_padding(GTK_MISC(session->gtk.notification_text), leftpadding, 0);
+  gtk_misc_set_padding(GTK_MISC(session->gtk.notification_text), xpadding/2, ypadding/2);
 #endif
 
   session->signals.inputbar_key_pressed = g_signal_connect(
@@ -597,28 +584,33 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
+  const GdkRGBA* foreground = NULL;
+  const GdkRGBA* background = NULL;
   switch (level) {
     case GIRARA_ERROR:
-      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_error_background));
-      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_error_foreground));
+      foreground = &session->style.notification_error_foreground;
+      background = &session->style.notification_error_background;
       break;
     case GIRARA_WARNING:
-      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_warning_background));
-      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_warning_foreground));
+      foreground = &session->style.notification_warning_foreground;
+      background = &session->style.notification_warning_background;
       break;
     case GIRARA_INFO:
-      gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, &(session->style.notification_default_background));
-      gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+      foreground = &session->style.notification_default_foreground;
+      background = &session->style.notification_default_background;
       break;
     default:
       return;
   }
+
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, background);
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, background);
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_area),
+          GTK_STATE_NORMAL, foreground);
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
+          GTK_STATE_NORMAL, foreground);
 
   /* prepare message */
   va_list ap;

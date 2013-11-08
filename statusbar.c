@@ -4,6 +4,7 @@
 #include "session.h"
 #include "datastructures.h"
 #include "internal.h"
+#include "settings.h"
 
 #if GTK_MAJOR_VERSION == 2
 #include "gtk2-compat.h"
@@ -21,7 +22,10 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
 
   /* set style */
   gtk_widget_override_background_color(GTK_WIDGET(item->box),  GTK_STATE_NORMAL, &(session->style.statusbar_background));
+  gtk_widget_override_color(GTK_WIDGET(item->box),             GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+  gtk_widget_override_background_color(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &(session->style.statusbar_background));
   gtk_widget_override_color(GTK_WIDGET(item->text),            GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+
   gtk_widget_override_font(GTK_WIDGET(item->text),             session->style.font);
 
   /* set properties */
@@ -33,7 +37,12 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_widget_set_name(GTK_WIDGET(item->text), "bottom_box");
 #else
   /* set padding */
-  gtk_misc_set_padding(GTK_MISC(item->text), 4, 0);
+  guint ypadding = 2;         /* total amount of padding (top + bottom) */
+  guint xpadding = 8;         /* total amount of padding (left + right) */
+  girara_setting_get(session, "statusbar-h-padding", &xpadding);
+  girara_setting_get(session, "statusbar-v-padding", &ypadding);
+
+  gtk_misc_set_padding(GTK_MISC(item->text), xpadding/2, ypadding/2);
 #endif
 
   if (callback != NULL) {
@@ -74,9 +83,16 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(item    != NULL, false);
 
+#if (GTK_MAJOR_VERSION == 3)
+  GdkRGBA gdk_color;
+  gdk_rgba_parse(&gdk_color, color);
+  gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_entry),
+      GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+#else
   GdkColor gdk_color;
   gdk_color_parse(color, &gdk_color);
   gtk_widget_modify_fg(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &gdk_color);
+#endif
 
   return true;
 }

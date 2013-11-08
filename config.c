@@ -188,7 +188,8 @@ girara_config_load_default(girara_session_t* session)
   }
 
   /* values */
-  int statusbar_padding     = 2;
+  int statusbar_h_padding   = 8;
+  int statusbar_v_padding   = 2;
   int window_width          = 800;
   int window_height         = 600;
   int n_completion_items    = 15;
@@ -225,7 +226,8 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
-  girara_setting_add(session, "statusbar-padding",        &statusbar_padding,   INT,     TRUE,  _("Vertical padding for the status input and notification bars"), NULL, NULL);
+  girara_setting_add(session, "statusbar-h-padding",      &statusbar_h_padding, INT,     TRUE,  _("Horizontal padding for the status input and notification bars"), NULL, NULL);
+  girara_setting_add(session, "statusbar-v-padding",      &statusbar_v_padding, INT,     TRUE,  _("Vertical padding for the status input and notification bars"), NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"), NULL, NULL);
   girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show both the horizontal and vertical scrollbars"), cb_scrollbars, NULL);
   girara_setting_add(session, "show-h-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the horizontal scrollbar"), cb_scrollbars, NULL);

@@ -9,7 +9,7 @@ enhance the user interface that is used by zathura and jumanji.
 
 Requirements
 ------------
-gtk2 (>= 2.18.6) or gtk3 (>= 3.0.11)
+gtk2 (>= 2.18.6) or gtk3 (>= 3.2)
 intltool
 
 Please note that you need to have a working pkg-config installation
@@ -34,3 +34,8 @@ Uninstall
 To delete girara from your system, type:
 
   make uninstall
+
+Bugs
+----
+Please report bugs at http://bugs.pwmt.org or contact us on our mailing list at
+girara@lists.pwmt.org.
