@@ -32,6 +32,11 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.5);
   gtk_label_set_use_markup(item->text,             TRUE);
 
+  /* add ellipsis if item is on the left side */
+  if (left == true) {
+    gtk_label_set_ellipsize(item->text, PANGO_ELLIPSIZE_END);
+  }
+
 #if (GTK_MAJOR_VERSION == 3)
   /* add name so it uses a custom style */
   gtk_widget_set_name(GTK_WIDGET(item->text), "bottom_box");
