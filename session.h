@@ -8,13 +8,8 @@
 #include "callbacks.h"
 
 #include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-
-#if (GTK_MAJOR_VERSION == 3)
 #include <gtk/gtkx.h>
-#elif GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
+#include <gdk/gdkkeysyms.h>
 
 struct girara_session_s
 {
@@ -35,13 +30,7 @@ struct girara_session_s
     GtkEntry        *inputbar_entry; /**< Inputbar entry */
     GtkNotebook     *tabs; /**< The tabs notebook */
     GtkBox          *results; /**< Completion results */
-
-#if (GTK_MAJOR_VERSION == 3)
-    Window embed; /**< Embedded window */
-#else
-    GdkNativeWindow embed; /**< Embedded window */
-#endif // (GTK_MAJOR_VERSION == 3)
-
+    Window          embed; /**< Embedded window */
   } gtk;
 
   struct

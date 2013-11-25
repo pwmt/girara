@@ -11,10 +11,6 @@
 #include "datastructures.h"
 #include "utils.h"
 
-#if GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
-
 static GtkEventBox* girara_completion_row_create(girara_session_t*, const char*, const char*, bool);
 static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
@@ -243,11 +239,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
    *  there is no current list
    */
   if (session->gtk.results == NULL) {
-#if GTK_MAJOR_VERSION == 2
-    session->gtk.results = GTK_BOX(gtk_vbox_new(FALSE, 0));
-#else
     session->gtk.results = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-#endif
 
     if (session->gtk.results == NULL) {
       g_free(current_command);
@@ -486,11 +478,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 static GtkEventBox*
 girara_completion_row_create(girara_session_t* session, const char* command, const char* description, bool group)
 {
-#if GTK_MAJOR_VERSION == 2
-  GtkBox *col = GTK_BOX(gtk_hbox_new(FALSE, 0));
-#else
   GtkBox *col = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-#endif
 
   GtkEventBox *row = GTK_EVENT_BOX(gtk_event_box_new());
 

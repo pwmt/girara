@@ -6,10 +6,6 @@
 #include "internal.h"
 #include "settings.h"
 
-#if GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
-
 girara_statusbar_item_t*
 girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback)
 {
@@ -37,18 +33,8 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
     gtk_label_set_ellipsize(item->text, PANGO_ELLIPSIZE_END);
   }
 
-#if (GTK_MAJOR_VERSION == 3)
   /* add name so it uses a custom style */
   gtk_widget_set_name(GTK_WIDGET(item->text), "bottom_box");
-#else
-  /* set padding */
-  guint ypadding = 2;         /* total amount of padding (top + bottom) */
-  guint xpadding = 8;         /* total amount of padding (left + right) */
-  girara_setting_get(session, "statusbar-h-padding", &xpadding);
-  girara_setting_get(session, "statusbar-v-padding", &ypadding);
-
-  gtk_misc_set_padding(GTK_MISC(item->text), xpadding/2, ypadding/2);
-#endif
 
   if (callback != NULL) {
     g_signal_connect(G_OBJECT(item->box), "button-press-event", G_CALLBACK(callback), session);
@@ -88,16 +74,10 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(item    != NULL, false);
 
-#if (GTK_MAJOR_VERSION == 3)
   GdkRGBA gdk_color;
   gdk_rgba_parse(&gdk_color, color);
   gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_entry),
       GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
-#else
-  GdkColor gdk_color;
-  gdk_color_parse(color, &gdk_color);
-  gtk_widget_modify_fg(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &gdk_color);
-#endif
 
   return true;
 }

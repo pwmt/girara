@@ -123,7 +123,6 @@ cb_scrollbars(girara_session_t* session, const char* name,
   bool show_hscrollbar = false;
   bool show_vscrollbar = false;
 
-#if (GTK_MAJOR_VERSION == 3)
   GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
   GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
 
@@ -134,12 +133,6 @@ cb_scrollbars(girara_session_t* session, const char* name,
   if (hscrollbar != NULL) {
     show_hscrollbar = gtk_widget_get_visible(hscrollbar);
   }
-#else
-  GtkPolicyType h_policy, v_policy;
-  gtk_scrolled_window_get_policy(GTK_SCROLLED_WINDOW(session->gtk.view), &h_policy, &v_policy);
-  show_vscrollbar = (v_policy == GTK_POLICY_AUTOMATIC);
-  show_hscrollbar = (h_policy == GTK_POLICY_AUTOMATIC);
-#endif
 
   if (!strcmp(name, "show-scrollbars")) {
     show_hscrollbar = show_vscrollbar = val;
@@ -154,7 +147,6 @@ cb_scrollbars(girara_session_t* session, const char* name,
     show_vscrollbar = val;
   }
 
-#if (GTK_MAJOR_VERSION == 3)
   if (vscrollbar != NULL) {
     gtk_widget_set_visible(vscrollbar, show_vscrollbar);
   }
@@ -162,11 +154,6 @@ cb_scrollbars(girara_session_t* session, const char* name,
   if (hscrollbar != NULL) {
     gtk_widget_set_visible(hscrollbar, show_hscrollbar);
   }
-#else
-  h_policy = show_hscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  v_policy = show_vscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), h_policy, v_policy);
-#endif
 
   /* be careful to avoid infinite recursion as changing settings triggers
      cb_scrollbars call */
