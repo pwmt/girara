@@ -22,6 +22,16 @@ endif
 
 all: options ${PROJECT} po
 
+# pkg-config based version checks
+.version-checks/%:
+	$(QUIET)test $($(*)_VERSION_CHECK) -eq 0 || \
+		pkg-config --atleast-version $($(*)_MIN_VERSION) $($(*)_PKG_CONFIG_NAME) || ( \
+		echo "The minium required version of $(*) is $($(*)_MIN_VERSION)" && \
+		false \
+	)
+	@mkdir -p .version-checks
+	$(QUIET)touch $@
+
 options:
 	@echo ${PROJECT} build options:
 	@echo "CFLAGS  = ${CFLAGS}"
@@ -44,8 +54,7 @@ version.h: version.h.in config.mk
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-${OBJECTS}:  config.mk version.h
-${DOBJECTS}: config.mk version.h
+${OBJECTS} ${DOBJECTS}: config.mk version.h .version-checks/GTK
 
 ${PROJECT}: static shared
 static: lib${PROJECT}.a
@@ -63,7 +72,8 @@ clean:
 	$(QUIET)rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
-		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov
+		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov \
+		.version-checks
 	$(QUIET)${MAKE} -C tests clean
 	$(QUIET)${MAKE} -C po clean
 
