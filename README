@@ -9,7 +9,7 @@ enhance the user interface that is used by zathura and jumanji.
 
 Requirements
 ------------
-gtk2 (>= 2.18.6) or gtk3 (>= 3.2)
+gtk3 (>= 3.2)
 intltool
 
 Please note that you need to have a working pkg-config installation
@@ -23,11 +23,6 @@ Installation
 Run the following command to build and install girara to your system:
 
   make install
-
-girara is built for gtk2 by default. If it should be build for gtk3
-pass GIRARA_GTK_VERSION to make:
-
-  make GIRARA_GTK_VERSION=3 install
 
 Uninstall
 ---------
