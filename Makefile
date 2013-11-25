@@ -54,7 +54,8 @@ version.h: version.h.in config.mk
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-${OBJECTS} ${DOBJECTS}: config.mk version.h .version-checks/GTK
+${OBJECTS} ${DOBJECTS}: config.mk version.h \
+	.version-checks/GTK .version-checks/GLIB
 
 ${PROJECT}: static shared
 static: lib${PROJECT}.a

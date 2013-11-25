@@ -90,12 +90,7 @@ girara_list_clear(girara_list_t* list)
   }
 
   if (list->free) {
-#if (GLIB_MAJOR_VERSION >= 2) && (GLIB_MINOR_VERSION >= 28)
     g_list_free_full(list->start, list->free);
-#else
-    g_list_foreach(list->start, (GFunc)list->free, NULL);
-    g_list_free(list->start);
-#endif
   } else {
     g_list_free(list->start);
   }
