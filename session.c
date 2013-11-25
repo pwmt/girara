@@ -678,6 +678,7 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
 
   gtk_container_add(GTK_CONTAINER(session->gtk.viewport), widget);
   gtk_widget_show_all(widget);
+  gtk_widget_grab_focus(session->gtk.view);
 
   return true;
 }
