@@ -9,9 +9,6 @@
 #include <glib/gi18n-lib.h>
 
 #include "internal.h"
-#if GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
 static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK |

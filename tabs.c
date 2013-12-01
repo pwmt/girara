@@ -6,10 +6,6 @@
 
 #define UNTITLED_TAB_TITLE "untitled"
 
-#if GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
-
 /**
  * Default implementation of the event that is executed if a tab is clicked
  *

@@ -12,10 +12,6 @@
 #include "settings.h"
 #include "shortcuts.h"
 
-#if GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
-
 /* default commands implementation */
 bool
 girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
