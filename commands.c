@@ -99,7 +99,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     {"button-released",  GIRARA_EVENT_BUTTON_RELEASE}
   };
 
-  size_t number_of_arguments = girara_list_size(argument_list);
+  const size_t number_of_arguments = girara_list_size(argument_list);
 
   unsigned int limit = (unmap == true) ? 1 : 2;
   if (number_of_arguments < limit) {
