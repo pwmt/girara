@@ -5,13 +5,14 @@
 #   <cedric.sodhi@googlemail.com>, 2012
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2012
 # Moritz Lipp <mlq@pwmt.org>, 2012
+# rike, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-11-04 20:02+0100\n"
-"PO-Revision-Date: 2013-08-15 00:24+0200\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"PO-Revision-Date: 2014-01-04 20:14+0100\n"
+"Last-Translator: rike\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
 "de/)\n"
 "Language: de\n"
@@ -29,8 +30,7 @@ msgstr "Ungültige zugewiesene Funktion: %s"
 #: ../commands.c:112 ../commands.c:312
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr ""
-"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
+msgstr "Ungültige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
 #: ../commands.c:146
 #, c-format
@@ -191,11 +191,11 @@ msgstr "Ausgangshöhe des Fensters"
 
 #: ../config.c:229
 msgid "Horizontal padding for the status input and notification bars"
-msgstr ""
+msgstr "Horizontaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
 #: ../config.c:230
 msgid "Vertical padding for the status input and notification bars"
-msgstr ""
+msgstr "Vertikaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
 #: ../config.c:231
 msgid "Number of completion items"
@@ -203,7 +203,7 @@ msgstr "Anzahl der Elemente in der Vervollständigung"
 
 #: ../config.c:232
 msgid "Show both the horizontal and vertical scrollbars"
-msgstr ""
+msgstr "Zeige horizontale und vertikale Bildlaufleiste"
 
 #: ../config.c:233
 msgid "Show the horizontal scrollbar"

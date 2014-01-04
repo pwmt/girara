@@ -2,13 +2,14 @@
 # See LICENSE file for license and copyright information
 #
 # Translators:
+# vp1981 <irk.translator@yandex.ru>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-11-04 20:02+0100\n"
-"PO-Revision-Date: 2012-05-08 17:17+0000\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"PO-Revision-Date: 2013-12-16 12:25+0000\n"
+"Last-Translator: vp1981 <irk.translator@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/girara/language/"
 "ru/)\n"
 "Language: ru\n"
@@ -22,228 +23,228 @@ msgstr ""
 #: ../callbacks.c:498
 #, c-format
 msgid "Not a valid command: %s"
-msgstr ""
+msgstr "Неправильная команда: %s"
 
 #: ../commands.c:112 ../commands.c:312
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr ""
+msgstr "Передано неверное количество аргументов: %zu вместо как минимум %u"
 
 #: ../commands.c:146
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr ""
+msgstr "Указан незарегистрированный режим: %s"
 
 #: ../commands.c:178
 #, c-format
 msgid "Invalid modifier in %s"
-msgstr ""
+msgstr "Неправильный модификатор в %s"
 
 #: ../commands.c:217
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr ""
+msgstr "Неправильное значение для специальной клавиши %s"
 
 #: ../commands.c:253
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr ""
+msgstr "Неправильное значения для специальной клавиши или режим %s"
 
 #: ../commands.c:334
 #, c-format
 msgid "Not a valid shortcut function: %s"
-msgstr ""
+msgstr "Неправильная функция комбинации: %s"
 
 #: ../commands.c:422
 msgid "Not enough arguments."
-msgstr ""
+msgstr "Недостаточно аргументов."
 
 #: ../commands.c:427
 msgid "Too many arguments."
-msgstr ""
+msgstr "Слишком много аргументов."
 
 #: ../commands.c:440
 #, c-format
 msgid "Unknown option: %s"
-msgstr ""
+msgstr "Неизвестный параметр: %s"
 
 #: ../commands.c:454
 msgid "true"
-msgstr ""
+msgstr "правда"
 
 #: ../commands.c:454
 msgid "false"
-msgstr ""
+msgstr "ложь"
 
 #: ../commands.c:486
 #, c-format
 msgid "No value defined for option: %s"
-msgstr ""
+msgstr "Для параметра: %s не задано значение"
 
 #: ../commands.c:501
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr ""
+msgstr "Неизвестное значение для параметра: %s"
 
 #. settings
 #: ../config.c:203
 msgid "Font"
-msgstr ""
+msgstr "Шрифт"
 
 #: ../config.c:204
 msgid "Default foreground color"
-msgstr ""
+msgstr "Цвет текста по умолчанию"
 
 #: ../config.c:205
 msgid "Default background color"
-msgstr ""
+msgstr "Цвет фона по умолчанию"
 
 #: ../config.c:206
 msgid "Inputbar foreground color"
-msgstr ""
+msgstr "Цвет текста в поле ввода"
 
 #: ../config.c:207
 msgid "Inputbar background color"
-msgstr ""
+msgstr "Цвет фона в поле ввода"
 
 #: ../config.c:208
 msgid "Statusbar foreground color"
-msgstr ""
+msgstr "Цвет текста статусной строки"
 
 #: ../config.c:209
 msgid "Statsubar background color"
-msgstr ""
+msgstr "Цвет фона статусной строки"
 
 #: ../config.c:210
 msgid "Completion foreground color"
-msgstr ""
+msgstr "Цвет текста для автодополнения"
 
 #: ../config.c:211
 msgid "Completion background color"
-msgstr ""
+msgstr "Цвет фона для автодополнения"
 
 #: ../config.c:212
 msgid "Completion group foreground color"
-msgstr ""
+msgstr "Цвет текста группы автодополнения"
 
 #: ../config.c:213
 msgid "Completion group background color"
-msgstr ""
+msgstr "Цвет фона группы автодополнения"
 
 #: ../config.c:214
 msgid "Completion highlight foreground color"
-msgstr ""
+msgstr "Цвет текста выделения в автодополнении"
 
 #: ../config.c:215
 msgid "Completion highlight background color"
-msgstr ""
+msgstr "Цвет фона выделения в автодополнении"
 
 #: ../config.c:216
 msgid "Error notification foreground color"
-msgstr ""
+msgstr "Цвет текста в уведомлениях об ошибке"
 
 #: ../config.c:217
 msgid "Error notification background color"
-msgstr ""
+msgstr "Цвет фона в уведомлениях об ошибке"
 
 #: ../config.c:218
 msgid "Warning notification foreground color"
-msgstr ""
+msgstr "Цвет текста в предупреждающих уведомлениях"
 
 #: ../config.c:219
 msgid "Warning notifaction background color"
-msgstr ""
+msgstr "Цвет фона в предупреждающих уведомлениях"
 
 #: ../config.c:220
 msgid "Notification foreground color"
-msgstr ""
+msgstr "Цвет текста в уведомлениях"
 
 #: ../config.c:221
 msgid "Notification background color"
-msgstr ""
+msgstr "Цвет фона в уведомлениях"
 
 #: ../config.c:222
 msgid "Tab bar foreground color"
-msgstr ""
+msgstr "Цвет текста в строке вкладок"
 
 #: ../config.c:223
 msgid "Tab bar background color"
-msgstr ""
+msgstr "Цвет фона в строке вкладок"
 
 #: ../config.c:224
 msgid "Tab bar foreground color (active)"
-msgstr ""
+msgstr "Цвет текста в строке вкладок (активная)"
 
 #: ../config.c:225
 msgid "Tab bar background color (active)"
-msgstr ""
+msgstr "Цвет фона строки вкладок (активная)"
 
 #: ../config.c:227
 msgid "Initial window width"
-msgstr ""
+msgstr "Начальная ширина окна"
 
 #: ../config.c:228
 msgid "Initial window height"
-msgstr ""
+msgstr "Начальная высота окна"
 
 #: ../config.c:229
 msgid "Horizontal padding for the status input and notification bars"
-msgstr ""
+msgstr "Горизонтальные промежутки для статусной строки и строки уведомлений"
 
 #: ../config.c:230
 msgid "Vertical padding for the status input and notification bars"
-msgstr ""
+msgstr "Вертикальный промежуток для статусной строки и области уведомления"
 
 #: ../config.c:231
 msgid "Number of completion items"
-msgstr ""
+msgstr "Количество элементов в автодополнении"
 
 #: ../config.c:232
 msgid "Show both the horizontal and vertical scrollbars"
-msgstr ""
+msgstr "Показать горизонтальную и вертикальную прокрутки"
 
 #: ../config.c:233
 msgid "Show the horizontal scrollbar"
-msgstr ""
+msgstr "Показать горизонтальную прокрутку"
 
 #: ../config.c:234
 msgid "Show the vertical scrollbar"
-msgstr ""
+msgstr "Показать вертикальную прокрутку"
 
 #: ../config.c:235
 msgid "Window icon"
-msgstr ""
+msgstr "Значок окна"
 
 #: ../config.c:236
 msgid "Command to execute in :exec"
-msgstr ""
+msgstr "Команда для выполнения через :exec"
 
 #: ../config.c:237
 msgid "Show or hide certain GUI elements"
-msgstr ""
+msgstr "Показать или скрыть определённые элементы графического интерфейса"
 
 #. commands
 #: ../config.c:273
 msgid "Execute a command"
-msgstr ""
+msgstr "Выполнить команду"
 
 #: ../config.c:274
 msgid "Map a key sequence"
-msgstr ""
+msgstr "Задать клавиатурную комбинацию"
 
 #: ../config.c:275
 msgid "Quit the program"
-msgstr ""
+msgstr "Завершить программу"
 
 #: ../config.c:276
 msgid "Set an option"
-msgstr ""
+msgstr "Задать параметр"
 
 #: ../config.c:277
 msgid "Unmap a key sequence"
-msgstr ""
+msgstr "Убрать определение с клавиатурной комбинации"
 
 #: ../utils.c:519
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr ""
+msgstr "Не удалось выполнить команду: %s"

@@ -2,14 +2,13 @@
 # See LICENSE file for license and copyright information
 #
 # Translators:
-# salmora8 <shorterfire@gmail.com>, 2013
-# salmora8 <shorterfire@gmail.com>, 2012
+# salmora8 <shorterfire@gmail.com>, 2012-2013
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-11-04 20:02+0100\n"
-"PO-Revision-Date: 2013-08-15 20:28+0000\n"
+"PO-Revision-Date: 2014-01-04 20:16+0100\n"
 "Last-Translator: salmora8 <shorterfire@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
 "girara/language/pt_BR/)\n"
@@ -188,15 +187,12 @@ msgid "Initial window height"
 msgstr "Altura de janela inicial"
 
 #: ../config.c:229
-#, fuzzy
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
-"Preenchimento vertical para a entrada de status e barras de notificações"
 
 #: ../config.c:230
 msgid "Vertical padding for the status input and notification bars"
-msgstr ""
-"Preenchimento vertical para a entrada de status e barras de notificações"
+msgstr "Preenchimento vertical para a entrada de status e barras de notificações"
 
 #: ../config.c:231
 msgid "Number of completion items"

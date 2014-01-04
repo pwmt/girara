@@ -4,15 +4,16 @@
 # Translators:
 # Richard Gill <richard@houbathecat.fr>, 2012.
 # Benoît Knecht <benoit.knecht@fsfe.org>, 2013.
+# rike, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2013-11-04 20:02+0100\n"
-"PO-Revision-Date: 2013-08-15 00:25+0200\n"
-"Last-Translator: Benoît Knecht <benoit.knecht@fsfe.org>\n"
-"Language-Team: French\n"
+"PO-Revision-Date: 2013-12-30 22:52+0000\n"
 "Language: fr\n"
+"Last-Translator: rike\n"
+"Language-Team: French (http://www.transifex.com/projects/p/girara/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -188,11 +189,11 @@ msgstr "Hauteur initiale de la fenêtre"
 
 #: ../config.c:229
 msgid "Horizontal padding for the status input and notification bars"
-msgstr ""
+msgstr "Espacement horizontal pour le champ de statut et les barres de notification"
 
 #: ../config.c:230
 msgid "Vertical padding for the status input and notification bars"
-msgstr ""
+msgstr "Espacement vertical pour le champ de statut et les barres de notification"
 
 #: ../config.c:231
 msgid "Number of completion items"
@@ -200,15 +201,15 @@ msgstr "Nombre d'éléments de complétion"
 
 #: ../config.c:232
 msgid "Show both the horizontal and vertical scrollbars"
-msgstr ""
+msgstr "Afficher les ascenseur vertical et horizontal"
 
 #: ../config.c:233
 msgid "Show the horizontal scrollbar"
-msgstr ""
+msgstr "Afficher l'ascenseur horizontal"
 
 #: ../config.c:234
 msgid "Show the vertical scrollbar"
-msgstr ""
+msgstr "Afficher l'ascenseur vertical"
 
 #: ../config.c:235
 msgid "Window icon"
