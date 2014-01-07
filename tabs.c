@@ -12,7 +12,7 @@
  * @param widget The widget
  * @param event The event
  * @param data Additional data
- * @return true if an error occured, otherwise false
+ * @return true if an error occurred, otherwise false
  */
 static bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
 

@@ -377,7 +377,7 @@ girara_clean_line(char* line)
 void*
 girara_safe_realloc(void** ptr, size_t size)
 {
-  if(ptr == NULL) {
+  if (ptr == NULL) {
     return NULL;
   }
 
@@ -386,7 +386,7 @@ girara_safe_realloc(void** ptr, size_t size)
   }
 
   void* tmp = realloc(*ptr, size);
-  if(tmp == NULL) {
+  if (tmp == NULL) {
     goto error_free;
   }
 
