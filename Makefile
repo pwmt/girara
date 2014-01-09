@@ -57,7 +57,7 @@ version.h: version.h.in config.mk
 ${OBJECTS} ${DOBJECTS}: config.mk version.h \
 	.version-checks/GTK .version-checks/GLIB
 
-${PROJECT}: static shared
+${PROJECT}: static shared ${PROJECT}.pc
 static: lib${PROJECT}.a
 shared: lib${PROJECT}.so.${SOVERSION}
 
@@ -119,12 +119,12 @@ dist: clean
 	$(QUIET)rm -rf ${PROJECTNV}-${VERSION}
 
 ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
-	$(QUIET)echo project=${PROJECT} > ${PROJECT}.pc
-	$(QUIET)echo version=${VERSION} >> ${PROJECT}.pc
-	$(QUIET)echo includedir=${INCLUDEDIR} >> ${PROJECT}.pc
-	$(QUIET)echo libdir=${LIBDIR} >> ${PROJECT}.pc
-	$(QUIET)echo GTK_VERSION=${GIRARA_GTK_VERSION} >> ${PROJECT}.pc
-	$(QUIET)cat ${PROJECTNV}.pc.in >> ${PROJECT}.pc
+	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
+		-e 's,@VERSION@,${VERSION},' \
+		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
+		-e 's,@LIBDIR@,${LIBDIR},' \
+		-e 's,@GIRARA_GTK_VERSION@,${GIRARA_GTK_VERSION},' \
+		${PROJECTNV}.pc.in > ${PROJECT}.pc
 
 po:
 	$(QUIET)${MAKE} -C po
