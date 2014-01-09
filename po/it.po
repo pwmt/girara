@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-11-04 20:02+0100\n"
+"POT-Creation-Date: 2014-01-09 18:43+0100\n"
 "PO-Revision-Date: 2013-11-20 09:46+0000\n"
 "Last-Translator: TheLemonMan <segnalazionidalweb@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.net/projects/p/girara/language/"
@@ -19,227 +19,227 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:498
+#: ../callbacks.c:495
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Scorciatoia invalida:%s"
 
-#: ../commands.c:112 ../commands.c:312
+#: ../commands.c:108 ../commands.c:308
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Numero degli argomenti non valido:%zu immessi, %u attesi"
 
-#: ../commands.c:146
+#: ../commands.c:142
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Modalità non registrata:%s"
 
-#: ../commands.c:178
+#: ../commands.c:174
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Modificatore invalido in %s"
 
-#: ../commands.c:217
+#: ../commands.c:213
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Valore della chiave speciale %s non valido "
 
-#: ../commands.c:253
+#: ../commands.c:249
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Valore della chiave speciale o modalità %s non valida"
 
-#: ../commands.c:334
+#: ../commands.c:330
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Scorciatoia invalida:%s"
 
-#: ../commands.c:422
+#: ../commands.c:418
 msgid "Not enough arguments."
 msgstr "Non abbastanza argomenti specificati."
 
-#: ../commands.c:427
+#: ../commands.c:423
 msgid "Too many arguments."
 msgstr "Troppi argomenti specificati."
 
-#: ../commands.c:440
+#: ../commands.c:436
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Opzione sconosciuta:%s"
 
-#: ../commands.c:454
+#: ../commands.c:450
 msgid "true"
 msgstr "vero"
 
-#: ../commands.c:454
+#: ../commands.c:450
 msgid "false"
 msgstr "falso"
 
-#: ../commands.c:486
+#: ../commands.c:482
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Nessun valore definito per l' opzione:%s"
 
-#: ../commands.c:501
+#: ../commands.c:497
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Valore sconosciuto per l' opzione:%s"
 
 #. settings
-#: ../config.c:203
+#: ../config.c:190
 msgid "Font"
 msgstr "Font"
 
-#: ../config.c:204
+#: ../config.c:191
 msgid "Default foreground color"
 msgstr "Colore del testo di default"
 
-#: ../config.c:205
+#: ../config.c:192
 msgid "Default background color"
 msgstr "Colore di sfondo di default"
 
-#: ../config.c:206
+#: ../config.c:193
 msgid "Inputbar foreground color"
 msgstr "Colore del testo della barra dei comandi"
 
-#: ../config.c:207
+#: ../config.c:194
 msgid "Inputbar background color"
 msgstr "Colore di sfondo della barra dei comandi"
 
-#: ../config.c:208
+#: ../config.c:195
 msgid "Statusbar foreground color"
 msgstr "Colore del testo della barra di stato"
 
-#: ../config.c:209
+#: ../config.c:196
 msgid "Statsubar background color"
 msgstr "Colore di sfondo della barra di stato"
 
-#: ../config.c:210
+#: ../config.c:197
 msgid "Completion foreground color"
 msgstr "Colore del testo del completamento"
 
-#: ../config.c:211
+#: ../config.c:198
 msgid "Completion background color"
 msgstr "Colore di sfondo del completamento"
 
-#: ../config.c:212
+#: ../config.c:199
 msgid "Completion group foreground color"
 msgstr "Colore del testo del gruppo di completamento"
 
-#: ../config.c:213
+#: ../config.c:200
 msgid "Completion group background color"
 msgstr "Colore di sfondo del gruppo di completamento"
 
-#: ../config.c:214
+#: ../config.c:201
 msgid "Completion highlight foreground color"
 msgstr "Colore del testo del completamento evidenziato"
 
-#: ../config.c:215
+#: ../config.c:202
 msgid "Completion highlight background color"
 msgstr "Colore di sfondo del completamento evidenziato"
 
-#: ../config.c:216
+#: ../config.c:203
 msgid "Error notification foreground color"
 msgstr "Colore del testo della notifica di errore"
 
-#: ../config.c:217
+#: ../config.c:204
 msgid "Error notification background color"
 msgstr "Colore di sfondo della notifica di errore"
 
-#: ../config.c:218
+#: ../config.c:205
 msgid "Warning notification foreground color"
 msgstr "Colore del testo della notifica d' avvertimento"
 
-#: ../config.c:219
+#: ../config.c:206
 msgid "Warning notifaction background color"
 msgstr "Colore di sfondo della notifica d' avvertimento"
 
-#: ../config.c:220
+#: ../config.c:207
 msgid "Notification foreground color"
 msgstr "Colore del testo della notifica"
 
-#: ../config.c:221
+#: ../config.c:208
 msgid "Notification background color"
 msgstr "Colore di sfondo della notifica"
 
-#: ../config.c:222
+#: ../config.c:209
 msgid "Tab bar foreground color"
 msgstr "Colore del testo del tab"
 
-#: ../config.c:223
+#: ../config.c:210
 msgid "Tab bar background color"
 msgstr "Colore di sfondo del tab"
 
-#: ../config.c:224
+#: ../config.c:211
 msgid "Tab bar foreground color (active)"
 msgstr "Colore del testo del tab (attivo)"
 
-#: ../config.c:225
+#: ../config.c:212
 msgid "Tab bar background color (active)"
 msgstr "Colore di sfondo del tab (attivo)"
 
-#: ../config.c:227
+#: ../config.c:214
 msgid "Initial window width"
 msgstr "Larghezza iniziale della finestra"
 
-#: ../config.c:228
+#: ../config.c:215
 msgid "Initial window height"
 msgstr "Altezza iniziale della finestra"
 
-#: ../config.c:229
+#: ../config.c:216
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../config.c:230
+#: ../config.c:217
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../config.c:231
+#: ../config.c:218
 msgid "Number of completion items"
 msgstr "Numero di possibili completamenti"
 
-#: ../config.c:232
+#: ../config.c:219
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../config.c:233
+#: ../config.c:220
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../config.c:234
+#: ../config.c:221
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../config.c:235
+#: ../config.c:222
 msgid "Window icon"
 msgstr "Icona della finestra"
 
-#: ../config.c:236
+#: ../config.c:223
 msgid "Command to execute in :exec"
 msgstr "Comando da eseguire in :exec"
 
-#: ../config.c:237
+#: ../config.c:224
 msgid "Show or hide certain GUI elements"
 msgstr ""
 
 #. commands
-#: ../config.c:273
+#: ../config.c:260
 msgid "Execute a command"
 msgstr "Esegui un comando"
 
-#: ../config.c:274
+#: ../config.c:261
 msgid "Map a key sequence"
 msgstr "Mappa una sequenza di tasti"
 
-#: ../config.c:275
+#: ../config.c:262
 msgid "Quit the program"
 msgstr "Esci dal programma"
 
-#: ../config.c:276
+#: ../config.c:263
 msgid "Set an option"
 msgstr "Imposta un opzione"
 
-#: ../config.c:277
+#: ../config.c:264
 msgid "Unmap a key sequence"
 msgstr "Cancella mappatura di una sequenza di tasti"
 
