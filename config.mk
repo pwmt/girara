@@ -24,24 +24,21 @@ INCLUDEDIR ?= ${PREFIX}/include
 # locale directory
 LOCALEDIR ?= ${PREFIX}/share/locale
 
-# the GTK+ version to use
-GIRARA_GTK_VERSION = 3
-
 # version checks
 # If you want to disable any of the checks, set *_VERSION_CHECK to 0.
 
 # GTK+
 GTK_VERSION_CHECK ?= 1
 GTK_MIN_VERSION = 3.2
-GTK_PKG_CONFIG_NAME = gtk+-$(GIRARA_GTK_VERSION).0
+GTK_PKG_CONFIG_NAME = gtk+-3.0
 # glib
 GLIB_VERSION_CHECK ?= 1
 GLIB_MIN_VERSION = 2.28
 GLIB_PKG_CONFIG_NAME = glib-2.0
 
 # libs
-GTK_INC ?= $(shell pkg-config --cflags gtk+-${GIRARA_GTK_VERSION}.0)
-GTK_LIB ?= $(shell pkg-config --libs gtk+-${GIRARA_GTK_VERSION}.0)
+GTK_INC ?= $(shell pkg-config --cflags gtk+-3.0)
+GTK_LIB ?= $(shell pkg-config --libs gtk+-3.0)
 
 INCS = ${GTK_INC}
 LIBS = ${GTK_LIB} -lm

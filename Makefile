@@ -4,10 +4,10 @@ include config.mk
 include common.mk
 
 PROJECTNV = girara
-PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
+PROJECT   = girara-gtk3
 SOURCE    = $(wildcard *.c)
-OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
-DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
+OBJECTS   = ${SOURCE:.c=.o}
+DOBJECTS  = ${SOURCE:.c=.do}
 HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
@@ -20,7 +20,7 @@ CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
 
 
-all: options ${PROJECT} po
+all: options ${PROJECT} po ${PROJECT}.pc
 
 # pkg-config based version checks
 .version-checks/%: config.mk
@@ -44,12 +44,12 @@ version.h: version.h.in config.mk
 		-e 's/GVMINOR/${GIRARA_VERSION_MINOR}/' \
 		-e 's/GVREV/${GIRARA_VERSION_REV}/' version.h.in > version.h
 
-%-gtk${GIRARA_GTK_VERSION}.o: %.c
+%.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-%-gtk${GIRARA_GTK_VERSION}.do: %.c
+%.do: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
@@ -57,7 +57,7 @@ version.h: version.h.in config.mk
 ${OBJECTS} ${DOBJECTS}: config.mk version.h \
 	.version-checks/GTK .version-checks/GLIB
 
-${PROJECT}: static shared ${PROJECT}.pc
+${PROJECT}: static shared
 static: lib${PROJECT}.a
 shared: lib${PROJECT}.so.${SOVERSION}
 
@@ -123,7 +123,6 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
 		-e 's,@LIBDIR@,${LIBDIR},' \
-		-e 's,@GIRARA_GTK_VERSION@,${GIRARA_GTK_VERSION},' \
 		${PROJECTNV}.pc.in > ${PROJECT}.pc
 
 po:
