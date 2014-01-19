@@ -34,9 +34,7 @@ struct girara_list_iterator_s
 girara_list_t*
 girara_list_new(void)
 {
-  girara_list_t* list = g_malloc0(sizeof(girara_list_t));
-
-  return list;
+  return g_try_malloc0(sizeof(girara_list_t));
 }
 
 girara_list_t*
@@ -200,25 +198,34 @@ girara_list_find(girara_list_t* list, girara_compare_function_t compare, const v
 girara_list_iterator_t*
 girara_list_iterator(girara_list_t* list)
 {
-  g_return_val_if_fail(list, NULL);
+  g_return_val_if_fail(list != NULL, NULL);
 
-  if (!list->start) {
+  if (list->start == NULL) {
     return NULL;
   }
 
-  girara_list_iterator_t* iter = g_malloc0(sizeof(girara_list_iterator_t));
-  iter->list = list;
+  girara_list_iterator_t* iter = g_try_malloc0(sizeof(girara_list_iterator_t));
+  if (iter == NULL) {
+    return NULL;
+  }
+
+  iter->list    = list;
   iter->element = list->start;
 
   return iter;
 }
 
 girara_list_iterator_t*
-girara_list_iterator_copy(girara_list_iterator_t* iter) {
-  g_return_val_if_fail(iter, NULL);
-  girara_list_iterator_t* iter2 = g_malloc0(sizeof(girara_list_iterator_t));
+girara_list_iterator_copy(girara_list_iterator_t* iter)
+{
+  g_return_val_if_fail(iter != NULL, NULL);
 
-  iter2->list = iter->list;
+  girara_list_iterator_t* iter2 = g_try_malloc0(sizeof(girara_list_iterator_t));
+  if (iter2 == NULL) {
+    return NULL;
+  }
+
+  iter2->list    = iter->list;
   iter2->element = iter->element;
   return iter2;
 }
@@ -392,14 +399,22 @@ girara_list_merge(girara_list_t* list, girara_list_t* other)
 girara_tree_node_t*
 girara_node_new(void* data)
 {
-  girara_tree_node_t* node = g_malloc0(sizeof(girara_tree_node_t));
-  girara_tree_node_data_t* nodedata = g_malloc0(sizeof(girara_tree_node_data_t));
+  girara_tree_node_t* node = g_try_malloc0(sizeof(girara_tree_node_t));
+  if (node == NULL) {
+    return NULL;
+  }
+
+  girara_tree_node_data_t* nodedata = g_try_malloc0(sizeof(girara_tree_node_data_t));
+  if (nodedata == NULL) {
+    g_free(node);
+    return NULL;
+  }
 
   nodedata->data = data;
   nodedata->node = node;
-  node->node = g_node_new(nodedata);
+  node->node     = g_node_new(nodedata);
 
-  if (!node->node) {
+  if (node->node == NULL) {
     g_free(node);
     g_free(nodedata);
     return NULL;

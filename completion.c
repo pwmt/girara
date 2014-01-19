@@ -158,10 +158,14 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
   if (input_length > 1) {
     if (g_shell_parse_argv(input + 1, &n_parameter, &elements, NULL) == FALSE) {
       g_free(input);
-      return FALSE;
+      return false;
     }
   } else {
-    elements = g_malloc0(2 * sizeof(char*));
+    elements = g_try_malloc0(2 * sizeof(char*));
+    if (element == NULL) {
+      g_free(input);
+      return false;
+    }
     elements[0] = g_strdup("");
   }
 

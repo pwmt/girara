@@ -156,8 +156,12 @@ cb_scrollbars(girara_session_t* session, const char* name,
   }
 
   const size_t guioptions_len = strlen(guioptions);
-  char* new_guioptions        = g_malloc0(sizeof(char) * (guioptions_len + 3));
+  char* new_guioptions        = g_try_malloc0(sizeof(char) * (guioptions_len + 3));
   char* iterator              = new_guioptions;
+  if (new_guioptions == NULL) {
+    g_free(guioptions);
+    return;
+  }
 
   /* copy everything apart from h and v */
   for (size_t i = 0; i != guioptions_len; ++i) {
