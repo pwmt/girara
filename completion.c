@@ -162,7 +162,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
     }
   } else {
     elements = g_try_malloc0(2 * sizeof(char*));
-    if (element == NULL) {
+    if (elements == NULL) {
       g_free(input);
       return false;
     }
