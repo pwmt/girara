@@ -109,7 +109,7 @@ void girara_clean_line(char* line);
  * @param size Number of bytes
  * @return Pointer to the allocated memory block or NULL
  */
-void* girara_safe_realloc(void** ptr, size_t size);
+void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2);
 
 /**
  * Prints a debug message. The arguments are passed to @ref _girara_debug as
