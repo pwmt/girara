@@ -73,7 +73,7 @@ girara_session_create()
 
   /* init modes */
   session->modes.identifiers  = girara_list_new2(
-  (girara_free_function_t) girara_mode_string_free);
+      (girara_free_function_t) girara_mode_string_free);
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   girara_mode_t inputbar_mode = girara_mode_add(session, "inputbar");
   session->modes.normal       = normal_mode;

@@ -286,10 +286,11 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
   g_return_val_if_fail(button  != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event;
-  event.type = GIRARA_EVENT_MOTION_NOTIFY;
-  event.x    = button->x;
-  event.y    = button->y;
+  girara_event_t event = {
+    .type = GIRARA_EVENT_MOTION_NOTIFY,
+    .x    = button->x,
+    .y    = button->y
+  };
 
   const guint state = button->state & MOUSE_MASK;
 
