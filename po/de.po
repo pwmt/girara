@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2014-01-09 18:43+0100\n"
-"PO-Revision-Date: 2014-01-04 20:14+0100\n"
+"PO-Revision-Date: 2014-01-09 17:53+0000\n"
 "Last-Translator: rike\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
 "de/)\n"
@@ -191,13 +191,11 @@ msgstr "Ausgangshöhe des Fensters"
 
 #: ../config.c:216
 msgid "Horizontal padding for the status input and notification bars"
-msgstr ""
-"Horizontaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
+msgstr "Horizontaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
 #: ../config.c:217
 msgid "Vertical padding for the status input and notification bars"
-msgstr ""
-"Vertikaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
+msgstr "Vertikaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
 #: ../config.c:218
 msgid "Number of completion items"
