@@ -197,7 +197,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
         break;
       }
       if (pos == 0) {
-	      break;
+        break;
       }
 
       i = pos - 1;
@@ -233,7 +233,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       break;
     case GIRARA_DELETE_CURR_CHAR:
       if (length != 1 && pos == 0 && (input[0] == ':' || input[0] == '/')){
-	break;
+        break;
       }
       if(length == 1 && pos == 0) {
         girara_isc_abort(session, argument, NULL, 0);
@@ -361,9 +361,10 @@ girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, g
 {
   g_return_val_if_fail(session != NULL, false);
 
-  unsigned int number_of_tabs = girara_get_number_of_tabs(session);
-  if (number_of_tabs == 0)
+  const unsigned int number_of_tabs = girara_get_number_of_tabs(session);
+  if (number_of_tabs == 0) {
     return false;
+  }
 
   unsigned int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
   unsigned int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
@@ -409,7 +410,7 @@ girara_toggle_widget_visibility(GtkWidget* widget)
     return;
   }
 
-  if (gtk_widget_get_visible(widget)) {
+  if (gtk_widget_get_visible(widget) == TRUE) {
     gtk_widget_hide(widget);
   } else {
     gtk_widget_show(widget);
