@@ -55,7 +55,7 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
 
   shortcut->mask             = modifier;
   shortcut->key              = key;
-  shortcut->buffered_command = buffer;
+  shortcut->buffered_command = g_strdup(buffer);
   shortcut->function         = function;
   shortcut->mode             = mode;
   shortcut->argument         = argument;
@@ -89,6 +89,7 @@ void
 girara_shortcut_free(girara_shortcut_t* shortcut)
 {
   g_return_if_fail(shortcut != NULL);
+  g_free(shortcut->buffered_command);
   g_free(shortcut->argument.data);
   g_slice_free(girara_shortcut_t, shortcut);
 }
