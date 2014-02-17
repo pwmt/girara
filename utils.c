@@ -7,20 +7,17 @@
 #define _FILE_OFFSET_BITS 64
 
 #include <ctype.h>
-#include <fcntl.h>
+#include <glib.h>
+#include <glib/gi18n-lib.h>
 #include <limits.h>
 #include <pwd.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <glib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <stdint.h>
-#include <gtk/gtk.h>
-#include <glib/gi18n-lib.h>
 
 #include "utils.h"
 #include "datastructures.h"
@@ -104,7 +101,7 @@ girara_get_home_directory(const char* user)
 
   // XXX: The following code is very unportable.
   struct passwd pwd;
-  struct passwd* result;
+  struct passwd* result = NULL;
 #ifdef _SC_GETPW_R_SIZE_MAX
   int bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
   if (bufsize < 0) {
@@ -114,7 +111,10 @@ girara_get_home_directory(const char* user)
   int bufsize = 4096;
 #endif
 
-  char* buffer = g_malloc0(sizeof(char) * bufsize);
+  char* buffer = g_try_malloc0(sizeof(char) * bufsize);
+  if (buffer == NULL) {
+    return NULL;
+  }
 
   getpwnam_r(user, &pwd, buffer, bufsize, &result);
   if (result == NULL) {
@@ -332,7 +332,7 @@ girara_file_read2(FILE* file)
   }
 
   char* buffer    = malloc(size + 1);
-  if (!buffer) {
+  if (buffer == NULL) {
     return NULL;
   }
 
@@ -359,7 +359,7 @@ girara_clean_line(char* line)
 
   for(i = 0; i < strlen(line); i++) {
     if (isspace(line[i]) != 0) {
-      if (ws_mode) {
+      if (ws_mode == true) {
         continue;
       }
 
@@ -377,7 +377,7 @@ girara_clean_line(char* line)
 void*
 girara_safe_realloc(void** ptr, size_t size)
 {
-  if(ptr == NULL) {
+  if (ptr == NULL) {
     return NULL;
   }
 
@@ -386,7 +386,7 @@ girara_safe_realloc(void** ptr, size_t size)
   }
 
   void* tmp = realloc(*ptr, size);
-  if(tmp == NULL) {
+  if (tmp == NULL) {
     goto error_free;
   }
 
@@ -464,7 +464,8 @@ update_state_by_keyval(int *state, int keyval)
   }
 }
 
-char* girara_escape_string(const char* value)
+char*
+girara_escape_string(const char* value)
 {
   if (value == NULL) {
     return NULL;

@@ -5,22 +5,22 @@ include ../common.mk
 include config.mk
 
 SOURCE   = tests.c $(wildcard test_*.c)
-OBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
-DOBJECTS = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
+OBJECTS  = ${SOURCE:.c=.o}
+DOBJECTS = ${SOURCE:.c=.do}
 XDG_HELPER_SOURCE = xdg_test_helper.c
 XDG_HELPER = ${XDG_HELPER_SOURCE:.c=}
 
-all: options girara_test-gtk${GIRARA_GTK_VERSION} ${XDG_HELPER}
+all: options girara_test ${XDG_HELPER}
 
-run: girara_test-gtk${GIRARA_GTK_VERSION} ${XDG_HELPER}
+run: girara_test ${XDG_HELPER}
 	$(ECHO) "running tests ..."
-	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}
+	$(QUIET)G_SLICE=debug-blocks ./girara_test
 
-debug: options girara_test-gtk${GIRARA_GTK_VERSION}-debug ${XDG_HELPER}
+debug: options girara_test-debug ${XDG_HELPER}
 
 run-debug: debug
 	$(ECHO) "running tests ..."
-	$(QUIET)G_SLICE=debug-blocks ./girara_test-gtk${GIRARA_GTK_VERSION}-debug
+	$(QUIET)G_SLICE=debug-blocks ./girara_test-debug
 
 options:
 	@echo ${PROJECT} build options:
@@ -29,34 +29,34 @@ options:
 	@echo "DFLAGS  = ${DFLAGS}"
 	@echo "CC      = ${CC}"
 
-%-gtk${GIRARA_GTK_VERSION}.o: %.c
+%.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-${XDG_HELPER}: ${XDG_HELPER_SOURCE} ../libgirara-gtk${GIRARA_GTK_VERSION}.a
+${XDG_HELPER}: ${XDG_HELPER_SOURCE} ../libgirara-gtk3.a
 	@mkdir -p .depend
 	$(ECHO) CC $<
-	$(QUIET)${CC}  -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk${GIRARA_GTK_VERSION}.a ${LDFLAGS} ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC}  -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk3.a ${LDFLAGS} ${LIBS} -MMD -MF .depend/$@.dep
 
-%-gtk${GIRARA_GTK_VERSION}.do: %.c
+%.do: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-girara_test-gtk${GIRARA_GTK_VERSION}: ${OBJECTS} ../libgirara-gtk${GIRARA_GTK_VERSION}.a
+girara_test: ${OBJECTS} ../libgirara-gtk3.a
 	$(ECHO) LD $@
-	$(QUIET)${CC} ${LDFLAGS} -o $@ ${OBJECTS} ../libgirara-gtk${GIRARA_GTK_VERSION}.a ${LIBS}
+	$(QUIET)${CC} ${LDFLAGS} -o $@ ${OBJECTS} ../libgirara-gtk3.a ${LIBS}
 
-girara_test-gtk${GIRARA_GTK_VERSION}-debug: ${DOBJECTS} ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a
+girara_test-debug: ${DOBJECTS} ../libgirara-gtk3-debug.a
 	$(ECHO) LD $@
-	$(QUIET)${CC} ${LDFLAGS} -o $@ ${DOBJECTS} ../libgirara-gtk${GIRARA_GTK_VERSION}-debug.a ${LIBS}
+	$(QUIET)${CC} ${LDFLAGS} -o $@ ${DOBJECTS} ../libgirara-gtk3-debug.a ${LIBS}
 
 ${DOBJECTS} ${OBJECTS}: ../config.mk
 
 clean:
-	$(QUIET)rm -rf ${OBJECTS} ${DOBJECTS} girara_test-gtk${GIRARA_GTK_VERSION} \
-		girara_test-gtk${GIRARA_GTK_VERSION}-debug .depend ${XDG_HELPER} *gcda *gcno
+	$(QUIET)rm -rf ${OBJECTS} ${DOBJECTS} girara_test \
+		girara_test-debug .depend ${XDG_HELPER} *gcda *gcno
 
 .PHONY: all options clean debug run run-debug
 

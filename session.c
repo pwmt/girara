@@ -14,10 +14,6 @@
 #include "utils.h"
 #include "input-history.h"
 
-#if GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
-
 #if defined(__GNUC__) || defined(__clang__)
 #define DO_PRAGMA(x) _Pragma(#x)
 #else
@@ -77,7 +73,7 @@ girara_session_create()
 
   /* init modes */
   session->modes.identifiers  = girara_list_new2(
-  (girara_free_function_t) girara_mode_string_free);
+      (girara_free_function_t) girara_mode_string_free);
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   girara_mode_t inputbar_mode = girara_mode_add(session, "inputbar");
   session->modes.normal       = normal_mode;
@@ -99,13 +95,6 @@ girara_session_create()
   girara_config_load_default(session);
 
   /* create widgets */
-#if GTK_MAJOR_VERSION == 2
-  session->gtk.box                      = GTK_BOX(gtk_vbox_new(FALSE, 0));
-  session->private_data->gtk.bottom_box = GTK_BOX(gtk_vbox_new(FALSE, 0));
-  session->gtk.statusbar_entries        = GTK_BOX(gtk_hbox_new(FALSE, 0));
-  session->gtk.tabbar                   = gtk_hbox_new(TRUE, 0);
-  session->gtk.inputbar_box             = GTK_BOX(gtk_hbox_new(TRUE, 0));
-#else
   session->gtk.box                      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session->private_data->gtk.overlay    = gtk_overlay_new();
   session->private_data->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
@@ -114,7 +103,6 @@ girara_session_create()
   session->gtk.inputbar_box             = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   gtk_box_set_homogeneous(GTK_BOX(session->gtk.tabbar), TRUE);
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
-#endif
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
 #if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
@@ -170,15 +158,9 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
 
-#if (GTK_MAJOR_VERSION == 3)
   gtk_window_set_has_resize_grip(GTK_WINDOW(session->gtk.window), FALSE);
-#endif
 
-#if (GTK_MAJOR_VERSION == 3)
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.window), GTK_STATE_NORMAL, &(session->style.default_background));
-#else
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.window), GTK_STATE_NORMAL, &(session->style.default_background));
-#endif
 
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
@@ -196,41 +178,28 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->signals.view_scroll_event = g_signal_connect(G_OBJECT(session->gtk.view), "scroll-event",
       G_CALLBACK(girara_callback_view_scroll_event), session);
 
-  bool show_hscrollbar = false;
-  bool show_vscrollbar = false;
-
-  girara_setting_get(session, "show-h-scrollbar", &show_hscrollbar);
-  girara_setting_get(session, "show-v-scrollbar", &show_vscrollbar);
-
-#if (GTK_MAJOR_VERSION == 3)
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  char* guioptions = NULL;
+  girara_setting_get(session, "guioptions", &guioptions);
 
   GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
   GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
 
   if (vscrollbar != NULL) {
-    gtk_widget_set_visible(GTK_WIDGET(vscrollbar), show_vscrollbar);
+    gtk_widget_set_visible(GTK_WIDGET(vscrollbar), strchr(guioptions, 'v') != NULL);
   }
 
   if (hscrollbar != NULL) {
-    gtk_widget_set_visible(GTK_WIDGET(hscrollbar), show_hscrollbar);
+    gtk_widget_set_visible(GTK_WIDGET(hscrollbar), strchr(guioptions, 'h') != NULL);
   }
-#else
-  GtkPolicyType h_policy, v_policy;
-  h_policy = show_hscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  v_policy = show_vscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), h_policy, v_policy);
-#endif
+  g_free(guioptions);
 
   /* viewport */
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
   gtk_viewport_set_shadow_type(GTK_VIEWPORT(session->gtk.viewport), GTK_SHADOW_NONE);
 
-#if (GTK_MAJOR_VERSION == 3)
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
-#else
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
-#endif
 
   /* statusbar */
   gtk_container_add(GTK_CONTAINER(session->gtk.statusbar), GTK_WIDGET(session->gtk.statusbar_entries));
@@ -254,7 +223,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   girara_setting_get(session, "statusbar-h-padding", &xpadding);
   girara_setting_get(session, "statusbar-v-padding", &ypadding);
 
-#if (GTK_MAJOR_VERSION == 3)
   /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
   GtkCssProvider* provider = gtk_css_provider_new();
 
@@ -272,18 +240,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
   gtk_widget_set_name(GTK_WIDGET(session->gtk.notification_text), "bottom_box");
-#else
-  GtkBorder inner_border = {
-      .left = xpadding - xpadding/2,
-      .right = xpadding/2,
-      .top = ypadding - ypadding/2,
-      .bottom = ypadding/2
-  };
-
-  /* set inner borders for inputbar and notification_text */
-  gtk_entry_set_inner_border(session->gtk.inputbar_entry, &inner_border);
-  gtk_misc_set_padding(GTK_MISC(session->gtk.notification_text), xpadding/2, ypadding/2);
-#endif
 
   session->signals.inputbar_key_pressed = g_signal_connect(
       G_OBJECT(session->gtk.inputbar_entry),
@@ -325,7 +281,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
   gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
 
-#if (GTK_MAJOR_VERSION == 3)
   /* packing */
   gtk_box_set_spacing(session->gtk.box, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
@@ -339,17 +294,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   gtk_overlay_add_overlay(GTK_OVERLAY(session->private_data->gtk.overlay), GTK_WIDGET(session->private_data->gtk.bottom_box));
   gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->private_data->gtk.overlay));
-
-#else
-  /* packing */
-  gtk_box_set_spacing(session->gtk.box, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),                 FALSE, FALSE, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),                   TRUE,  TRUE, 0);
-  gtk_box_pack_end(session->gtk.box, GTK_WIDGET(session->private_data->gtk.bottom_box), FALSE, FALSE, 0);
-
-  /* box */
-  gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->gtk.box));
-#endif
 
   /* parse color values */
   typedef struct color_setting_mapping_s
@@ -401,7 +345,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       GTK_STATE_NORMAL, &(session->style.statusbar_background));
 
   /* inputbar */
-#if (GTK_MAJOR_VERSION == 3)
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar_entry),
       GTK_STATE_NORMAL, &(session->style.inputbar_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_entry),
@@ -417,20 +360,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       GTK_STATE_NORMAL, &(session->style.notification_default_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
       GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
-#else
-  /* inputbar */
-  gtk_widget_modify_base(GTK_WIDGET(session->gtk.inputbar_entry), GTK_STATE_NORMAL, &(session->style.inputbar_background));
-  gtk_widget_modify_text(GTK_WIDGET(session->gtk.inputbar_entry), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
-
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.inputbar),        GTK_STATE_NORMAL, &(session->style.inputbar_background));
-  gtk_widget_modify_fg(GTK_WIDGET(session->gtk.inputbar_dialog), GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
-
-  /* notification area */
-  gtk_widget_modify_bg(GTK_WIDGET(session->gtk.notification_area),
-    GTK_STATE_NORMAL, &(session->style.notification_default_background));
-  gtk_widget_modify_text(GTK_WIDGET(session->gtk.notification_text),
-    GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
-#endif
 
   if (session->style.font == NULL) {
     /* set default font */
@@ -678,6 +607,7 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
 
   gtk_container_add(GTK_CONTAINER(session->gtk.viewport), widget);
   gtk_widget_show_all(widget);
+  gtk_widget_grab_focus(session->gtk.view);
 
   return true;
 }

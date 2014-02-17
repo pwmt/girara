@@ -169,7 +169,7 @@ struct girara_shortcut_s
 {
   guint mask; /**< Mask */
   guint key; /**< Key */
-  const char* buffered_command; /**< Buffer command */
+  char* buffered_command; /**< Buffer command */
   girara_shortcut_function_t function; /**< The correspondending function */
   girara_mode_t mode; /**< Mode identifier */
   girara_argument_t argument; /**< Given argument */
@@ -240,9 +240,7 @@ struct girara_session_private_s
 
   struct
   {
-#if GTK_MAJOR_VERSION == 3
     GtkWidget         *overlay; /**< So we can overlay bottom_box on top of view */
-#endif
     GtkBox            *bottom_box; /**< Box grouping input, status and notification */
   } gtk;
 };

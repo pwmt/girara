@@ -4,7 +4,7 @@ include ../config.mk
 include ../common.mk
 
 PROJECTNV  = girara
-PROJECT    = girara-gtk${GIRARA_GTK_VERSION}
+PROJECT    = girara-gtk3
 CATALOGS   = $(wildcard *.po)
 LINGUAS   ?= $(patsubst %.po, %, $(CATALOGS))
 ifeq ($(LINGUAS),)

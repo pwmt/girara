@@ -4,10 +4,10 @@ include config.mk
 include common.mk
 
 PROJECTNV = girara
-PROJECT   = girara-gtk${GIRARA_GTK_VERSION}
+PROJECT   = girara-gtk3
 SOURCE    = $(wildcard *.c)
-OBJECTS   = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.o}
-DOBJECTS  = ${SOURCE:.c=-gtk${GIRARA_GTK_VERSION}.do}
+OBJECTS   = ${SOURCE:.c=.o}
+DOBJECTS  = ${SOURCE:.c=.do}
 HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
@@ -20,7 +20,17 @@ CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
 
 
-all: options ${PROJECT} po
+all: options ${PROJECT} po ${PROJECT}.pc
+
+# pkg-config based version checks
+.version-checks/%: config.mk
+	$(QUIET)test $($(*)_VERSION_CHECK) -eq 0 || \
+		pkg-config --atleast-version $($(*)_MIN_VERSION) $($(*)_PKG_CONFIG_NAME) || ( \
+		echo "The minium required version of $(*) is $($(*)_MIN_VERSION)" && \
+		false \
+	)
+	@mkdir -p .version-checks
+	$(QUIET)touch $@
 
 options:
 	@echo ${PROJECT} build options:
@@ -34,18 +44,18 @@ version.h: version.h.in config.mk
 		-e 's/GVMINOR/${GIRARA_VERSION_MINOR}/' \
 		-e 's/GVREV/${GIRARA_VERSION_REV}/' version.h.in > version.h
 
-%-gtk${GIRARA_GTK_VERSION}.o: %.c
+%.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-%-gtk${GIRARA_GTK_VERSION}.do: %.c
+%.do: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
-${OBJECTS}:  config.mk version.h
-${DOBJECTS}: config.mk version.h
+${OBJECTS} ${DOBJECTS}: config.mk version.h \
+	.version-checks/GTK .version-checks/GLIB
 
 ${PROJECT}: static shared
 static: lib${PROJECT}.a
@@ -63,7 +73,8 @@ clean:
 	$(QUIET)rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
-		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov
+		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov \
+		.version-checks
 	$(QUIET)${MAKE} -C tests clean
 	$(QUIET)${MAKE} -C po clean
 
@@ -108,12 +119,11 @@ dist: clean
 	$(QUIET)rm -rf ${PROJECTNV}-${VERSION}
 
 ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
-	$(QUIET)echo project=${PROJECT} > ${PROJECT}.pc
-	$(QUIET)echo version=${VERSION} >> ${PROJECT}.pc
-	$(QUIET)echo includedir=${INCLUDEDIR} >> ${PROJECT}.pc
-	$(QUIET)echo libdir=${LIBDIR} >> ${PROJECT}.pc
-	$(QUIET)echo GTK_VERSION=${GIRARA_GTK_VERSION} >> ${PROJECT}.pc
-	$(QUIET)cat ${PROJECTNV}.pc.in >> ${PROJECT}.pc
+	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
+		-e 's,@VERSION@,${VERSION},' \
+		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
+		-e 's,@LIBDIR@,${LIBDIR},' \
+		${PROJECTNV}.pc.in > ${PROJECT}.pc
 
 po:
 	$(QUIET)${MAKE} -C po

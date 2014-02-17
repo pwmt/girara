@@ -1,11 +1,13 @@
-
-LIB_PATH=-L${libdir}
-INC_PATH=-I${includedir}
+project=@PROJECT@
+version=@VERSION@
+includedir=@INCLUDEDIR@
+libdir=@LIBDIR@
+GTK_VERSION=3
 
 Name: ${project}
 Description: User interface libray
 Version: ${version}
-URL: http://pwmt.org/projects/libgirara
-Cflags: ${INC_PATH}
-Libs: -l${project} ${LIB_PATH}
-Requires.private: gtk+-${GTK_VERSION}.0
+URL: http://pwmt.org/projects/girara
+Cflags: -I${includedir}
+Libs: -L${libdir} -l${project}
+Requires.private: gtk+-3.0

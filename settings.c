@@ -27,7 +27,7 @@ struct girara_setting_s
   bool init_only; /**< Option can be set only before girara gets initialized */
   char* description; /**< Description of this setting */
   girara_setting_callback_t callback; /**< Callback that gets executed when the value of the setting changes */
-  void* data; /**< Arbitary data that can be used by callbacks */
+  void* data; /**< Arbitrary data that can be used by callbacks */
 };
 
 void

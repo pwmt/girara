@@ -22,6 +22,7 @@ typedef struct ih_private_s {
                                 ih_private_t))
 
 /* Methods */
+static void ih_dispose(GObject* object);
 static void ih_finalize(GObject* object);
 static void ih_set_property(GObject* object, guint prop_id,
     const GValue* value, GParamSpec* pspec);
@@ -50,6 +51,7 @@ girara_input_history_class_init(GiraraInputHistoryClass* class)
 
   /* overwrite methods */
   GObjectClass* object_class = G_OBJECT_CLASS(class);
+  object_class->dispose      = ih_dispose;
   object_class->finalize     = ih_finalize;
   object_class->set_property = ih_set_property;
   object_class->get_property = ih_get_property;
@@ -74,8 +76,19 @@ girara_input_history_init(GiraraInputHistory* history)
 {
   ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
   priv->history = girara_list_new2((girara_free_function_t) g_free);
-  priv->reset = true;
-  priv->io = NULL;
+  priv->reset   = true;
+  priv->io      = NULL;
+}
+
+/* GObject dispose */
+static void
+ih_dispose(GObject* object)
+{
+  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
+
+  g_clear_object(&priv->io);
+
+  G_OBJECT_CLASS(girara_input_history_parent_class)->dispose(object);
 }
 
 /* GObject finalize */
@@ -85,10 +98,6 @@ ih_finalize(GObject* object)
   ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
   girara_list_free(priv->history);
   g_free(priv->command_line);
-
-  if (priv->io != NULL) {
-    g_object_unref(priv->io);
-  }
 
   G_OBJECT_CLASS(girara_input_history_parent_class)->finalize(object);
 }

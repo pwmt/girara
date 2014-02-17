@@ -77,12 +77,14 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   /* set default values */
   bool show_commandline = false;
   bool show_statusbar   = false;
+  bool show_hscrollbar  = false;
+  bool show_vscrollbar  = false;
 
   /* evaluate input */
-  char* input      = (char*) value;
-  int input_length = strlen(input);
+  char* input               = (char*) value;
+  const size_t input_length = strlen(input);
 
-  for (int i = 0; i < input_length; i++) {
+  for (size_t i = 0; i < input_length; i++) {
     switch (input[i]) {
       /* command line */
       case 'c':
@@ -91,6 +93,12 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
       /* statusbar */
       case 's':
         show_statusbar = true;
+        break;
+      case 'h':
+        show_hscrollbar = true;
+        break;
+      case 'v':
+        show_vscrollbar = true;
         break;
     }
   }
@@ -111,6 +119,17 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
     session->global.hide_statusbar = true;
     gtk_widget_hide(session->gtk.statusbar);
   }
+
+  GtkWidget* vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
+  GtkWidget* hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
+
+  if (vscrollbar != NULL) {
+    gtk_widget_set_visible(vscrollbar, show_vscrollbar);
+  }
+
+  if (hscrollbar != NULL) {
+    gtk_widget_set_visible(hscrollbar, show_hscrollbar);
+  }
 }
 
 static void
@@ -119,65 +138,51 @@ cb_scrollbars(girara_session_t* session, const char* name,
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  bool val = *(bool*) value;
-  bool show_hscrollbar = false;
-  bool show_vscrollbar = false;
+  const bool val = *(bool*) value;
 
-#if (GTK_MAJOR_VERSION == 3)
-  GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
-  GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
+  char* guioptions = NULL;
+  girara_setting_get(session, "guioptions", &guioptions);
+  g_return_if_fail(guioptions != NULL);
 
-  if (vscrollbar != NULL) {
-    show_vscrollbar = gtk_widget_get_visible(vscrollbar);
-  }
+  bool show_hscrollbar = strchr(guioptions, 'h') != NULL;
+  bool show_vscrollbar = strchr(guioptions, 'v') != NULL;
 
-  if (hscrollbar != NULL) {
-    show_hscrollbar = gtk_widget_get_visible(hscrollbar);
-  }
-#else
-  GtkPolicyType h_policy, v_policy;
-  gtk_scrolled_window_get_policy(GTK_SCROLLED_WINDOW(session->gtk.view), &h_policy, &v_policy);
-  show_vscrollbar = (v_policy == GTK_POLICY_AUTOMATIC);
-  show_hscrollbar = (h_policy == GTK_POLICY_AUTOMATIC);
-#endif
-
-  if (!strcmp(name, "show-scrollbars")) {
+  if (strcmp(name, "show-scrollbars") == 0) {
     show_hscrollbar = show_vscrollbar = val;
-
-    girara_setting_set(session, "show-h-scrollbar", &val);
-    girara_setting_set(session, "show-v-scrollbar", &val);
-
-  } else if (!strcmp(name, "show-h-scrollbar")) {
+  } else if (strcmp(name, "show-h-scrollbar") == 0) {
     show_hscrollbar = val;
-
-  } else if (!strcmp(name, "show-v-scrollbar")) {
+  } else if (strcmp(name, "show-v-scrollbar") == 0) {
     show_vscrollbar = val;
   }
 
-#if (GTK_MAJOR_VERSION == 3)
-  if (vscrollbar != NULL) {
-    gtk_widget_set_visible(vscrollbar, show_vscrollbar);
+  const size_t guioptions_len = strlen(guioptions);
+  char* new_guioptions        = g_try_malloc0(sizeof(char) * (guioptions_len + 3));
+  char* iterator              = new_guioptions;
+  if (new_guioptions == NULL) {
+    g_free(guioptions);
+    return;
   }
 
-  if (hscrollbar != NULL) {
-    gtk_widget_set_visible(hscrollbar, show_hscrollbar);
+  /* copy everything apart from h and v */
+  for (size_t i = 0; i != guioptions_len; ++i) {
+    if (guioptions[i] != 'h' && guioptions[i] != 'v') {
+      *iterator = guioptions[i];
+      ++iterator;
+    }
   }
-#else
-  h_policy = show_hscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  v_policy = show_vscrollbar ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER;
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), h_policy, v_policy);
-#endif
+  g_free(guioptions);
 
-  /* be careful to avoid infinite recursion as changing settings triggers
-     cb_scrollbars call */
-  girara_setting_get(session, "show-scrollbars", &val);
-  if (show_hscrollbar && show_vscrollbar && !val) {
-    val = true;
-    girara_setting_set(session, "show-scrollbars", &val);
-  } else if (!show_hscrollbar && !show_vscrollbar && val) {
-    val = false;
-    girara_setting_set(session, "show-scrollbars", &val);
+  if (show_hscrollbar == true) {
+    *iterator = 'h';
+    ++iterator;
   }
+  if (show_vscrollbar == true) {
+    *iterator = 'v';
+    ++iterator;
+  }
+
+  girara_setting_set(session, "guioptions", new_guioptions);
+  g_free(new_guioptions);
 }
 
 void

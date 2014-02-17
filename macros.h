@@ -40,4 +40,12 @@
 # endif
 #endif
 
+#ifndef GIRARA_ALLOC_SIZE
+# if defined(__GNUC__)
+#  define GIRARA_ALLOC_SIZE(...) __attribute__((alloc_size(__VA_ARGS__)))
+# else
+#  define GIRARA_ALLOC_SIZE(x)
+# endif
+#endif
+
 #endif

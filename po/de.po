@@ -5,13 +5,14 @@
 #   <cedric.sodhi@googlemail.com>, 2012
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2012
 # Moritz Lipp <mlq@pwmt.org>, 2012
+# rike, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2013-11-04 20:02+0100\n"
-"PO-Revision-Date: 2013-08-15 00:24+0200\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"POT-Creation-Date: 2014-01-09 18:43+0100\n"
+"PO-Revision-Date: 2014-01-09 17:53+0000\n"
+"Last-Translator: rike\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
 "de/)\n"
 "Language: de\n"
@@ -21,228 +22,227 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #. unhandled command
-#: ../callbacks.c:498
+#: ../callbacks.c:495
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
 
-#: ../commands.c:112 ../commands.c:312
+#: ../commands.c:108 ../commands.c:308
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr ""
-"Ungülitige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
+msgstr "Ungültige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
-#: ../commands.c:146
+#: ../commands.c:142
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Modus ist nicht registriert: %s"
 
-#: ../commands.c:178
+#: ../commands.c:174
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Ungültiger Modifikator in %s"
 
-#: ../commands.c:217
+#: ../commands.c:213
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Ungültige Sondertaste für %s"
 
-#: ../commands.c:253
+#: ../commands.c:249
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Ungültige Sondertaste oder Modus %s"
 
-#: ../commands.c:334
+#: ../commands.c:330
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
 
-#: ../commands.c:422
+#: ../commands.c:418
 msgid "Not enough arguments."
 msgstr "Zu wenige Argumente."
 
-#: ../commands.c:427
+#: ../commands.c:423
 msgid "Too many arguments."
 msgstr "Zu viele Argumente."
 
-#: ../commands.c:440
+#: ../commands.c:436
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Unbekannte Otion: %s"
 
-#: ../commands.c:454
+#: ../commands.c:450
 msgid "true"
 msgstr "wahr"
 
-#: ../commands.c:454
+#: ../commands.c:450
 msgid "false"
 msgstr "falsch"
 
-#: ../commands.c:486
+#: ../commands.c:482
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Kein Wert für Option definiert: %s"
 
-#: ../commands.c:501
+#: ../commands.c:497
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"
 
 #. settings
-#: ../config.c:203
+#: ../config.c:190
 msgid "Font"
 msgstr "Schriftart"
 
-#: ../config.c:204
+#: ../config.c:191
 msgid "Default foreground color"
 msgstr "Standardfarbe des Vordergrunds"
 
-#: ../config.c:205
+#: ../config.c:192
 msgid "Default background color"
 msgstr "Standardfarbe des Hintergrunds"
 
-#: ../config.c:206
+#: ../config.c:193
 msgid "Inputbar foreground color"
 msgstr "Vordergrundfarbe der Eingabezeile"
 
-#: ../config.c:207
+#: ../config.c:194
 msgid "Inputbar background color"
 msgstr "Hintergrundfarbe der Eingabezeile"
 
-#: ../config.c:208
+#: ../config.c:195
 msgid "Statusbar foreground color"
 msgstr "Vordergrundfarbe der Statuszeile"
 
-#: ../config.c:209
+#: ../config.c:196
 msgid "Statsubar background color"
 msgstr "Hintergrundfarbe der Statuszeile"
 
-#: ../config.c:210
+#: ../config.c:197
 msgid "Completion foreground color"
 msgstr "Vordergrundfarbe der Vervollständigung"
 
-#: ../config.c:211
+#: ../config.c:198
 msgid "Completion background color"
 msgstr "Hintergrundfarbe der Vervollständigung"
 
-#: ../config.c:212
+#: ../config.c:199
 msgid "Completion group foreground color"
 msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
 
-#: ../config.c:213
+#: ../config.c:200
 msgid "Completion group background color"
 msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
 
-#: ../config.c:214
+#: ../config.c:201
 msgid "Completion highlight foreground color"
 msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
 
-#: ../config.c:215
+#: ../config.c:202
 msgid "Completion highlight background color"
 msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
 
-#: ../config.c:216
+#: ../config.c:203
 msgid "Error notification foreground color"
 msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
 
-#: ../config.c:217
+#: ../config.c:204
 msgid "Error notification background color"
 msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
 
-#: ../config.c:218
+#: ../config.c:205
 msgid "Warning notification foreground color"
 msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
 
-#: ../config.c:219
+#: ../config.c:206
 msgid "Warning notifaction background color"
 msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
 
-#: ../config.c:220
+#: ../config.c:207
 msgid "Notification foreground color"
 msgstr "Vordergrundfarbe der Benachrichtigung"
 
-#: ../config.c:221
+#: ../config.c:208
 msgid "Notification background color"
 msgstr "Hintergrundfarbe der Benachrichtigung"
 
-#: ../config.c:222
+#: ../config.c:209
 msgid "Tab bar foreground color"
 msgstr "Registerleisten Vordergrundfarbe"
 
-#: ../config.c:223
+#: ../config.c:210
 msgid "Tab bar background color"
 msgstr "Registerleisten Hintergrundfarbe"
 
-#: ../config.c:224
+#: ../config.c:211
 msgid "Tab bar foreground color (active)"
 msgstr "Registerleisten Vordergrundfarbe (aktiv)"
 
-#: ../config.c:225
+#: ../config.c:212
 msgid "Tab bar background color (active)"
 msgstr "Registerleisten Hintergrundfarbe (aktiv)"
 
-#: ../config.c:227
+#: ../config.c:214
 msgid "Initial window width"
 msgstr "Ausgangsbreite des Fensters"
 
-#: ../config.c:228
+#: ../config.c:215
 msgid "Initial window height"
 msgstr "Ausgangshöhe des Fensters"
 
-#: ../config.c:229
+#: ../config.c:216
 msgid "Horizontal padding for the status input and notification bars"
-msgstr ""
+msgstr "Horizontaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
-#: ../config.c:230
+#: ../config.c:217
 msgid "Vertical padding for the status input and notification bars"
-msgstr ""
+msgstr "Vertikaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
-#: ../config.c:231
+#: ../config.c:218
 msgid "Number of completion items"
 msgstr "Anzahl der Elemente in der Vervollständigung"
 
-#: ../config.c:232
+#: ../config.c:219
 msgid "Show both the horizontal and vertical scrollbars"
-msgstr ""
+msgstr "Zeige horizontale und vertikale Bildlaufleiste"
 
-#: ../config.c:233
+#: ../config.c:220
 msgid "Show the horizontal scrollbar"
 msgstr "Zeige horizontale Bildlaufleiste"
 
-#: ../config.c:234
+#: ../config.c:221
 msgid "Show the vertical scrollbar"
 msgstr "Zeige vertikale Bildlaufleiste"
 
-#: ../config.c:235
+#: ../config.c:222
 msgid "Window icon"
 msgstr "Fenstericon"
 
-#: ../config.c:236
+#: ../config.c:223
 msgid "Command to execute in :exec"
 msgstr "Befehl, der von :exec ausgeführt werden soll"
 
-#: ../config.c:237
+#: ../config.c:224
 msgid "Show or hide certain GUI elements"
 msgstr "Zeige oder verstecke bestimmte GUI Elemente"
 
 #. commands
-#: ../config.c:273
+#: ../config.c:260
 msgid "Execute a command"
 msgstr "Führe einen Befehl aus."
 
-#: ../config.c:274
+#: ../config.c:261
 msgid "Map a key sequence"
 msgstr "Tastenfolge zuweisen"
 
-#: ../config.c:275
+#: ../config.c:262
 msgid "Quit the program"
 msgstr "Beende das Programm"
 
-#: ../config.c:276
+#: ../config.c:263
 msgid "Set an option"
 msgstr "Setze eine Option"
 
-#: ../config.c:277
+#: ../config.c:264
 msgid "Unmap a key sequence"
 msgstr "Tastenfolge entbinden"
 

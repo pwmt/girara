@@ -6,17 +6,13 @@
 
 #define UNTITLED_TAB_TITLE "untitled"
 
-#if GTK_MAJOR_VERSION == 2
-#include "gtk2-compat.h"
-#endif
-
 /**
  * Default implementation of the event that is executed if a tab is clicked
  *
  * @param widget The widget
  * @param event The event
  * @param data Additional data
- * @return true if an error occured, otherwise false
+ * @return true if an error occurred, otherwise false
  */
 static bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
 
