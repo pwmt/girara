@@ -160,7 +160,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   gtk_window_set_has_resize_grip(GTK_WINDOW(session->gtk.window), FALSE);
 
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.window), GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.window),
+      GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
 
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
@@ -560,7 +561,8 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 }
 
-void girara_dialog(girara_session_t* session, const char* dialog, bool
+void
+girara_dialog(girara_session_t* session, const char* dialog, bool
     invisible, girara_callback_inputbar_key_press_event_t key_press_event,
     girara_callback_inputbar_activate_t activate_event, void* data)
 {
@@ -600,7 +602,7 @@ girara_set_view(girara_session_t* session, GtkWidget* widget)
 
   GtkWidget* child = gtk_bin_get_child(GTK_BIN(session->gtk.viewport));
 
-  if (child) {
+  if (child != NULL) {
     g_object_ref(child);
     gtk_container_remove(GTK_CONTAINER(session->gtk.viewport), child);
   }
