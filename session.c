@@ -160,7 +160,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   gtk_window_set_has_resize_grip(GTK_WINDOW(session->gtk.window), FALSE);
 
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.window), GTK_STATE_NORMAL, &(session->style.default_background));
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.window), GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
 
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
@@ -199,7 +199,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
   gtk_viewport_set_shadow_type(GTK_VIEWPORT(session->gtk.viewport), GTK_SHADOW_NONE);
 
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport), GTK_STATE_NORMAL, &(session->style.default_background));
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport), GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
 
   /* statusbar */
   gtk_container_add(GTK_CONTAINER(session->gtk.statusbar), GTK_WIDGET(session->gtk.statusbar_entries));
@@ -338,28 +338,28 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   /* view */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport),
-      GTK_STATE_NORMAL, &(session->style.default_background));
+      GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
 
   /* statusbar */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),
-      GTK_STATE_NORMAL, &(session->style.statusbar_background));
+      GTK_STATE_FLAG_NORMAL, &(session->style.statusbar_background));
 
   /* inputbar */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar_entry),
-      GTK_STATE_NORMAL, &(session->style.inputbar_background));
+      GTK_STATE_FLAG_NORMAL, &(session->style.inputbar_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_entry),
-      GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+      GTK_STATE_FLAG_NORMAL, &(session->style.inputbar_foreground));
 
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.inputbar),
-      GTK_STATE_NORMAL, &(session->style.inputbar_background));
+      GTK_STATE_FLAG_NORMAL, &(session->style.inputbar_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_dialog),
-      GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+      GTK_STATE_FLAG_NORMAL, &(session->style.inputbar_foreground));
 
   /* notification area */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-      GTK_STATE_NORMAL, &(session->style.notification_default_background));
+      GTK_STATE_FLAG_NORMAL, &(session->style.notification_default_background));
   gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-      GTK_STATE_NORMAL, &(session->style.notification_default_foreground));
+      GTK_STATE_FLAG_NORMAL, &(session->style.notification_default_foreground));
 
   if (session->style.font == NULL) {
     /* set default font */
@@ -536,13 +536,13 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   }
 
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, background);
+          GTK_STATE_FLAG_NORMAL, background);
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, background);
+          GTK_STATE_FLAG_NORMAL, background);
   gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_NORMAL, foreground);
+          GTK_STATE_FLAG_NORMAL, foreground);
   gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_NORMAL, foreground);
+          GTK_STATE_FLAG_NORMAL, foreground);
 
   /* prepare message */
   va_list ap;
@@ -624,7 +624,7 @@ girara_mode_t
 girara_mode_add(girara_session_t* session, const char* name)
 {
   g_return_val_if_fail(session  != NULL, FALSE);
-  g_return_val_if_fail(name != NULL && name[0] != 0x0, FALSE);
+  g_return_val_if_fail(name != NULL && name[0] != '\0', FALSE);
 
   girara_mode_t last_index = 0;
   GIRARA_LIST_FOREACH(session->modes.identifiers, girara_mode_string_t*, iter, mode)
