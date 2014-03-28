@@ -40,9 +40,10 @@ options:
 	@echo "CC      = ${CC}"
 
 version.h: version.h.in config.mk
-	$(QUIET)sed -e 's/GVMAJOR/${GIRARA_VERSION_MAJOR}/' \
-		-e 's/GVMINOR/${GIRARA_VERSION_MINOR}/' \
-		-e 's/GVREV/${GIRARA_VERSION_REV}/' version.h.in > version.h.tmp
+	$(QUIET)sed -e 's,@GVMAJOR@,${GIRARA_VERSION_MAJOR},' \
+		-e 's,@GVMINOR@,${GIRARA_VERSION_MINOR},' \
+		-e 's,@GVREV@,${GIRARA_VERSION_REV},' \
+		version.h.in > version.h.tmp
 	$(QUIET)mv version.h.tmp version.h
 
 %.o: %.c
@@ -75,7 +76,7 @@ clean:
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
 		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov \
-		.version-checks version.h.tmp
+		.version-checks version.h.tmp ${PROJECT}.pc.tmp
 	$(QUIET)${MAKE} -C tests clean
 	$(QUIET)${MAKE} -C po clean
 
@@ -124,7 +125,8 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
 		-e 's,@LIBDIR@,${LIBDIR},' \
-		${PROJECTNV}.pc.in > ${PROJECT}.pc
+		${PROJECTNV}.pc.in > ${PROJECT}.pc.tmp
+	$(QUIET)mv ${PROJECT}.pc.tmp ${PROJECT}.pc
 
 po:
 	$(QUIET)${MAKE} -C po
