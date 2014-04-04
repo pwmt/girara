@@ -80,6 +80,9 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   bool show_hscrollbar  = false;
   bool show_vscrollbar  = false;
 
+  GtkPolicyType hscrollbar_policy = GTK_POLICY_NEVER;
+  GtkPolicyType vscrollbar_policy = GTK_POLICY_NEVER;
+
   /* evaluate input */
   char* input               = (char*) value;
   const size_t input_length = strlen(input);
@@ -96,9 +99,11 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
         break;
       case 'h':
         show_hscrollbar = true;
+        hscrollbar_policy = GTK_POLICY_AUTOMATIC;
         break;
       case 'v':
         show_vscrollbar = true;
+        vscrollbar_policy = GTK_POLICY_AUTOMATIC;
         break;
     }
   }
@@ -130,6 +135,9 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   if (hscrollbar != NULL) {
     gtk_widget_set_visible(hscrollbar, show_hscrollbar);
   }
+
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view),
+      hscrollbar_policy, vscrollbar_policy);
 }
 
 static void
