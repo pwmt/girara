@@ -181,19 +181,39 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-  char* guioptions = NULL;
-  girara_setting_get(session, "guioptions", &guioptions);
-
+  /* invisible scrollbars */
   GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
   GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
 
-  if (vscrollbar != NULL) {
-    gtk_widget_set_visible(GTK_WIDGET(vscrollbar), strchr(guioptions, 'v') != NULL);
+  static const char CSS_INVISIBLE_SCROLLBAR[] = "GtkScrollbar:insensitive { -GtkRange-slider-width: 0; -GtkRange-trough-border: 0; }";
+
+  GtkCssProvider* provider = gtk_css_provider_new();
+  GError* error = NULL;
+  if (gtk_css_provider_load_from_data(provider, CSS_INVISIBLE_SCROLLBAR, -1, &error) == FALSE) {
+    girara_warning("Unable to load CSS: %s", error->message);
+    g_error_free(error);
   }
 
-  if (hscrollbar != NULL) {
-    gtk_widget_set_visible(GTK_WIDGET(hscrollbar), strchr(guioptions, 'h') != NULL);
+  char* guioptions = NULL;
+  girara_setting_get(session, "guioptions", &guioptions);
+
+  if (vscrollbar != NULL) {
+    gtk_style_context_add_provider(gtk_widget_get_style_context(vscrollbar),
+        GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    if (strchr(guioptions, 'v') == NULL) {
+      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
   }
+  if (hscrollbar != NULL) {
+    gtk_style_context_add_provider(gtk_widget_get_style_context(hscrollbar),
+        GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    if (strchr(guioptions, 'h') == NULL) {
+     gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
+  }
+
+  g_object_unref(provider);
+  provider = NULL;
   g_free(guioptions);
 
   /* viewport */
@@ -225,18 +245,22 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   girara_setting_get(session, "statusbar-v-padding", &ypadding);
 
   /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
-  GtkCssProvider* provider = gtk_css_provider_new();
+  provider = gtk_css_provider_new();
 
   static const char CSS_PATTERN[] = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx %dpx %dpx %dpx; }";
   char* css = g_strdup_printf(CSS_PATTERN, ypadding - ypadding/2, xpadding/2, ypadding/2, xpadding - xpadding/2);
-  gtk_css_provider_load_from_data(provider, css, strlen(css), NULL);
-  g_free(css);
-
-  GdkDisplay* display = gdk_display_get_default();
-  GdkScreen* screen = gdk_display_get_default_screen(display);
-  gtk_style_context_add_provider_for_screen(screen,
+  error = NULL;
+  if (gtk_css_provider_load_from_data(provider, css, -1, &error) == FALSE) {
+    girara_warning("Unable to load CSS: %s", error->message);
+    g_error_free(error);
+  } else {
+    GdkDisplay* display = gdk_display_get_default();
+    GdkScreen* screen = gdk_display_get_default_screen(display);
+    gtk_style_context_add_provider_for_screen(screen,
                                             GTK_STYLE_PROVIDER(provider),
                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  }
+  g_free(css);
   g_object_unref(provider);
 
   gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");

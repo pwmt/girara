@@ -124,11 +124,18 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   GtkWidget* hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
 
   if (vscrollbar != NULL) {
-    gtk_widget_set_visible(vscrollbar, show_vscrollbar);
+    if (show_vscrollbar == true) {
+      gtk_widget_unset_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
   }
-
   if (hscrollbar != NULL) {
-    gtk_widget_set_visible(hscrollbar, show_hscrollbar);
+    if (show_hscrollbar == true) {
+      gtk_widget_unset_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
   }
 }
 
