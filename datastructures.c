@@ -153,10 +153,10 @@ void*
 girara_list_nth(girara_list_t* list, size_t n)
 {
   g_return_val_if_fail(list != NULL, NULL);
-  g_return_val_if_fail(list->start != NULL || (n < g_list_length(list->start)), NULL);
+  g_return_val_if_fail(list->start != NULL && (n < g_list_length(list->start)), NULL);
 
   GList* tmp = g_list_nth(list->start, n);
-  g_return_val_if_fail(tmp, NULL);
+  g_return_val_if_fail(tmp != NULL, NULL);
 
   return tmp->data;
 }
