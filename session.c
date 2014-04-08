@@ -409,8 +409,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->private_data->gtk.overlay));
 
   /* statusbar */
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),
-      GTK_STATE_FLAG_NORMAL, &(session->style.statusbar_background));
+  gtk_style_context_add_class(gtk_widget_get_style_context(
+        GTK_WIDGET(session->gtk.statusbar)), "statusbar");
 
   /* inputbar */
   gtk_style_context_add_class(gtk_widget_get_style_context(

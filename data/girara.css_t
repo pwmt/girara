@@ -35,6 +35,11 @@
   background-color: @COMPLETION-GROUP-BG@;
 }
 
+#@SESSION@ .statusbar {
+  color: @STATUSBAR-FG@;
+  background-color: @STATUSBAR-BG@;
+}
+
 /* Padding of the bottom box */
 #@SESSION@ #bottom_box {
   border-style: none;
