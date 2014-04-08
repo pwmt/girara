@@ -17,12 +17,12 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   item->text = GTK_LABEL(gtk_label_new(NULL));
 
   /* set style */
-  gtk_widget_override_background_color(GTK_WIDGET(item->box),  GTK_STATE_NORMAL, &(session->style.statusbar_background));
-  gtk_widget_override_color(GTK_WIDGET(item->box),             GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
-  gtk_widget_override_background_color(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &(session->style.statusbar_background));
-  gtk_widget_override_color(GTK_WIDGET(item->text),            GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
+  gtk_style_context_add_class(gtk_widget_get_style_context(
+        GTK_WIDGET(item->box)), "statusbar");
+  gtk_style_context_add_class(gtk_widget_get_style_context(
+        GTK_WIDGET(item->text)), "statusbar");
 
-  gtk_widget_override_font(GTK_WIDGET(item->text),             session->style.font);
+  gtk_widget_override_font(GTK_WIDGET(item->text), session->style.font);
 
   /* set properties */
   gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.5);
