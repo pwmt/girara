@@ -1,0 +1,23 @@
+/* No resize grip on GtkWindows */
+#@SESSION@ GtkWindow {
+  -GtkWindow-resize-grip-height: 0;
+  -GtkWindow-resize-grip-width: 0;
+}
+
+/* Hide scrollbars from GtkScrolledWindow */
+#@SESSION@ GtkScrolledWindow GtkScrollbar:insensitive {
+  -GtkRange-slider-width: 0;
+  -GtkRange-trough-border: 0;
+}
+
+#@SESSION@ * {
+  color: @DEFAULT-FG@;
+  background-color: @DEFAULT-BG@;
+}
+
+#@SESSION@ #bottom_box {
+  border-style: none;
+  margin: 0px 0px 0px 0px;
+  padding: @BOTTOMBOX-PADDING1@px @BOTTOMBOX-PADDING2@px @BOTTOMBOX-PADDING3@px
+    @BOTTOMBOX-PADDING4@px;
+}

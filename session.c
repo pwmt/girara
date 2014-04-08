@@ -13,6 +13,7 @@
 #include "config.h"
 #include "utils.h"
 #include "input-history.h"
+#include "css-definitions.h"
 
 #if defined(__GNUC__) || defined(__clang__)
 #define DO_PRAGMA(x) _Pragma(#x)
@@ -41,6 +42,117 @@ ensure_gettext_initialized(void)
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     g_once_init_leave(&initialized, 1);
   }
+}
+
+static char*
+load_css(girara_session_t* session, const char* session_name)
+{
+  char* css_data = g_strdup(CSS_TEMPLATE);
+  if (css_data == NULL) {
+    return NULL;
+  }
+
+  char* tmp = girara_replace_substring(css_data, "@SESSION@", session_name);
+  g_free(css_data);
+  if (tmp == NULL) {
+    return NULL;
+  }
+  css_data = tmp;
+
+  /* parse color values */
+  typedef struct color_setting_mapping_s {
+    const char* identifier;
+    GdkRGBA *color;
+  } color_setting_mapping_t;
+
+  const color_setting_mapping_t color_setting_mappings[] = {
+    {"default-fg",              &(session->style.default_foreground)},
+    {"default-bg",              &(session->style.default_background)},
+    {"inputbar-fg",             &(session->style.inputbar_foreground)},
+    {"inputbar-bg",             &(session->style.inputbar_background)},
+    {"statusbar-fg",            &(session->style.statusbar_foreground)},
+    {"statusbar-bg",            &(session->style.statusbar_background)},
+    {"completion-fg",           &(session->style.completion_foreground)},
+    {"completion-bg",           &(session->style.completion_background)},
+    {"completion-group-fg",     &(session->style.completion_group_foreground)},
+    {"completion-group-bg",     &(session->style.completion_group_background)},
+    {"completion-highlight-fg", &(session->style.completion_highlight_foreground)},
+    {"completion-highlight-bg", &(session->style.completion_highlight_background)},
+    {"notification-error-fg",   &(session->style.notification_error_foreground)},
+    {"notification-error-bg",   &(session->style.notification_error_background)},
+    {"notification-warning-fg", &(session->style.notification_warning_foreground)},
+    {"notification-warning-bg", &(session->style.notification_warning_background)},
+    {"notification-fg",         &(session->style.notification_default_foreground)},
+    {"notification-bg",         &(session->style.notification_default_background)},
+    {"tabbar-fg",               &(session->style.tabbar_foreground)},
+    {"tabbar-bg",               &(session->style.tabbar_background)},
+    {"tabbar-focus-fg",         &(session->style.tabbar_focus_foreground)},
+    {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
+  };
+
+  for (size_t i = 0; i < LENGTH(color_setting_mappings) && css_data != NULL; i++) {
+    char* tmp_value = NULL;
+    girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
+    if (tmp_value != NULL) {
+      gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
+      g_free(tmp_value);
+    }
+
+    char* color = gdk_rgba_to_string(color_setting_mappings[i].color);
+    char* identifier = g_ascii_strup(color_setting_mappings[i].identifier, -1);
+    char* css_identifier = g_strdup_printf("@%s@", identifier);
+
+    tmp = girara_replace_substring(css_data, css_identifier, color);
+
+    g_free(css_data);
+    g_free(css_identifier);
+    g_free(identifier);
+    g_free(color);
+
+    css_data = tmp;
+  }
+
+  if (css_data == NULL) {
+    return NULL;
+  }
+
+  /* we want inputbar_entry the same height as notification_text and statusbar,
+    so that when inputbar_entry is hidden, the size of the bottom_box remains
+    the same. We need to get rid of the builtin padding in the GtkEntry
+    widget. */
+
+  int ypadding = 2;         /* total amount of padding (top + bottom) */
+  int xpadding = 8;         /* total amount of padding (left + right) */
+  girara_setting_get(session, "statusbar-h-padding", &xpadding);
+  girara_setting_get(session, "statusbar-v-padding", &ypadding);
+
+  typedef struct padding_mapping_s {
+    const char* identifier;
+    char* value;
+  } padding_mapping_t;
+
+  const padding_mapping_t padding_mapping[] = {
+    {"@BOTTOMBOX-PADDING1@", g_strdup_printf("%d", ypadding - ypadding/2)},
+    {"@BOTTOMBOX-PADDING2@", g_strdup_printf("%d", xpadding/2)},
+    {"@BOTTOMBOX-PADDING3@", g_strdup_printf("%d", ypadding/2)},
+    {"@BOTTOMBOX-PADDING4@", g_strdup_printf("%d", xpadding - xpadding/2)},
+  };
+
+  for (size_t i = 0; i < LENGTH(padding_mapping) && css_data != NULL; ++i) {
+    tmp = girara_replace_substring(css_data, padding_mapping[i].identifier, padding_mapping[i].value);
+    g_free(css_data);
+    css_data = tmp;
+  }
+
+  for (size_t i = 0; i < LENGTH(padding_mapping); ++i) {
+    g_free(padding_mapping[i].value);
+  }
+
+  if (css_data == NULL) {
+    return NULL;
+  }
+
+  return css_data;
 }
 
 girara_session_t*
@@ -132,16 +244,46 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     return false;
   }
 
+  /* load CSS style */
+  char* css_data = load_css(session, sessionname == NULL ? "girara" : sessionname);
+  if (css_data == NULL) {
+    return false;
+  }
+
+  GtkCssProvider* provider = gtk_css_provider_new();
+  GError* error = NULL;
+  if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
+    girara_error("Unable to load CSS: %s", error->message);
+    g_free(css_data);
+    g_error_free(error);
+    g_object_unref(provider);
+    return false;
+  }
+  g_free(css_data);
+
   /* window */
-  if (session->gtk.embed){
+  if (session->gtk.embed != 0) {
     session->gtk.window = gtk_plug_new(session->gtk.embed);
   } else {
     session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   }
 
+  GtkWidget* window_widget = GTK_WIDGET(session->gtk.window);
   if (sessionname != NULL) {
-    gtk_widget_set_name(GTK_WIDGET(session->gtk.window), sessionname);
+    gtk_widget_set_name(window_widget, sessionname);
+  } else {
+    gtk_widget_set_name(window_widget, "girara");
   }
+
+  /* add CSS style provider to the window */
+  /* gtk_style_context_add_provider(gtk_widget_get_style_context(window_widget),
+    GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION); */
+  GdkDisplay* display = gdk_display_get_default();
+  GdkScreen* screen = gdk_display_get_default_screen(display);
+  gtk_style_context_add_provider_for_screen(screen,
+                                            GTK_STYLE_PROVIDER(provider),
+                                            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  g_object_unref(provider);
 
   GdkGeometry hints = {
     .base_height = 1,
@@ -157,11 +299,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   };
 
   gtk_window_set_geometry_hints(GTK_WINDOW(session->gtk.window), NULL, &hints, GDK_HINT_MIN_SIZE);
-
-  gtk_window_set_has_resize_grip(GTK_WINDOW(session->gtk.window), FALSE);
-
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.window),
-      GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
 
   /* view */
   session->signals.view_key_pressed = g_signal_connect(G_OBJECT(session->gtk.view), "key-press-event",
@@ -185,42 +322,22 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
   GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
 
-  static const char CSS_INVISIBLE_SCROLLBAR[] = "GtkScrollbar:insensitive { -GtkRange-slider-width: 0; -GtkRange-trough-border: 0; }";
-
-  GtkCssProvider* provider = gtk_css_provider_new();
-  GError* error = NULL;
-  if (gtk_css_provider_load_from_data(provider, CSS_INVISIBLE_SCROLLBAR, -1, &error) == FALSE) {
-    girara_warning("Unable to load CSS: %s", error->message);
-    g_error_free(error);
-  }
-
   char* guioptions = NULL;
   girara_setting_get(session, "guioptions", &guioptions);
 
-  if (vscrollbar != NULL) {
-    gtk_style_context_add_provider(gtk_widget_get_style_context(vscrollbar),
-        GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    if (strchr(guioptions, 'v') == NULL) {
-      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-    }
+  if (vscrollbar != NULL && strchr(guioptions, 'v') == NULL) {
+    gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
   }
   if (hscrollbar != NULL) {
-    gtk_style_context_add_provider(gtk_widget_get_style_context(hscrollbar),
-        GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     if (strchr(guioptions, 'h') == NULL) {
      gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
     }
   }
-
-  g_object_unref(provider);
-  provider = NULL;
   g_free(guioptions);
 
   /* viewport */
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
   gtk_viewport_set_shadow_type(GTK_VIEWPORT(session->gtk.viewport), GTK_SHADOW_NONE);
-
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport), GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
 
   /* statusbar */
   gtk_container_add(GTK_CONTAINER(session->gtk.statusbar), GTK_WIDGET(session->gtk.statusbar_entries));
@@ -233,35 +350,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   /* inputbar */
   gtk_entry_set_has_frame(session->gtk.inputbar_entry, FALSE);
   gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar_entry), TRUE);
-
-  /* we want inputbar_entry the same height as notification_text and statusbar,
-     so that when inputbar_entry is hidden, the size of the bottom_box remains
-     the same. We need to get rid of the builtin padding in the GtkEntry
-     widget. */
-
-  guint ypadding = 2;         /* total amount of padding (top + bottom) */
-  guint xpadding = 8;         /* total amount of padding (left + right) */
-  girara_setting_get(session, "statusbar-h-padding", &xpadding);
-  girara_setting_get(session, "statusbar-v-padding", &ypadding);
-
-  /* gtk_entry_set_inner_border is deprecated since gtk 3.4 and does nothing. */
-  provider = gtk_css_provider_new();
-
-  static const char CSS_PATTERN[] = "#bottom_box { border-style: none; margin: 0px 0px 0px 0px; padding:%dpx %dpx %dpx %dpx; }";
-  char* css = g_strdup_printf(CSS_PATTERN, ypadding - ypadding/2, xpadding/2, ypadding/2, xpadding - xpadding/2);
-  error = NULL;
-  if (gtk_css_provider_load_from_data(provider, css, -1, &error) == FALSE) {
-    girara_warning("Unable to load CSS: %s", error->message);
-    g_error_free(error);
-  } else {
-    GdkDisplay* display = gdk_display_get_default();
-    GdkScreen* screen = gdk_display_get_default_screen(display);
-    gtk_style_context_add_provider_for_screen(screen,
-                                            GTK_STYLE_PROVIDER(provider),
-                                            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-  }
-  g_free(css);
-  g_object_unref(provider);
 
   gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
   gtk_widget_set_name(GTK_WIDGET(session->gtk.notification_text), "bottom_box");
@@ -320,50 +408,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_overlay_add_overlay(GTK_OVERLAY(session->private_data->gtk.overlay), GTK_WIDGET(session->private_data->gtk.bottom_box));
   gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->private_data->gtk.overlay));
 
-  /* parse color values */
-  typedef struct color_setting_mapping_s
-  {
-    char* identifier;
-    GdkRGBA *color;
-  } color_setting_mapping_t;
-
-  const color_setting_mapping_t color_setting_mappings[] = {
-    {"default-fg",              &(session->style.default_foreground)},
-    {"default-bg",              &(session->style.default_background)},
-    {"inputbar-fg",             &(session->style.inputbar_foreground)},
-    {"inputbar-bg",             &(session->style.inputbar_background)},
-    {"statusbar-fg",            &(session->style.statusbar_foreground)},
-    {"statusbar-bg",            &(session->style.statusbar_background)},
-    {"completion-fg",           &(session->style.completion_foreground)},
-    {"completion-bg",           &(session->style.completion_background)},
-    {"completion-group-fg",     &(session->style.completion_group_foreground)},
-    {"completion-group-bg",     &(session->style.completion_group_background)},
-    {"completion-highlight-fg", &(session->style.completion_highlight_foreground)},
-    {"completion-highlight-bg", &(session->style.completion_highlight_background)},
-    {"notification-error-fg",   &(session->style.notification_error_foreground)},
-    {"notification-error-bg",   &(session->style.notification_error_background)},
-    {"notification-warning-fg", &(session->style.notification_warning_foreground)},
-    {"notification-warning-bg", &(session->style.notification_warning_background)},
-    {"notification-fg",         &(session->style.notification_default_foreground)},
-    {"notification-bg",         &(session->style.notification_default_background)},
-    {"tabbar-fg",               &(session->style.tabbar_foreground)},
-    {"tabbar-bg",               &(session->style.tabbar_background)},
-    {"tabbar-focus-fg",         &(session->style.tabbar_focus_foreground)},
-    {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
-  };
-
-  for (size_t i = 0; i < LENGTH(color_setting_mappings); i++) {
-    char* tmp_value = NULL;
-    girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
-    if (tmp_value != NULL) {
-      gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
-      g_free(tmp_value);
-    }
-  }
-
-  /* view */
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.viewport),
-      GTK_STATE_FLAG_NORMAL, &(session->style.default_background));
 
   /* statusbar */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),

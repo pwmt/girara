@@ -164,6 +164,18 @@ void girara_set_debug_level(girara_debug_level_t level);
 char* girara_escape_string(const char* value);
 
 /**
+ * Replaces all occurences of \ref old in \ref string with \ref new and returns
+ * a new allocated string
+ *
+ * @param string The original string
+ * @param old String to replace
+ * @param new Replacement string
+ *
+ * @return new allocated string, needs to be freed with g_free
+ */
+char* girara_replace_substring(const char* string, const char* old, const char* new);
+
+/**
  * Execute command from argument list
  *
  * @param session The used girara session

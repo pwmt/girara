@@ -6,6 +6,7 @@ include common.mk
 PROJECTNV = girara
 PROJECT   = girara-gtk3
 SOURCE    = $(wildcard *.c)
+CSOURCE   = $(filter-out css-defintions.c, $(SOURCE))
 OBJECTS   = ${SOURCE:.c=.o}
 DOBJECTS  = ${SOURCE:.c=.do}
 HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
@@ -46,6 +47,13 @@ version.h: version.h.in config.mk
 		version.h.in > version.h.tmp
 	$(QUIET)mv version.h.tmp version.h
 
+css-definitions.c: data/girara.css_t
+	$(QUIET)echo '#include "css-definitions.h"' > $@.tmp
+	$(QUIET)echo 'const char* CSS_TEMPLATE =' >> $@.tmp
+	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' $< >> $@.tmp
+	$(QUIET)echo ';' >> $@.tmp
+	$(QUIET)mv $@.tmp $@
+
 %.o: %.c
 	@mkdir -p .depend
 	$(ECHO) CC $<
@@ -76,7 +84,8 @@ clean:
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
 		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov \
-		.version-checks version.h.tmp ${PROJECT}.pc.tmp
+		.version-checks version.h.tmp ${PROJECT}.pc.tmp \
+		css-definitions.c css-definitions.c.tmp
 	$(QUIET)${MAKE} -C tests clean
 	$(QUIET)${MAKE} -C po clean
 
@@ -111,10 +120,12 @@ dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/tests
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/po
+	$(QUIET)mkdir -p $(PROJECTNV)-$(VERSION)/data
 	$(QUIET)cp LICENSE Makefile config.mk common.mk ${PROJECTNV}.pc.in \
 		${HEADERS} internal.h version.h.in README AUTHORS Doxyfile \
-		${SOURCE} ${PROJECTNV}-${VERSION}
+		${CSOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)cp tests/*.c tests/Makefile tests/config.mk ${PROJECTNV}-${VERSION}/tests
+	$(QUIET)cp data/*.css_t $(PROJECTNV)-$(VERSION)/data
 	$(QUIET)cp po/Makefile po/*.po ${PROJECTNV}-${VERSION}/po
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar

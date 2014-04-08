@@ -8,6 +8,7 @@ tests/girara_test-gtk*
 .depend
 *.pc
 version.h
+css-definitions.c
 *.info
 *.gcno
 *.gcda

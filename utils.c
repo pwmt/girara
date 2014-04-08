@@ -483,6 +483,51 @@ girara_escape_string(const char* value)
   return g_string_free(str, FALSE);
 }
 
+char*
+girara_replace_substring(const char* string, const char* old, const char* new)
+{
+  if (string == NULL || old == NULL || new == NULL) {
+    return NULL;
+  }
+
+  size_t old_len = strlen(old);
+  size_t new_len = strlen(new);
+
+  /* count occurrences */
+  size_t count = 0;
+  size_t i = 0;
+
+  for (i = 0; string[i] != '\0'; i++) {
+    if (strstr(&string[i], old) == &string[i]) {
+      i += (old_len - 1);
+      count++;
+    }
+  }
+
+  if (count == 0) {
+    return g_strdup(string);
+  }
+
+  char* ret = g_try_malloc0(sizeof(char) * (i - count * old_len + count * new_len + 1));
+  if (ret == NULL) {
+    return NULL;
+  }
+
+  /* replace */
+  char* iter = ret;
+  while (*string != '\0') {
+    if (strstr(string, old) == string) {
+      strncpy(iter, new, new_len);
+      iter += new_len;
+      string += old_len;
+    } else {
+      *iter++ = *string++;
+    }
+  }
+
+  return ret;
+}
+
 bool
 girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list)
 {
