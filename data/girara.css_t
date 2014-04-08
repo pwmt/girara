@@ -15,6 +15,27 @@
   background-color: @DEFAULT-BG@;
 }
 
+#@SESSION@ .inputbar {
+  color: @INPUTBAR-FG@;
+  background-color: @INPUTBAR-BG@;
+}
+
+#@SESSION@ .completion {
+  color: @COMPLETION-FG@;
+  background-color: @COMPLETION-BG@;
+}
+
+#@SESSION@ .completion:active {
+  color: @COMPLETION-HIGHLIGHT-FG@;
+  background-color: @COMPLETION-HIGHLIGHT-BG@;
+}
+
+#@SESSION@ .completion-group {
+  color: @COMPLETION-GROUP-FG@;
+  background-color: @COMPLETION-GROUP-BG@;
+}
+
+/* Padding of the bottom box */
 #@SESSION@ #bottom_box {
   border-style: none;
   margin: 0px 0px 0px 0px;
