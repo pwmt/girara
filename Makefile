@@ -6,9 +6,9 @@ include common.mk
 PROJECTNV = girara
 PROJECT   = girara-gtk3
 SOURCE    = $(wildcard *.c)
-CSOURCE   = $(filter-out css-defintions.c, $(SOURCE))
-OBJECTS   = ${SOURCE:.c=.o}
-DOBJECTS  = ${SOURCE:.c=.do}
+CSOURCE   = $(filter-out css-definitions.c, $(SOURCE))
+OBJECTS   = ${CSOURCE:.c=.o} css-definitions.o
+DOBJECTS  = ${OBJECTS:.o=.do}
 HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
