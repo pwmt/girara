@@ -244,6 +244,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
    */
   if (session->gtk.results == NULL) {
     session->gtk.results = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+    gtk_style_context_add_class(gtk_widget_get_style_context(
+          GTK_WIDGET(session->gtk.results)), "completion-box");
 
     if (session->gtk.results == NULL) {
       g_free(current_command);
@@ -492,14 +494,6 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
   gtk_misc_set_alignment(GTK_MISC(show_command),     0.0, 0.0);
   gtk_misc_set_alignment(GTK_MISC(show_description), 1.0, 0.0);
 
-  if (group == true) {
-    gtk_misc_set_padding(GTK_MISC(show_command),     2, 4);
-    gtk_misc_set_padding(GTK_MISC(show_description), 2, 4);
-  } else {
-    gtk_misc_set_padding(GTK_MISC(show_command),     1, 1);
-    gtk_misc_set_padding(GTK_MISC(show_description), 1, 1);
-  }
-
   gtk_label_set_use_markup(show_command,     TRUE);
   gtk_label_set_use_markup(show_description, TRUE);
 
@@ -545,13 +539,13 @@ girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int
   GtkWidget* desc = GTK_WIDGET(g_list_nth_data(items, 1));
 
   if (mode == GIRARA_HIGHLIGHT) {
-    gtk_widget_set_state_flags(cmd, GTK_STATE_ACTIVE, false);
-    gtk_widget_set_state_flags(desc, GTK_STATE_ACTIVE, false);
-    gtk_widget_set_state_flags(GTK_WIDGET(row), GTK_STATE_ACTIVE, false);
+    gtk_widget_set_state_flags(cmd, GTK_STATE_FLAG_SELECTED, false);
+    gtk_widget_set_state_flags(desc, GTK_STATE_FLAG_SELECTED, false);
+    gtk_widget_set_state_flags(GTK_WIDGET(row), GTK_STATE_FLAG_SELECTED, false);
   } else {
-    gtk_widget_unset_state_flags(cmd, GTK_STATE_ACTIVE);
-    gtk_widget_unset_state_flags(desc, GTK_STATE_ACTIVE);
-    gtk_widget_unset_state_flags(GTK_WIDGET(row), GTK_STATE_ACTIVE);
+    gtk_widget_unset_state_flags(cmd, GTK_STATE_FLAG_SELECTED);
+    gtk_widget_unset_state_flags(desc, GTK_STATE_FLAG_SELECTED);
+    gtk_widget_unset_state_flags(GTK_WIDGET(row), GTK_STATE_FLAG_SELECTED);
   }
 
   g_list_free(items);

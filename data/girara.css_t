@@ -20,12 +20,16 @@
   background-color: @INPUTBAR-BG@;
 }
 
-#@SESSION@ .completion {
+#@SESSION@ .completion, .completion-box {
   color: @COMPLETION-FG@;
   background-color: @COMPLETION-BG@;
 }
 
-#@SESSION@ .completion:active {
+#@SESSION@ .completion {
+  padding: 1px;
+}
+
+#@SESSION@ .completion:selected {
   color: @COMPLETION-HIGHLIGHT-FG@;
   background-color: @COMPLETION-HIGHLIGHT-BG@;
 }
@@ -33,6 +37,7 @@
 #@SESSION@ .completion-group {
   color: @COMPLETION-GROUP-FG@;
   background-color: @COMPLETION-GROUP-BG@;
+  padding: 2px 4px;
 }
 
 #@SESSION@ .statusbar {
