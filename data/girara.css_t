@@ -45,10 +45,24 @@
   background-color: @STATUSBAR-BG@;
 }
 
+#@SESSION@ .tab {
+  color: @TABBAR-FG@;
+  background-color: @TABBAR-BG@;
+}
+
+#@SESSION@ GtkLabel.tab {
+  padding: 4px;
+}
+
+#@SESSION@ .tab:selected {
+  color: @TABBAR-FOCUS-FG@;
+  background-color: @TABBAR-FOCUS-BG@;
+}
+
 /* Padding of the bottom box */
 #@SESSION@ #bottom_box {
   border-style: none;
-  margin: 0px 0px 0px 0px;
+  margin: 0px;
   padding: @BOTTOMBOX-PADDING1@px @BOTTOMBOX-PADDING2@px @BOTTOMBOX-PADDING3@px
     @BOTTOMBOX-PADDING4@px;
 }

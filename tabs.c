@@ -69,8 +69,9 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
       G_CALLBACK(girara_callback_tab_clicked), tab);
 
   gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
-  gtk_misc_set_padding(GTK_MISC(tab_label),   4, 4);
   gtk_widget_override_font(tab_label, session->style.font);
+  gtk_style_context_add_class(gtk_widget_get_style_context(tab_label), "tab");
+  gtk_style_context_add_class(gtk_widget_get_style_context(tab_event), "tab");
 
   gtk_container_add(GTK_CONTAINER(tab_event), tab_label);
   gtk_box_pack_start(GTK_BOX(session->gtk.tabbar), tab_event, TRUE, TRUE, 0);
@@ -157,11 +158,11 @@ girara_tab_update(girara_session_t* session)
     GtkWidget* tab_label = GTK_WIDGET(g_object_get_data(G_OBJECT(tab->widget), "label"));
 
     if (i == current_tab) {
-      gtk_widget_override_background_color(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_focus_background));
-      gtk_widget_override_color(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_focus_foreground));
+      gtk_widget_set_state_flags(tab_event, GTK_STATE_FLAG_SELECTED, false);
+      gtk_widget_set_state_flags(tab_label, GTK_STATE_FLAG_SELECTED, false);
     } else {
-      gtk_widget_override_background_color(tab_event, GTK_STATE_NORMAL, &(session->style.tabbar_background));
-      gtk_widget_override_color(tab_label, GTK_STATE_NORMAL, &(session->style.tabbar_foreground));
+      gtk_widget_unset_state_flags(tab_event, GTK_STATE_FLAG_SELECTED);
+      gtk_widget_unset_state_flags(tab_label, GTK_STATE_FLAG_SELECTED);
     }
   }
 }
