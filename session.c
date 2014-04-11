@@ -396,8 +396,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   /* packing */
   gtk_box_set_spacing(session->gtk.box, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar),            FALSE, FALSE, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),              TRUE,  TRUE, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar), FALSE, FALSE, 0);
+  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),   TRUE,  TRUE, 0);
 
   /* box */
   gtk_container_add(GTK_CONTAINER(session->private_data->gtk.overlay), GTK_WIDGET(session->gtk.box));
@@ -409,16 +409,12 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->private_data->gtk.overlay));
 
   /* statusbar */
-  gtk_style_context_add_class(gtk_widget_get_style_context(
-        GTK_WIDGET(session->gtk.statusbar)), "statusbar");
+  widget_add_class(GTK_WIDGET(session->gtk.statusbar), "statusbar");
 
   /* inputbar */
-  gtk_style_context_add_class(gtk_widget_get_style_context(
-        GTK_WIDGET(session->gtk.inputbar_entry)), "inputbar");
-  gtk_style_context_add_class(gtk_widget_get_style_context(
-        GTK_WIDGET(session->gtk.inputbar)), "inputbar");
-  gtk_style_context_add_class(gtk_widget_get_style_context(
-        GTK_WIDGET(session->gtk.inputbar_dialog)), "inputbar");
+  widget_add_class(GTK_WIDGET(session->gtk.inputbar_entry), "inputbar");
+  widget_add_class(GTK_WIDGET(session->gtk.inputbar), "inputbar");
+  widget_add_class(GTK_WIDGET(session->gtk.inputbar_dialog), "inputbar");
 
   /* notification area */
   gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),

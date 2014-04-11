@@ -70,8 +70,8 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
 
   gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
   gtk_widget_override_font(tab_label, session->style.font);
-  gtk_style_context_add_class(gtk_widget_get_style_context(tab_label), "tab");
-  gtk_style_context_add_class(gtk_widget_get_style_context(tab_event), "tab");
+  widget_add_class(tab_label, "tab");
+  widget_add_class(tab_event, "tab");
 
   gtk_container_add(GTK_CONTAINER(tab_event), tab_label);
   gtk_box_pack_start(GTK_BOX(session->gtk.tabbar), tab_event, TRUE, TRUE, 0);

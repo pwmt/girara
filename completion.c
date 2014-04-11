@@ -60,7 +60,7 @@ completion_element_free(girara_completion_element_t* element)
   /* free element */
   g_free(element->value);
   g_free(element->description);
-  g_slice_free(girara_completion_element_t,  element);
+  g_slice_free(girara_completion_element_t, element);
 }
 
 girara_completion_t*
@@ -244,8 +244,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
    */
   if (session->gtk.results == NULL) {
     session->gtk.results = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-    gtk_style_context_add_class(gtk_widget_get_style_context(
-          GTK_WIDGET(session->gtk.results)), "completion-box");
+    widget_add_class(GTK_WIDGET(session->gtk.results), "completion-box");
 
     if (session->gtk.results == NULL) {
       g_free(current_command);
@@ -508,12 +507,9 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
   g_free(d);
 
   const char* class = group == true ? "completion-group" : "completion";
-  gtk_style_context_add_class(
-      gtk_widget_get_style_context(GTK_WIDGET(show_command)), class);
-  gtk_style_context_add_class(
-      gtk_widget_get_style_context(GTK_WIDGET(show_description)), class);
-  gtk_style_context_add_class(
-      gtk_widget_get_style_context(GTK_WIDGET(row)), class);
+  widget_add_class(GTK_WIDGET(show_command), class);
+  widget_add_class(GTK_WIDGET(show_description), class);
+  widget_add_class(GTK_WIDGET(row), class);
 
   gtk_widget_override_font(GTK_WIDGET(show_command),     session->style.font);
   gtk_widget_override_font(GTK_WIDGET(show_description), session->style.font);
@@ -533,8 +529,8 @@ girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int
   g_return_if_fail(session != NULL);
   g_return_if_fail(row     != NULL);
 
-  GtkBox* col    = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
-  GList* items   = gtk_container_get_children(GTK_CONTAINER(col));
+  GtkBox* col     = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
+  GList* items    = gtk_container_get_children(GTK_CONTAINER(col));
   GtkWidget* cmd  = GTK_WIDGET(g_list_nth_data(items, 0));
   GtkWidget* desc = GTK_WIDGET(g_list_nth_data(items, 1));
 

@@ -17,10 +17,8 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   item->text = GTK_LABEL(gtk_label_new(NULL));
 
   /* set style */
-  gtk_style_context_add_class(gtk_widget_get_style_context(
-        GTK_WIDGET(item->box)), "statusbar");
-  gtk_style_context_add_class(gtk_widget_get_style_context(
-        GTK_WIDGET(item->text)), "statusbar");
+  widget_add_class(GTK_WIDGET(item->box), "statusbar");
+  widget_add_class(GTK_WIDGET(item->text), "statusbar");
 
   gtk_widget_override_font(GTK_WIDGET(item->text), session->style.font);
 
@@ -77,7 +75,7 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
   GdkRGBA gdk_color;
   gdk_rgba_parse(&gdk_color, color);
   gtk_widget_override_color(GTK_WIDGET(item->text),
-      GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+      GTK_STATE_FLAG_NORMAL, &(session->style.inputbar_foreground));
 
   return true;
 }
@@ -89,7 +87,8 @@ girara_statusbar_set_background(girara_session_t* session, const char* color)
 
   GdkRGBA gdk_color;
   gdk_rgba_parse(&gdk_color, color);
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),
+      GTK_STATE_FLAG_NORMAL, &gdk_color);
 
   return true;
 }

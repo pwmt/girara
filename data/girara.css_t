@@ -15,10 +15,14 @@
   background-color: @DEFAULT-BG@;
 }
 
+/* Inputbar */
+
 #@SESSION@ .inputbar {
   color: @INPUTBAR-FG@;
   background-color: @INPUTBAR-BG@;
 }
+
+/* Completion entries and groups */
 
 #@SESSION@ .completion, .completion-box {
   color: @COMPLETION-FG@;
@@ -40,10 +44,14 @@
   padding: 2px 4px;
 }
 
+/* Statusbar */
+
 #@SESSION@ .statusbar {
   color: @STATUSBAR-FG@;
   background-color: @STATUSBAR-BG@;
 }
+
+/* Tabbar */
 
 #@SESSION@ .tab {
   color: @TABBAR-FG@;
