@@ -343,7 +343,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_container_add(GTK_CONTAINER(session->gtk.statusbar), GTK_WIDGET(session->gtk.statusbar_entries));
 
   /* notification area */
-  gtk_container_add(GTK_CONTAINER(session->gtk.notification_area), GTK_WIDGET(session->gtk.notification_text));
+  gtk_container_add(GTK_CONTAINER(session->gtk.notification_area), session->gtk.notification_text);
   gtk_misc_set_alignment(GTK_MISC(session->gtk.notification_text), 0.0, 0.5);
   gtk_label_set_use_markup(GTK_LABEL(session->gtk.notification_text), TRUE);
 
@@ -352,7 +352,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar_entry), TRUE);
 
   gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
-  gtk_widget_set_name(GTK_WIDGET(session->gtk.notification_text), "bottom_box");
+  gtk_widget_set_name(session->gtk.notification_text, "bottom_box");
 
   session->signals.inputbar_key_pressed = g_signal_connect(
       G_OBJECT(session->gtk.inputbar_entry),
@@ -417,10 +417,10 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   widget_add_class(GTK_WIDGET(session->gtk.inputbar_dialog), "inputbar");
 
   /* notification area */
-  widget_add_class(GTK_WIDGET(session->gtk.notification_area), "notification");
-  widget_add_class(GTK_WIDGET(session->gtk.notification_text), "notification");
-  gtk_style_context_save(gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_area)));
-  gtk_style_context_save(gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_text)));
+  widget_add_class(session->gtk.notification_area, "notification");
+  widget_add_class(session->gtk.notification_text, "notification");
+  gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_area));
+  gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_text));
 
   if (session->style.font == NULL) {
     /* set default font */
@@ -428,7 +428,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   } else {
     gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_entry),    session->style.font);
     gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_dialog),   session->style.font);
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), session->style.font);
+    gtk_widget_override_font(session->gtk.notification_text, session->style.font);
   }
 
   /* set window size */
@@ -577,8 +577,8 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  GtkStyleContext* area_context = gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_area));
-  GtkStyleContext* text_context = gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_text));
+  GtkStyleContext* area_context = gtk_widget_get_style_context(session->gtk.notification_area);
+  GtkStyleContext* text_context = gtk_widget_get_style_context(session->gtk.notification_text);
 
   gtk_style_context_restore(area_context);
   gtk_style_context_restore(text_context);
@@ -600,8 +600,8 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
   }
 
   if (cssclass != NULL) {
-    widget_add_class(GTK_WIDGET(session->gtk.notification_area), cssclass);
-    widget_add_class(GTK_WIDGET(session->gtk.notification_text), cssclass);
+    widget_add_class(session->gtk.notification_area, cssclass);
+    widget_add_class(session->gtk.notification_text, cssclass);
   }
 
   /* prepare message */
