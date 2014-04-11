@@ -67,6 +67,23 @@
   background-color: @TABBAR-FOCUS-BG@;
 }
 
+/* Notification area */
+
+#@SESSION@ .notification {
+  color: @NOTIFICATION-FG@;
+  background-color: @NOTIFICATION-BG@;
+}
+
+#@SESSION@ .notification-error {
+  color: @NOTIFICATION-ERROR-FG@;
+  background-color: @NOTIFICATION-ERROR-BG@;
+}
+
+#@SESSION@ .notification-warning {
+  color: @NOTIFICATION-WARNING-FG@;
+  background-color: @NOTIFICATION-WARNING-BG@;
+}
+
 /* Padding of the bottom box */
 #@SESSION@ #bottom_box {
   border-style: none;

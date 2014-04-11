@@ -417,10 +417,10 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   widget_add_class(GTK_WIDGET(session->gtk.inputbar_dialog), "inputbar");
 
   /* notification area */
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-      GTK_STATE_FLAG_NORMAL, &(session->style.notification_default_background));
-  gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-      GTK_STATE_FLAG_NORMAL, &(session->style.notification_default_foreground));
+  widget_add_class(GTK_WIDGET(session->gtk.notification_area), "notification");
+  widget_add_class(GTK_WIDGET(session->gtk.notification_text), "notification");
+  gtk_style_context_save(gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_area)));
+  gtk_style_context_save(gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_text)));
 
   if (session->style.font == NULL) {
     /* set default font */
@@ -577,33 +577,32 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  const GdkRGBA* foreground = NULL;
-  const GdkRGBA* background = NULL;
+  GtkStyleContext* area_context = gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_area));
+  GtkStyleContext* text_context = gtk_widget_get_style_context(GTK_WIDGET(session->gtk.notification_text));
+
+  gtk_style_context_restore(area_context);
+  gtk_style_context_restore(text_context);
+  gtk_style_context_save(area_context);
+  gtk_style_context_save(text_context);
+
+  const char* cssclass = NULL;
   switch (level) {
     case GIRARA_ERROR:
-      foreground = &session->style.notification_error_foreground;
-      background = &session->style.notification_error_background;
+      cssclass = "notification-error";
       break;
     case GIRARA_WARNING:
-      foreground = &session->style.notification_warning_foreground;
-      background = &session->style.notification_warning_background;
+      cssclass = "notification-warning";
       break;
     case GIRARA_INFO:
-      foreground = &session->style.notification_default_foreground;
-      background = &session->style.notification_default_background;
       break;
     default:
       return;
   }
 
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_FLAG_NORMAL, background);
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_FLAG_NORMAL, background);
-  gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_area),
-          GTK_STATE_FLAG_NORMAL, foreground);
-  gtk_widget_override_color(GTK_WIDGET(session->gtk.notification_text),
-          GTK_STATE_FLAG_NORMAL, foreground);
+  if (cssclass != NULL) {
+    widget_add_class(GTK_WIDGET(session->gtk.notification_area), cssclass);
+    widget_add_class(GTK_WIDGET(session->gtk.notification_text), cssclass);
+  }
 
   /* prepare message */
   va_list ap;
