@@ -287,6 +287,13 @@ START_TEST(test_strings_replace_substrings_3) {
   g_free(result);
 } END_TEST
 
+START_TEST(test_strings_replace_substrings_4) {
+  char* result = girara_replace_substring("test test", "t", "es");
+  fail_unless(result != NULL);
+  fail_unless(strncmp(result, "eseses eseses", 14) == 0);
+  g_free(result);
+} END_TEST
+
 Suite* suite_utils()
 {
   TCase* tcase = NULL;
