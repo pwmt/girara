@@ -244,6 +244,7 @@ struct girara_session_private_s
   {
     GtkWidget* overlay; /**< So we can overlay bottom_box on top of view */
     GtkBox*    bottom_box; /**< Box grouping input, status and notification */
+    GtkCssProvider* cssprovider;
   } gtk;
 };
 

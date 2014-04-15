@@ -183,6 +183,9 @@ girara_session_create()
       (girara_compare_function_t) cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
 
+  /* CSS style provider */
+  session->private_data->gtk.cssprovider = gtk_css_provider_new();
+
   /* init modes */
   session->modes.identifiers  = girara_list_new2(
       (girara_free_function_t) girara_mode_string_free);
@@ -250,13 +253,12 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     return false;
   }
 
-  GtkCssProvider* provider = gtk_css_provider_new();
+  GtkCssProvider* provider = session->private_data->gtk.cssprovider;
   GError* error = NULL;
   if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
     girara_error("Unable to load CSS: %s", error->message);
     g_free(css_data);
     g_error_free(error);
-    g_object_unref(provider);
     return false;
   }
   g_free(css_data);
@@ -275,15 +277,12 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     gtk_widget_set_name(window_widget, "girara");
   }
 
-  /* add CSS style provider to the window */
-  /* gtk_style_context_add_provider(gtk_widget_get_style_context(window_widget),
-    GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION); */
+  /* add CSS style provider */
   GdkDisplay* display = gdk_display_get_default();
   GdkScreen* screen = gdk_display_get_default_screen(display);
   gtk_style_context_add_provider_for_screen(screen,
                                             GTK_STYLE_PROVIDER(provider),
                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-  g_object_unref(provider);
 
   GdkGeometry hints = {
     .base_height = 1,
@@ -471,6 +470,12 @@ static void
 girara_session_private_free(girara_session_private_t* session)
 {
   g_return_if_fail(session != NULL);
+
+  /* clean up CSS style provider */
+  if (session->gtk.cssprovider == NULL) {
+    g_object_unref(session->gtk.cssprovider);
+  }
+  session->gtk.cssprovider = NULL;
 
   /* clean up settings */
   girara_list_free(session->settings);
