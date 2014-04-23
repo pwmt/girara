@@ -92,13 +92,13 @@ load_css(girara_session_t* session, const char* session_name)
 
   girara_template_set_variable_value(csstemplate, "session", session_name);
 
-  /*
-  char* tmp = girara_replace_substring(css_data, "@SESSION@", session_name);
-  g_free(css_data);
-  if (tmp == NULL) {
-    return NULL;
+  if (session->style.font == NULL) {
+    girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
+  } else {
+    char* fontname = pango_font_description_to_string(session->style.font);
+    girara_template_set_variable_value(csstemplate, "font", fontname);
+    g_free(fontname);
   }
-  css_data = tmp; */
 
   /* parse color values */
   typedef struct color_setting_mapping_s {
