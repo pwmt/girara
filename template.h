@@ -41,17 +41,59 @@ GType girara_template_get_type(void);
 /**
  * Create new template object.
  *
- * @param template a string that is used as template
+ * @param base a string that is used as template
  * @returns a templot object
  */
 GiraraTemplate* girara_template_new(const char* base);
 
+/**
+ * Set the base string of the template.
+ *
+ * @param object GiraraTemplate object
+ * @param base a string that is used as template
+ */
 void girara_template_set_base(GiraraTemplate* object, const char* base);
+
+/**
+ * Get the base string of the template.
+ *
+ * @param object GiraraTemplate object
+ * @returns string that is used as template
+ */
 const char* girara_template_get_base(GiraraTemplate* object);
 
+/**
+ * Get list of variable names referenced in the template.
+ *
+ * @param object GiraraTemplate object
+ * @returns list of variables names referenced in the template
+ */
 girara_list_t* girara_template_referenced_variables(GiraraTemplate* object);
-void girara_template_add_variable(GiraraTemplate* object, const char* name);
+
+/**
+ * Register a variable.
+ *
+ * @param object GiraraTemplate object
+ * @param name name of the variable
+ * @returns true if the variable was added, false otherwise
+ */
+bool girara_template_add_variable(GiraraTemplate* object, const char* name);
+
+/**
+ * Set value of a variable.
+ *
+ * @param object GiraraTemplate object
+ * @param name name of the variable
+ * @param value value of the variable
+ */
 void girara_template_set_variable_value(GiraraTemplate* object, const char* name, const char* value);
+
+/**
+ * Replace all variables with their values in the template.
+ *
+ * @param object GiraraTemplate object
+ * @returns evaluated template, needes to be deallocated with g_free
+ */
 char* girara_template_evaluate(GiraraTemplate* object);
 
 #endif

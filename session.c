@@ -46,20 +46,59 @@ ensure_gettext_initialized(void)
   }
 }
 
+static void
+init_template_engine(GiraraTemplate* csstemplate)
+{
+  static const char* variable_names[] = {
+    "session",
+    "font",
+    "default-fg",
+    "default-bg",
+    "inputbar-fg",
+    "inputbar-bg",
+    "statusbar-fg",
+    "statusbar-bg",
+    "completion-fg",
+    "completion-bg",
+    "completion-group-fg",
+    "completion-group-bg",
+    "completion-highlight-fg",
+    "completion-highlight-bg",
+    "notification-error-fg",
+    "notification-error-bg",
+    "notification-warning-fg",
+    "notification-warning-bg",
+    "notification-fg",
+    "notification-bg",
+    "tabbar-fg",
+    "tabbar-bg",
+    "tabbar-focus-fg",
+    "tabbar-focus-bg",
+    "bottombox-padding1",
+    "bottombox-padding2",
+    "bottombox-padding3",
+    "bottombox-padding4"
+  };
+
+  for (size_t idx = 0; idx < LENGTH(variable_names); ++idx) {
+    girara_template_add_variable(csstemplate, variable_names[idx]);
+  }
+}
+
 static char*
 load_css(girara_session_t* session, const char* session_name)
 {
-  char* css_data = g_strdup(CSS_TEMPLATE);
-  if (css_data == NULL) {
-    return NULL;
-  }
+  GiraraTemplate* csstemplate = session->private_data->csstemplate;
 
+  girara_template_set_variable_value(csstemplate, "session", session_name);
+
+  /*
   char* tmp = girara_replace_substring(css_data, "@SESSION@", session_name);
   g_free(css_data);
   if (tmp == NULL) {
     return NULL;
   }
-  css_data = tmp;
+  css_data = tmp; */
 
   /* parse color values */
   typedef struct color_setting_mapping_s {
@@ -92,7 +131,7 @@ load_css(girara_session_t* session, const char* session_name)
     {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
   };
 
-  for (size_t i = 0; i < LENGTH(color_setting_mappings) && css_data != NULL; i++) {
+  for (size_t i = 0; i < LENGTH(color_setting_mappings); i++) {
     char* tmp_value = NULL;
     girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
     if (tmp_value != NULL) {
@@ -101,21 +140,9 @@ load_css(girara_session_t* session, const char* session_name)
     }
 
     char* color = gdk_rgba_to_string(color_setting_mappings[i].color);
-    char* identifier = g_ascii_strup(color_setting_mappings[i].identifier, -1);
-    char* css_identifier = g_strdup_printf("@%s@", identifier);
-
-    tmp = girara_replace_substring(css_data, css_identifier, color);
-
-    g_free(css_data);
-    g_free(css_identifier);
-    g_free(identifier);
+    girara_template_set_variable_value(csstemplate,
+        color_setting_mappings[i].identifier, color);
     g_free(color);
-
-    css_data = tmp;
-  }
-
-  if (css_data == NULL) {
-    return NULL;
   }
 
   /* we want inputbar_entry the same height as notification_text and statusbar,
@@ -134,27 +161,19 @@ load_css(girara_session_t* session, const char* session_name)
   } padding_mapping_t;
 
   const padding_mapping_t padding_mapping[] = {
-    {"@BOTTOMBOX-PADDING1@", g_strdup_printf("%d", ypadding - ypadding/2)},
-    {"@BOTTOMBOX-PADDING2@", g_strdup_printf("%d", xpadding/2)},
-    {"@BOTTOMBOX-PADDING3@", g_strdup_printf("%d", ypadding/2)},
-    {"@BOTTOMBOX-PADDING4@", g_strdup_printf("%d", xpadding - xpadding/2)},
+    {"bottombox-padding1", g_strdup_printf("%d", ypadding - ypadding/2)},
+    {"bottombox-padding2", g_strdup_printf("%d", xpadding/2)},
+    {"bottombox-padding3", g_strdup_printf("%d", ypadding/2)},
+    {"bottombox-padding4", g_strdup_printf("%d", xpadding - xpadding/2)},
   };
 
-  for (size_t i = 0; i < LENGTH(padding_mapping) && css_data != NULL; ++i) {
-    tmp = girara_replace_substring(css_data, padding_mapping[i].identifier, padding_mapping[i].value);
-    g_free(css_data);
-    css_data = tmp;
-  }
-
   for (size_t i = 0; i < LENGTH(padding_mapping); ++i) {
+    girara_template_set_variable_value(csstemplate,
+        padding_mapping[i].identifier, padding_mapping[i].value);
     g_free(padding_mapping[i].value);
   }
 
-  if (css_data == NULL) {
-    return NULL;
-  }
-
-  return css_data;
+  return girara_template_evaluate(csstemplate);
 }
 
 girara_session_t*
@@ -188,6 +207,7 @@ girara_session_create()
   /* CSS style provider */
   session->private_data->csstemplate = girara_template_new(CSS_TEMPLATE);
   session->private_data->gtk.cssprovider = gtk_css_provider_new();
+  init_template_engine(session->private_data->csstemplate);
 
   /* init modes */
   session->modes.identifiers  = girara_list_new2(

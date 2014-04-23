@@ -14,6 +14,7 @@ G_DEFINE_TYPE(GiraraTemplate, girara_template, G_TYPE_OBJECT)
 typedef struct private_s {
   char* base;
   GRegex* variable_regex;
+  GRegex* variable_check_regex;
   girara_list_t* variables_in_base;
   girara_list_t* variables;
   bool valid;
@@ -175,12 +176,21 @@ girara_template_init(GiraraTemplate* history)
     g_error_free(error);
   }
 
-  private_t* priv         = GET_PRIVATE(history);
-  priv->base              = g_strdup("");
-  priv->variable_regex    = regex;
-  priv->variables_in_base = girara_list_new2(g_free);
-  priv->variables         = girara_list_new2(free_variable);
-  priv->valid             = true;
+  GRegex* check_regex = g_regex_new("^[A-Za-z0-9][A-Za-z0-9_-]*$",
+                                    G_REGEX_OPTIMIZE, 0, &error);
+  if (check_regex == NULL) {
+    girara_error("Failed to create regex: %s", error->message);
+    g_regex_unref(regex);
+    g_error_free(error);
+  }
+
+  private_t* priv            = GET_PRIVATE(history);
+  priv->base                 = g_strdup("");
+  priv->variable_regex       = regex;
+  priv->variable_check_regex = check_regex;
+  priv->variables_in_base    = girara_list_new2(g_free);
+  priv->variables            = girara_list_new2(free_variable);
+  priv->valid                = true;
 }
 
 /* GObject dispose */
@@ -190,7 +200,10 @@ dispose(GObject* object)
   private_t* priv = GET_PRIVATE(object);
 
   g_regex_unref(priv->variable_regex);
+  g_regex_unref(priv->variable_check_regex);
+
   priv->variable_regex = NULL;
+  priv->variable_check_regex = NULL;
 
   G_OBJECT_CLASS(girara_template_parent_class)->dispose(object);
 }
@@ -348,30 +361,37 @@ girara_template_referenced_variables(GiraraTemplate* object)
   return priv->variables_in_base;
 }
 
-void
+bool
 girara_template_add_variable(GiraraTemplate* object, const char* name)
 {
-  g_return_if_fail(GIRARA_IS_TEMPLATE(object));
-  g_return_if_fail(name != NULL);
+  g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), false);
+  g_return_val_if_fail(name != NULL, false);
 
   private_t* priv = GET_PRIVATE(object);
+
+  if (g_regex_match(priv->variable_check_regex, name, 0, NULL) == FALSE) {
+    girara_debug("'%s' is not a valid variable name.", name);
+    return false;
+  }
 
   variable_t* variable = girara_list_find(priv->variables, compare_variable_name,
                                           name);
   if (variable != NULL) {
-    girara_error("Variable '%s' already exists.", name);
-    return;
+    girara_debug("Variable '%s' already exists.", name);
+    return false;
   }
 
   variable = new_variable(name);
   if (variable == NULL) {
-    girara_error("Could not create new variable.");
-    return;
+    girara_debug("Could not create new variable.");
+    return false;
   }
 
   girara_list_append(priv->variables, variable);
   g_signal_emit(object, signals[VARIABLE_CHANGED], 0, name);
   g_signal_emit(object, signals[TEMPLATE_CHANGED], 0);
+
+  return true;
 }
 
 void

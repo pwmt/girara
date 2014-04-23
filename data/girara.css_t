@@ -1,97 +1,97 @@
 /* No resize grip on GtkWindows */
-#@SESSION@ GtkWindow {
+#@session@ GtkWindow {
   -GtkWindow-resize-grip-height: 0;
   -GtkWindow-resize-grip-width: 0;
 }
 
 /* Hide scrollbars from GtkScrolledWindow */
-#@SESSION@ GtkScrolledWindow GtkScrollbar:insensitive {
+#@session@ GtkScrolledWindow GtkScrollbar:insensitive {
   -GtkRange-slider-width: 0;
   -GtkRange-trough-border: 0;
 }
 
-#@SESSION@ * {
-  color: @DEFAULT-FG@;
-  background-color: @DEFAULT-BG@;
+#@session@ * {
+  color: @default-fg@;
+  background-color: @default-bg@;
 }
 
 /* Inputbar */
 
-#@SESSION@ GtkEntry.inputbar {
-  background-color: @INPUTBAR-BG@;
+#@session@ GtkEntry.inputbar {
+  background-color: @inputbar-bg@;
 }
 
-#@SESSION@ .inputbar {
-  color: @INPUTBAR-FG@;
-  background-color: @INPUTBAR-BG@;
+#@session@ .inputbar {
+  color: @inputbar-fg@;
+  background-color: @inputbar-bg@;
 }
 
 /* Completion entries and groups */
 
-#@SESSION@ .completion, .completion-box {
-  color: @COMPLETION-FG@;
-  background-color: @COMPLETION-BG@;
+#@session@ .completion, .completion-box {
+  color: @completion-fg@;
+  background-color: @completion-bg@;
 }
 
-#@SESSION@ .completion {
+#@session@ .completion {
   padding: 1px;
 }
 
-#@SESSION@ .completion:selected {
-  color: @COMPLETION-HIGHLIGHT-FG@;
-  background-color: @COMPLETION-HIGHLIGHT-BG@;
+#@session@ .completion:selected {
+  color: @completion-highlight-fg@;
+  background-color: @completion-highlight-bg@;
 }
 
-#@SESSION@ .completion-group {
-  color: @COMPLETION-GROUP-FG@;
-  background-color: @COMPLETION-GROUP-BG@;
+#@session@ .completion-group {
+  color: @completion-group-fg@;
+  background-color: @completion-group-bg@;
   padding: 2px 4px;
 }
 
 /* Statusbar */
 
-#@SESSION@ .statusbar {
-  color: @STATUSBAR-FG@;
-  background-color: @STATUSBAR-BG@;
+#@session@ .statusbar {
+  color: @statusbar-fg@;
+  background-color: @statusbar-bg@;
 }
 
 /* Tabbar */
 
-#@SESSION@ .tab {
-  color: @TABBAR-FG@;
-  background-color: @TABBAR-BG@;
+#@session@ .tab {
+  color: @tabbar-fg@;
+  background-color: @tabbar-bg@;
 }
 
-#@SESSION@ GtkLabel.tab {
+#@session@ GtkLabel.tab {
   padding: 4px;
 }
 
-#@SESSION@ .tab:selected {
-  color: @TABBAR-FOCUS-FG@;
-  background-color: @TABBAR-FOCUS-BG@;
+#@session@ .tab:selected {
+  color: @tabbar-focus-fg@;
+  background-color: @tabbar-focus-bg@;
 }
 
 /* Notification area */
 
-#@SESSION@ .notification {
-  color: @NOTIFICATION-FG@;
-  background-color: @NOTIFICATION-BG@;
+#@session@ .notification {
+  color: @notification-fg@;
+  background-color: @notification-bg@;
 }
 
-#@SESSION@ .notification-error {
-  color: @NOTIFICATION-ERROR-FG@;
-  background-color: @NOTIFICATION-ERROR-BG@;
+#@session@ .notification-error {
+  color: @notification-error-fg@;
+  background-color: @notification-error-bg@;
 }
 
-#@SESSION@ .notification-warning {
-  color: @NOTIFICATION-WARNING-FG@;
-  background-color: @NOTIFICATION-WARNING-BG@;
+#@session@ .notification-warning {
+  color: @notification-warning-fg@;
+  background-color: @notification-warning-bg@;
 }
 
 /* Padding of the bottom box */
-#@SESSION@ #bottom_box {
+#@session@ #bottom_box {
   border-style: none;
   margin: 0px;
-  padding: @BOTTOMBOX-PADDING1@px @BOTTOMBOX-PADDING2@px @BOTTOMBOX-PADDING3@px
-    @BOTTOMBOX-PADDING4@px;
+  padding: @bottombox-padding1@px @bottombox-padding2@px @bottombox-padding3@px
+    @bottombox-padding4@px;
 }

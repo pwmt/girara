@@ -72,7 +72,15 @@ START_TEST(test_variable_add) {
   GiraraTemplate* obj = girara_template_new(NULL);
   ck_assert_ptr_ne(obj, NULL);
 
-  girara_template_add_variable(obj, "name");
+  ck_assert(girara_template_add_variable(obj, "name"));
+  g_object_unref(obj);
+} END_TEST
+
+START_TEST(test_variable_add_invalid) {
+  GiraraTemplate* obj = girara_template_new(NULL);
+  ck_assert_ptr_ne(obj, NULL);
+
+  ck_assert(!girara_template_add_variable(obj, "na|me"));
   g_object_unref(obj);
 } END_TEST
 
@@ -80,7 +88,7 @@ START_TEST(test_variable_set) {
   GiraraTemplate* obj = girara_template_new(NULL);
   ck_assert_ptr_ne(obj, NULL);
 
-  girara_template_add_variable(obj, "name");
+  ck_assert(girara_template_add_variable(obj, "name"));
   girara_template_set_variable_value(obj, "name", "value");
   g_object_unref(obj);
 } END_TEST
@@ -89,7 +97,7 @@ START_TEST(test_full_1) {
   GiraraTemplate* obj = girara_template_new("name = @name@");
   ck_assert_ptr_ne(obj, NULL);
 
-  girara_template_add_variable(obj, "name");
+  ck_assert(girara_template_add_variable(obj, "name"));
   girara_template_set_variable_value(obj, "name", "value");
 
   char* result = girara_template_evaluate(obj);
@@ -141,6 +149,7 @@ Suite* suite_template()
   tcase = tcase_create("variables");
   tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_variable_add);
+  tcase_add_test(tcase, test_variable_add_invalid);
   tcase_add_test(tcase, test_variable_set);
   suite_add_tcase(suite, tcase);
 
