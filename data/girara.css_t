@@ -17,6 +17,10 @@
 
 /* Inputbar */
 
+#@SESSION@ GtkEntry.inputbar {
+  background-color: @INPUTBAR-BG@;
+}
+
 #@SESSION@ .inputbar {
   color: @INPUTBAR-FG@;
   background-color: @INPUTBAR-BG@;
