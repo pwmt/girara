@@ -215,4 +215,7 @@ typedef struct girara_input_history_io_interface_s GiraraInputHistoryIOInterface
 typedef struct girara_input_history_s GiraraInputHistory;
 typedef struct girara_input_history_class_s GiraraInputHistoryClass;
 
+typedef struct girara_template_s GiraraTemplate;
+typedef struct girara_template_class_s GiraraTemplateClass;
+
 #endif

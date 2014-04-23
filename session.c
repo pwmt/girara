@@ -4,16 +4,18 @@
 #include <glib/gi18n-lib.h>
 
 #include "session.h"
-#include "settings.h"
-#include "datastructures.h"
-#include "internal.h"
-#include "commands.h"
+
 #include "callbacks.h"
-#include "shortcuts.h"
+#include "commands.h"
 #include "config.h"
-#include "utils.h"
-#include "input-history.h"
 #include "css-definitions.h"
+#include "datastructures.h"
+#include "input-history.h"
+#include "internal.h"
+#include "settings.h"
+#include "shortcuts.h"
+#include "template.h"
+#include "utils.h"
 
 #if defined(__GNUC__) || defined(__clang__)
 #define DO_PRAGMA(x) _Pragma(#x)
@@ -184,6 +186,7 @@ girara_session_create()
       (girara_free_function_t) girara_setting_free);
 
   /* CSS style provider */
+  session->private_data->csstemplate = girara_template_new(CSS_TEMPLATE);
   session->private_data->gtk.cssprovider = gtk_css_provider_new();
 
   /* init modes */
@@ -472,10 +475,14 @@ girara_session_private_free(girara_session_private_t* session)
   g_return_if_fail(session != NULL);
 
   /* clean up CSS style provider */
-  if (session->gtk.cssprovider == NULL) {
+  if (session->gtk.cssprovider != NULL) {
     g_object_unref(session->gtk.cssprovider);
   }
   session->gtk.cssprovider = NULL;
+  if (session->csstemplate != NULL) {
+    g_object_unref(session->csstemplate);
+  }
+  session->csstemplate = NULL;
 
   /* clean up settings */
   girara_list_free(session->settings);

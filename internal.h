@@ -240,6 +240,11 @@ struct girara_session_private_s
    */
   girara_list_t* settings;
 
+  /**
+   * Template enginge for CSS.
+   */
+  GiraraTemplate* csstemplate;
+
   struct
   {
     GtkWidget* overlay; /**< So we can overlay bottom_box on top of view */

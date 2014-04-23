@@ -9,6 +9,7 @@ Suite* suite_datastructures();
 Suite* suite_settings();
 Suite* suite_session();
 Suite* suite_config();
+Suite* suite_template();
 
 void setup(void)
 {
@@ -55,6 +56,14 @@ int main()
   srunner_run_all(suite_runner, CK_NORMAL);
   number_failed += srunner_ntests_failed(suite_runner);
   srunner_free(suite_runner);
+
+  /* test template */
+  suite        = suite_template();
+  suite_runner = srunner_create(suite);
+  srunner_run_all(suite_runner, CK_NORMAL);
+  number_failed += srunner_ntests_failed(suite_runner);
+  srunner_free(suite_runner);
+
 
   return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
