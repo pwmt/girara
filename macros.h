@@ -50,4 +50,23 @@
 # endif
 #endif
 
+#ifndef GIRARA_DO_PRAGMA
+# if defined(__GNUC__) || defined(__clang__)
+#  define GIRARA_DO_PRAGMA(x) _Pragma(#x)
+# else
+#  define GIRARA_DO_PRAGMA(x)
+# endif
+#endif
+
+#ifndef GIRARA_IGNORE_DEPRECATED
+# define GIRARA_IGNORE_DEPRECATED \
+    GIRARA_DO_PRAGMA(GCC diagnostic push) \
+    GIRARA_DO_PRAGMA(GCC diagnostic ignored "-Wdeprecated-declarations")
+#endif
+
+#ifndef GIRARA_UNIGNORE
+# define GIRARA_UNIGNORE \
+    GIRARA_DO_PRAGMA(GCC diagnostic pop)
+#endif
+
 #endif

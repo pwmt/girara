@@ -17,18 +17,6 @@
 #include "template.h"
 #include "utils.h"
 
-#if defined(__GNUC__) || defined(__clang__)
-#define DO_PRAGMA(x) _Pragma(#x)
-#else
-#define DO_PRAGMA(x)
-#endif
-
-#define IGNORE_DEPRECATED \
-  DO_PRAGMA(GCC diagnostic push) \
-  DO_PRAGMA(GCC diagnostic ignored "-Wdeprecated-declarations")
-#define UNIGNORE \
-  DO_PRAGMA(GCC diagnostic pop)
-
 static int
 cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
 {
@@ -95,10 +83,13 @@ fill_template_with_values(girara_session_t* session, const char* session_name)
   char* font = NULL;
   girara_setting_get(session, "font", &font);
   if (font != NULL) {
+    GIRARA_IGNORE_DEPRECATED
     pango_font_description_free(session->style.font);
     session->style.font = pango_font_description_from_string(font);
+    GIRARA_UNIGNORE
     g_free(font);
   }
+  GIRARA_IGNORE_DEPRECATED
   if (session->style.font == NULL) {
     girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
   } else {
@@ -106,6 +97,7 @@ fill_template_with_values(girara_session_t* session, const char* session_name)
     girara_template_set_variable_value(csstemplate, "font", fontname);
     g_free(fontname);
   }
+  GIRARA_UNIGNORE
 
   /* parse color values */
   typedef struct color_setting_mapping_s {
@@ -113,6 +105,7 @@ fill_template_with_values(girara_session_t* session, const char* session_name)
     GdkRGBA *color;
   } color_setting_mapping_t;
 
+  GIRARA_IGNORE_DEPRECATED
   const color_setting_mapping_t color_setting_mappings[] = {
     {"default-fg",              &(session->style.default_foreground)},
     {"default-bg",              &(session->style.default_background)},
@@ -137,6 +130,7 @@ fill_template_with_values(girara_session_t* session, const char* session_name)
     {"tabbar-focus-fg",         &(session->style.tabbar_focus_foreground)},
     {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
   };
+  GIRARA_UNIGNORE
 
   for (size_t i = 0; i < LENGTH(color_setting_mappings); i++) {
     char* tmp_value = NULL;
@@ -295,10 +289,10 @@ girara_session_create()
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
   /* deprecated members */
-  IGNORE_DEPRECATED
+  GIRARA_IGNORE_DEPRECATED
   session->settings               = session->private_data->settings;
   session->global.command_history = girara_get_command_history(session);
-  UNIGNORE
+  GIRARA_UNIGNORE
 
   return session;
 }
@@ -533,9 +527,11 @@ girara_session_destroy(girara_session_t* session)
   g_return_val_if_fail(session != NULL, FALSE);
 
   /* clean up style */
-  if (session->style.font) {
+  GIRARA_IGNORE_DEPRECATED
+  if (session->style.font != NULL) {
     pango_font_description_free(session->style.font);
   }
+  GIRARA_UNIGNORE
 
   /* clean up shortcuts */
   girara_list_free(session->bindings.shortcuts);
@@ -596,9 +592,9 @@ girara_session_destroy(girara_session_t* session)
   /* clean up private data */
   girara_session_private_free(session->private_data);
   session->private_data = NULL;
-  IGNORE_DEPRECATED
+  GIRARA_IGNORE_DEPRECATED
   session->settings = NULL;
-  UNIGNORE
+  GIRARA_UNIGNORE
 
   /* clean up session */
   g_slice_free(girara_session_t, session);

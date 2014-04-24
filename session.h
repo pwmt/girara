@@ -58,7 +58,7 @@ struct girara_session_s
     GdkRGBA tabbar_focus_foreground; /**< The foreground color for a focused tab */
     GdkRGBA tabbar_focus_background; /**< The background color for a focused tab */
     PangoFontDescription *font; /**< The used font */
-  } style;
+  } GIRARA_DEPRECATED(style);
 
   struct
   {

@@ -42,6 +42,7 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
 {
   g_return_if_fail(session != NULL && value != NULL);
 
+  GIRARA_IGNORE_DEPRECATED
   pango_font_description_free(session->style.font);
 
   /* parse font */
@@ -52,6 +53,7 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
   girara_template_set_variable_value(session->private_data->csstemplate, "font",
       fontname);
   g_free(fontname);
+  GIRARA_UNIGNORE
 }
 
 static void
