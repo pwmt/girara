@@ -92,6 +92,14 @@ load_css(girara_session_t* session, const char* session_name)
 
   girara_template_set_variable_value(csstemplate, "session", session_name);
 
+  char* font = NULL;
+  girara_setting_get(session, "font", &font);
+  if (font != NULL) {
+    pango_font_description_free(session->style.font);
+    session->style.font = pango_font_description_from_string(font);
+    g_free(font);
+  }
+
   if (session->style.font == NULL) {
     girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
   } else {
