@@ -20,8 +20,6 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   widget_add_class(GTK_WIDGET(item->box), "statusbar");
   widget_add_class(GTK_WIDGET(item->text), "statusbar");
 
-  gtk_widget_override_font(GTK_WIDGET(item->text), session->style.font);
-
   /* set properties */
   gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.5);
   gtk_label_set_use_markup(item->text,             TRUE);

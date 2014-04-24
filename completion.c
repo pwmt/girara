@@ -11,7 +11,7 @@
 #include "datastructures.h"
 #include "utils.h"
 
-static GtkEventBox* girara_completion_row_create(girara_session_t*, const char*, const char*, bool);
+static GtkEventBox* girara_completion_row_create(const char*, const char*, bool);
 static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
 
 /* completion */
@@ -269,7 +269,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
           entry->group  = FALSE;
           entry->value  = g_strdup(command->command);
-          entry->widget = girara_completion_row_create(session, command->command, command->description, FALSE);
+          entry->widget = girara_completion_row_create(command->command, command->description, FALSE);
 
           entries = g_list_append(entries, entry);
 
@@ -323,7 +323,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
           entry->group  = FALSE;
           entry->value  = g_strdup(command->command);
-          entry->widget = girara_completion_row_create(session, command->command, command->description, FALSE);
+          entry->widget = girara_completion_row_create(command->command, command->description, FALSE);
 
           entries = g_list_append(entries, entry);
 
@@ -350,7 +350,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
             girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
             entry->group  = TRUE;
             entry->value  = g_strdup(group->value);
-            entry->widget = girara_completion_row_create(session, group->value, NULL, TRUE);
+            entry->widget = girara_completion_row_create(group->value, NULL, TRUE);
 
             entries = g_list_append(entries, entry);
 
@@ -361,7 +361,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
             girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
             entry->group  = FALSE;
             entry->value  = g_strdup(element->value);
-            entry->widget = girara_completion_row_create(session, element->value, element->description, FALSE);
+            entry->widget = girara_completion_row_create(element->value, element->description, FALSE);
 
             entries = g_list_append(entries, entry);
 
@@ -481,7 +481,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 }
 
 static GtkEventBox*
-girara_completion_row_create(girara_session_t* session, const char* command, const char* description, bool group)
+girara_completion_row_create(const char* command, const char* description, bool group)
 {
   GtkBox *col = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
 
@@ -510,9 +510,6 @@ girara_completion_row_create(girara_session_t* session, const char* command, con
   widget_add_class(GTK_WIDGET(show_command), class);
   widget_add_class(GTK_WIDGET(show_description), class);
   widget_add_class(GTK_WIDGET(row), class);
-
-  gtk_widget_override_font(GTK_WIDGET(show_command),     session->style.font);
-  gtk_widget_override_font(GTK_WIDGET(show_description), session->style.font);
 
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command),     TRUE, TRUE, 2);
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), TRUE, TRUE, 2);

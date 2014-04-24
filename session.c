@@ -85,8 +85,8 @@ init_template_engine(GiraraTemplate* csstemplate)
   }
 }
 
-static char*
-load_css(girara_session_t* session, const char* session_name)
+static void
+fill_template_with_values(girara_session_t* session, const char* session_name)
 {
   GiraraTemplate* csstemplate = session->private_data->csstemplate;
 
@@ -99,7 +99,6 @@ load_css(girara_session_t* session, const char* session_name)
     session->style.font = pango_font_description_from_string(font);
     g_free(font);
   }
-
   if (session->style.font == NULL) {
     girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
   } else {
@@ -180,8 +179,41 @@ load_css(girara_session_t* session, const char* session_name)
         padding_mapping[i].identifier, padding_mapping[i].value);
     g_free(padding_mapping[i].value);
   }
+}
 
-  return girara_template_evaluate(csstemplate);
+static void
+css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session)
+{
+  GtkCssProvider* old = session->private_data->gtk.cssprovider;
+  char* css_data      = girara_template_evaluate(csstemplate);
+  if (css_data == NULL) {
+    girara_error("Error while evaluating templates.");
+    return;
+  }
+
+  GtkCssProvider* provider = gtk_css_provider_new();
+  GError* error            = NULL;
+  if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
+    girara_error("Unable to load CSS: %s", error->message);
+    g_free(css_data);
+    g_error_free(error);
+    g_object_unref(provider);
+    return;
+  }
+  g_free(css_data);
+
+  /* add CSS style provider */
+  GdkDisplay* display = gdk_display_get_default();
+  GdkScreen* screen = gdk_display_get_default_screen(display);
+  gtk_style_context_add_provider_for_screen(screen,
+      GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  if (old != NULL) {
+    gtk_style_context_remove_provider_for_screen(screen, GTK_STYLE_PROVIDER(old));
+    g_object_unref(old);
+
+    gtk_widget_queue_draw(GTK_WIDGET(session->gtk.window));
+  }
+  session->private_data->gtk.cssprovider = provider;
 }
 
 girara_session_t*
@@ -213,8 +245,8 @@ girara_session_create()
       (girara_free_function_t) girara_setting_free);
 
   /* CSS style provider */
-  session->private_data->csstemplate = girara_template_new(CSS_TEMPLATE);
-  session->private_data->gtk.cssprovider = gtk_css_provider_new();
+  session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE);
+  session->private_data->gtk.cssprovider = NULL;
   init_template_engine(session->private_data->csstemplate);
 
   /* init modes */
@@ -279,20 +311,9 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   }
 
   /* load CSS style */
-  char* css_data = load_css(session, sessionname == NULL ? "girara" : sessionname);
-  if (css_data == NULL) {
-    return false;
-  }
-
-  GtkCssProvider* provider = session->private_data->gtk.cssprovider;
-  GError* error = NULL;
-  if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
-    girara_error("Unable to load CSS: %s", error->message);
-    g_free(css_data);
-    g_error_free(error);
-    return false;
-  }
-  g_free(css_data);
+  fill_template_with_values(session, sessionname == NULL ? "girara" : sessionname);
+  g_signal_connect(G_OBJECT(session->private_data->csstemplate), "changed",
+      G_CALLBACK(css_template_changed), session);
 
   /* window */
   if (session->gtk.embed != 0) {
@@ -308,12 +329,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     gtk_widget_set_name(window_widget, "girara");
   }
 
-  /* add CSS style provider */
-  GdkDisplay* display = gdk_display_get_default();
-  GdkScreen* screen = gdk_display_get_default_screen(display);
-  gtk_style_context_add_provider_for_screen(screen,
-                                            GTK_STYLE_PROVIDER(provider),
-                                            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  /* apply CSS style */
+  css_template_changed(session->private_data->csstemplate, session);
 
   GdkGeometry hints = {
     .base_height = 1,
@@ -451,15 +468,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   widget_add_class(session->gtk.notification_text, "notification");
   gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_area));
   gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_text));
-
-  if (session->style.font == NULL) {
-    /* set default font */
-    girara_setting_set(session, "font", "monospace normal 9");
-  } else {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_entry),    session->style.font);
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_dialog),   session->style.font);
-    gtk_widget_override_font(session->gtk.notification_text, session->style.font);
-  }
 
   /* set window size */
   int window_width = 0;

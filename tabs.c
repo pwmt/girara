@@ -69,7 +69,6 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
       G_CALLBACK(girara_callback_tab_clicked), tab);
 
   gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
-  gtk_widget_override_font(tab_label, session->style.font);
   widget_add_class(tab_label, "tab");
   widget_add_class(tab_event, "tab");
 

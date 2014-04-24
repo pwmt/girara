@@ -12,6 +12,7 @@
 #include "settings.h"
 #include "shortcuts.h"
 #include "utils.h"
+#include "template.h"
 
 #define COMMENT_PREFIX "\"#"
 
@@ -47,25 +48,10 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
   PangoFontDescription* font = pango_font_description_from_string(value);
   session->style.font = font;
 
-  /* inputbar */
-  if (session->gtk.inputbar_entry != NULL) {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_entry), font);
-  }
-
-  if (session->gtk.inputbar_dialog != NULL) {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_dialog), font);
-  }
-
-  /* notification area */
-  if (session->gtk.notification_text != NULL) {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
-  }
-
-  GIRARA_LIST_FOREACH(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item)
-    if (item != NULL){
-      gtk_widget_override_font(GTK_WIDGET(item->text), font);
-    }
-  GIRARA_LIST_FOREACH_END(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item);
+  char* fontname = pango_font_description_to_string(session->style.font);
+  girara_template_set_variable_value(session->private_data->csstemplate, "font",
+      fontname);
+  g_free(fontname);
 }
 
 static void
