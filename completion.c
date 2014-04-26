@@ -511,8 +511,8 @@ girara_completion_row_create(const char* command, const char* description, bool 
   widget_add_class(GTK_WIDGET(show_description), class);
   widget_add_class(GTK_WIDGET(row), class);
 
-  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command),     TRUE, TRUE, 2);
-  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), TRUE, TRUE, 2);
+  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command),     TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), TRUE, TRUE, 0);
 
   gtk_container_add(GTK_CONTAINER(row), GTK_WIDGET(col));
   gtk_widget_show_all(GTK_WIDGET(row));
