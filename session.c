@@ -784,3 +784,12 @@ girara_get_command_history(girara_session_t* session)
   g_return_val_if_fail(session != NULL, NULL);
   return girara_input_history_list(session->command_history);
 }
+
+GiraraTemplate*
+girara_session_get_template(girara_session_t* session)
+{
+  g_return_val_if_fail(session != NULL, NULL);
+
+  return session->private_data->csstemplate;
+}
+

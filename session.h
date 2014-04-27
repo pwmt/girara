@@ -248,4 +248,12 @@ bool girara_set_window_title(girara_session_t* session, const char* name);
  */
 girara_list_t* girara_get_command_history(girara_session_t* session);
 
+/**
+ * Returns the internal template object to apply custom theming options
+ *
+ * @param session The girara session
+ * @returns GiraraTemplate object
+ */
+GiraraTemplate* girara_session_get_template(girara_session_t* session);
+
 #endif
