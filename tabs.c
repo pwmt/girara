@@ -71,6 +71,7 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
   gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
   widget_add_class(tab_label, "tab");
   widget_add_class(tab_event, "tab");
+  gtk_label_set_ellipsize(GTK_LABEL(tab_label), PANGO_ELLIPSIZE_MIDDLE);
 
   gtk_container_add(GTK_CONTAINER(tab_event), tab_label);
   gtk_box_pack_start(GTK_BOX(session->gtk.tabbar), tab_event, TRUE, TRUE, 0);
