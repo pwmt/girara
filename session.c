@@ -845,6 +845,18 @@ girara_set_window_title(girara_session_t* session, const char* name)
   return true;
 }
 
+bool
+girara_set_window_icon(girara_session_t* session, const char* name)
+{
+  if (session == NULL || session->gtk.window == NULL || name == NULL) {
+    return false;
+  }
+
+  gtk_window_set_icon_name(GTK_WINDOW(session->gtk.window), name);
+
+  return true;
+}
+
 girara_list_t*
 girara_get_command_history(girara_session_t* session)
 {

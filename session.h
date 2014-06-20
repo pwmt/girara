@@ -253,6 +253,16 @@ girara_mode_t girara_mode_get(girara_session_t* session);
 bool girara_set_window_title(girara_session_t* session, const char* name);
 
 /**
+ * Set icon of the window
+ *
+ * @param session The used girara session
+ * @param name the name of the themed icon
+ * @return true if no error occured
+ * @return false if an error occured
+ */
+bool girara_set_window_icon(girara_session_t* session, const char* name);
+
+/**
  * Returns the command history
  *
  * @param session The used girara session
