@@ -180,7 +180,9 @@ bool girara_set_view(girara_session_t* session, GtkWidget* widget);
 char* girara_buffer_get(girara_session_t* session);
 
 /**
- * Displays a notification popup for the user using libnotify.
+ * Displays a notification popup for the user using libnotify. Basic styling
+ * is allowed using Pango's markup format:
+ * <https://developer.gnome.org/pango/stable/PangoMarkupFormat.html>
  *
  * @param session The girara session
  * @param summary The title
