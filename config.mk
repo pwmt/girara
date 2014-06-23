@@ -16,6 +16,9 @@ SOMAJOR = 1
 SOMINOR = 1
 SOVERSION = ${SOMAJOR}.${SOMINOR}
 
+# libnotify
+WITH_LIBNOTIFY ?= $(shell (pkg-config libnotify && echo 1) || echo 0)
+
 # paths
 PREFIX ?= /usr
 LIBDIR ?= ${PREFIX}/lib
@@ -40,8 +43,13 @@ GLIB_PKG_CONFIG_NAME = glib-2.0
 GTK_INC ?= $(shell pkg-config --cflags gtk+-3.0)
 GTK_LIB ?= $(shell pkg-config --libs gtk+-3.0)
 
-INCS = ${GTK_INC}
-LIBS = ${GTK_LIB} -lm
+ifneq (${WITH_LIBNOTIFY},0)
+LNOTIF_INC ?= $(shell pkg-config --cflags libnotify)
+LNOTIF_LIB ?= $(shell pkg-config --libs libnotify)
+endif
+
+INCS = ${GTK_INC} ${LNOTIF_INC}
+LIBS = ${GTK_LIB} ${LNOTIF_LIB} -lm
 
 # flags
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)

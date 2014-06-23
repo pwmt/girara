@@ -180,6 +180,16 @@ bool girara_set_view(girara_session_t* session, GtkWidget* widget);
 char* girara_buffer_get(girara_session_t* session);
 
 /**
+ * Displays a notification popup for the user using libnotify.
+ *
+ * @param session The girara session
+ * @param summary The title
+ * @param body The content
+ */
+void girara_libnotify(girara_session_t* session, const char *summary,
+    const char *body);
+
+/**
  * Displays a notification for the user. It is possible to pass GIRARA_INFO,
  * GIRARA_WARNING or GIRARA_ERROR as a notification level.
  *

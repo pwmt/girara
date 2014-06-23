@@ -12,6 +12,11 @@ DOBJECTS  = ${OBJECTS:.o=.do}
 HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
+ifneq (${WITH_LIBNOTIFY},0)
+INCS += $(LNOTIF_INF)
+LIBS += $(LNOTIF_LIB)
+CPPFLAGS += -DWITH_LIBNOTIFY
+endif
 
 ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
 CPPFLAGS += -DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"
