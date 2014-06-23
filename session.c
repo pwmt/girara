@@ -634,7 +634,6 @@ girara_libnotify(girara_session_t* session, const char *summary,
 
 #ifdef WITH_LIBNOTIFY
 
-  GError* error = NULL;
   NotifyNotification* libnotify_notification = NULL;
   char* icon_name = NULL;
 
@@ -664,7 +663,7 @@ girara_libnotify(girara_session_t* session, const char *summary,
     }
   }
 
-  notify_notification_show(libnotify_notification, &error);
+  notify_notification_show(libnotify_notification, NULL);
   g_object_unref(G_OBJECT(libnotify_notification));
 
 #else
