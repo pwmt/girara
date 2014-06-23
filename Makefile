@@ -13,8 +13,8 @@ HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
 ifneq (${WITH_LIBNOTIFY},0)
-INCS += $(LNOTIF_INF)
-LIBS += $(LNOTIF_LIB)
+INCS += $(LIBNOTIFY_INC)
+LIBS += $(LIBNOTIFY_LIB)
 CPPFLAGS += -DWITH_LIBNOTIFY
 endif
 

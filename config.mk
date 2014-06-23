@@ -44,12 +44,12 @@ GTK_INC ?= $(shell pkg-config --cflags gtk+-3.0)
 GTK_LIB ?= $(shell pkg-config --libs gtk+-3.0)
 
 ifneq (${WITH_LIBNOTIFY},0)
-LNOTIF_INC ?= $(shell pkg-config --cflags libnotify)
-LNOTIF_LIB ?= $(shell pkg-config --libs libnotify)
+LIBNOTIFY_INC ?= $(shell pkg-config --cflags libnotify)
+LIBNOTIFY_LIB ?= $(shell pkg-config --libs libnotify)
 endif
 
-INCS = ${GTK_INC} ${LNOTIF_INC}
-LIBS = ${GTK_LIB} ${LNOTIF_LIB} -lm
+INCS = ${GTK_INC} ${LIBNOTIFY_INC}
+LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} -lm
 
 # flags
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)
