@@ -17,12 +17,8 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   item->text = GTK_LABEL(gtk_label_new(NULL));
 
   /* set style */
-  gtk_widget_override_background_color(GTK_WIDGET(item->box),  GTK_STATE_NORMAL, &(session->style.statusbar_background));
-  gtk_widget_override_color(GTK_WIDGET(item->box),             GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
-  gtk_widget_override_background_color(GTK_WIDGET(item->text), GTK_STATE_NORMAL, &(session->style.statusbar_background));
-  gtk_widget_override_color(GTK_WIDGET(item->text),            GTK_STATE_NORMAL, &(session->style.statusbar_foreground));
-
-  gtk_widget_override_font(GTK_WIDGET(item->text),             session->style.font);
+  widget_add_class(GTK_WIDGET(item->box), "statusbar");
+  widget_add_class(GTK_WIDGET(item->text), "statusbar");
 
   /* set properties */
   gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.5);
@@ -42,7 +38,7 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
 
   /* add it to the list */
   gtk_container_add(GTK_CONTAINER(item->box), GTK_WIDGET(item->text));
-  gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->box), expand, fill, 2);
+  gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->box), expand, fill, 0);
   gtk_widget_show_all(GTK_WIDGET(item->box));
 
   girara_list_prepend(session->elements.statusbar_items, item);
@@ -76,8 +72,8 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
 
   GdkRGBA gdk_color;
   gdk_rgba_parse(&gdk_color, color);
-  gtk_widget_override_color(GTK_WIDGET(session->gtk.inputbar_entry),
-      GTK_STATE_NORMAL, &(session->style.inputbar_foreground));
+  gtk_widget_override_color(GTK_WIDGET(item->text),
+      GTK_STATE_FLAG_NORMAL, &gdk_color);
 
   return true;
 }
@@ -89,7 +85,8 @@ girara_statusbar_set_background(girara_session_t* session, const char* color)
 
   GdkRGBA gdk_color;
   gdk_rgba_parse(&gdk_color, color);
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar), GTK_STATE_NORMAL, &gdk_color);
+  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),
+      GTK_STATE_FLAG_NORMAL, &gdk_color);
 
   return true;
 }

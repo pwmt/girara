@@ -2,6 +2,8 @@
 
 include ../config.mk
 include ../common.mk
+include ../colors.mk
+
 include config.mk
 
 SOURCE   = tests.c $(wildcard test_*.c)
@@ -31,25 +33,25 @@ options:
 
 %.o: %.c
 	@mkdir -p .depend
-	$(ECHO) CC $<
+	$(call colorecho,CC,$<)
 	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 ${XDG_HELPER}: ${XDG_HELPER_SOURCE} ../libgirara-gtk3.a
 	@mkdir -p .depend
-	$(ECHO) CC $<
+	$(call colorecho,CC,$<)
 	$(QUIET)${CC}  -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk3.a ${LDFLAGS} ${LIBS} -MMD -MF .depend/$@.dep
 
 %.do: %.c
 	@mkdir -p .depend
-	$(ECHO) CC $<
+	$(call colorecho,CC,$<)
 	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 girara_test: ${OBJECTS} ../libgirara-gtk3.a
-	$(ECHO) LD $@
+	$(call colorecho,LD,$@)
 	$(QUIET)${CC} ${LDFLAGS} -o $@ ${OBJECTS} ../libgirara-gtk3.a ${LIBS}
 
 girara_test-debug: ${DOBJECTS} ../libgirara-gtk3-debug.a
-	$(ECHO) LD $@
+	$(call colorecho,LD,$@)
 	$(QUIET)${CC} ${LDFLAGS} -o $@ ${DOBJECTS} ../libgirara-gtk3-debug.a ${LIBS}
 
 ${DOBJECTS} ${OBJECTS}: ../config.mk

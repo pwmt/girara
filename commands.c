@@ -51,7 +51,8 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     {"Super",     GDK_KEY_Super_L},
     {"Tab",       GDK_KEY_Tab},
     {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
-    {"Up",        GDK_KEY_Up}
+    {"Up",        GDK_KEY_Up},
+    {"Print",     GDK_KEY_Print}
   };
 
   typedef struct gdk_mouse_button_s

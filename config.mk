@@ -2,7 +2,7 @@
 
 GIRARA_VERSION_MAJOR = 0
 GIRARA_VERSION_MINOR = 2
-GIRARA_VERSION_REV   = 0
+GIRARA_VERSION_REV   = 1
 VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 
 # Rules for the SOMAJOR and SOMINOR.
@@ -15,6 +15,9 @@ VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 SOMAJOR = 1
 SOMINOR = 1
 SOVERSION = ${SOMAJOR}.${SOMINOR}
+
+# libnotify
+WITH_LIBNOTIFY ?= $(shell (pkg-config libnotify && echo 1) || echo 0)
 
 # paths
 PREFIX ?= /usr
@@ -40,8 +43,13 @@ GLIB_PKG_CONFIG_NAME = glib-2.0
 GTK_INC ?= $(shell pkg-config --cflags gtk+-3.0)
 GTK_LIB ?= $(shell pkg-config --libs gtk+-3.0)
 
-INCS = ${GTK_INC}
-LIBS = ${GTK_LIB} -lm
+ifneq (${WITH_LIBNOTIFY},0)
+LIBNOTIFY_INC ?= $(shell pkg-config --cflags libnotify)
+LIBNOTIFY_LIB ?= $(shell pkg-config --libs libnotify)
+endif
+
+INCS = ${GTK_INC} ${LIBNOTIFY_INC}
+LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} -lm
 
 # flags
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)
@@ -66,3 +74,6 @@ GETTEXT_PACKAGE ?= lib${PROJECT}-${SOMAJOR}
 
 # msgfmt
 MSGFMT ?= msgfmt
+
+# colors
+COLOR ?= 1

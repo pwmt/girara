@@ -253,6 +253,47 @@ START_TEST(test_split_path) {
   girara_list_free(res);
 } END_TEST
 
+START_TEST(test_strings_replace_substrings_invalid) {
+  fail_unless(girara_replace_substring(NULL, NULL, NULL) == NULL);
+  fail_unless(girara_replace_substring("", NULL, NULL) == NULL);
+  fail_unless(girara_replace_substring("", "", NULL) == NULL);
+} END_TEST
+
+START_TEST(test_strings_replace_substrings_nothing_to_replace) {
+  char* result = girara_replace_substring("test", "n", "y");
+  fail_unless(result != NULL);
+  fail_unless(strncmp(result, "test", 5) == 0);
+  g_free(result);
+} END_TEST
+
+START_TEST(test_strings_replace_substrings_1) {
+  char* result = girara_replace_substring("test", "e", "f");
+  fail_unless(result != NULL);
+  fail_unless(strncmp(result, "tfst", 5) == 0);
+  g_free(result);
+} END_TEST
+
+START_TEST(test_strings_replace_substrings_2) {
+  char* result = girara_replace_substring("test", "es", "f");
+  fail_unless(result != NULL);
+  fail_unless(strncmp(result, "tft", 4) == 0);
+  g_free(result);
+} END_TEST
+
+START_TEST(test_strings_replace_substrings_3) {
+  char* result = girara_replace_substring("test", "e", "fg");
+  fail_unless(result != NULL);
+  fail_unless(strncmp(result, "tfgst", 6) == 0);
+  g_free(result);
+} END_TEST
+
+START_TEST(test_strings_replace_substrings_4) {
+  char* result = girara_replace_substring("test test", "t", "es");
+  fail_unless(result != NULL);
+  fail_unless(strncmp(result, "eseses eseses", 14) == 0);
+  g_free(result);
+} END_TEST
+
 Suite* suite_utils()
 {
   TCase* tcase = NULL;
@@ -294,6 +335,16 @@ Suite* suite_utils()
   tcase = tcase_create("split_path");
   tcase_add_test(tcase, test_split_path);
   suite_add_tcase(suite, tcase);
+
+  /* strings */
+  tcase = tcase_create("strings");
+  tcase_add_test(tcase, test_strings_replace_substrings_invalid);
+  tcase_add_test(tcase, test_strings_replace_substrings_nothing_to_replace);
+  tcase_add_test(tcase, test_strings_replace_substrings_1);
+  tcase_add_test(tcase, test_strings_replace_substrings_2);
+  tcase_add_test(tcase, test_strings_replace_substrings_3);
+  suite_add_tcase(suite, tcase);
+
 
   return suite;
 }

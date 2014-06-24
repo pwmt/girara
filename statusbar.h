@@ -3,6 +3,7 @@
 #ifndef GIRARA_STATUSBAR_H
 #define GIRARA_STATUSBAR_H
 
+#include "macros.h"
 #include "types.h"
 #include <gtk/gtk.h>
 
@@ -54,7 +55,7 @@ bool girara_statusbar_item_set_text(girara_session_t* session,
  * @return FALSE An error occured
  */
 bool girara_statusbar_item_set_foreground(girara_session_t* session,
-    girara_statusbar_item_t* item, const char* color);
+    girara_statusbar_item_t* item, const char* color) GIRARA_DEPRECATED_;
 
 /**
  * Sets the background color of the statusbar
@@ -65,6 +66,6 @@ bool girara_statusbar_item_set_foreground(girara_session_t* session,
  * @return FALSE An error occured
  */
 bool girara_statusbar_set_background(girara_session_t* session,
-    const char* color);
+    const char* color) GIRARA_DEPRECATED_;
 
 #endif

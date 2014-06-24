@@ -2,15 +2,25 @@
 
 include config.mk
 include common.mk
+include colors.mk
 
 PROJECTNV = girara
 PROJECT   = girara-gtk3
 SOURCE    = $(wildcard *.c)
-OBJECTS   = ${SOURCE:.c=.o}
-DOBJECTS  = ${SOURCE:.c=.do}
+CSOURCE   = $(filter-out css-definitions.c, $(SOURCE))
+OBJECTS   = ${CSOURCE:.c=.o} css-definitions.o
+DOBJECTS  = ${OBJECTS:.o=.do}
 HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
+ifneq (${WITH_LIBNOTIFY},0)
+INCS += $(LIBNOTIFY_INC)
+LIBS += $(LIBNOTIFY_LIB)
+CPPFLAGS += -DWITH_LIBNOTIFY
+LIBNOTIFY_PC_NAME = libnotify
+else
+LIBNOTIFY_PC_NAME =
+endif
 
 ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
 CPPFLAGS += -DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"
@@ -20,7 +30,7 @@ CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
 
 
-all: options ${PROJECT} po ${PROJECT}.pc
+all: ${PROJECT} po ${PROJECT}.pc
 
 # pkg-config based version checks
 .version-checks/%: config.mk
@@ -40,18 +50,27 @@ options:
 	@echo "CC      = ${CC}"
 
 version.h: version.h.in config.mk
-	$(QUIET)sed -e 's/GVMAJOR/${GIRARA_VERSION_MAJOR}/' \
-		-e 's/GVMINOR/${GIRARA_VERSION_MINOR}/' \
-		-e 's/GVREV/${GIRARA_VERSION_REV}/' version.h.in > version.h
+	$(QUIET)sed -e 's,@GVMAJOR@,${GIRARA_VERSION_MAJOR},' \
+		-e 's,@GVMINOR@,${GIRARA_VERSION_MINOR},' \
+		-e 's,@GVREV@,${GIRARA_VERSION_REV},' \
+		version.h.in > version.h.tmp
+	$(QUIET)mv version.h.tmp version.h
+
+css-definitions.c: data/girara.css_t
+	$(QUIET)echo '#include "css-definitions.h"' > $@.tmp
+	$(QUIET)echo 'const char* CSS_TEMPLATE =' >> $@.tmp
+	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' $< >> $@.tmp
+	$(QUIET)echo ';' >> $@.tmp
+	$(QUIET)mv $@.tmp $@
 
 %.o: %.c
 	@mkdir -p .depend
-	$(ECHO) CC $<
+	$(call colorecho,CC,$<)
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 %.do: %.c
 	@mkdir -p .depend
-	$(ECHO) CC $<
+	$(call colorecho,CC,$<)
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 ${OBJECTS} ${DOBJECTS}: config.mk version.h \
@@ -62,11 +81,11 @@ static: lib${PROJECT}.a
 shared: lib${PROJECT}.so.${SOVERSION}
 
 lib${PROJECT}.a: ${OBJECTS}
-	$(ECHO) AR rcs $@
+	$(call colorecho,AR,$@)
 	$(QUIET)ar rcs $@ ${OBJECTS}
 
 lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
-	$(ECHO) LD $@
+	$(call colorecho,LD,$@)
 	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS}
 
 clean:
@@ -74,18 +93,19 @@ clean:
 		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
 		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
 		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov \
-		.version-checks
+		.version-checks version.h.tmp ${PROJECT}.pc.tmp \
+		css-definitions.c css-definitions.c.tmp
 	$(QUIET)${MAKE} -C tests clean
 	$(QUIET)${MAKE} -C po clean
 
 ${PROJECT}-debug: lib${PROJECT}-debug.a lib${PROJECT}-debug.so.${SOVERSION}
 
 lib${PROJECT}-debug.a: ${DOBJECTS}
-	$(ECHO) AR rcs $@
+	$(call colorecho,AR,$@)
 	$(QUIET)ar rc $@ ${DOBJECTS}
 
 lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
-	$(ECHO) LD $@
+	$(call colorecho,LD,$@)
 	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${DOBJECTS} ${LIBS}
 
 debug: options ${PROJECT}-debug
@@ -109,10 +129,12 @@ dist: clean
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/tests
 	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/po
+	$(QUIET)mkdir -p $(PROJECTNV)-$(VERSION)/data
 	$(QUIET)cp LICENSE Makefile config.mk common.mk ${PROJECTNV}.pc.in \
 		${HEADERS} internal.h version.h.in README AUTHORS Doxyfile \
-		${SOURCE} ${PROJECTNV}-${VERSION}
+		${CSOURCE} ${PROJECTNV}-${VERSION}
 	$(QUIET)cp tests/*.c tests/Makefile tests/config.mk ${PROJECTNV}-${VERSION}/tests
+	$(QUIET)cp data/*.css_t $(PROJECTNV)-$(VERSION)/data
 	$(QUIET)cp po/Makefile po/*.po ${PROJECTNV}-${VERSION}/po
 	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
 	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
@@ -123,7 +145,9 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
 		-e 's,@LIBDIR@,${LIBDIR},' \
-		${PROJECTNV}.pc.in > ${PROJECT}.pc
+		-e 's,@LIBNOTIFY_PC_NAME@,${LIBNOTIFY_PC_NAME},' \
+		${PROJECTNV}.pc.in > ${PROJECT}.pc.tmp
+	$(QUIET)mv ${PROJECT}.pc.tmp ${PROJECT}.pc
 
 po:
 	$(QUIET)${MAKE} -C po
@@ -132,12 +156,12 @@ update-po:
 	$(QUIET)${MAKE} -C po update-po
 
 install-static: static
-	$(ECHO) installing static library
+	$(call colorecho,INSTALL,"Install static library")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
 
 install-shared: shared
-	$(ECHO) installing shared library
+	$(call colorecho,INSTALL,"Install shared library")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}
 	$(QUIET)ln -sf lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} || \
@@ -149,23 +173,23 @@ install: options po install-static install-shared install-headers
 		$(QUIET)${MAKE} -C po install
 
 install-headers: version.h ${PROJECT}.pc
-	$(ECHO) installing pkgconfig file
+	$(call colorecho,INSTALL,"Install pkg-config file")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
-	$(ECHO) installing header files
+	$(call colorecho,INSTALL,"Install header files")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${INCLUDEDIR}/girara
 	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${INCLUDEDIR}/girara
 
 uninstall: uninstall-headers
-	$(ECHO) removing library file
+	$(call colorecho,UNINSTALL,"Remove library files")
 	$(QUIET)rm -f ${LIBDIR}/lib${PROJECT}.a ${LIBDIR}/lib${PROJECT}.so.${SOVERSION} \
 		${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} ${LIBDIR}/lib${PROJECT}.so
 	$(QUIET)${MAKE} -C po uninstall
 
 uninstall-headers:
-	$(ECHO) removing header files
+	$(call colorecho,UNINSTALL,"Remove header files")
 	$(QUIET)rm -rf ${INCLUDEDIR}/girara
-	$(ECHO) removing pkgconfig file
+	$(call colorecho,UNINSTALL,"Remove pkg-config file")
 	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 
 .PHONY: all options clean debug doc test dist install install-headers uninstall \

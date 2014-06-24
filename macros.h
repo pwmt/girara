@@ -35,8 +35,10 @@
 #ifndef GIRARA_DEPRECATED
 # if defined(__GNUC__)
 #  define GIRARA_DEPRECATED(x) x __attribute__((deprecated))
+#  define GIRARA_DEPRECATED_ __attribute__((deprecated))
 # else
 #  define GIRARA_DEPRECATED(x) x
+#  define GIRARA_DEPRECATED_
 # endif
 #endif
 
@@ -46,6 +48,25 @@
 # else
 #  define GIRARA_ALLOC_SIZE(x)
 # endif
+#endif
+
+#ifndef GIRARA_DO_PRAGMA
+# if defined(__GNUC__) || defined(__clang__)
+#  define GIRARA_DO_PRAGMA(x) _Pragma(#x)
+# else
+#  define GIRARA_DO_PRAGMA(x)
+# endif
+#endif
+
+#ifndef GIRARA_IGNORE_DEPRECATED
+# define GIRARA_IGNORE_DEPRECATED \
+    GIRARA_DO_PRAGMA(GCC diagnostic push) \
+    GIRARA_DO_PRAGMA(GCC diagnostic ignored "-Wdeprecated-declarations")
+#endif
+
+#ifndef GIRARA_UNIGNORE
+# define GIRARA_UNIGNORE \
+    GIRARA_DO_PRAGMA(GCC diagnostic pop)
 #endif
 
 #endif

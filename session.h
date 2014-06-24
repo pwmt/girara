@@ -58,7 +58,7 @@ struct girara_session_s
     GdkRGBA tabbar_focus_foreground; /**< The foreground color for a focused tab */
     GdkRGBA tabbar_focus_background; /**< The background color for a focused tab */
     PangoFontDescription *font; /**< The used font */
-  } style;
+  } GIRARA_DEPRECATED(style);
 
   struct
   {
@@ -180,6 +180,18 @@ bool girara_set_view(girara_session_t* session, GtkWidget* widget);
 char* girara_buffer_get(girara_session_t* session);
 
 /**
+ * Displays a notification popup for the user using libnotify. Basic styling
+ * is allowed using Pango's markup format:
+ * <https://developer.gnome.org/pango/stable/PangoMarkupFormat.html>
+ *
+ * @param session The girara session
+ * @param summary The title
+ * @param body The content
+ */
+void girara_libnotify(girara_session_t* session, const char *summary,
+    const char *body);
+
+/**
  * Displays a notification for the user. It is possible to pass GIRARA_INFO,
  * GIRARA_WARNING or GIRARA_ERROR as a notification level.
  *
@@ -247,5 +259,13 @@ bool girara_set_window_title(girara_session_t* session, const char* name);
  * @return The command history (list of strings) or NULL
  */
 girara_list_t* girara_get_command_history(girara_session_t* session);
+
+/**
+ * Returns the internal template object to apply custom theming options
+ *
+ * @param session The girara session
+ * @returns GiraraTemplate object
+ */
+GiraraTemplate* girara_session_get_template(girara_session_t* session);
 
 #endif

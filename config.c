@@ -12,6 +12,7 @@
 #include "settings.h"
 #include "shortcuts.h"
 #include "utils.h"
+#include "template.h"
 
 #define COMMENT_PREFIX "\"#"
 
@@ -21,18 +22,26 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name),
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  if (session->gtk.window != NULL) {
-    char* path = girara_fix_path(value); // value != NULL
-
-    GError* error = NULL;
-    gtk_window_set_icon_from_file(GTK_WINDOW(session->gtk.window), path, &error);
-    if (error != NULL) {
-      girara_error("failed to load window icon: %s", error->message);
-      g_error_free(error);
-    }
-
-    free(path);
+  if (session->gtk.window == NULL) {
+    return;
   }
+
+  char* path        = girara_fix_path(value);
+  GtkWindow* window = GTK_WINDOW(session->gtk.window);
+
+  GError* error = NULL;
+  gtk_window_set_icon_from_file(window, path, &error);
+  free(path);
+
+  if (error == NULL) {
+    return;
+  }
+
+  girara_debug("Failed to load window icon (file): %s", error->message);
+  girara_debug("Trying name instead.");
+  g_error_free(error);
+
+  gtk_window_set_icon_name(window, value);
 }
 
 static void
@@ -41,31 +50,18 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
 {
   g_return_if_fail(session != NULL && value != NULL);
 
+  GIRARA_IGNORE_DEPRECATED
   pango_font_description_free(session->style.font);
 
   /* parse font */
   PangoFontDescription* font = pango_font_description_from_string(value);
   session->style.font = font;
 
-  /* inputbar */
-  if (session->gtk.inputbar_entry != NULL) {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_entry), font);
-  }
-
-  if (session->gtk.inputbar_dialog != NULL) {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.inputbar_dialog), font);
-  }
-
-  /* notification area */
-  if (session->gtk.notification_text != NULL) {
-    gtk_widget_override_font(GTK_WIDGET(session->gtk.notification_text), font);
-  }
-
-  GIRARA_LIST_FOREACH(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item)
-    if (item != NULL){
-      gtk_widget_override_font(GTK_WIDGET(item->text), font);
-    }
-  GIRARA_LIST_FOREACH_END(session->elements.statusbar_items, girara_statusbar_item_t *, iter, item);
+  char* fontname = pango_font_description_to_string(session->style.font);
+  girara_template_set_variable_value(session->private_data->csstemplate, "font",
+      fontname);
+  g_free(fontname);
+  GIRARA_UNIGNORE
 }
 
 static void
@@ -124,11 +120,18 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   GtkWidget* hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
 
   if (vscrollbar != NULL) {
-    gtk_widget_set_visible(vscrollbar, show_vscrollbar);
+    if (show_vscrollbar == true) {
+      gtk_widget_unset_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
   }
-
   if (hscrollbar != NULL) {
-    gtk_widget_set_visible(hscrollbar, show_hscrollbar);
+    if (show_hscrollbar == true) {
+      gtk_widget_unset_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
   }
 }
 

@@ -50,6 +50,8 @@ HIDDEN void girara_config_load_default(girara_session_t* session);
 
 HIDDEN void update_state_by_keyval(int *state, int keyval);
 
+HIDDEN void widget_add_class(GtkWidget* widget, const char* styleclass);
+
 /**
  * Default complection function for the settings
  *
@@ -234,14 +236,25 @@ struct girara_statusbar_item_s
 struct girara_session_private_s
 {
   /**
+   * Used in session-specific paths
+   */
+  char* session_name;
+
+  /**
    * List of all settings
    */
   girara_list_t* settings;
 
+  /**
+   * Template enginge for CSS.
+   */
+  GiraraTemplate* csstemplate;
+
   struct
   {
-    GtkWidget         *overlay; /**< So we can overlay bottom_box on top of view */
-    GtkBox            *bottom_box; /**< Box grouping input, status and notification */
+    GtkWidget* overlay; /**< So we can overlay bottom_box on top of view */
+    GtkBox*    bottom_box; /**< Box grouping input, status and notification */
+    GtkCssProvider* cssprovider;
   } gtk;
 };
 
