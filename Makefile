@@ -16,6 +16,9 @@ ifneq (${WITH_LIBNOTIFY},0)
 INCS += $(LIBNOTIFY_INC)
 LIBS += $(LIBNOTIFY_LIB)
 CPPFLAGS += -DWITH_LIBNOTIFY
+LIBNOTIFY_PC_NAME = libnotify
+else
+LIBNOTIFY_PC_NAME =
 endif
 
 ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
@@ -141,6 +144,7 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
 		-e 's,@LIBDIR@,${LIBDIR},' \
+		-e 's,@LIBNOTIFY@,${LIBNOTIFY_PC_NAME},' \
 		${PROJECTNV}.pc.in > ${PROJECT}.pc.tmp
 	$(QUIET)mv ${PROJECT}.pc.tmp ${PROJECT}.pc
 
