@@ -73,7 +73,7 @@ girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar
   GdkRGBA gdk_color;
   gdk_rgba_parse(&gdk_color, color);
   gtk_widget_override_color(GTK_WIDGET(item->text),
-      GTK_STATE_FLAG_NORMAL, &(session->style.inputbar_foreground));
+      GTK_STATE_FLAG_NORMAL, &gdk_color);
 
   return true;
 }
