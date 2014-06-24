@@ -144,7 +144,7 @@ ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
 		-e 's,@LIBDIR@,${LIBDIR},' \
-		-e 's,@LIBNOTIFY@,${LIBNOTIFY_PC_NAME},' \
+		-e 's,@LIBNOTIFY_PC_NAME@,${LIBNOTIFY_PC_NAME},' \
 		${PROJECTNV}.pc.in > ${PROJECT}.pc.tmp
 	$(QUIET)mv ${PROJECT}.pc.tmp ${PROJECT}.pc
 
