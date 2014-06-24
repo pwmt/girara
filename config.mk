@@ -74,3 +74,6 @@ GETTEXT_PACKAGE ?= lib${PROJECT}-${SOMAJOR}
 
 # msgfmt
 MSGFMT ?= msgfmt
+
+# colors
+COLOR ?= 1

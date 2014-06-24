@@ -2,6 +2,7 @@
 
 include ../config.mk
 include ../common.mk
+include ../colors.mk
 
 PROJECTNV  = girara
 PROJECT    = girara-gtk3
@@ -31,7 +32,7 @@ ${GETTEXT_PACKAGE}.pot: POTFILES.in
 	$(QUIET)intltool-update --pot --gettext-package=${GETTEXT_PACKAGE}
 
 update-po: ${GETTEXT_PACKAGE}.pot
-	$(ECHO) updating po files: ${CATALOGS}
+	$(call colorecho,PO,"Updating po files ${CATALOGS}")
 	$(QUIET)set -e && for f in ${CATALOGS} ; do \
 		intltool-update --dist --gettext-package=${GETTEXT_PACKAGE} `echo $$f | sed 's/\.po//'` ; \
 		sed -i 's/Report-Msgid-Bugs-To: \\n/Report-Msgid-Bugs-To: http:\/\/bugs.pwmt.org\\n/'  "$$f" ; \
@@ -39,18 +40,18 @@ update-po: ${GETTEXT_PACKAGE}.pot
 
 %/LC_MESSAGES/${GETTEXT_PACKAGE}.mo: %.po
 	@mkdir -p $(@D)
-	$(ECHO) msgfmt $(shell echo $< | sed 's/\.po//')
+	$(call colorecho,MSGFMT,$(shell echo $< | sed 's/\.po//'))
 	$(QUIET)${MSGFMT} ${MSGFMTFLAGS} -c $< -o $@
 
 install: ${MOS}
-	$(ECHO) installing translations
+	$(call colorecho,INSTALL,"Install translations")
 	$(QUIET)set -e && for f in $^ ; do \
 		mkdir -p -m 755 $(DESTDIR)$(LOCALEDIR)/`dirname $$f`; \
 		install -m 644 $$f $(DESTDIR)$(LOCALEDIR)/`dirname $$f` ; \
 	done
 
 uninstall: ${MOS}
-	$(ECHO) removing translations
+	$(call colorecho,UNINSTALL,"Uninstall translations")
 	$(QUIET)set -e && for f in $^ ; do \
 		rm -f $(LOCALEDIR)/$$f; \
 	done

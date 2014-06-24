@@ -2,6 +2,7 @@
 
 include config.mk
 include common.mk
+include colors.mk
 
 PROJECTNV = girara
 PROJECT   = girara-gtk3
@@ -29,7 +30,7 @@ CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
 
 
-all: options ${PROJECT} po ${PROJECT}.pc
+all: ${PROJECT} po ${PROJECT}.pc
 
 # pkg-config based version checks
 .version-checks/%: config.mk
@@ -64,12 +65,12 @@ css-definitions.c: data/girara.css_t
 
 %.o: %.c
 	@mkdir -p .depend
-	$(ECHO) CC $<
+	$(call colorecho,CC,$<)
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 %.do: %.c
 	@mkdir -p .depend
-	$(ECHO) CC $<
+	$(call colorecho,CC,$<)
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
 
 ${OBJECTS} ${DOBJECTS}: config.mk version.h \
@@ -80,11 +81,11 @@ static: lib${PROJECT}.a
 shared: lib${PROJECT}.so.${SOVERSION}
 
 lib${PROJECT}.a: ${OBJECTS}
-	$(ECHO) AR rcs $@
+	$(call colorecho,AR,$@)
 	$(QUIET)ar rcs $@ ${OBJECTS}
 
 lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
-	$(ECHO) LD $@
+	$(call colorecho,LD,$@)
 	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS}
 
 clean:
@@ -100,11 +101,11 @@ clean:
 ${PROJECT}-debug: lib${PROJECT}-debug.a lib${PROJECT}-debug.so.${SOVERSION}
 
 lib${PROJECT}-debug.a: ${DOBJECTS}
-	$(ECHO) AR rcs $@
+	$(call colorecho,AR,$@)
 	$(QUIET)ar rc $@ ${DOBJECTS}
 
 lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
-	$(ECHO) LD $@
+	$(call colorecho,LD,$@)
 	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${DOBJECTS} ${LIBS}
 
 debug: options ${PROJECT}-debug
@@ -155,12 +156,12 @@ update-po:
 	$(QUIET)${MAKE} -C po update-po
 
 install-static: static
-	$(ECHO) installing static library
+	$(call colorecho,INSTALL,"Install static library")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.a ${DESTDIR}${LIBDIR}
 
 install-shared: shared
-	$(ECHO) installing shared library
+	$(call colorecho,INSTALL,"Install shared library")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
 	$(QUIET)install -m 644 lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}
 	$(QUIET)ln -sf lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} || \
@@ -172,23 +173,23 @@ install: options po install-static install-shared install-headers
 		$(QUIET)${MAKE} -C po install
 
 install-headers: version.h ${PROJECT}.pc
-	$(ECHO) installing pkgconfig file
+	$(call colorecho,INSTALL,"Install pkg-config file")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}/pkgconfig
 	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
-	$(ECHO) installing header files
+	$(call colorecho,INSTALL,"Install header files")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${INCLUDEDIR}/girara
 	$(QUIET)install -m 644 ${HEADERS_INSTALL} ${DESTDIR}${INCLUDEDIR}/girara
 
 uninstall: uninstall-headers
-	$(ECHO) removing library file
+	$(call colorecho,UNINSTALL,"Remove library files")
 	$(QUIET)rm -f ${LIBDIR}/lib${PROJECT}.a ${LIBDIR}/lib${PROJECT}.so.${SOVERSION} \
 		${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} ${LIBDIR}/lib${PROJECT}.so
 	$(QUIET)${MAKE} -C po uninstall
 
 uninstall-headers:
-	$(ECHO) removing header files
+	$(call colorecho,UNINSTALL,"Remove header files")
 	$(QUIET)rm -rf ${INCLUDEDIR}/girara
-	$(ECHO) removing pkgconfig file
+	$(call colorecho,UNINSTALL,"Remove pkg-config file")
 	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
 
 .PHONY: all options clean debug doc test dist install install-headers uninstall \
