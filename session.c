@@ -508,6 +508,10 @@ girara_session_private_free(girara_session_private_t* session)
 {
   g_return_if_fail(session != NULL);
 
+  if (session->session_name != NULL) {
+    g_free(session->session_name);
+  }
+
   /* clean up CSS style provider */
   if (session->gtk.cssprovider != NULL) {
     g_object_unref(session->gtk.cssprovider);
