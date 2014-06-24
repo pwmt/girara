@@ -2,7 +2,6 @@ project=@PROJECT@
 version=@VERSION@
 includedir=@INCLUDEDIR@
 libdir=@LIBDIR@
-libnotify=@LIBNOTIFY_PC_NAME@
 GTK_VERSION=3
 
 Name: ${project}
@@ -11,4 +10,4 @@ Version: ${version}
 URL: http://pwmt.org/projects/girara
 Cflags: -I${includedir}
 Libs: -L${libdir} -l${project}
-Requires.private: gtk+-3.0 ${libnotify}
+Requires.private: gtk+-3.0 @LIBNOTIFY_PC_NAME@
