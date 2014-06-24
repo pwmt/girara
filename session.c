@@ -78,11 +78,12 @@ init_template_engine(GiraraTemplate* csstemplate)
 }
 
 static void
-fill_template_with_values(girara_session_t* session, const char* session_name)
+fill_template_with_values(girara_session_t* session)
 {
   GiraraTemplate* csstemplate = session->private_data->csstemplate;
 
-  girara_template_set_variable_value(csstemplate, "session", session_name);
+  girara_template_set_variable_value(csstemplate, "session",
+      session->private_data->session_name);
 
   char* font = NULL;
   girara_setting_get(session, "font", &font);
@@ -308,8 +309,11 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     return false;
   }
 
+  session->private_data->session_name = g_strdup(
+      (sessionname == NULL) ? "girara" : sessionname);
+
   /* load CSS style */
-  fill_template_with_values(session, sessionname == NULL ? "girara" : sessionname);
+  fill_template_with_values(session);
   g_signal_connect(G_OBJECT(session->private_data->csstemplate), "changed",
       G_CALLBACK(css_template_changed), session);
 
@@ -320,12 +324,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   }
 
-  GtkWidget* window_widget = GTK_WIDGET(session->gtk.window);
-  if (sessionname != NULL) {
-    gtk_widget_set_name(window_widget, sessionname);
-  } else {
-    gtk_widget_set_name(window_widget, "girara");
-  }
+  gtk_widget_set_name(GTK_WIDGET(session->gtk.window),
+      session->private_data->session_name);
 
   /* apply CSS style */
   css_template_changed(session->private_data->csstemplate, session);
@@ -489,10 +489,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     gtk_widget_hide(GTK_WIDGET(session->gtk.statusbar));
   }
 
-#ifdef WITH_LIBNOTIFY
-  notify_init(sessionname);
-#endif
-
   char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
   if (window_icon != NULL) {
@@ -597,10 +593,6 @@ girara_session_destroy(girara_session_t* session)
   session->buffer.command = NULL;
   session->global.buffer  = NULL;
 
-#ifdef WITH_LIBNOTIFY
-  notify_uninit();
-#endif
-
   /* clean up private data */
   girara_session_private_free(session->private_data);
   session->private_data = NULL;
@@ -634,6 +626,12 @@ girara_libnotify(girara_session_t* session, const char *summary,
 
 #ifdef WITH_LIBNOTIFY
 
+  bool was_initialized = notify_is_initted();
+
+  if (!was_initialized) {
+    notify_init(session->private_data->session_name);
+  }
+
   NotifyNotification* libnotify_notification = NULL;
   char* icon_name = NULL;
 
@@ -644,27 +642,29 @@ girara_libnotify(girara_session_t* session, const char *summary,
    */
   icon_name = g_strdup(gtk_window_get_icon_name(GTK_WINDOW(session->gtk.window)));
   if (icon_name != NULL) {
-    // Icon can be loaded from theme with adequate quality for notification
+    /* Icon can be loaded from theme with adequate quality for notification */
     libnotify_notification = notify_notification_new(summary, body, icon_name);
     g_free(icon_name);
-    g_return_if_fail(libnotify_notification != NULL);
   } else {
-    // Or extracted from the current window
+    /* Or extracted from the current window */
     GdkPixbuf* icon_pix = gtk_window_get_icon(GTK_WINDOW(session->gtk.window));
     if (icon_pix != NULL) {
       libnotify_notification = notify_notification_new(summary, body, NULL);
       notify_notification_set_image_from_pixbuf(libnotify_notification, icon_pix);
       g_object_unref(G_OBJECT(icon_pix));
-      g_return_if_fail(libnotify_notification != NULL);
     } else {
-      // Or from a default image as a last resort
+      /* Or from a default image as a last resort */
       libnotify_notification = notify_notification_new(summary, body, "info");
-      g_return_if_fail(libnotify_notification != NULL);
     }
   }
 
+  g_return_if_fail(libnotify_notification != NULL);
   notify_notification_show(libnotify_notification, NULL);
   g_object_unref(G_OBJECT(libnotify_notification));
+
+  if (!was_initialized) {
+    notify_uninit();
+  }
 
 #else
 

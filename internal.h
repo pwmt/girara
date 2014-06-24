@@ -236,6 +236,11 @@ struct girara_statusbar_item_s
 struct girara_session_private_s
 {
   /**
+   * Used in session-specific paths
+   */
+  char* session_name;
+
+  /**
    * List of all settings
    */
   girara_list_t* settings;
