@@ -3,6 +3,8 @@
 #ifndef GIRARA_CSS_DEFINITIONS_H
 #define GIRARA_CSS_DEFINITIONS_H
 
-extern const char* CSS_TEMPLATE;
+#include "macros.h"
+
+extern const char* CSS_TEMPLATE GIRARA_HIDDEN;
 
 #endif
