@@ -10,6 +10,8 @@ SOURCE    = $(wildcard *.c)
 CSOURCE   = $(filter-out css-definitions.c, $(SOURCE))
 OBJECTS   = ${CSOURCE:.c=.o} css-definitions.o
 DOBJECTS  = ${OBJECTS:.o=.do}
+GCDA      = ${SOURCE:.c=.gcda}
+GCNO      = ${SOURCE:.c=.gcno}
 HEADERS   = $(filter-out version.h,$(filter-out internal.h,$(wildcard *.h)))
 HEADERS_INSTALL = ${HEADERS} version.h
 
@@ -89,12 +91,28 @@ lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
 	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS}
 
 clean:
-	$(QUIET)rm -rf ${OBJECTS} ${PROJECT}-${VERSION}.tar.gz \
-		${DOBJECTS} lib${PROJECT}.a lib${PROJECT}-debug.a ${PROJECT}.pc doc \
-		lib$(PROJECT).so.${SOVERSION} lib${PROJECT}-debug.so.${SOVERSION} .depend \
-		${PROJECTNV}-${VERSION}.tar.gz version.h *gcda *gcno $(PROJECT).info gcov \
-		.version-checks version.h.tmp ${PROJECT}.pc.tmp \
-		css-definitions.c css-definitions.c.tmp
+	$(QUIET)rm -rf \
+		${OBJECTS} \
+		${DOBJECTS} \
+		${TARFILE} \
+		${TARDIR} \
+		lib${PROJECT}.a \
+		lib${PROJECT}-debug.a \
+		${PROJECT}.pc \
+		doc \
+		lib$(PROJECT).so.${SOVERSION} \
+		lib${PROJECT}-debug.so.${SOVERSION} \
+		.depend \
+		version.h \
+		${GCDA} \
+		${GCNO} \
+		$(PROJECT).info \
+		gcov \
+		.version-checks \
+		version.h.tmp \
+		${PROJECT}.pc.tmp \
+		css-definitions.c \
+		css-definitions.c.tmp
 	$(QUIET)${MAKE} -C tests clean
 	$(QUIET)${MAKE} -C po clean
 
@@ -126,19 +144,9 @@ test-debug: debug
 	$(QUIET)${MAKE} -C tests run-debug
 
 dist: clean
-	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}
-	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/tests
-	$(QUIET)mkdir -p ${PROJECTNV}-${VERSION}/po
-	$(QUIET)mkdir -p $(PROJECTNV)-$(VERSION)/data
-	$(QUIET)cp LICENSE Makefile config.mk common.mk ${PROJECTNV}.pc.in \
-		${HEADERS} internal.h version.h.in README AUTHORS Doxyfile \
-		${CSOURCE} ${PROJECTNV}-${VERSION}
-	$(QUIET)cp tests/*.c tests/Makefile tests/config.mk ${PROJECTNV}-${VERSION}/tests
-	$(QUIET)cp data/*.css_t $(PROJECTNV)-$(VERSION)/data
-	$(QUIET)cp po/Makefile po/*.po ${PROJECTNV}-${VERSION}/po
-	$(QUIET)tar -cf ${PROJECTNV}-${VERSION}.tar ${PROJECTNV}-${VERSION}
-	$(QUIET)gzip ${PROJECTNV}-${VERSION}.tar
-	$(QUIET)rm -rf ${PROJECTNV}-${VERSION}
+	$(QUIET)tar -czf $(TARFILE) --exclude=.gitignore \
+		--transform 's,^,$(PROJECTNV)-$(VERSION)/,' \
+		`git ls-files`
 
 ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
