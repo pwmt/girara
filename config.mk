@@ -77,3 +77,7 @@ MSGFMT ?= msgfmt
 
 # colors
 COLOR ?= 1
+
+# dist
+TARFILE = ${PROJECT}-${VERSION}.tar.gz
+TARDIR = ${PROJECT}-${VERSION}
