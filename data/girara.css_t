@@ -1,5 +1,5 @@
-/* No resize grip on GtkWindows */
-#@session@ GtkWindow {
+/* No resize grip */
+#@session@ {
   -GtkWindow-resize-grip-height: 0;
   -GtkWindow-resize-grip-width: 0;
 }
