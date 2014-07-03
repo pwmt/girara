@@ -283,7 +283,7 @@ girara_session_create()
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
 #if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
-  gtk_widget_add_events(session->gtk.viewport, GDK_SCROLL_MASK);
+  gtk_widget_add_events(session->gtk.viewport, GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
 #endif
   session->gtk.statusbar         = gtk_event_box_new();
   session->gtk.notification_area = gtk_event_box_new();
