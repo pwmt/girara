@@ -321,6 +321,8 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
   event.x    = scroll->x;
   event.y    = scroll->y;
 
+  double motion_direction[2];
+
   switch (scroll->direction) {
     case GDK_SCROLL_UP:
       event.type = GIRARA_EVENT_SCROLL_UP;
@@ -333,6 +335,10 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
       break;
     case GDK_SCROLL_RIGHT:
       event.type = GIRARA_EVENT_SCROLL_RIGHT;
+      break;
+    case GDK_SCROLL_SMOOTH:
+      event.type = GIRARA_EVENT_SCROLL_BIDIRECTIONAL;
+      gdk_event_get_scroll_deltas((GdkEvent*)scroll, motion_direction, motion_direction + 1);
       break;
     default:
       return false;
@@ -348,6 +354,7 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
         && mouse_event->event_type == event.type
         && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
+        mouse_event->argument.data = motion_direction;
         mouse_event->function(session, &(mouse_event->argument), &event, session->buffer.n);
         girara_list_iterator_free(iter);
         return true;
