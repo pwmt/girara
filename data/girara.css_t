@@ -90,7 +90,7 @@
 }
 
 /* Padding of the bottom box */
-#@session@ #bottom_box {
+#@session@ .bottom_box {
   border-style: none;
   margin: 0px;
   padding: @bottombox-padding1@px @bottombox-padding2@px @bottombox-padding3@px

@@ -396,8 +396,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_entry_set_has_frame(session->gtk.inputbar_entry, FALSE);
   gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar_entry), TRUE);
 
-  gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
-  gtk_widget_set_name(session->gtk.notification_text, "bottom_box");
+  widget_add_class(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
+  widget_add_class(session->gtk.notification_text, "bottom_box");
 
   session->signals.inputbar_key_pressed = g_signal_connect(
       G_OBJECT(session->gtk.inputbar_entry),
