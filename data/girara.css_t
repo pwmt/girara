@@ -13,6 +13,7 @@
 #@session@ * {
   color: @default-fg@;
   background-color: @default-bg@;
+  background-image: none;
   font: @font@;
 }
 
