@@ -457,6 +457,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   widget_add_class(GTK_WIDGET(session->gtk.statusbar), "statusbar");
 
   /* inputbar */
+  widget_add_class(GTK_WIDGET(session->gtk.inputbar_box), "inputbar");
   widget_add_class(GTK_WIDGET(session->gtk.inputbar_entry), "inputbar");
   widget_add_class(GTK_WIDGET(session->gtk.inputbar), "inputbar");
   widget_add_class(GTK_WIDGET(session->gtk.inputbar_dialog), "inputbar");
