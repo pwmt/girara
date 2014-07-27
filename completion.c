@@ -188,16 +188,20 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
   static bool command_mode        = true;
   static size_t previous_length   = 0;
 
+  const bool is_single_entry = (1 == g_list_length(entries));
+
   /* delete old list iff
    *   the completion should be hidden
    *   the current command differs from the previous one
    *   the current parameter differs from the previous one
    *   no current command is given
+   *   there is only one completion entry
    */
   if ( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
       (current_command && previous_command && strcmp(current_command, previous_command)) ||
-      input_length != previous_length
+      (input_length != previous_length) ||
+      is_single_entry
     )
   {
     if (session->gtk.results != NULL) {
