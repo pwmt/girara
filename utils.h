@@ -15,6 +15,7 @@ typedef enum {
   XDG_DATA, /**< XDG_DATA_HOME */
   XDG_CONFIG_DIRS, /**< XDG_CONFIG_DIRS */
   XDG_DATA_DIRS, /**< XDG_DATA_DIRS */
+  XDG_CACHE, /**< XDG_CACHE_HOME */
 } girara_xdg_path_t;
 
 /**
