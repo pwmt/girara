@@ -283,7 +283,7 @@ girara_session_create()
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
 #if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
-  gtk_widget_add_events(session->gtk.viewport, GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
+  gtk_widget_add_events(session->gtk.viewport, GDK_SCROLL_MASK);
 #endif
   session->gtk.statusbar         = gtk_event_box_new();
   session->gtk.notification_area = gtk_event_box_new();
@@ -308,6 +308,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   if (session == NULL) {
     return false;
   }
+
+#if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
+  bool smooth_scroll = false;
+  girara_setting_get(session, "smooth-scroll", &smooth_scroll);
+  if (smooth_scroll) {
+    gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
+  }
+#endif
 
   session->private_data->session_name = g_strdup(
       (sessionname == NULL) ? "girara" : sessionname);
