@@ -196,13 +196,13 @@ typedef enum girara_event_type_e
   GIRARA_EVENT_SCROLL_DOWN, /**< Scroll event */
   GIRARA_EVENT_SCROLL_LEFT, /**< Scroll event */
   GIRARA_EVENT_SCROLL_RIGHT, /**< Scroll event */
-  GIRARA_EVENT_SCROLL_BIDIRECTIONAL, /**< Scroll event that carries extra data
-                                      *   in girara_argument_t with motion
-                                      *   information as double[2].
-                                      *   First component is horizontal shift,
-                                      *   second - vertical.
-                                      */
-  GIRARA_EVENT_OTHER /**< Unknown event */
+  GIRARA_EVENT_OTHER, /**< Unknown event */
+  GIRARA_EVENT_SCROLL_BIDIRECTIONAL /**< Scroll event that carries extra data
+                                     *   in girara_argument_t with motion
+                                     *   information as double[2].
+                                     *   First component is horizontal shift,
+                                     *   second - vertical.
+                                     */
 } girara_event_type_t;
 
 /**
