@@ -177,6 +177,7 @@ START_TEST(test_xdg_path) {
   xdg_path_impl(XDG_DATA,        "XDG_DATA_HOME",   g_get_user_data_dir());
   xdg_path_impl(XDG_CONFIG_DIRS, "XDG_CONFIG_DIRS", "/etc/xdg");
   xdg_path_impl(XDG_DATA_DIRS,   "XDG_DATA_DIRS",   "/usr/local/share/:/usr/share");
+  xdg_path_impl(XDG_CACHE,       "XDG_CACHE_HOME",  g_get_user_cache_dir());
 } END_TEST
 
 START_TEST(test_file_invariants) {
