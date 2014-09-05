@@ -14,6 +14,7 @@
 #include "config.h"
 #include "css-definitions.h"
 #include "datastructures.h"
+#include "entry.h"
 #include "input-history.h"
 #include "internal.h"
 #include "settings.h"
@@ -289,7 +290,7 @@ girara_session_create()
   session->gtk.notification_area = gtk_event_box_new();
   session->gtk.notification_text = gtk_label_new(NULL);
   session->gtk.inputbar_dialog   = GTK_LABEL(gtk_label_new(NULL));
-  session->gtk.inputbar_entry    = GTK_ENTRY(gtk_entry_new());
+  session->gtk.inputbar_entry    = GTK_ENTRY(girara_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
