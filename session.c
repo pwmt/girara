@@ -398,7 +398,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   /* notification area */
   gtk_container_add(GTK_CONTAINER(session->gtk.notification_area), session->gtk.notification_text);
-  gtk_misc_set_alignment(GTK_MISC(session->gtk.notification_text), 0.0, 0.5);
+  gtk_widget_set_halign(session->gtk.notification_text, GTK_ALIGN_START);
+  gtk_widget_set_valign(session->gtk.notification_text, GTK_ALIGN_CENTER);
   gtk_label_set_use_markup(GTK_LABEL(session->gtk.notification_text), TRUE);
 
   /* inputbar */

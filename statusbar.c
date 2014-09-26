@@ -21,8 +21,9 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, boo
   widget_add_class(GTK_WIDGET(item->text), "statusbar");
 
   /* set properties */
-  gtk_misc_set_alignment(GTK_MISC(item->text),     left ? 0.0 : 1.0, 0.5);
-  gtk_label_set_use_markup(item->text,             TRUE);
+  gtk_widget_set_halign(GTK_WIDGET(item->text), left ? GTK_ALIGN_START : GTK_ALIGN_END);
+  gtk_widget_set_valign(GTK_WIDGET(item->text), GTK_ALIGN_CENTER);
+  gtk_label_set_use_markup(item->text, TRUE);
 
   /* add ellipsis if item is on the left side */
   if (left == true) {

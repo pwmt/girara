@@ -68,7 +68,8 @@ girara_tab_new(girara_session_t* session, const char* title, GtkWidget* widget,
   g_signal_connect(G_OBJECT(tab_event), "button_press_event",
       G_CALLBACK(girara_callback_tab_clicked), tab);
 
-  gtk_misc_set_alignment(GTK_MISC(tab_label), 0.0f, 0.0f);
+  gtk_widget_set_halign(tab_label, GTK_ALIGN_START);
+  gtk_widget_set_valign(tab_label, GTK_ALIGN_START);
   widget_add_class(tab_label, "tab");
   widget_add_class(tab_event, "tab");
   gtk_label_set_ellipsize(GTK_LABEL(tab_label), PANGO_ELLIPSIZE_MIDDLE);
