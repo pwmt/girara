@@ -494,10 +494,10 @@ girara_completion_row_create(const char* command, const char* description, bool 
   GtkLabel *show_command     = GTK_LABEL(gtk_label_new(NULL));
   GtkLabel *show_description = GTK_LABEL(gtk_label_new(NULL));
 
-  gtk_widget_set_halign(show_command, GTK_ALIGN_START);
-  gtk_widget_set_valign(show_command, GTK_ALIGN_START);
-  gtk_widget_set_halign(show_description, GTK_ALIGN_END);
-  gtk_widget_set_valign(show_description, GTK_ALIGN_START);
+  gtk_widget_set_halign(GTK_WIDGET(show_command), GTK_ALIGN_START);
+  gtk_widget_set_valign(GTK_WIDGET(show_command), GTK_ALIGN_START);
+  gtk_widget_set_halign(GTK_WIDGET(show_description), GTK_ALIGN_END);
+  gtk_widget_set_valign(GTK_WIDGET(show_description), GTK_ALIGN_START);
 
   gtk_label_set_use_markup(show_command,     TRUE);
   gtk_label_set_use_markup(show_description, TRUE);
