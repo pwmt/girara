@@ -1,6 +1,6 @@
 /* See LICENSE file for license and copyright information */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
 #define _XOPEN_SOURCE 700
 #endif
