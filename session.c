@@ -14,6 +14,7 @@
 #include "config.h"
 #include "css-definitions.h"
 #include "datastructures.h"
+#include "entry.h"
 #include "input-history.h"
 #include "internal.h"
 #include "settings.h"
@@ -289,7 +290,7 @@ girara_session_create()
   session->gtk.notification_area = gtk_event_box_new();
   session->gtk.notification_text = gtk_label_new(NULL);
   session->gtk.inputbar_dialog   = GTK_LABEL(gtk_label_new(NULL));
-  session->gtk.inputbar_entry    = GTK_ENTRY(gtk_entry_new());
+  session->gtk.inputbar_entry    = GTK_ENTRY(girara_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
@@ -308,6 +309,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   if (session == NULL) {
     return false;
   }
+
+#if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
+  bool smooth_scroll = false;
+  girara_setting_get(session, "smooth-scroll", &smooth_scroll);
+  if (smooth_scroll) {
+    gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
+  }
+#endif
 
   session->private_data->session_name = g_strdup(
       (sessionname == NULL) ? "girara" : sessionname);
@@ -389,15 +398,16 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   /* notification area */
   gtk_container_add(GTK_CONTAINER(session->gtk.notification_area), session->gtk.notification_text);
-  gtk_misc_set_alignment(GTK_MISC(session->gtk.notification_text), 0.0, 0.5);
+  gtk_widget_set_halign(session->gtk.notification_text, GTK_ALIGN_START);
+  gtk_widget_set_valign(session->gtk.notification_text, GTK_ALIGN_CENTER);
   gtk_label_set_use_markup(GTK_LABEL(session->gtk.notification_text), TRUE);
 
   /* inputbar */
   gtk_entry_set_has_frame(session->gtk.inputbar_entry, FALSE);
   gtk_editable_set_editable(GTK_EDITABLE(session->gtk.inputbar_entry), TRUE);
 
-  gtk_widget_set_name(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
-  gtk_widget_set_name(session->gtk.notification_text, "bottom_box");
+  widget_add_class(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
+  widget_add_class(session->gtk.notification_text, "bottom_box");
 
   session->signals.inputbar_key_pressed = g_signal_connect(
       G_OBJECT(session->gtk.inputbar_entry),
@@ -457,6 +467,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   widget_add_class(GTK_WIDGET(session->gtk.statusbar), "statusbar");
 
   /* inputbar */
+  widget_add_class(GTK_WIDGET(session->gtk.inputbar_box), "inputbar");
   widget_add_class(GTK_WIDGET(session->gtk.inputbar_entry), "inputbar");
   widget_add_class(GTK_WIDGET(session->gtk.inputbar), "inputbar");
   widget_add_class(GTK_WIDGET(session->gtk.inputbar_dialog), "inputbar");
@@ -841,6 +852,18 @@ girara_set_window_title(girara_session_t* session, const char* name)
   }
 
   gtk_window_set_title(GTK_WINDOW(session->gtk.window), name);
+
+  return true;
+}
+
+bool
+girara_set_window_icon(girara_session_t* session, const char* name)
+{
+  if (session == NULL || session->gtk.window == NULL || name == NULL) {
+    return false;
+  }
+
+  gtk_window_set_icon_name(GTK_WINDOW(session->gtk.window), name);
 
   return true;
 }

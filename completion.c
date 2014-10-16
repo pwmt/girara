@@ -188,16 +188,20 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
   static bool command_mode        = true;
   static size_t previous_length   = 0;
 
+  const bool is_single_entry = (1 == g_list_length(entries));
+
   /* delete old list iff
    *   the completion should be hidden
    *   the current command differs from the previous one
    *   the current parameter differs from the previous one
    *   no current command is given
+   *   there is only one completion entry
    */
   if ( (argument->n == GIRARA_HIDE) ||
       (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
       (current_command && previous_command && strcmp(current_command, previous_command)) ||
-      input_length != previous_length
+      (input_length != previous_length) ||
+      is_single_entry
     )
   {
     if (session->gtk.results != NULL) {
@@ -490,8 +494,10 @@ girara_completion_row_create(const char* command, const char* description, bool 
   GtkLabel *show_command     = GTK_LABEL(gtk_label_new(NULL));
   GtkLabel *show_description = GTK_LABEL(gtk_label_new(NULL));
 
-  gtk_misc_set_alignment(GTK_MISC(show_command),     0.0, 0.0);
-  gtk_misc_set_alignment(GTK_MISC(show_description), 1.0, 0.0);
+  gtk_widget_set_halign(GTK_WIDGET(show_command), GTK_ALIGN_START);
+  gtk_widget_set_valign(GTK_WIDGET(show_command), GTK_ALIGN_START);
+  gtk_widget_set_halign(GTK_WIDGET(show_description), GTK_ALIGN_END);
+  gtk_widget_set_valign(GTK_WIDGET(show_description), GTK_ALIGN_START);
 
   gtk_label_set_use_markup(show_command,     TRUE);
   gtk_label_set_use_markup(show_description, TRUE);
@@ -510,6 +516,7 @@ girara_completion_row_create(const char* command, const char* description, bool 
   widget_add_class(GTK_WIDGET(show_command), class);
   widget_add_class(GTK_WIDGET(show_description), class);
   widget_add_class(GTK_WIDGET(row), class);
+  widget_add_class(GTK_WIDGET(col), class);
 
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command),     TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), TRUE, TRUE, 0);

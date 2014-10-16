@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2014-06-24 21:30+0200\n"
+"POT-Creation-Date: 2014-10-08 15:31+0200\n"
 "PO-Revision-Date: 2013-12-30 22:52+0000\n"
 "Last-Translator: rike\n"
 "Language-Team: French (http://www.transifex.com/projects/p/girara/language/"
@@ -20,171 +20,175 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
+#. unhandled command
+#: ../callbacks.c:501
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Pas une commande valide : %s"
+
 #. settings
-#: ../config.c:211
+#: ../config.c:212
 msgid "Font"
 msgstr "Police"
 
-#: ../config.c:212
+#: ../config.c:213
 msgid "Default foreground color"
 msgstr "Couleur par défaut du texte"
 
-#: ../config.c:213
+#: ../config.c:214
 msgid "Default background color"
 msgstr "Couleur par défaut du fond"
 
-#: ../config.c:214
+#: ../config.c:215
 msgid "Inputbar foreground color"
 msgstr "Couleur du texte de la barre de saisie"
 
-#: ../config.c:215
+#: ../config.c:216
 msgid "Inputbar background color"
 msgstr "Couleur de fond de la barre de saisie"
 
-#: ../config.c:216
+#: ../config.c:217
 msgid "Statusbar foreground color"
 msgstr "Couleur du texte de la barre d'état"
 
-#: ../config.c:217
+#: ../config.c:218
 msgid "Statsubar background color"
 msgstr "Couleur de fond de la barre d'état"
 
-#: ../config.c:218
+#: ../config.c:219
 msgid "Completion foreground color"
 msgstr "Couleur du texte de la complétion"
 
-#: ../config.c:219
+#: ../config.c:220
 msgid "Completion background color"
 msgstr "Couleur de fond de la complétion"
 
-#: ../config.c:220
+#: ../config.c:221
 msgid "Completion group foreground color"
 msgstr "Couleur du texte du groupe de complétion"
 
-#: ../config.c:221
+#: ../config.c:222
 msgid "Completion group background color"
 msgstr "Couleur de fond du groupe de complétion"
 
-#: ../config.c:222
+#: ../config.c:223
 msgid "Completion highlight foreground color"
 msgstr "Couleur du texte du surlignage de complétion"
 
-#: ../config.c:223
+#: ../config.c:224
 msgid "Completion highlight background color"
 msgstr "Couleur de fond du surlignage de complétion"
 
-#: ../config.c:224
+#: ../config.c:225
 msgid "Error notification foreground color"
 msgstr "Couleur du texte des notifications d'erreur"
 
-#: ../config.c:225
+#: ../config.c:226
 msgid "Error notification background color"
 msgstr "Couleur de fond des notifications d'erreur"
 
-#: ../config.c:226
+#: ../config.c:227
 msgid "Warning notification foreground color"
 msgstr "Couleur du texte des notifications d'avertissement"
 
-#: ../config.c:227
+#: ../config.c:228
 msgid "Warning notifaction background color"
 msgstr "Couleur de fond des notifications d'avertissement"
 
-#: ../config.c:228
+#: ../config.c:229
 msgid "Notification foreground color"
 msgstr "Couleur du texte des notifications"
 
-#: ../config.c:229
+#: ../config.c:230
 msgid "Notification background color"
 msgstr "Couleur de fond des notifications"
 
-#: ../config.c:230
+#: ../config.c:231
 msgid "Tab bar foreground color"
 msgstr "Couleur du texte des onglets"
 
-#: ../config.c:231
+#: ../config.c:232
 msgid "Tab bar background color"
 msgstr "Couleur de fond des onglets"
 
-#: ../config.c:232
+#: ../config.c:233
 msgid "Tab bar foreground color (active)"
 msgstr "Couleur du texte de l'onglet actif"
 
-#: ../config.c:233
+#: ../config.c:234
 msgid "Tab bar background color (active)"
 msgstr "Couleur de fond de l'onglet actif"
 
-#: ../config.c:235
+#: ../config.c:236
 msgid "Initial window width"
 msgstr "Largeur initiale de la fenêtre"
 
-#: ../config.c:236
+#: ../config.c:237
 msgid "Initial window height"
 msgstr "Hauteur initiale de la fenêtre"
 
-#: ../config.c:237
+#: ../config.c:238
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 "Espacement horizontal pour le champ de statut et les barres de notification"
 
-#: ../config.c:238
+#: ../config.c:239
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 "Espacement vertical pour le champ de statut et les barres de notification"
 
-#: ../config.c:239
+#: ../config.c:240
 msgid "Number of completion items"
 msgstr "Nombre d'éléments de complétion"
 
-#: ../config.c:240
+#: ../config.c:241
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr "Afficher les ascenseur vertical et horizontal"
 
-#: ../config.c:241
+#: ../config.c:242
 msgid "Show the horizontal scrollbar"
 msgstr "Afficher l'ascenseur horizontal"
 
-#: ../config.c:242
+#: ../config.c:243
 msgid "Show the vertical scrollbar"
 msgstr "Afficher l'ascenseur vertical"
 
-#: ../config.c:243
+#: ../config.c:244
 msgid "Window icon"
 msgstr "Icône de fenêtre"
 
-#: ../config.c:244
+#: ../config.c:245
 msgid "Command to execute in :exec"
 msgstr "Commande à exécuter dans :exec"
 
-#: ../config.c:245
+#: ../config.c:246
 msgid "Show or hide certain GUI elements"
 msgstr "Afficher ou cacher certains éléments de l'interface"
 
+#: ../config.c:247
+msgid "Enable smooth scrolling and zooming"
+msgstr ""
+
 #. commands
-#: ../config.c:281
+#: ../config.c:283
 msgid "Execute a command"
 msgstr "Exécuter une commande"
 
-#: ../config.c:282
+#: ../config.c:284
 msgid "Map a key sequence"
 msgstr "Associer une séquence de touches"
 
-#: ../config.c:283
+#: ../config.c:285
 msgid "Quit the program"
 msgstr "Quitter le programme"
 
-#: ../config.c:284
+#: ../config.c:286
 msgid "Set an option"
 msgstr "Placer une option"
 
-#: ../config.c:285
+#: ../config.c:287
 msgid "Unmap a key sequence"
 msgstr "Désassocier une séquence de touches"
-
-#. unhandled command
-#: ../callbacks.c:496
-#, c-format
-msgid "Not a valid command: %s"
-msgstr "Pas une commande valide : %s"
 
 #: ../commands.c:109 ../commands.c:309
 #, c-format
@@ -247,7 +251,7 @@ msgstr "Aucune valeur définie pour l'option : %s"
 msgid "Unknown value for option: %s"
 msgstr "Valeur inconnue pour l'option : %s"
 
-#: ../utils.c:518
+#: ../utils.c:522
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Échec d'exécution de la commande : %s"

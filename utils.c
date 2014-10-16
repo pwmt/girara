@@ -1,6 +1,6 @@
 /* See LICENSE file for license and copyright information */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
 #define _XOPEN_SOURCE 700
 #endif
@@ -134,7 +134,8 @@ girara_get_xdg_path(girara_xdg_path_t path)
     "XDG_CONFIG_HOME",
     "XDG_DATA_HOME",
     "XDG_CONFIG_DIRS",
-    "XDG_DATA_DIRS"
+    "XDG_DATA_DIRS",
+    "XDG_CACHE_HOME",
   };
 
   static const char* DEFAULTS[] = {
@@ -142,6 +143,7 @@ girara_get_xdg_path(girara_xdg_path_t path)
     "NOTUSED",
     "/etc/xdg",
     "/usr/local/share/:/usr/share",
+    "NOTUSED"
   };
 
   switch (path) {
@@ -158,6 +160,8 @@ girara_get_xdg_path(girara_xdg_path_t path)
       }
       return g_strdup(tmp);
     }
+    case XDG_CACHE:
+      return g_strdup(g_get_user_cache_dir());
   }
 
   return NULL;

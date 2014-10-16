@@ -1,5 +1,5 @@
-/* No resize grip on GtkWindows */
-#@session@ GtkWindow {
+/* No resize grip */
+#@session@ {
   -GtkWindow-resize-grip-height: 0;
   -GtkWindow-resize-grip-width: 0;
 }
@@ -13,6 +13,7 @@
 #@session@ * {
   color: @default-fg@;
   background-color: @default-bg@;
+  background-image: none;
   font: @font@;
 }
 
@@ -90,7 +91,7 @@
 }
 
 /* Padding of the bottom box */
-#@session@ #bottom_box {
+#@session@ .bottom_box {
   border-style: none;
   margin: 0px;
   padding: @bottombox-padding1@px @bottombox-padding2@px @bottombox-padding3@px

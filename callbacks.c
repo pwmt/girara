@@ -334,6 +334,11 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
     case GDK_SCROLL_RIGHT:
       event.type = GIRARA_EVENT_SCROLL_RIGHT;
       break;
+    case GDK_SCROLL_SMOOTH:
+      event.type = GIRARA_EVENT_SCROLL_BIDIRECTIONAL;
+      /* We abuse x and y here. We really need more fields in girara_event_t. */
+      gdk_event_get_scroll_deltas((GdkEvent*)scroll, &event.x, &event.y);
+      break;
     default:
       return false;
   }
