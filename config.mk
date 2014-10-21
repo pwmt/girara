@@ -17,7 +17,7 @@ SOMINOR = 1
 SOVERSION = ${SOMAJOR}.${SOMINOR}
 
 # libnotify
-WITH_LIBNOTIFY ?= $(shell (pkg-config libnotify && echo 1) || echo 0)
+WITH_LIBNOTIFY ?= $(shell (pkg-config libnotify --atleast-version=0.7.0 && echo 1) || echo 0)
 
 # paths
 PREFIX ?= /usr
