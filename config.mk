@@ -69,6 +69,9 @@ SFLAGS ?= -s
 # set to something != 0 if you want verbose build output
 VERBOSE ?= 0
 
+# xembed
+WITH_XEMBED ?= 1
+
 # gettext package name
 GETTEXT_PACKAGE ?= lib${PROJECT}-${SOMAJOR}
 

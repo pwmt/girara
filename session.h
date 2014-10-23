@@ -30,7 +30,9 @@ struct girara_session_s
     GtkEntry        *inputbar_entry; /**< Inputbar entry */
     GtkNotebook     *tabs; /**< The tabs notebook */
     GtkBox          *results; /**< Completion results */
+#ifdef WITH_XEMBED
     Window          embed; /**< Embedded window */
+#endif
   } gtk;
 
   struct

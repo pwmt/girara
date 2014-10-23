@@ -327,11 +327,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       G_CALLBACK(css_template_changed), session);
 
   /* window */
+#ifdef WITH_XEMBED
   if (session->gtk.embed != 0) {
     session->gtk.window = gtk_plug_new(session->gtk.embed);
   } else {
+#endif
     session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+#ifdef WITH_XEMBED
   }
+#endif
 
   gtk_widget_set_name(GTK_WIDGET(session->gtk.window),
       session->private_data->session_name);

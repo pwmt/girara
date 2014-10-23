@@ -24,13 +24,16 @@ else
 LIBNOTIFY_PC_NAME =
 endif
 
+ifneq (${WITH_XEMBED},0)
+CPPFLAGS += -DWITH_XEMBED
+endif
+
 ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
 CPPFLAGS += -DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"
 endif
 ifeq (,$(findstring -DLOCALEDIR,${CPPFLAGS}))
 CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
-
 
 all: ${PROJECT} po ${PROJECT}.pc
 
