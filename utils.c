@@ -1,7 +1,7 @@
 /* See LICENSE file for license and copyright information */
 
 #define _DEFAULT_SOURCE
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__APPLE__)
 #define _XOPEN_SOURCE 700
 #endif
 #define _FILE_OFFSET_BITS 64
@@ -244,7 +244,7 @@ girara_file_open(const char* path, const char* mode)
   /*return fp;*/
 }
 
-#if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__)
+#if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)
 char*
 girara_file_read_line(FILE* file)
 {

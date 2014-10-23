@@ -35,6 +35,12 @@ ifeq (,$(findstring -DLOCALEDIR,${CPPFLAGS}))
 CPPFLAGS += -DLOCALEDIR=\"${LOCALEDIR}\"
 endif
 
+UNAME := $(shell uname -s)
+ifeq ($(UNAME), Darwin)
+SONAME_FLAG = -install_name
+SHARED_FLAG = -dynamiclib
+endif
+
 all: ${PROJECT} po ${PROJECT}.pc
 
 # pkg-config based version checks
@@ -91,7 +97,7 @@ lib${PROJECT}.a: ${OBJECTS}
 
 lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
 	$(call colorecho,LD,$@)
-	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS}
+	$(QUIET)${CC} -Wl,${SONAME_FLAG},lib${PROJECT}.so.${SOMAJOR} ${SHARED_FLAG} ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS}
 
 clean:
 	$(QUIET)rm -rf \
@@ -127,7 +133,7 @@ lib${PROJECT}-debug.a: ${DOBJECTS}
 
 lib${PROJECT}-debug.so.${SOVERSION}: ${DOBJECTS}
 	$(call colorecho,LD,$@)
-	$(QUIET)${CC} -Wl,-soname,lib${PROJECT}.so.${SOMAJOR} -shared ${LDFLAGS} -o $@ ${DOBJECTS} ${LIBS}
+	$(QUIET)${CC} -Wl,${SONAME_FLAG},lib${PROJECT}.so.${SOMAJOR} ${SHARED_FLAG} ${LDFLAGS} -o $@ ${DOBJECTS} ${LIBS}
 
 debug: options ${PROJECT}-debug
 

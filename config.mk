@@ -66,6 +66,10 @@ CC ?= gcc
 # strip
 SFLAGS ?= -s
 
+# soname
+SONAME_FLAG ?= -soname
+SHARED_FLAG ?= -shared
+
 # set to something != 0 if you want verbose build output
 VERBOSE ?= 0
 
