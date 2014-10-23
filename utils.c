@@ -258,7 +258,7 @@ girara_file_read_line(FILE* file)
     return NULL;
   }
 
-  char* copy = strndup(line, size);
+  char* copy = g_strndup(line, size);
   if (copy == NULL) {
     return NULL;
   }
@@ -287,7 +287,10 @@ girara_file_read_line(FILE* file)
 
   /* remove the trailing line deliminator */
   g_strdelimit(line, "\n\r", '\0');
-  return line;
+
+  char* duplicate = g_strdup(line);
+  free(line);
+  return duplicate;
 }
 #endif
 

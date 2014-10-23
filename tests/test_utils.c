@@ -215,7 +215,7 @@ START_TEST(test_file_read) {
     char* line = girara_file_read_line(file);
     fail_unless(g_strcmp0(line, LINES[i]) == 0, "Line doesn't match (got: %s, expected: %s)",
         line, LINES[i], NULL);
-    free(line);
+    g_free(line);
   }
   fclose(file);
 

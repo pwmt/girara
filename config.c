@@ -352,7 +352,7 @@ config_parse(girara_session_t* session, const char* path)
   while ((line = girara_file_read_line(file)) != NULL) {
     /* skip empty lines and comments */
     if (strlen(line) == 0 || strchr(COMMENT_PREFIX, line[0]) != NULL) {
-      free(line);
+      g_free(line);
       continue;
     }
 
@@ -361,7 +361,7 @@ config_parse(girara_session_t* session, const char* path)
 
     girara_list_t* argument_list = girara_list_new();
     if (argument_list == NULL) {
-      free(line);
+      g_free(line);
       fclose(file);
       return false;
     }
@@ -375,7 +375,7 @@ config_parse(girara_session_t* session, const char* path)
     } else {
       girara_list_free(argument_list);
       fclose(file);
-      free(line);
+      g_free(line);
       return false;
     }
 
@@ -426,7 +426,7 @@ config_parse(girara_session_t* session, const char* path)
     line_number++;
     girara_list_free(argument_list);
     g_strfreev(argv);
-    free(line);
+    g_free(line);
   }
 
   fclose(file);
