@@ -8,7 +8,9 @@
 #include "callbacks.h"
 
 #include <gtk/gtk.h>
+#ifdef GDK_WINDOWING_X11
 #include <gtk/gtkx.h>
+#endif
 #include <gdk/gdkkeysyms.h>
 
 struct girara_session_s
@@ -30,7 +32,7 @@ struct girara_session_s
     GtkEntry        *inputbar_entry; /**< Inputbar entry */
     GtkNotebook     *tabs; /**< The tabs notebook */
     GtkBox          *results; /**< Completion results */
-#ifdef WITH_XEMBED
+#ifdef GDK_WINDOWING_X11
     Window          embed; /**< Embedded window */
 #endif
   } gtk;
