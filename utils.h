@@ -72,7 +72,8 @@ char* girara_fix_path(const char* path);
 FILE* girara_file_open(const char* path, const char* mode);
 
 /**
- * Reads a line from the file. Returned string has to be freed.
+ * Reads a line from the file. The returned string has to be released with
+ * g_free.
  *
  * @param file The file stream
  * @return Read line or NULL if an error occured
