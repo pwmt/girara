@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2014-10-08 15:31+0200\n"
+"POT-Creation-Date: 2014-11-07 16:02+0100\n"
 "PO-Revision-Date: 2014-01-04 20:16+0100\n"
 "Last-Translator: salmora8 <shorterfire@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
@@ -17,6 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../utils.c:525
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Falha ao executar comando: %s"
 
 #. unhandled command
 #: ../callbacks.c:501
@@ -247,8 +252,3 @@ msgstr "Não há valor definido para a opção: %s"
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Valor desconhecido para opção: %s"
-
-#: ../utils.c:522
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "Falha ao executar comando: %s"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2014-10-08 15:31+0200\n"
+"POT-Creation-Date: 2014-11-07 16:02+0100\n"
 "PO-Revision-Date: 2013-11-20 09:46+0000\n"
 "Last-Translator: Nisok Kosin <nikos.efthimiou@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/girara/language/"
@@ -18,6 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../utils.c:525
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "Αποτυχία στην εκτέλεση της εντολής: %s"
 
 #. unhandled command
 #: ../callbacks.c:501
@@ -247,8 +252,3 @@ msgstr "Καμία τιμή δεν έχει καθοριστεί για την �
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Άγνωστη τιμή για την επιλογή: %s"
-
-#: ../utils.c:522
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "Αποτυχία στην εκτέλεση της εντολής: %s"
