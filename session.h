@@ -78,11 +78,6 @@ struct girara_session_s
     girara_list_t* statusbar_items; /**< List of statusbar items */
   } elements;
 
-  /**
-   * List of settings (deprecated)
-   */
-  girara_list_t* GIRARA_DEPRECATED(settings);
-
   struct
   {
     int inputbar_activate; /**< Inputbar activation */
@@ -108,7 +103,6 @@ struct girara_session_s
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
-    girara_list_t* GIRARA_DEPRECATED(command_history); /**< Command history (deprecated) */
     bool autohide_inputbar; /**< Auto-hide inputbar */
     bool hide_statusbar; /**< Hide statusbar */
   } global;

@@ -294,12 +294,6 @@ girara_session_create()
   session->gtk.inputbar          = gtk_event_box_new();
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
-  /* deprecated members */
-  GIRARA_IGNORE_DEPRECATED
-  session->settings               = session->private_data->settings;
-  session->global.command_history = girara_get_command_history(session);
-  GIRARA_UNIGNORE
-
   return session;
 }
 
@@ -615,9 +609,6 @@ girara_session_destroy(girara_session_t* session)
   /* clean up private data */
   girara_session_private_free(session->private_data);
   session->private_data = NULL;
-  GIRARA_IGNORE_DEPRECATED
-  session->settings = NULL;
-  GIRARA_UNIGNORE
 
   /* clean up session */
   g_slice_free(girara_session_t, session);

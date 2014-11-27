@@ -45,27 +45,4 @@ girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session,
 bool girara_statusbar_item_set_text(girara_session_t* session,
     girara_statusbar_item_t* item, const char* text);
 
-/**
- * Sets the foreground color of an statusbar item
- *
- * @param session The used girara session
- * @param item The statusbar item
- * @param color The color code
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_statusbar_item_set_foreground(girara_session_t* session,
-    girara_statusbar_item_t* item, const char* color) GIRARA_DEPRECATED_;
-
-/**
- * Sets the background color of the statusbar
- *
- * @param session The used girara session
- * @param color The color code
- * @return TRUE No error occured
- * @return FALSE An error occured
- */
-bool girara_statusbar_set_background(girara_session_t* session,
-    const char* color) GIRARA_DEPRECATED_;
-
 #endif
