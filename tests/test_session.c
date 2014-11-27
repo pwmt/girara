@@ -2,7 +2,7 @@
 
 #include <check.h>
 
-#include "../session.h"
+#include "session.h"
 
 START_TEST(test_create) {
   girara_session_t* session = girara_session_create();

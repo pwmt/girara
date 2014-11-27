@@ -2,7 +2,7 @@
 
 # General information
 PROJECT_NAME          = girara
-OUTPUT_DIRECTORY      = ./doc/
+OUTPUT_DIRECTORY      = build
 OUTPUT_LANGUAGE       = English
 TAB_SIZE              = 2
 EXTRACT_ALL           = YES
@@ -16,9 +16,9 @@ WARNINGS             = YES
 WARN_IF_UNDOCUMENTED = YES
 
 # Input files
-INPUT         =
-EXCLUDE       = ./tests
-FILE_PATTERNS = *.h *.c
+INPUT         = ../
+EXCLUDE       = ../tests
+FILE_PATTERNS = *.h
 RECURSIVE     = YES
 
 # Output files

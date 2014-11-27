@@ -27,6 +27,14 @@ INCLUDEDIR ?= ${PREFIX}/include
 # locale directory
 LOCALEDIR ?= ${PREFIX}/share/locale
 
+# build directories
+DEPENDDIR ?= .depend
+BUILDDIR ?= build
+BUILDDIR_RELEASE ?= ${BUILDDIR}/release
+BUILDDIR_DEBUG ?= ${BUILDDIR}/debug
+BUILDDIR_GCOV ?= ${BUILDDIR}/gcov
+BINDIR ?= bin
+
 # version checks
 # If you want to disable any of the checks, set *_VERSION_CHECK to 0.
 
@@ -78,6 +86,16 @@ GETTEXT_PACKAGE ?= lib${PROJECT}-${SOMAJOR}
 
 # msgfmt
 MSGFMT ?= msgfmt
+
+# gcov & lcov
+GCOV_CFLAGS=-fprofile-arcs -ftest-coverage
+GCOV_LDFLAGS=-fprofile-arcs
+LCOV_OUTPUT=gcov
+LCOV_EXEC=lcov
+LCOV_FLAGS=--base-directory . --directory ${BUILDDIR_GCOV} --capture --rc \
+					 lcov_branch_coverage=1 --output-file ${BUILDDIR_GCOV}/$(PROJECT).info
+GENHTML_EXEC=genhtml
+GENHTML_FLAGS=--rc lcov_branch_coverage=1 --output-directory ${LCOV_OUTPUT} ${BUILDDIR_GCOV}/$(PROJECT).info
 
 # colors
 COLOR ?= 1

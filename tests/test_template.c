@@ -2,8 +2,8 @@
 
 #include <check.h>
 
-#include "../template.h"
-#include "../datastructures.h"
+#include "template.h"
+#include "datastructures.h"
 
 START_TEST(test_new) {
   GiraraTemplate* obj = girara_template_new(NULL);

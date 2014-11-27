@@ -23,7 +23,7 @@ clean:
 POTFILES.in: $(wildcard ../*.c)
 	$(QUIET) set -e && rm -f $@.tmp && touch $@.tmp && \
 	for f in $(^F) ; do \
-		echo $$f >> $@.tmp ; \
+		echo ../$$f >> $@.tmp ; \
 	done && \
 	mv $@.tmp $@
 
