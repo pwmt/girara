@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 #include <string.h>
 #ifdef WITH_JSON
 #include <json.h>
