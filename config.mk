@@ -19,6 +19,9 @@ SOVERSION = ${SOMAJOR}.${SOMINOR}
 # libnotify
 WITH_LIBNOTIFY ?= $(shell (pkg-config libnotify --atleast-version=0.7.0 && echo 1) || echo 0)
 
+# libjson-c
+WITH_JSON ?= $(shell (pkg-config json-c --exists && echo 1) || echo 0)
+
 # paths
 PREFIX ?= /usr
 LIBDIR ?= ${PREFIX}/lib
@@ -56,8 +59,13 @@ LIBNOTIFY_INC ?= $(shell pkg-config --cflags libnotify)
 LIBNOTIFY_LIB ?= $(shell pkg-config --libs libnotify)
 endif
 
-INCS = ${GTK_INC} ${LIBNOTIFY_INC}
-LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} -lm
+ifneq (${WITH_JSON},0)
+JSON_INC ?= $(shell pkg-config --cflags json-c)
+JSON_LIB ?= $(shell pkg-config --libs json-c)
+endif
+
+INCS = ${GTK_INC} ${LIBNOTIFY_INC} ${JSON_INC}
+LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} ${JSON_LIB} -lm
 
 # flags
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)

@@ -28,6 +28,10 @@ else
 LIBNOTIFY_PC_NAME =
 endif
 
+ifneq (${WITH_JSON},0)
+CPPFLAGS += -DWITH_JSON
+endif
+
 ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
 CPPFLAGS += -DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\"
 endif

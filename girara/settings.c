@@ -3,12 +3,16 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <string.h>
+#ifdef WITH_JSON
+#include <json.h>
+#endif
 
 #include "settings.h"
 #include "datastructures.h"
 #include "completion.h"
 #include "session.h"
 #include "internal.h"
+#include "utils.h"
 
 /**
  * Structure of a settings entry
@@ -222,3 +226,73 @@ girara_cc_set(girara_session_t* session, const char* input)
 
   return completion;
 }
+
+#ifdef WITH_JSON
+bool
+girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
+{
+  if (session == NULL || argument_list == NULL) {
+    return false;
+  }
+
+  const size_t number_of_arguments = girara_list_size(argument_list);
+  if (number_of_arguments != 1) {
+    girara_warning("Invalid number of arguments passed: %zu instead of 1",
+        number_of_arguments);
+    girara_notify(session, GIRARA_ERROR,
+        _("Invalid number of arguments passed: %zu instead of 1"),
+        number_of_arguments);
+    return false;
+
+    return false;
+  }
+
+  json_object* json_config = json_object_new_object();
+
+  GIRARA_LIST_FOREACH(session->private_data->settings, girara_setting_t*, iter, setting)
+    json_object* json_setting = json_object_new_object();
+
+    json_object* json_value = NULL;
+    json_object* json_type = NULL;
+    switch(setting->type) {
+      case BOOLEAN:
+        json_value = json_object_new_boolean(setting->value.b);
+        json_type = json_object_new_string("boolean");
+        break;
+      case FLOAT:
+        json_value = json_object_new_double(setting->value.f);
+        json_type = json_object_new_string("float");
+        break;
+      case INT:
+        json_value = json_object_new_int(setting->value.i);
+        json_type = json_object_new_string("int");
+        break;
+      case STRING:
+        json_value = json_object_new_string(setting->value.s ? setting->value.s : "");
+        json_type = json_object_new_string("string");
+        break;
+      default:
+        girara_debug("Invalid setting: %s", setting->name);
+    }
+    if (json_value != NULL) {
+      json_object_object_add(json_setting, "value", json_value);
+      json_object_object_add(json_setting, "type", json_type);
+    }
+
+    if (setting->description != NULL) {
+      json_object_object_add(json_setting, "description",
+          json_object_new_string(setting->description));
+    }
+    json_object_object_add(json_setting, "init-only",
+        json_object_new_boolean(setting->init_only));
+
+    json_object_object_add(json_config, setting->name, json_setting);
+  GIRARA_LIST_FOREACH_END(session->private_data->settings, girara_setting_t*, iter, setting);
+
+  json_object_to_file_ext(girara_list_nth(argument_list, 0), json_config,
+      JSON_C_TO_STRING_PRETTY);
+  json_object_put(json_config);
+
+  return true;
+}
+#endif

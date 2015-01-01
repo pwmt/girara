@@ -280,11 +280,14 @@ girara_config_load_default(girara_session_t* session)
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_n,            girara_isc_command_history,     GIRARA_NEXT,                 NULL);
 
   /* commands */
-  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,  NULL,          _("Execute a command"));
-  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,   NULL,          _("Map a key sequence"));
-  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,  NULL,          _("Quit the program"));
-  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,   girara_cc_set, _("Set an option"));
-  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap, NULL,          _("Unmap a key sequence"));
+  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,        NULL,          _("Execute a command"));
+  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,         NULL,          _("Map a key sequence"));
+  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,        NULL,          _("Quit the program"));
+  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,         girara_cc_set, _("Set an option"));
+  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap,       NULL,          _("Unmap a key sequence"));
+#ifdef WITH_JSON
+  girara_inputbar_command_add(session, "dump",  NULL, girara_cmd_dump_config, NULL,          _("Dump settings to a file"));
+#endif
 
   /* config handle */
   girara_config_handle_add(session, "map",   girara_cmd_map);
