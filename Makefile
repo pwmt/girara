@@ -20,8 +20,6 @@ OBJECTS_GCOV  = $(addprefix ${BUILDDIR_GCOV}/,${CSOURCE:.c=.o}) \
 HEADERS       = $(filter-out ${PROJECTNV}/internal.h, $(wildcard ${PROJECTNV}/*.h))
 
 ifneq (${WITH_LIBNOTIFY},0)
-INCS += $(LIBNOTIFY_INC)
-LIBS += $(LIBNOTIFY_LIB)
 CPPFLAGS += -DWITH_LIBNOTIFY
 LIBNOTIFY_PC_NAME = libnotify
 else
