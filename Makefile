@@ -43,7 +43,7 @@ SONAME_FLAG = -install_name
 SHARED_FLAG = -dynamiclib
 endif
 
-all: ${PROJECTNV} ${PROJECT}.pc po
+all: ${PROJECTNV} ${BUILDDIR}/${PROJECT}.pc po
 
 # pkg-config based version checks
 .version-checks/%: config.mk
@@ -81,15 +81,15 @@ ${PROJECTNV}/css-definitions.c: data/girara.css_t
 	$(QUIET)echo ';' >> $@.tmp
 	$(QUIET)mv $@.tmp $@
 
-${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
+${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(call colorecho,GEN,$(shell basename $@))
 	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
 		-e 's,@LIBDIR@,${LIBDIR},' \
 		-e 's,@LIBNOTIFY_PC_NAME@,${LIBNOTIFY_PC_NAME},' \
-		${PROJECTNV}.pc.in > ${PROJECT}.pc.tmp
-	$(QUIET)mv ${PROJECT}.pc.tmp ${PROJECT}.pc
+		${PROJECTNV}.pc.in > $@.tmp
+	$(QUIET)mv $@.tmp $@
 
 # release build
 
@@ -194,7 +194,6 @@ clean:
 		${DEPENDDIR} \
 		${TARFILE} \
 		${TARDIR} \
-		${PROJECT}.pc \
 		${GCDA} \
 		${GCNO} \
 		$(PROJECT).info \
@@ -202,7 +201,6 @@ clean:
 		.version-checks \
 		${PROJECTNV}/version.h \
 		${PROJECTNV}/version.h.tmp \
-		${PROJECT}.pc.tmp \
 		${PROJECTNV}/css-definitions.c \
 		${PROJECTNV}/css-definitions.c.tmp
 	$(QUIET)$(MAKE) -C tests clean
@@ -253,10 +251,10 @@ install-shared: shared
 	$(QUIET)ln -sf lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so || \
 		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
 
-install-headers: ${PROJECTNV}/version.h ${PROJECT}.pc
+install-headers: ${PROJECTNV}/version.h ${BUILDDIR}/${PROJECT}.pc
 	$(call colorecho,INSTALL,"Install pkg-config file")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}/pkgconfig
-	$(QUIET)install -m 644 ${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
+	$(QUIET)install -m 644 ${BUILDDIR}/${PROJECT}.pc ${DESTDIR}${LIBDIR}/pkgconfig
 	$(call colorecho,INSTALL,"Install header files")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${INCLUDEDIR}/girara
 	$(QUIET)install -m 644 ${HEADERS} ${DESTDIR}${INCLUDEDIR}/girara
