@@ -193,7 +193,6 @@ clean:
 		${BUILDDIR} \
 		${DEPENDDIR} \
 		${TARFILE} \
-		${TARDIR} \
 		${GCDA} \
 		${GCNO} \
 		$(PROJECT).info \
