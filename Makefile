@@ -83,6 +83,7 @@ ${PROJECTNV}/css-definitions.c: data/girara.css_t
 
 ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(call colorecho,GEN,$(shell basename $@))
+	@mkdir -p ${BUILDDIR}
 	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
