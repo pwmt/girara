@@ -359,9 +359,6 @@ config_parse(girara_session_t* session, const char* path)
       continue;
     }
 
-    gchar** argv = NULL;
-    gint    argc = 0;
-
     girara_list_t* argument_list = girara_list_new();
     if (argument_list == NULL) {
       g_free(line);
@@ -370,8 +367,12 @@ config_parse(girara_session_t* session, const char* path)
     }
 
     girara_list_set_free_function(argument_list, g_free);
+
+    gchar** argv = NULL;
+    gint    argc = 0;
+
     if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
-      for(int i = 1; i < argc; i++) {
+      for (int i = 1; i < argc; i++) {
         char* argument = g_strdup(argv[i]);
         girara_list_append(argument_list, (void*) argument);
       }
@@ -402,7 +403,7 @@ config_parse(girara_session_t* session, const char* path)
           girara_warning("Could not process line %d in '%s': trying to include itself.", line_number, path);
         } else {
           girara_debug("Loading config file '%s'.", newpath);
-          if (config_parse(session, newpath) == FALSE) {
+          if (config_parse(session, newpath) == false) {
             girara_warning("Could not process line %d in '%s': failed to load '%s'.", line_number, path, newpath);
           }
         }
