@@ -65,6 +65,7 @@ options:
 # generated files
 
 ${PROJECTNV}/version.h: ${PROJECTNV}/version.h.in config.mk
+	$(call colorecho,GEN,$@)
 	$(QUIET)sed \
 		-e 's,@GVMAJOR@,${GIRARA_VERSION_MAJOR},' \
 		-e 's,@GVMINOR@,${GIRARA_VERSION_MINOR},' \
@@ -73,6 +74,7 @@ ${PROJECTNV}/version.h: ${PROJECTNV}/version.h.in config.mk
 	$(QUIET)mv ${PROJECTNV}/version.h.tmp ${PROJECTNV}/version.h
 
 ${PROJECTNV}/css-definitions.c: data/girara.css_t
+	$(call colorecho,GEN,$@)
 	$(QUIET)echo '#include "css-definitions.h"' > $@.tmp
 	$(QUIET)echo 'const char* CSS_TEMPLATE =' >> $@.tmp
 	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' $< >> $@.tmp
@@ -80,6 +82,7 @@ ${PROJECTNV}/css-definitions.c: data/girara.css_t
 	$(QUIET)mv $@.tmp $@
 
 ${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
+	$(call colorecho,GEN,$(shell basename $@))
 	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
 		-e 's,@VERSION@,${VERSION},' \
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
