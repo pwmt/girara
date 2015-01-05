@@ -39,28 +39,10 @@ struct girara_session_s
 
   struct
   {
-    GdkRGBA default_foreground; /**< The default foreground color */
-    GdkRGBA default_background; /**< The default background color */
     GdkRGBA inputbar_foreground; /**< The foreground color of the inputbar */
     GdkRGBA inputbar_background; /**< The background color of the inputbar */
     GdkRGBA statusbar_foreground; /**< The foreground color of the statusbar */
     GdkRGBA statusbar_background; /**< The background color of the statusbar */
-    GdkRGBA completion_foreground; /**< The foreground color of a completion item */
-    GdkRGBA completion_background; /**< The background color of a completion item */
-    GdkRGBA completion_group_foreground; /**< The foreground color of a completion group entry */
-    GdkRGBA completion_group_background; /**< The background color of a completion group entry */
-    GdkRGBA completion_highlight_foreground; /**< The foreground color of a highlighted completion item */
-    GdkRGBA completion_highlight_background; /**< The background color of a highlighted completion item */
-    GdkRGBA notification_error_foreground; /**< The foreground color of an error notification */
-    GdkRGBA notification_error_background; /**< The background color of an error notification */
-    GdkRGBA notification_warning_foreground; /**< The foreground color of a warning notification */
-    GdkRGBA notification_warning_background; /**< The background color of a warning notification */
-    GdkRGBA notification_default_foreground; /**< The foreground color of a default notification */
-    GdkRGBA notification_default_background; /**< The background color of a default notification */
-    GdkRGBA tabbar_foreground; /**< The foreground color for a tab */
-    GdkRGBA tabbar_background; /**< The background color for a tab */
-    GdkRGBA tabbar_focus_foreground; /**< The foreground color for a focused tab */
-    GdkRGBA tabbar_focus_background; /**< The background color for a focused tab */
     PangoFontDescription *font; /**< The used font */
   } GIRARA_DEPRECATED(style);
 

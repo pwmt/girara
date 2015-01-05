@@ -113,28 +113,10 @@ fill_template_with_values(girara_session_t* session)
 
   GIRARA_IGNORE_DEPRECATED
   const color_setting_mapping_t color_setting_mappings[] = {
-    {"default-fg",              &(session->style.default_foreground)},
-    {"default-bg",              &(session->style.default_background)},
     {"inputbar-fg",             &(session->style.inputbar_foreground)},
     {"inputbar-bg",             &(session->style.inputbar_background)},
     {"statusbar-fg",            &(session->style.statusbar_foreground)},
     {"statusbar-bg",            &(session->style.statusbar_background)},
-    {"completion-fg",           &(session->style.completion_foreground)},
-    {"completion-bg",           &(session->style.completion_background)},
-    {"completion-group-fg",     &(session->style.completion_group_foreground)},
-    {"completion-group-bg",     &(session->style.completion_group_background)},
-    {"completion-highlight-fg", &(session->style.completion_highlight_foreground)},
-    {"completion-highlight-bg", &(session->style.completion_highlight_background)},
-    {"notification-error-fg",   &(session->style.notification_error_foreground)},
-    {"notification-error-bg",   &(session->style.notification_error_background)},
-    {"notification-warning-fg", &(session->style.notification_warning_foreground)},
-    {"notification-warning-bg", &(session->style.notification_warning_background)},
-    {"notification-fg",         &(session->style.notification_default_foreground)},
-    {"notification-bg",         &(session->style.notification_default_background)},
-    {"tabbar-fg",               &(session->style.tabbar_foreground)},
-    {"tabbar-bg",               &(session->style.tabbar_background)},
-    {"tabbar-focus-fg",         &(session->style.tabbar_focus_foreground)},
-    {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
   };
   GIRARA_UNIGNORE
 
