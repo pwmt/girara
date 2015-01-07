@@ -113,25 +113,49 @@ fill_template_with_values(girara_session_t* session)
 
   GIRARA_IGNORE_DEPRECATED
   const color_setting_mapping_t color_setting_mappings[] = {
+    {"default-fg",              NULL},
+    {"default-bg",              NULL},
     {"inputbar-fg",             &(session->style.inputbar_foreground)},
     {"inputbar-bg",             &(session->style.inputbar_background)},
     {"statusbar-fg",            &(session->style.statusbar_foreground)},
     {"statusbar-bg",            &(session->style.statusbar_background)},
+    {"completion-fg",           NULL},
+    {"completion-bg",           NULL},
+    {"completion-group-fg",     NULL},
+    {"completion-group-bg",     NULL},
+    {"completion-highlight-fg", NULL},
+    {"completion-highlight-bg", NULL},
+    {"notification-error-fg",   NULL},
+    {"notification-error-bg",   NULL},
+    {"notification-warning-fg", NULL},
+    {"notification-warning-bg", NULL},
+    {"notification-fg",         NULL},
+    {"notification-bg",         NULL},
+    {"tabbar-fg",               NULL},
+    {"tabbar-bg",               NULL},
+    {"tabbar-focus-fg",         NULL},
+    {"tabbar-focus-bg",         NULL},
   };
   GIRARA_UNIGNORE
 
   for (size_t i = 0; i < LENGTH(color_setting_mappings); i++) {
     char* tmp_value = NULL;
     girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
+
+    GdkRGBA color = { 0, 0, 0, 0 };
     if (tmp_value != NULL) {
-      gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
+      gdk_rgba_parse(&color, tmp_value);
       g_free(tmp_value);
     }
 
-    char* color = gdk_rgba_to_string(color_setting_mappings[i].color);
+    char* colorstr = gdk_rgba_to_string(&color);
     girara_template_set_variable_value(csstemplate,
-        color_setting_mappings[i].identifier, color);
-    g_free(color);
+        color_setting_mappings[i].identifier, colorstr);
+    g_free(colorstr);
+
+    if (color_setting_mappings[i].color != NULL) {
+      *color_setting_mappings[i].color = color;
+    }
   }
 
   /* we want inputbar_entry the same height as notification_text and statusbar,
