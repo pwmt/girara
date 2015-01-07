@@ -89,58 +89,41 @@ fill_template_with_values(girara_session_t* session)
   char* font = NULL;
   girara_setting_get(session, "font", &font);
   if (font != NULL) {
-    GIRARA_IGNORE_DEPRECATED
-    pango_font_description_free(session->style.font);
-    session->style.font = pango_font_description_from_string(font);
-    GIRARA_UNIGNORE
+    girara_template_set_variable_value(csstemplate, "font", font);
     g_free(font);
-  }
-  GIRARA_IGNORE_DEPRECATED
-  if (session->style.font == NULL) {
-    girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
   } else {
-    char* fontname = pango_font_description_to_string(session->style.font);
-    girara_template_set_variable_value(csstemplate, "font", fontname);
-    g_free(fontname);
-  }
-  GIRARA_UNIGNORE
+    girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
+  };
 
   /* parse color values */
-  typedef struct color_setting_mapping_s {
-    const char* identifier;
-    GdkRGBA *color;
-  } color_setting_mapping_t;
-
-  GIRARA_IGNORE_DEPRECATED
-  const color_setting_mapping_t color_setting_mappings[] = {
-    {"default-fg",              NULL},
-    {"default-bg",              NULL},
-    {"inputbar-fg",             &(session->style.inputbar_foreground)},
-    {"inputbar-bg",             &(session->style.inputbar_background)},
-    {"statusbar-fg",            &(session->style.statusbar_foreground)},
-    {"statusbar-bg",            &(session->style.statusbar_background)},
-    {"completion-fg",           NULL},
-    {"completion-bg",           NULL},
-    {"completion-group-fg",     NULL},
-    {"completion-group-bg",     NULL},
-    {"completion-highlight-fg", NULL},
-    {"completion-highlight-bg", NULL},
-    {"notification-error-fg",   NULL},
-    {"notification-error-bg",   NULL},
-    {"notification-warning-fg", NULL},
-    {"notification-warning-bg", NULL},
-    {"notification-fg",         NULL},
-    {"notification-bg",         NULL},
-    {"tabbar-fg",               NULL},
-    {"tabbar-bg",               NULL},
-    {"tabbar-focus-fg",         NULL},
-    {"tabbar-focus-bg",         NULL},
+  const char* color_settings[] = {
+    "default-fg",
+    "default-bg",
+    "inputbar-fg",
+    "inputbar-bg",
+    "statusbar-fg",
+    "statusbar-bg",
+    "completion-fg",
+    "completion-bg",
+    "completion-group-fg",
+    "completion-group-bg",
+    "completion-highlight-fg",
+    "completion-highlight-bg",
+    "notification-error-fg",
+    "notification-error-bg",
+    "notification-warning-fg",
+    "notification-warning-bg",
+    "notification-fg",
+    "notification-bg",
+    "tabbar-fg",
+    "tabbar-bg",
+    "tabbar-focus-fg",
+    "tabbar-focus-bg",
   };
-  GIRARA_UNIGNORE
 
-  for (size_t i = 0; i < LENGTH(color_setting_mappings); i++) {
+  for (size_t i = 0; i < LENGTH(color_settings); i++) {
     char* tmp_value = NULL;
-    girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
+    girara_setting_get(session, color_settings[i], &tmp_value);
 
     GdkRGBA color = { 0, 0, 0, 0 };
     if (tmp_value != NULL) {
@@ -149,13 +132,9 @@ fill_template_with_values(girara_session_t* session)
     }
 
     char* colorstr = gdk_rgba_to_string(&color);
-    girara_template_set_variable_value(csstemplate,
-        color_setting_mappings[i].identifier, colorstr);
+    girara_template_set_variable_value(csstemplate, color_settings[i],
+        colorstr);
     g_free(colorstr);
-
-    if (color_setting_mappings[i].color != NULL) {
-      *color_setting_mappings[i].color = color;
-    }
   }
 
   /* we want inputbar_entry the same height as notification_text and statusbar,
@@ -548,13 +527,6 @@ bool
 girara_session_destroy(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
-
-  /* clean up style */
-  GIRARA_IGNORE_DEPRECATED
-  if (session->style.font != NULL) {
-    pango_font_description_free(session->style.font);
-  }
-  GIRARA_UNIGNORE
 
   /* clean up shortcuts */
   girara_list_free(session->bindings.shortcuts);

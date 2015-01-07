@@ -39,15 +39,6 @@ struct girara_session_s
 
   struct
   {
-    GdkRGBA inputbar_foreground; /**< The foreground color of the inputbar */
-    GdkRGBA inputbar_background; /**< The background color of the inputbar */
-    GdkRGBA statusbar_foreground; /**< The foreground color of the statusbar */
-    GdkRGBA statusbar_background; /**< The background color of the statusbar */
-    PangoFontDescription *font; /**< The used font */
-  } GIRARA_DEPRECATED(style);
-
-  struct
-  {
     girara_list_t* mouse_events; /**< List of mouse events */
     girara_list_t* commands; /**< List of commands */
     girara_list_t* shortcuts; /**< List of shortcuts */
