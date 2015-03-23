@@ -86,8 +86,8 @@ ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	@mkdir -p ${BUILDDIR}
 	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
 		-e 's,@VERSION@,${VERSION},' \
-		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
-		-e 's,@LIBDIR@,${LIBDIR},' \
+		-e 's,@INCLUDEDIR@,${DESTDIR}${INCLUDEDIR},' \
+		-e 's,@LIBDIR@,${DESTDIR}${LIBDIR},' \
 		-e 's,@LIBNOTIFY_PC_NAME@,${LIBNOTIFY_PC_NAME},' \
 		${PROJECTNV}.pc.in > $@.tmp
 	$(QUIET)mv $@.tmp $@
@@ -274,9 +274,9 @@ uninstall: uninstall-headers
 
 uninstall-headers:
 	$(call colorecho,UNINSTALL,"Remove header files")
-	$(QUIET)rm -rf ${INCLUDEDIR}/girara
+	$(QUIET)rm -rf ${DESTDIR}${INCLUDEDIR}/girara
 	$(call colorecho,UNINSTALL,"Remove pkg-config file")
-	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
+	$(QUIET)rm -f ${DESTDIR}${LIBDIR}/pkgconfig/${PROJECT}.pc
 
 .PHONY: all options clean debug doc test dist install install-headers uninstall \
 	uninstall-headers ${PROJECT} ${PROJECT}-debug po update-po \
