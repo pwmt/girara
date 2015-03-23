@@ -274,9 +274,9 @@ uninstall: uninstall-headers
 
 uninstall-headers:
 	$(call colorecho,UNINSTALL,"Remove header files")
-	$(QUIET)rm -rf ${INCLUDEDIR}/girara
+	$(QUIET)rm -rf ${DESTDIR}${INCLUDEDIR}/girara
 	$(call colorecho,UNINSTALL,"Remove pkg-config file")
-	$(QUIET)rm -f ${LIBDIR}/pkgconfig/${PROJECT}.pc
+	$(QUIET)rm -f ${DESTDIR}${LIBDIR}/pkgconfig/${PROJECT}.pc
 
 .PHONY: all options clean debug doc test dist install install-headers uninstall \
 	uninstall-headers ${PROJECT} ${PROJECT}-debug po update-po \
