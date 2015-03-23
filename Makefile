@@ -86,8 +86,8 @@ ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	@mkdir -p ${BUILDDIR}
 	$(QUIET)sed -e 's,@PROJECT@,${PROJECT},' \
 		-e 's,@VERSION@,${VERSION},' \
-		-e 's,@INCLUDEDIR@,${DESTDIR}${INCLUDEDIR},' \
-		-e 's,@LIBDIR@,${DESTDIR}${LIBDIR},' \
+		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
+		-e 's,@LIBDIR@,${LIBDIR},' \
 		-e 's,@LIBNOTIFY_PC_NAME@,${LIBNOTIFY_PC_NAME},' \
 		${PROJECTNV}.pc.in > $@.tmp
 	$(QUIET)mv $@.tmp $@
