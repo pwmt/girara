@@ -16,11 +16,14 @@ SOMAJOR = 2
 SOMINOR = 0
 SOVERSION = ${SOMAJOR}.${SOMINOR}
 
+# pkg-config binary
+PKG_CONFIG ?= pkg-config
+
 # libnotify
-WITH_LIBNOTIFY ?= $(shell (pkg-config libnotify --atleast-version=0.7.0 && echo 1) || echo 0)
+WITH_LIBNOTIFY ?= $(shell (${PKG_CONFIG} libnotify --atleast-version=0.7.0 && echo 1) || echo 0)
 
 # libjson-c
-WITH_JSON ?= $(shell (pkg-config json-c --exists && echo 1) || echo 0)
+WITH_JSON ?= $(shell (${PKG_CONFIG} json-c --exists && echo 1) || echo 0)
 
 # paths
 PREFIX ?= /usr
@@ -51,17 +54,17 @@ GLIB_MIN_VERSION = 2.28
 GLIB_PKG_CONFIG_NAME = glib-2.0
 
 # libs
-GTK_INC ?= $(shell pkg-config --cflags gtk+-3.0)
-GTK_LIB ?= $(shell pkg-config --libs gtk+-3.0)
+GTK_INC ?= $(shell ${PKG_CONFIG} --cflags gtk+-3.0)
+GTK_LIB ?= $(shell ${PKG_CONFIG} --libs gtk+-3.0)
 
 ifneq (${WITH_LIBNOTIFY},0)
-LIBNOTIFY_INC ?= $(shell pkg-config --cflags libnotify)
-LIBNOTIFY_LIB ?= $(shell pkg-config --libs libnotify)
+LIBNOTIFY_INC ?= $(shell ${PKG_CONFIG} --cflags libnotify)
+LIBNOTIFY_LIB ?= $(shell ${PKG_CONFIG} --libs libnotify)
 endif
 
 ifneq (${WITH_JSON},0)
-JSON_INC ?= $(shell pkg-config --cflags json-c)
-JSON_LIB ?= $(shell pkg-config --libs json-c)
+JSON_INC ?= $(shell ${PKG_CONFIG} --cflags json-c)
+JSON_LIB ?= $(shell ${PKG_CONFIG} --libs json-c)
 endif
 
 INCS = ${GTK_INC} ${LIBNOTIFY_INC} ${JSON_INC}
@@ -78,6 +81,9 @@ DFLAGS = -O0 -g
 
 # compiler
 CC ?= gcc
+
+# archiver
+AR ?= ar
 
 # strip
 SFLAGS ?= -s

@@ -48,7 +48,7 @@ all: ${PROJECTNV} ${BUILDDIR}/${PROJECT}.pc po
 # pkg-config based version checks
 .version-checks/%: config.mk
 	$(QUIET)test $($(*)_VERSION_CHECK) -eq 0 || \
-		pkg-config --atleast-version $($(*)_MIN_VERSION) $($(*)_PKG_CONFIG_NAME) || ( \
+		${PKG_CONFIG} --atleast-version $($(*)_MIN_VERSION) $($(*)_PKG_CONFIG_NAME) || ( \
 		echo "The minimum required version of $(*) is $($(*)_MIN_VERSION)" && \
 		false \
 	)
@@ -140,7 +140,7 @@ ${BUILDDIR_DEBUG}/%.o: %.c
 ${BUILDDIR_DEBUG}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS_DEBUG}
 	$(call colorecho,AR,$@)
 	@mkdir -p ${BUILDDIR_DEBUG}/${BINDIR}
-	$(QUIET)ar rcs $@ ${OBJECTS_DEBUG}
+	$(QUIET)${AR} rcs $@ ${OBJECTS_DEBUG}
 
 ${BUILDDIR_DEBUG}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}: ${OBJECTS_DEBUG}
 	$(call colorecho,LD,$@)
@@ -169,7 +169,7 @@ ${BUILDDIR_GCOV}/%.o: %.c
 ${BUILDDIR_GCOV}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS_GCOV}
 	$(call colorecho,AR,$@)
 	@mkdir -p ${BUILDDIR_GCOV}/${BINDIR}
-	$(QUIET)ar rcs $@ ${OBJECTS_GCOV}
+	$(QUIET)${AR} rcs $@ ${OBJECTS_GCOV}
 
 ${BUILDDIR_GCOV}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}: ${OBJECTS_GCOV}
 	$(call colorecho,LD,$@)
