@@ -70,20 +70,20 @@ girara_xdg_open(const char* uri)
     return false;
   }
 
-  GString* command = g_string_new("xdg-open ");
-  char* tmp        = g_shell_quote(uri);
-
-  g_string_append(command, tmp);
-  g_free(tmp);
+  /* g_spawn_async expects char** */
+  char* argv[] = { g_strdup("xdg-open"), g_strdup(uri), NULL };
 
   GError* error = NULL;
-  bool res = g_spawn_command_line_async(command->str, &error);
+  const bool res = g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
+      NULL, NULL, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
     g_error_free(error);
   }
 
-  g_string_free(command, TRUE);
+  g_free(argv[0]);
+  g_free(argv[1]);
+
   return res;
 }
 
