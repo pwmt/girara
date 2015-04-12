@@ -268,7 +268,7 @@ girara_session_create()
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
-#if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
+#if GTK_CHECK_VERSION(3, 4, 0)
   gtk_widget_add_events(session->gtk.viewport, GDK_SCROLL_MASK);
 #endif
   session->gtk.statusbar         = gtk_event_box_new();
@@ -289,7 +289,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     return false;
   }
 
-#if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
+#if GTK_CHECK_VERSION(3, 4, 0)
   bool smooth_scroll = false;
   girara_setting_get(session, "smooth-scroll", &smooth_scroll);
   if (smooth_scroll) {
