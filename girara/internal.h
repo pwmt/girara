@@ -52,6 +52,8 @@ HIDDEN void update_state_by_keyval(int *state, int keyval);
 
 HIDDEN void widget_add_class(GtkWidget* widget, const char* styleclass);
 
+HIDDEN void widget_remove_class(GtkWidget* widget, const char* styleclass);
+
 /**
  * Default complection function for the settings
  *

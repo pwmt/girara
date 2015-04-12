@@ -458,8 +458,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   /* notification area */
   widget_add_class(session->gtk.notification_area, "notification");
   widget_add_class(session->gtk.notification_text, "notification");
-  gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_area));
-  gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_text));
 
   /* set window size */
   int window_width = 0;
@@ -672,13 +670,10 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  GtkStyleContext* area_context = gtk_widget_get_style_context(session->gtk.notification_area);
-  GtkStyleContext* text_context = gtk_widget_get_style_context(session->gtk.notification_text);
-
-  gtk_style_context_restore(area_context);
-  gtk_style_context_restore(text_context);
-  gtk_style_context_save(area_context);
-  gtk_style_context_save(text_context);
+  widget_remove_class(session->gtk.notification_area, "notification-error");
+  widget_remove_class(session->gtk.notification_text, "notification-error");
+  widget_remove_class(session->gtk.notification_area, "notification-warning");
+  widget_remove_class(session->gtk.notification_text, "notification-warning");
 
   const char* cssclass = NULL;
   switch (level) {
