@@ -539,7 +539,9 @@ widget_add_class(GtkWidget* widget, const char* styleclass)
   }
 
   GtkStyleContext* context = gtk_widget_get_style_context(widget);
-  gtk_style_context_add_class(context, styleclass);
+  if (gtk_style_context_has_class(context, styleclass) == FALSE) {
+    gtk_style_context_add_class(context, styleclass);
+  }
 }
 
 void
@@ -550,5 +552,7 @@ widget_remove_class(GtkWidget* widget, const char* styleclass)
   }
 
   GtkStyleContext* context = gtk_widget_get_style_context(widget);
-  gtk_style_context_remove_class(context, styleclass);
+  if (gtk_style_context_has_class(context, styleclass) == TRUE) {
+    gtk_style_context_remove_class(context, styleclass);
+  }
 }

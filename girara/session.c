@@ -670,18 +670,15 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  widget_remove_class(session->gtk.notification_area, "notification-error");
-  widget_remove_class(session->gtk.notification_text, "notification-error");
-  widget_remove_class(session->gtk.notification_area, "notification-warning");
-  widget_remove_class(session->gtk.notification_text, "notification-warning");
+  bool error_class = false;
+  bool warning_class = false;
 
-  const char* cssclass = NULL;
   switch (level) {
     case GIRARA_ERROR:
-      cssclass = "notification-error";
+      error_class = true;
       break;
     case GIRARA_WARNING:
-      cssclass = "notification-warning";
+      warning_class = true;
       break;
     case GIRARA_INFO:
       break;
@@ -689,9 +686,19 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
       return;
   }
 
-  if (cssclass != NULL) {
-    widget_add_class(session->gtk.notification_area, cssclass);
-    widget_add_class(session->gtk.notification_text, cssclass);
+  if (error_class == true) {
+    widget_add_class(session->gtk.notification_area, "notification-error");
+    widget_add_class(session->gtk.notification_text, "notification-error");
+  } else {
+    widget_remove_class(session->gtk.notification_area, "notification-error");
+    widget_remove_class(session->gtk.notification_text, "notification-error");
+  }
+  if (warning_class == true) {
+    widget_add_class(session->gtk.notification_area, "notification-warning");
+    widget_add_class(session->gtk.notification_text, "notification-warning");
+  } else {
+    widget_remove_class(session->gtk.notification_area, "notification-warning");
+    widget_remove_class(session->gtk.notification_text, "notification-warning");
   }
 
   /* prepare message */
