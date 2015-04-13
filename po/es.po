@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2014-10-08 15:31+0200\n"
-"PO-Revision-Date: 2014-02-13 22:09+0000\n"
-"Last-Translator: joserc87 <joserc87@gmail.com>\n"
+"POT-Creation-Date: 2015-04-13 19:37+0200\n"
+"PO-Revision-Date: 2015-01-01 21:25+0100\n"
+"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/girara/language/"
 "es/)\n"
 "Language: es\n"
@@ -18,237 +18,247 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#: ../girara/settings.c:244
+#, c-format
+msgid "Invalid number of arguments passed: %zu instead of 1"
+msgstr ""
 
 #. unhandled command
-#: ../callbacks.c:501
+#: ../girara/callbacks.c:501
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Función 'atajo' no valida: %s"
 
 #. settings
-#: ../config.c:212
+#: ../girara/config.c:202
 msgid "Font"
 msgstr "Fuente"
 
-#: ../config.c:213
+#: ../girara/config.c:203
 msgid "Default foreground color"
 msgstr "Color por omisión"
 
-#: ../config.c:214
+#: ../girara/config.c:204
 msgid "Default background color"
 msgstr "Color de fondo por omisión"
 
-#: ../config.c:215
+#: ../girara/config.c:205
 msgid "Inputbar foreground color"
 msgstr "Color de la barra de entrada"
 
-#: ../config.c:216
+#: ../girara/config.c:206
 msgid "Inputbar background color"
 msgstr "Color de fondo de la barra de entrada"
 
-#: ../config.c:217
+#: ../girara/config.c:207
 msgid "Statusbar foreground color"
 msgstr "Color de la barra de estado"
 
-#: ../config.c:218
+#: ../girara/config.c:208
 msgid "Statsubar background color"
 msgstr "Color de fondo de la barra de estado"
 
-#: ../config.c:219
+#: ../girara/config.c:209
 msgid "Completion foreground color"
 msgstr "Color de completado"
 
-#: ../config.c:220
+#: ../girara/config.c:210
 msgid "Completion background color"
 msgstr "Color de fondo de completado"
 
-#: ../config.c:221
+#: ../girara/config.c:211
 msgid "Completion group foreground color"
 msgstr "Color de los grupos de completado"
 
-#: ../config.c:222
+#: ../girara/config.c:212
 msgid "Completion group background color"
 msgstr "Color de fondo de los grupos de completado"
 
-#: ../config.c:223
+#: ../girara/config.c:213
 msgid "Completion highlight foreground color"
 msgstr "Color de la entrada de completado destacada"
 
-#: ../config.c:224
+#: ../girara/config.c:214
 msgid "Completion highlight background color"
 msgstr "Color de fondo de la entrada de completado destacada"
 
-#: ../config.c:225
+#: ../girara/config.c:215
 msgid "Error notification foreground color"
 msgstr "Color de las notificaciones de error"
 
-#: ../config.c:226
+#: ../girara/config.c:216
 msgid "Error notification background color"
 msgstr "Color de fondo de las notificaciones de error"
 
-#: ../config.c:227
+#: ../girara/config.c:217
 msgid "Warning notification foreground color"
 msgstr "Color de las advertencias"
 
-#: ../config.c:228
+#: ../girara/config.c:218
 msgid "Warning notifaction background color"
 msgstr "Color de fondo de las advertencias"
 
-#: ../config.c:229
+#: ../girara/config.c:219
 msgid "Notification foreground color"
 msgstr "Color de las notificaciones"
 
-#: ../config.c:230
+#: ../girara/config.c:220
 msgid "Notification background color"
 msgstr "Color de fondo de las notificaciones"
 
-#: ../config.c:231
+#: ../girara/config.c:221
 msgid "Tab bar foreground color"
 msgstr "Color de la barra 'tabulador'"
 
-#: ../config.c:232
+#: ../girara/config.c:222
 msgid "Tab bar background color"
 msgstr "Color de fondo de la barra 'tabulador'"
 
-#: ../config.c:233
+#: ../girara/config.c:223
 msgid "Tab bar foreground color (active)"
 msgstr "Color de la barra 'tabulador' (activa)"
 
-#: ../config.c:234
+#: ../girara/config.c:224
 msgid "Tab bar background color (active)"
 msgstr "Color de fondo de la barra 'tabulador' (activa)"
 
-#: ../config.c:236
+#: ../girara/config.c:226
 msgid "Initial window width"
 msgstr "Anchura inicial de la ventana"
 
-#: ../config.c:237
+#: ../girara/config.c:227
 msgid "Initial window height"
 msgstr "Altura inicial de la ventana"
 
-#: ../config.c:238
+#: ../girara/config.c:228
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../config.c:239
+#: ../girara/config.c:229
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../config.c:240
+#: ../girara/config.c:230
 msgid "Number of completion items"
 msgstr "Número de elementos en el completado"
 
-#: ../config.c:241
+#: ../girara/config.c:231
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../config.c:242
+#: ../girara/config.c:232
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../config.c:243
+#: ../girara/config.c:233
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../config.c:244
+#: ../girara/config.c:234
 msgid "Window icon"
 msgstr "Icono de la ventana"
 
-#: ../config.c:245
+#: ../girara/config.c:235
 msgid "Command to execute in :exec"
 msgstr "Comando a ejecutar en :exec"
 
-#: ../config.c:246
+#: ../girara/config.c:236
 msgid "Show or hide certain GUI elements"
 msgstr "Mostrar u ocultar determinados elementos de la interfaz de usuario"
 
-#: ../config.c:247
+#: ../girara/config.c:237
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../config.c:283
+#: ../girara/config.c:273
 msgid "Execute a command"
 msgstr "Ejecutar un comando"
 
-#: ../config.c:284
+#: ../girara/config.c:274
 msgid "Map a key sequence"
 msgstr "Mapear una secuéncia de teclas"
 
-#: ../config.c:285
+#: ../girara/config.c:275
 msgid "Quit the program"
 msgstr "Salir del programa"
 
-#: ../config.c:286
+#: ../girara/config.c:276
 msgid "Set an option"
 msgstr "Asignar un valor a una opción"
 
-#: ../config.c:287
+#: ../girara/config.c:277
 msgid "Unmap a key sequence"
 msgstr "Quitar el mapeo de una secuencia de teclas"
 
-#: ../commands.c:109 ../commands.c:309
+#: ../girara/config.c:279
+msgid "Dump settings to a file"
+msgstr ""
+
+#: ../girara/utils.c:525
+#, c-format
+msgid "Failed to execute command: %s"
+msgstr "No se pudo ejecutar el comando: %s"
+
+#: ../girara/commands.c:109 ../girara/commands.c:309
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Número de argumentos invalido: %zu, cuando se necesitan al menos %u"
 
-#: ../commands.c:143
+#: ../girara/commands.c:143
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Modo no registrado especificado: %s"
 
-#: ../commands.c:175
+#: ../girara/commands.c:175
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Modificador inválido en %s"
 
-#: ../commands.c:214
+#: ../girara/commands.c:214
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Valor de tecla especial inválido para %s"
 
-#: ../commands.c:250
+#: ../girara/commands.c:250
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Valor o modo de tecla especial inválido para %s"
 
-#: ../commands.c:331
+#: ../girara/commands.c:331
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Función 'atajo' no valida: %s"
 
-#: ../commands.c:419
+#: ../girara/commands.c:419
 msgid "Not enough arguments."
 msgstr "Número de argumentos insuficiente."
 
-#: ../commands.c:424
+#: ../girara/commands.c:424
 msgid "Too many arguments."
 msgstr "Demasiados argumentos."
 
-#: ../commands.c:437
+#: ../girara/commands.c:437
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Opción desconocida: %s"
 
-#: ../commands.c:451
+#: ../girara/commands.c:451
 msgid "true"
 msgstr "cierto"
 
-#: ../commands.c:451
+#: ../girara/commands.c:451
 msgid "false"
 msgstr "falso"
 
-#: ../commands.c:483
+#: ../girara/commands.c:483
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Valor indefinido para la opción: %s"
 
-#: ../commands.c:498
+#: ../girara/commands.c:498
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Valor desconocido para la opción: %s"
-
-#: ../utils.c:522
-#, c-format
-msgid "Failed to execute command: %s"
-msgstr "No se pudo ejecutar el comando: %s"

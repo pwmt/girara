@@ -5,9 +5,9 @@
 #include <glib/gstdio.h>
 #include <unistd.h>
 
-#include "../session.h"
-#include "../settings.h"
-#include "../config.h"
+#include "session.h"
+#include "settings.h"
+#include "config.h"
 
 START_TEST(test_config_parse) {
   girara_session_t* session = girara_session_create();

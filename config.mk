@@ -2,7 +2,7 @@
 
 GIRARA_VERSION_MAJOR = 0
 GIRARA_VERSION_MINOR = 2
-GIRARA_VERSION_REV   = 3
+GIRARA_VERSION_REV   = 4
 VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 
 # Rules for the SOMAJOR and SOMINOR.
@@ -12,12 +12,18 @@ VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 # * If any of the exported datastructures have changed in a incompatible way
 #   bump SOMAJOR and set SOMINOR to 0.
 # * If a function has been added bump SOMINOR.
-SOMAJOR = 1
-SOMINOR = 1
+SOMAJOR = 2
+SOMINOR = 0
 SOVERSION = ${SOMAJOR}.${SOMINOR}
 
+# pkg-config binary
+PKG_CONFIG ?= pkg-config
+
 # libnotify
-WITH_LIBNOTIFY ?= $(shell (pkg-config libnotify && echo 1) || echo 0)
+WITH_LIBNOTIFY ?= $(shell (${PKG_CONFIG} libnotify --atleast-version=0.7.0 && echo 1) || echo 0)
+
+# libjson-c
+WITH_JSON ?= $(shell (${PKG_CONFIG} json-c --exists && echo 1) || echo 0)
 
 # paths
 PREFIX ?= /usr
@@ -26,6 +32,14 @@ INCLUDEDIR ?= ${PREFIX}/include
 
 # locale directory
 LOCALEDIR ?= ${PREFIX}/share/locale
+
+# build directories
+DEPENDDIR ?= .depend
+BUILDDIR ?= build
+BUILDDIR_RELEASE ?= ${BUILDDIR}/release
+BUILDDIR_DEBUG ?= ${BUILDDIR}/debug
+BUILDDIR_GCOV ?= ${BUILDDIR}/gcov
+BINDIR ?= bin
 
 # version checks
 # If you want to disable any of the checks, set *_VERSION_CHECK to 0.
@@ -40,16 +54,21 @@ GLIB_MIN_VERSION = 2.28
 GLIB_PKG_CONFIG_NAME = glib-2.0
 
 # libs
-GTK_INC ?= $(shell pkg-config --cflags gtk+-3.0)
-GTK_LIB ?= $(shell pkg-config --libs gtk+-3.0)
+GTK_INC ?= $(shell ${PKG_CONFIG} --cflags gtk+-3.0)
+GTK_LIB ?= $(shell ${PKG_CONFIG} --libs gtk+-3.0)
 
 ifneq (${WITH_LIBNOTIFY},0)
-LIBNOTIFY_INC ?= $(shell pkg-config --cflags libnotify)
-LIBNOTIFY_LIB ?= $(shell pkg-config --libs libnotify)
+LIBNOTIFY_INC ?= $(shell ${PKG_CONFIG} --cflags libnotify)
+LIBNOTIFY_LIB ?= $(shell ${PKG_CONFIG} --libs libnotify)
 endif
 
-INCS = ${GTK_INC} ${LIBNOTIFY_INC}
-LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} -lm
+ifneq (${WITH_JSON},0)
+JSON_INC ?= $(shell ${PKG_CONFIG} --cflags json-c)
+JSON_LIB ?= $(shell ${PKG_CONFIG} --libs json-c)
+endif
+
+INCS = ${GTK_INC} ${LIBNOTIFY_INC} ${JSON_INC}
+LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} ${JSON_LIB} -lm
 
 # flags
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)
@@ -63,8 +82,15 @@ DFLAGS = -O0 -g
 # compiler
 CC ?= gcc
 
+# archiver
+AR ?= ar
+
 # strip
 SFLAGS ?= -s
+
+# soname
+SONAME_FLAG ?= -soname
+SHARED_FLAG ?= -shared
 
 # set to something != 0 if you want verbose build output
 VERBOSE ?= 0
@@ -75,9 +101,18 @@ GETTEXT_PACKAGE ?= lib${PROJECT}-${SOMAJOR}
 # msgfmt
 MSGFMT ?= msgfmt
 
+# gcov & lcov
+GCOV_CFLAGS=-fprofile-arcs -ftest-coverage
+GCOV_LDFLAGS=-fprofile-arcs
+LCOV_OUTPUT=gcov
+LCOV_EXEC=lcov
+LCOV_FLAGS=--base-directory . --directory ${BUILDDIR_GCOV} --capture --rc \
+					 lcov_branch_coverage=1 --output-file ${BUILDDIR_GCOV}/$(PROJECT).info
+GENHTML_EXEC=genhtml
+GENHTML_FLAGS=--rc lcov_branch_coverage=1 --output-directory ${LCOV_OUTPUT} ${BUILDDIR_GCOV}/$(PROJECT).info
+
 # colors
 COLOR ?= 1
 
 # dist
 TARFILE = ${PROJECTNV}-${VERSION}.tar.gz
-TARDIR = ${PROJECTNV}-${VERSION}

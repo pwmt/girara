@@ -16,8 +16,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../utils.h"
-#include "../datastructures.h"
+#include "utils.h"
+#include "datastructures.h"
 
 static girara_list_t*
 read_pwd_info(void)
@@ -135,7 +135,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
 #else
   gchar* envp[] = { g_strdup_printf("%s=", envvar), NULL };
 #endif
-  gchar* argv[] = { "./xdg_test_helper", g_strdup_printf("%d", path), NULL };
+  gchar* argv[] = { XDG_TEST_HELPER, g_strdup_printf("%d", path), NULL };
 
   gchar* output = NULL;
   bool result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
@@ -215,7 +215,7 @@ START_TEST(test_file_read) {
     char* line = girara_file_read_line(file);
     fail_unless(g_strcmp0(line, LINES[i]) == 0, "Line doesn't match (got: %s, expected: %s)",
         line, LINES[i], NULL);
-    free(line);
+    g_free(line);
   }
   fclose(file);
 

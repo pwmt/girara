@@ -52,6 +52,8 @@ HIDDEN void update_state_by_keyval(int *state, int keyval);
 
 HIDDEN void widget_add_class(GtkWidget* widget, const char* styleclass);
 
+HIDDEN void widget_remove_class(GtkWidget* widget, const char* styleclass);
+
 /**
  * Default complection function for the settings
  *
@@ -107,13 +109,27 @@ HIDDEN bool girara_cmd_set(girara_session_t* session,
 
 /**
  * Execute an external command
- * * @param session The used girara session
+ *
+ * @param session The used girara session
  * @param argument_list List of passed arguments
  * @return TRUE No error occured
  * @return FALSE An error occured
  */
 HIDDEN bool girara_cmd_exec(girara_session_t* session,
     girara_list_t* argument_list);
+
+#ifdef WITH_JSON
+/**
+ * Dump current settings to a JSON file
+ *
+ * @param session The used girara session
+ * @param argument_list List of passed arguments
+ * @return TRUE No error occured
+ * @return FALSE An error occured
+ */
+HIDDEN bool girara_cmd_dump_config(girara_session_t* session,
+    girara_list_t* argument_list);
+#endif
 
 /**
  * Process argument as a sequence of keys that were typed by the user

@@ -64,30 +64,3 @@ girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_
 
   return true;
 }
-
-bool
-girara_statusbar_item_set_foreground(girara_session_t* session, girara_statusbar_item_t* item, const char* color)
-{
-  g_return_val_if_fail(session != NULL, false);
-  g_return_val_if_fail(item    != NULL, false);
-
-  GdkRGBA gdk_color;
-  gdk_rgba_parse(&gdk_color, color);
-  gtk_widget_override_color(GTK_WIDGET(item->text),
-      GTK_STATE_FLAG_NORMAL, &gdk_color);
-
-  return true;
-}
-
-bool
-girara_statusbar_set_background(girara_session_t* session, const char* color)
-{
-  g_return_val_if_fail(session != NULL, false);
-
-  GdkRGBA gdk_color;
-  gdk_rgba_parse(&gdk_color, color);
-  gtk_widget_override_background_color(GTK_WIDGET(session->gtk.statusbar),
-      GTK_STATE_FLAG_NORMAL, &gdk_color);
-
-  return true;
-}

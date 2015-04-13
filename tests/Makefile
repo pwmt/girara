@@ -6,60 +6,116 @@ include ../colors.mk
 
 include config.mk
 
+PROJECT  = test
 SOURCE   = tests.c $(wildcard test_*.c)
-OBJECTS  = ${SOURCE:.c=.o}
-DOBJECTS = ${SOURCE:.c=.do}
+OBJECTS       = $(addprefix ${BUILDDIR_RELEASE}/,${SOURCE:.c=.o})
+OBJECTS_DEBUG = $(addprefix ${BUILDDIR_DEBUG}/,${SOURCE:.c=.o})
+OBJECTS_GCOV  = $(addprefix ${BUILDDIR_GCOV}/,${SOURCE:.c=.o})
+
+GIRARA_OBJECTS = $(wildcard ${GIRARA_RELEASE}/*.o)
+GIRARA_OBJECTS_DEBUG = $(wildcard ${GIRARA_DEBUG}/*.o)
+GIRARA_OBJECTS_GCOV = $(wildcard ${GIRARA_GCOV}/*.o)
+
 XDG_HELPER_SOURCE = xdg_test_helper.c
-XDG_HELPER = ${XDG_HELPER_SOURCE:.c=}
+XDG_HELPER = $(addprefix ${BUILDDIR_RELEASE}/,${XDG_HELPER_SOURCE:.c=})
 
-all: options girara_test ${XDG_HELPER}
+CPPFLAGS += -I../girara -DXDG_TEST_HELPER=\"${XDG_HELPER}\"
 
-run: girara_test ${XDG_HELPER}
-	$(ECHO) "running tests ..."
-	$(QUIET)G_SLICE=debug-blocks ./girara_test
+all: release ${XDG_HELPER}
 
-debug: options girara_test-debug ${XDG_HELPER}
+../girara/version.h:
+	$(MAKE) -C .. girara/version.h
 
-run-debug: debug
-	$(ECHO) "running tests ..."
-	$(QUIET)G_SLICE=debug-blocks ./girara_test-debug
+# release
 
-options:
-	@echo ${PROJECT} build options:
-	@echo "CFLAGS  = ${CFLAGS}"
-	@echo "LDFLAGS = ${LDFLAGS}"
-	@echo "DFLAGS  = ${DFLAGS}"
-	@echo "CC      = ${CC}"
+${OBJECTS}: config.mk ../config.mk ../girara/version.h
 
-%.o: %.c
-	@mkdir -p .depend
+${BUILDDIR_RELEASE}/%.o: %.c
 	$(call colorecho,CC,$<)
-	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
+	@mkdir -p ${DEPENDDIR}/$(dir $(abspath $@))
+	@mkdir -p $(dir $(abspath $@))
+	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} \
+		-o $@ $< -MMD -MF ${DEPENDDIR}/$(abspath $@).dep
 
-${XDG_HELPER}: ${XDG_HELPER_SOURCE} ../libgirara-gtk3.a
-	@mkdir -p .depend
+${BUILDDIR_RELEASE}/${BINDIR}/${PROJECT}: ${OBJECTS}
+	$(QUIET)$(MAKE) -C .. release
+	$(call colorecho,CC,$@)
+	@mkdir -p ${BUILDDIR_RELEASE}/${BINDIR}
+	$(QUIET)${CC} ${SFLAGS} ${LDFLAGS} \
+		-o ${BUILDDIR_RELEASE}/${BINDIR}/${PROJECT} \
+		${OBJECTS} ${GIRARA_OBJECTS} ${LIBS}
+
+release: ${BUILDDIR_RELEASE}/${BINDIR}/${PROJECT}
+
+run: release ${XDG_HELPER}
+	$(QUIET)./${BUILDDIR_RELEASE}/${BINDIR}/${PROJECT}
+
+# debug
+
+${OBJECTS_DEBUG}: config.mk ../config.mk ../girara/version.h
+
+${BUILDDIR_DEBUG}/%.o: %.c
+	@mkdir -p ${DEPENDDIR}/$(dir $(abspath $@))
+	@mkdir -p $(dir $(abspath $@))
 	$(call colorecho,CC,$<)
-	$(QUIET)${CC}  -I.. ${CPPFLAGS} ${CFLAGS} -o $@ $< ../libgirara-gtk3.a ${LDFLAGS} ${LIBS} -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} \
+		-o $@ $< -MMD -MF ${DEPENDDIR}/$(abspath $@).dep
 
-%.do: %.c
-	@mkdir -p .depend
+${BUILDDIR_DEBUG}/${BINDIR}/${PROJECT}: ${OBJECTS_DEBUG}
+	$(QUIET)$(MAKE) -C .. debug
+	$(call colorecho,CC,$@)
+	@mkdir -p ${BUILDDIR_DEBUG}/${BINDIR}
+	$(QUIET)${CC} ${SFLAGS} ${LDFLAGS} \
+		-o ${BUILDDIR_DEBUG}/${BINDIR}/${PROJECT} \
+		${OBJECTS} ${GIRARA_OBJECTS_DEBUG} ${LIBS}
+
+debug: ${BUILDDIR_DEBUG}/${BINDIR}/${PROJECT}
+
+run-debug: debug ${XDG_HELPER}
+	$(QUIET)./${BUILDDIR_DEBUG}/${BINDIR}/${PROJECT}
+
+# gcov
+
+${OBJECTS_GCOV}: config.mk ../config.mk ../girara/version.h
+
+${BUILDDIR_GCOV}/%.o: %.c
+	@mkdir -p ${DEPENDDIR}/$(dir $(abspath $@))
+	@mkdir -p $(dir $(abspath $@))
 	$(call colorecho,CC,$<)
-	$(QUIET)${CC} -c -I.. ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< -MMD -MF .depend/$@.dep
+	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${GCOV_CFLAGS} ${DFLAGS} ${GCOV_DFLAGS} \
+		-o $@ $< -MMD -MF ${DEPENDDIR}/$(abspath $@).dep
 
-girara_test: ${OBJECTS} ../libgirara-gtk3.a
-	$(call colorecho,LD,$@)
-	$(QUIET)${CC} ${LDFLAGS} -o $@ ${OBJECTS} ../libgirara-gtk3.a ${LIBS}
+${BUILDDIR_GCOV}/${BINDIR}/${PROJECT}: ${OBJECTS_GCOV}
+	$(QUIET)$(MAKE) -C .. gcov
+	$(call colorecho,CC,$@)
+	@mkdir -p ${BUILDDIR_GCOV}/${BINDIR}
+	$(QUIET)${CC} ${SFLAGS} ${LDFLAGS} ${GCOV_CFLAGS} ${GCOV_LDFLAGS} \
+		-o ${BUILDDIR_GCOV}/${BINDIR}/${PROJECT} \
+		${OBJECTS} ${GIRARA_OBJECTS_GCOV} ${LIBS}
 
-girara_test-debug: ${DOBJECTS} ../libgirara-gtk3-debug.a
-	$(call colorecho,LD,$@)
-	$(QUIET)${CC} ${LDFLAGS} -o $@ ${DOBJECTS} ../libgirara-gtk3-debug.a ${LIBS}
+gcov: ${BUILDDIR_GCOV}/${BINDIR}/${PROJECT}
 
-${DOBJECTS} ${OBJECTS}: ../config.mk
+run-gcov: gcov
+	$(QUIET)./${BUILDDIR_GCOV}/${BINDIR}/${PROJECT}
+
+# XDG test helper
+
+${XDG_HELPER}: ${XDG_HELPER_SOURCE}
+	$(MAKE) -C .. release
+	@mkdir -p ${DEPENDDIR}/$(dir $(abspath $@))
+	@mkdir -p $(dir $(abspath $@))
+	$(call colorecho,CC,$@)
+	$(QUIET)${CC} ${CPPFLAGS} ${CFLAGS} -o $@ $< ${GIRARA_OBJECTS} \
+		${LDFLAGS} ${LIBS} -MMD -MF ${DEPENDDIR}/$(abspath $@).dep
 
 clean:
-	$(QUIET)rm -rf ${OBJECTS} ${DOBJECTS} girara_test \
-		girara_test-debug .depend ${XDG_HELPER} *gcda *gcno
+	$(call colorecho,RM, "Clean test files")
+	$(QUIET)rm -rf ${PROJECT}
+	$(QUIET)rm -rf ${PROJECT}-debug
+	$(QUIET)rm -rf ${PROJECT}-gcov
+	$(QUIET)rm -rf ${BUILDDIR}
+	$(QUIET)rm -rf ${DEPENDDIR}
 
-.PHONY: all options clean debug run run-debug
+.PHONY: all clean debug gciv run run-debug run-gcov
 
--include $(wildcard .depend/*.dep)
+-include $(wildcard ${DEPENDDIR}/*.dep)

@@ -1,7 +1,7 @@
 /* See LICENSE file for license and copyright information */
 
 #define _DEFAULT_SOURCE
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__APPLE__)
 #define _XOPEN_SOURCE 700
 #endif
 #define _FILE_OFFSET_BITS 64
@@ -70,20 +70,20 @@ girara_xdg_open(const char* uri)
     return false;
   }
 
-  GString* command = g_string_new("xdg-open ");
-  char* tmp        = g_shell_quote(uri);
-
-  g_string_append(command, tmp);
-  g_free(tmp);
+  /* g_spawn_async expects char** */
+  char* argv[] = { g_strdup("xdg-open"), g_strdup(uri), NULL };
 
   GError* error = NULL;
-  bool res = g_spawn_command_line_async(command->str, &error);
+  const bool res = g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
+      NULL, NULL, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
     g_error_free(error);
   }
 
-  g_string_free(command, TRUE);
+  g_free(argv[0]);
+  g_free(argv[1]);
+
   return res;
 }
 
@@ -244,7 +244,7 @@ girara_file_open(const char* path, const char* mode)
   /*return fp;*/
 }
 
-#if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__)
+#if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)
 char*
 girara_file_read_line(FILE* file)
 {
@@ -258,7 +258,7 @@ girara_file_read_line(FILE* file)
     return NULL;
   }
 
-  char* copy = strndup(line, size);
+  char* copy = g_strndup(line, size);
   if (copy == NULL) {
     return NULL;
   }
@@ -287,7 +287,10 @@ girara_file_read_line(FILE* file)
 
   /* remove the trailing line deliminator */
   g_strdelimit(line, "\n\r", '\0');
-  return line;
+
+  char* duplicate = g_strdup(line);
+  free(line);
+  return duplicate;
 }
 #endif
 
@@ -536,6 +539,20 @@ widget_add_class(GtkWidget* widget, const char* styleclass)
   }
 
   GtkStyleContext* context = gtk_widget_get_style_context(widget);
-  gtk_style_context_add_class(context, styleclass);
+  if (gtk_style_context_has_class(context, styleclass) == FALSE) {
+    gtk_style_context_add_class(context, styleclass);
+  }
 }
 
+void
+widget_remove_class(GtkWidget* widget, const char* styleclass)
+{
+  if (widget == NULL || styleclass == NULL) {
+    return;
+  }
+
+  GtkStyleContext* context = gtk_widget_get_style_context(widget);
+  if (gtk_style_context_has_class(context, styleclass) == TRUE) {
+    gtk_style_context_remove_class(context, styleclass);
+  }
+}

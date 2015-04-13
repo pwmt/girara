@@ -2,8 +2,8 @@
 
 #include <check.h>
 
-#include "../session.h"
-#include "../settings.h"
+#include "session.h"
+#include "settings.h"
 
 START_TEST(test_settings_basic) {
   girara_session_t* session = girara_session_create();

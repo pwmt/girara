@@ -89,67 +89,52 @@ fill_template_with_values(girara_session_t* session)
   char* font = NULL;
   girara_setting_get(session, "font", &font);
   if (font != NULL) {
-    GIRARA_IGNORE_DEPRECATED
-    pango_font_description_free(session->style.font);
-    session->style.font = pango_font_description_from_string(font);
-    GIRARA_UNIGNORE
+    girara_template_set_variable_value(csstemplate, "font", font);
     g_free(font);
-  }
-  GIRARA_IGNORE_DEPRECATED
-  if (session->style.font == NULL) {
-    girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
   } else {
-    char* fontname = pango_font_description_to_string(session->style.font);
-    girara_template_set_variable_value(csstemplate, "font", fontname);
-    g_free(fontname);
-  }
-  GIRARA_UNIGNORE
+    girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
+  };
 
   /* parse color values */
-  typedef struct color_setting_mapping_s {
-    const char* identifier;
-    GdkRGBA *color;
-  } color_setting_mapping_t;
-
-  GIRARA_IGNORE_DEPRECATED
-  const color_setting_mapping_t color_setting_mappings[] = {
-    {"default-fg",              &(session->style.default_foreground)},
-    {"default-bg",              &(session->style.default_background)},
-    {"inputbar-fg",             &(session->style.inputbar_foreground)},
-    {"inputbar-bg",             &(session->style.inputbar_background)},
-    {"statusbar-fg",            &(session->style.statusbar_foreground)},
-    {"statusbar-bg",            &(session->style.statusbar_background)},
-    {"completion-fg",           &(session->style.completion_foreground)},
-    {"completion-bg",           &(session->style.completion_background)},
-    {"completion-group-fg",     &(session->style.completion_group_foreground)},
-    {"completion-group-bg",     &(session->style.completion_group_background)},
-    {"completion-highlight-fg", &(session->style.completion_highlight_foreground)},
-    {"completion-highlight-bg", &(session->style.completion_highlight_background)},
-    {"notification-error-fg",   &(session->style.notification_error_foreground)},
-    {"notification-error-bg",   &(session->style.notification_error_background)},
-    {"notification-warning-fg", &(session->style.notification_warning_foreground)},
-    {"notification-warning-bg", &(session->style.notification_warning_background)},
-    {"notification-fg",         &(session->style.notification_default_foreground)},
-    {"notification-bg",         &(session->style.notification_default_background)},
-    {"tabbar-fg",               &(session->style.tabbar_foreground)},
-    {"tabbar-bg",               &(session->style.tabbar_background)},
-    {"tabbar-focus-fg",         &(session->style.tabbar_focus_foreground)},
-    {"tabbar-focus-bg",         &(session->style.tabbar_focus_background)},
+  const char* color_settings[] = {
+    "default-fg",
+    "default-bg",
+    "inputbar-fg",
+    "inputbar-bg",
+    "statusbar-fg",
+    "statusbar-bg",
+    "completion-fg",
+    "completion-bg",
+    "completion-group-fg",
+    "completion-group-bg",
+    "completion-highlight-fg",
+    "completion-highlight-bg",
+    "notification-error-fg",
+    "notification-error-bg",
+    "notification-warning-fg",
+    "notification-warning-bg",
+    "notification-fg",
+    "notification-bg",
+    "tabbar-fg",
+    "tabbar-bg",
+    "tabbar-focus-fg",
+    "tabbar-focus-bg",
   };
-  GIRARA_UNIGNORE
 
-  for (size_t i = 0; i < LENGTH(color_setting_mappings); i++) {
+  for (size_t i = 0; i < LENGTH(color_settings); i++) {
     char* tmp_value = NULL;
-    girara_setting_get(session, color_setting_mappings[i].identifier, &tmp_value);
+    girara_setting_get(session, color_settings[i], &tmp_value);
+
+    GdkRGBA color = { 0, 0, 0, 0 };
     if (tmp_value != NULL) {
-      gdk_rgba_parse(color_setting_mappings[i].color, tmp_value);
+      gdk_rgba_parse(&color, tmp_value);
       g_free(tmp_value);
     }
 
-    char* color = gdk_rgba_to_string(color_setting_mappings[i].color);
-    girara_template_set_variable_value(csstemplate,
-        color_setting_mappings[i].identifier, color);
-    g_free(color);
+    char* colorstr = gdk_rgba_to_string(&color);
+    girara_template_set_variable_value(csstemplate, color_settings[i],
+        colorstr);
+    g_free(colorstr);
   }
 
   /* we want inputbar_entry the same height as notification_text and statusbar,
@@ -283,7 +268,7 @@ girara_session_create()
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
-#if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
+#if GTK_CHECK_VERSION(3, 4, 0)
   gtk_widget_add_events(session->gtk.viewport, GDK_SCROLL_MASK);
 #endif
   session->gtk.statusbar         = gtk_event_box_new();
@@ -293,12 +278,6 @@ girara_session_create()
   session->gtk.inputbar_entry    = GTK_ENTRY(girara_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
   session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
-
-  /* deprecated members */
-  GIRARA_IGNORE_DEPRECATED
-  session->settings               = session->private_data->settings;
-  session->global.command_history = girara_get_command_history(session);
-  GIRARA_UNIGNORE
 
   return session;
 }
@@ -310,7 +289,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     return false;
   }
 
-#if GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION >= 4
+#if GTK_CHECK_VERSION(3, 4, 0)
   bool smooth_scroll = false;
   girara_setting_get(session, "smooth-scroll", &smooth_scroll);
   if (smooth_scroll) {
@@ -327,11 +306,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
       G_CALLBACK(css_template_changed), session);
 
   /* window */
+#ifdef GDK_WINDOWING_X11
   if (session->gtk.embed != 0) {
     session->gtk.window = gtk_plug_new(session->gtk.embed);
   } else {
+#endif
     session->gtk.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+#ifdef GDK_WINDOWING_X11
   }
+#endif
 
   gtk_widget_set_name(GTK_WIDGET(session->gtk.window),
       session->private_data->session_name);
@@ -475,8 +458,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   /* notification area */
   widget_add_class(session->gtk.notification_area, "notification");
   widget_add_class(session->gtk.notification_text, "notification");
-  gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_area));
-  gtk_style_context_save(gtk_widget_get_style_context(session->gtk.notification_text));
 
   /* set window size */
   int window_width = 0;
@@ -545,13 +526,6 @@ girara_session_destroy(girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
 
-  /* clean up style */
-  GIRARA_IGNORE_DEPRECATED
-  if (session->style.font != NULL) {
-    pango_font_description_free(session->style.font);
-  }
-  GIRARA_UNIGNORE
-
   /* clean up shortcuts */
   girara_list_free(session->bindings.shortcuts);
   session->bindings.shortcuts = NULL;
@@ -611,9 +585,6 @@ girara_session_destroy(girara_session_t* session)
   /* clean up private data */
   girara_session_private_free(session->private_data);
   session->private_data = NULL;
-  GIRARA_IGNORE_DEPRECATED
-  session->settings = NULL;
-  GIRARA_UNIGNORE
 
   /* clean up session */
   g_slice_free(girara_session_t, session);
@@ -699,21 +670,15 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  GtkStyleContext* area_context = gtk_widget_get_style_context(session->gtk.notification_area);
-  GtkStyleContext* text_context = gtk_widget_get_style_context(session->gtk.notification_text);
+  bool error_class = false;
+  bool warning_class = false;
 
-  gtk_style_context_restore(area_context);
-  gtk_style_context_restore(text_context);
-  gtk_style_context_save(area_context);
-  gtk_style_context_save(text_context);
-
-  const char* cssclass = NULL;
   switch (level) {
     case GIRARA_ERROR:
-      cssclass = "notification-error";
+      error_class = true;
       break;
     case GIRARA_WARNING:
-      cssclass = "notification-warning";
+      warning_class = true;
       break;
     case GIRARA_INFO:
       break;
@@ -721,9 +686,19 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
       return;
   }
 
-  if (cssclass != NULL) {
-    widget_add_class(session->gtk.notification_area, cssclass);
-    widget_add_class(session->gtk.notification_text, cssclass);
+  if (error_class == true) {
+    widget_add_class(session->gtk.notification_area, "notification-error");
+    widget_add_class(session->gtk.notification_text, "notification-error");
+  } else {
+    widget_remove_class(session->gtk.notification_area, "notification-error");
+    widget_remove_class(session->gtk.notification_text, "notification-error");
+  }
+  if (warning_class == true) {
+    widget_add_class(session->gtk.notification_area, "notification-warning");
+    widget_add_class(session->gtk.notification_text, "notification-warning");
+  } else {
+    widget_remove_class(session->gtk.notification_area, "notification-warning");
+    widget_remove_class(session->gtk.notification_text, "notification-warning");
   }
 
   /* prepare message */

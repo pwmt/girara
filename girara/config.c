@@ -50,18 +50,8 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  GIRARA_IGNORE_DEPRECATED
-  pango_font_description_free(session->style.font);
-
-  /* parse font */
-  PangoFontDescription* font = pango_font_description_from_string(value);
-  session->style.font = font;
-
-  char* fontname = pango_font_description_to_string(session->style.font);
   girara_template_set_variable_value(session->private_data->csstemplate, "font",
-      fontname);
-  g_free(fontname);
-  GIRARA_UNIGNORE
+      value);
 }
 
 static void
@@ -280,11 +270,14 @@ girara_config_load_default(girara_session_t* session)
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_n,            girara_isc_command_history,     GIRARA_NEXT,                 NULL);
 
   /* commands */
-  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,  NULL,          _("Execute a command"));
-  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,   NULL,          _("Map a key sequence"));
-  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,  NULL,          _("Quit the program"));
-  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,   girara_cc_set, _("Set an option"));
-  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap, NULL,          _("Unmap a key sequence"));
+  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,        NULL,          _("Execute a command"));
+  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,         NULL,          _("Map a key sequence"));
+  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,        NULL,          _("Quit the program"));
+  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,         girara_cc_set, _("Set an option"));
+  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap,       NULL,          _("Unmap a key sequence"));
+#ifdef WITH_JSON
+  girara_inputbar_command_add(session, "dump",  NULL, girara_cmd_dump_config, NULL,          _("Dump settings to a file"));
+#endif
 
   /* config handle */
   girara_config_handle_add(session, "map",   girara_cmd_map);
@@ -352,30 +345,31 @@ config_parse(girara_session_t* session, const char* path)
   while ((line = girara_file_read_line(file)) != NULL) {
     /* skip empty lines and comments */
     if (strlen(line) == 0 || strchr(COMMENT_PREFIX, line[0]) != NULL) {
-      free(line);
+      g_free(line);
       continue;
     }
 
-    gchar** argv = NULL;
-    gint    argc = 0;
-
     girara_list_t* argument_list = girara_list_new();
     if (argument_list == NULL) {
-      free(line);
+      g_free(line);
       fclose(file);
       return false;
     }
 
     girara_list_set_free_function(argument_list, g_free);
+
+    gchar** argv = NULL;
+    gint    argc = 0;
+
     if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
-      for(int i = 1; i < argc; i++) {
+      for (int i = 1; i < argc; i++) {
         char* argument = g_strdup(argv[i]);
         girara_list_append(argument_list, (void*) argument);
       }
     } else {
       girara_list_free(argument_list);
       fclose(file);
-      free(line);
+      g_free(line);
       return false;
     }
 
@@ -399,7 +393,7 @@ config_parse(girara_session_t* session, const char* path)
           girara_warning("Could not process line %d in '%s': trying to include itself.", line_number, path);
         } else {
           girara_debug("Loading config file '%s'.", newpath);
-          if (config_parse(session, newpath) == FALSE) {
+          if (config_parse(session, newpath) == false) {
             girara_warning("Could not process line %d in '%s': failed to load '%s'.", line_number, path, newpath);
           }
         }
@@ -426,7 +420,7 @@ config_parse(girara_session_t* session, const char* path)
     line_number++;
     girara_list_free(argument_list);
     g_strfreev(argv);
-    free(line);
+    g_free(line);
   }
 
   fclose(file);

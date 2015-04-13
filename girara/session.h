@@ -8,7 +8,9 @@
 #include "callbacks.h"
 
 #include <gtk/gtk.h>
+#ifdef GDK_WINDOWING_X11
 #include <gtk/gtkx.h>
+#endif
 #include <gdk/gdkkeysyms.h>
 
 struct girara_session_s
@@ -30,35 +32,10 @@ struct girara_session_s
     GtkEntry        *inputbar_entry; /**< Inputbar entry */
     GtkNotebook     *tabs; /**< The tabs notebook */
     GtkBox          *results; /**< Completion results */
+#ifdef GDK_WINDOWING_X11
     Window          embed; /**< Embedded window */
+#endif
   } gtk;
-
-  struct
-  {
-    GdkRGBA default_foreground; /**< The default foreground color */
-    GdkRGBA default_background; /**< The default background color */
-    GdkRGBA inputbar_foreground; /**< The foreground color of the inputbar */
-    GdkRGBA inputbar_background; /**< The background color of the inputbar */
-    GdkRGBA statusbar_foreground; /**< The foreground color of the statusbar */
-    GdkRGBA statusbar_background; /**< The background color of the statusbar */
-    GdkRGBA completion_foreground; /**< The foreground color of a completion item */
-    GdkRGBA completion_background; /**< The background color of a completion item */
-    GdkRGBA completion_group_foreground; /**< The foreground color of a completion group entry */
-    GdkRGBA completion_group_background; /**< The background color of a completion group entry */
-    GdkRGBA completion_highlight_foreground; /**< The foreground color of a highlighted completion item */
-    GdkRGBA completion_highlight_background; /**< The background color of a highlighted completion item */
-    GdkRGBA notification_error_foreground; /**< The foreground color of an error notification */
-    GdkRGBA notification_error_background; /**< The background color of an error notification */
-    GdkRGBA notification_warning_foreground; /**< The foreground color of a warning notification */
-    GdkRGBA notification_warning_background; /**< The background color of a warning notification */
-    GdkRGBA notification_default_foreground; /**< The foreground color of a default notification */
-    GdkRGBA notification_default_background; /**< The background color of a default notification */
-    GdkRGBA tabbar_foreground; /**< The foreground color for a tab */
-    GdkRGBA tabbar_background; /**< The background color for a tab */
-    GdkRGBA tabbar_focus_foreground; /**< The foreground color for a focused tab */
-    GdkRGBA tabbar_focus_background; /**< The background color for a focused tab */
-    PangoFontDescription *font; /**< The used font */
-  } GIRARA_DEPRECATED(style);
 
   struct
   {
@@ -73,11 +50,6 @@ struct girara_session_s
   {
     girara_list_t* statusbar_items; /**< List of statusbar items */
   } elements;
-
-  /**
-   * List of settings (deprecated)
-   */
-  girara_list_t* GIRARA_DEPRECATED(settings);
 
   struct
   {
@@ -104,7 +76,6 @@ struct girara_session_s
   {
     GString *buffer; /**< Buffer */
     void* data; /**< User data */
-    girara_list_t* GIRARA_DEPRECATED(command_history); /**< Command history (deprecated) */
     bool autohide_inputbar; /**< Auto-hide inputbar */
     bool hide_statusbar; /**< Hide statusbar */
   } global;

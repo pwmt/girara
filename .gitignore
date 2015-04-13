@@ -14,5 +14,7 @@ css-definitions.c
 *.gcda
 gcov/
 *.swp
-doc/
 .version-checks/
+doc/doxygen
+build
+tests/build

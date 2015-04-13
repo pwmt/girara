@@ -97,3 +97,14 @@
   padding: @bottombox-padding1@px @bottombox-padding2@px @bottombox-padding3@px
     @bottombox-padding4@px;
 }
+
+#@session@ GtkScrolledWindow .undershoot.top,
+#@session@ GtkScrolledWindow .undershoot.top:backdrop,
+#@session@ GtkScrolledWindow .undershoot.bottom,
+#@session@ GtkScrolledWindow .undershoot.bottom:backdrop,
+#@session@ GtkScrolledWindow .undershoot.left,
+#@session@ GtkScrolledWindow .undershoot.left:backdrop,
+#@session@ GtkScrolledWindow .undershoot.right,
+#@session@ GtkScrolledWindow .undershoot.right:backdrop {
+  background-color: transparent;
+}
