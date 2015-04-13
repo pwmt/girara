@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2015-01-01 21:22+0100\n"
+"POT-Creation-Date: 2015-04-13 19:37+0200\n"
 "PO-Revision-Date: 2015-01-01 21:25+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/girara/language/"
@@ -32,168 +32,168 @@ msgid "Not a valid command: %s"
 msgstr "Μη έγγυρη εντολή: %s"
 
 #. settings
-#: ../girara/config.c:212
+#: ../girara/config.c:202
 msgid "Font"
 msgstr "Γραμματοσειρά"
 
-#: ../girara/config.c:213
+#: ../girara/config.c:203
 msgid "Default foreground color"
 msgstr "Προεπιλεγμένο χρώμα προσκηνίου"
 
-#: ../girara/config.c:214
+#: ../girara/config.c:204
 msgid "Default background color"
 msgstr "Προεπιλεγμένο χρώμα πρασκηνίου"
 
-#: ../girara/config.c:215
+#: ../girara/config.c:205
 msgid "Inputbar foreground color"
 msgstr "Χρώμα μπάρας εισαγωγής"
 
-#: ../girara/config.c:216
+#: ../girara/config.c:206
 msgid "Inputbar background color"
 msgstr "Χρώμα φόντου μπάρας εισαγωγής"
 
-#: ../girara/config.c:217
+#: ../girara/config.c:207
 msgid "Statusbar foreground color"
 msgstr "Χρώμα μπάρας κατάστασης"
 
-#: ../girara/config.c:218
+#: ../girara/config.c:208
 msgid "Statsubar background color"
 msgstr "Χρώμα φόντου μπάρας κατάστασης"
 
-#: ../girara/config.c:219
+#: ../girara/config.c:209
 msgid "Completion foreground color"
 msgstr "Χρώμα επιλογών συμπλήρωσης"
 
-#: ../girara/config.c:220
+#: ../girara/config.c:210
 msgid "Completion background color"
 msgstr "Χρώμα συμπλήρωσης λέξεων"
 
-#: ../girara/config.c:221
+#: ../girara/config.c:211
 msgid "Completion group foreground color"
 msgstr "Χρώμα μενού συμπλήρωσης λέξεων"
 
-#: ../girara/config.c:222
+#: ../girara/config.c:212
 msgid "Completion group background color"
 msgstr "Χρώμα φόντου του μενού συμπλήρωσης λέξεων"
 
-#: ../girara/config.c:223
+#: ../girara/config.c:213
 msgid "Completion highlight foreground color"
 msgstr "Χρώμα τονισμού συμπλήρωσης λέξεων"
 
-#: ../girara/config.c:224
+#: ../girara/config.c:214
 msgid "Completion highlight background color"
 msgstr "Χρώμα φόντου τονισμού συμπλήρωσης λέξεων"
 
-#: ../girara/config.c:225
+#: ../girara/config.c:215
 msgid "Error notification foreground color"
 msgstr "Χρώμα ειδοποίησης σφάλματος"
 
-#: ../girara/config.c:226
+#: ../girara/config.c:216
 msgid "Error notification background color"
 msgstr "Χρώμα φόντου ειδοποίησης σφάλματος"
 
-#: ../girara/config.c:227
+#: ../girara/config.c:217
 msgid "Warning notification foreground color"
 msgstr "Χρώμα ειδοποίησης προειδοποίησης"
 
-#: ../girara/config.c:228
+#: ../girara/config.c:218
 msgid "Warning notifaction background color"
 msgstr "Χρώμα φόντου ειδοποίησης προειδοποίησης"
 
-#: ../girara/config.c:229
+#: ../girara/config.c:219
 msgid "Notification foreground color"
 msgstr "Χρώμα ειδοποίησης"
 
-#: ../girara/config.c:230
+#: ../girara/config.c:220
 msgid "Notification background color"
 msgstr "Χρώμα φόντου ειδοποίησης"
 
-#: ../girara/config.c:231
+#: ../girara/config.c:221
 msgid "Tab bar foreground color"
 msgstr "Χρώμα μπάρας καρτελών"
 
-#: ../girara/config.c:232
+#: ../girara/config.c:222
 msgid "Tab bar background color"
 msgstr "Χρώμα φόντου μπάρας καρτελών"
 
-#: ../girara/config.c:233
+#: ../girara/config.c:223
 msgid "Tab bar foreground color (active)"
 msgstr "Χρώμα μπάρας καρτελών (ενεργό)"
 
-#: ../girara/config.c:234
+#: ../girara/config.c:224
 msgid "Tab bar background color (active)"
 msgstr "Χρώμα φόντου μπάρας καρτελών (ενεργό)"
 
-#: ../girara/config.c:236
+#: ../girara/config.c:226
 msgid "Initial window width"
 msgstr "Αρχικό πλάτος παραθύρου"
 
-#: ../girara/config.c:237
+#: ../girara/config.c:227
 msgid "Initial window height"
 msgstr "Αρχικό ύψος παραθύρου"
 
-#: ../girara/config.c:238
+#: ../girara/config.c:228
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:239
+#: ../girara/config.c:229
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:240
+#: ../girara/config.c:230
 msgid "Number of completion items"
 msgstr "Αριθμός στοιχείων συμπλήρωσης"
 
-#: ../girara/config.c:241
+#: ../girara/config.c:231
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../girara/config.c:242
+#: ../girara/config.c:232
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../girara/config.c:243
+#: ../girara/config.c:233
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../girara/config.c:244
+#: ../girara/config.c:234
 msgid "Window icon"
 msgstr "Εικονίδιο παραθύρου"
 
-#: ../girara/config.c:245
+#: ../girara/config.c:235
 msgid "Command to execute in :exec"
 msgstr "Η εντολή που θα εκτελεστεί στο :exec"
 
-#: ../girara/config.c:246
+#: ../girara/config.c:236
 msgid "Show or hide certain GUI elements"
 msgstr "Εμφάνιση είτε απόκριψη συγκεκριμένω στοιχείων του GUI"
 
-#: ../girara/config.c:247
+#: ../girara/config.c:237
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:283
+#: ../girara/config.c:273
 msgid "Execute a command"
 msgstr "Εκτέλεση εντολής"
 
-#: ../girara/config.c:284
+#: ../girara/config.c:274
 msgid "Map a key sequence"
 msgstr "Χαρτογράφηση / map αλληλουχίας πλήκτρων"
 
-#: ../girara/config.c:285
+#: ../girara/config.c:275
 msgid "Quit the program"
 msgstr "Εγκατάληψη της εφαρμογής"
 
-#: ../girara/config.c:286
+#: ../girara/config.c:276
 msgid "Set an option"
 msgstr "Ρύθμιση επιλογής"
 
-#: ../girara/config.c:287
+#: ../girara/config.c:277
 msgid "Unmap a key sequence"
 msgstr "Απόχαρτογράφηση / unmap αλληλουχίας πλήκτρων"
 
-#: ../girara/config.c:289
+#: ../girara/config.c:279
 msgid "Dump settings to a file"
 msgstr ""
 
