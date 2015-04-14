@@ -28,6 +28,9 @@ endif
 
 ifneq (${WITH_JSON},0)
 CPPFLAGS += -DWITH_JSON
+JSON_PC_NAME = json-c
+else
+JSON_PC_NAME =
 endif
 
 ifeq (,$(findstring -DGETTEXT_PACKAGE,${CPPFLAGS}))
@@ -89,6 +92,7 @@ ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 		-e 's,@INCLUDEDIR@,${INCLUDEDIR},' \
 		-e 's,@LIBDIR@,${LIBDIR},' \
 		-e 's,@LIBNOTIFY_PC_NAME@,${LIBNOTIFY_PC_NAME},' \
+		-e 's,@JSON_PC_NAME@,${JSON_PC_NAME},' \
 		${PROJECTNV}.pc.in > $@.tmp
 	$(QUIET)mv $@.tmp $@
 
