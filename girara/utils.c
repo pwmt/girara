@@ -4,7 +4,6 @@
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__APPLE__)
 #define _XOPEN_SOURCE 700
 #endif
-#define _FILE_OFFSET_BITS 64
 
 #include <ctype.h>
 #include <glib.h>
