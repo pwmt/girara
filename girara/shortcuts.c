@@ -152,8 +152,8 @@ bool
 girara_isc_activate(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
     girara_callback_inputbar_activate(session->gtk.inputbar_entry, session);
+    return true;
 }
-
 
 bool
 girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
