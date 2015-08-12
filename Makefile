@@ -113,7 +113,7 @@ ${BUILDDIR_RELEASE}/%.o: %.c
 ${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS}
 	$(call colorecho,AR,$@)
 	@mkdir -p ${BUILDDIR_RELEASE}/${BINDIR}
-	$(QUIET)ar rcs $@ ${OBJECTS}
+	$(QUIET)${AR} rcs $@ ${OBJECTS}
 
 ${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
 	$(call colorecho,LD,$@)
