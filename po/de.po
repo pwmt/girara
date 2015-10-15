@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2015-04-13 19:37+0200\n"
+"POT-Creation-Date: 2015-10-15 23:00+0200\n"
 "PO-Revision-Date: 2015-01-01 21:24+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
@@ -177,92 +177,92 @@ msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:273
+#: ../girara/config.c:276
 msgid "Execute a command"
 msgstr "Führe einen Befehl aus."
 
-#: ../girara/config.c:274
+#: ../girara/config.c:277
 msgid "Map a key sequence"
 msgstr "Tastenfolge zuweisen"
 
-#: ../girara/config.c:275
+#: ../girara/config.c:278
 msgid "Quit the program"
 msgstr "Beende das Programm"
 
-#: ../girara/config.c:276
+#: ../girara/config.c:279
 msgid "Set an option"
 msgstr "Setze eine Option"
 
-#: ../girara/config.c:277
+#: ../girara/config.c:280
 msgid "Unmap a key sequence"
 msgstr "Tastenfolge entbinden"
 
-#: ../girara/config.c:279
+#: ../girara/config.c:282
 msgid "Dump settings to a file"
 msgstr "Speichere Einstellungen in einer Datei"
 
-#: ../girara/utils.c:525
+#: ../girara/utils.c:524
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Konnte Befehl nicht ausführen: %s"
 
-#: ../girara/commands.c:109 ../girara/commands.c:309
+#: ../girara/commands.c:110 ../girara/commands.c:310
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Ungültige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
-#: ../girara/commands.c:143
+#: ../girara/commands.c:144
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Modus ist nicht registriert: %s"
 
-#: ../girara/commands.c:175
+#: ../girara/commands.c:176
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Ungültiger Modifikator in %s"
 
-#: ../girara/commands.c:214
+#: ../girara/commands.c:215
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Ungültige Sondertaste für %s"
 
-#: ../girara/commands.c:250
+#: ../girara/commands.c:251
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Ungültige Sondertaste oder Modus %s"
 
-#: ../girara/commands.c:331
+#: ../girara/commands.c:332
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
 
-#: ../girara/commands.c:419
+#: ../girara/commands.c:420
 msgid "Not enough arguments."
 msgstr "Zu wenige Argumente."
 
-#: ../girara/commands.c:424
+#: ../girara/commands.c:425
 msgid "Too many arguments."
 msgstr "Zu viele Argumente."
 
-#: ../girara/commands.c:437
+#: ../girara/commands.c:438
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Unbekannte Otion: %s"
 
-#: ../girara/commands.c:451
+#: ../girara/commands.c:452
 msgid "true"
 msgstr "wahr"
 
-#: ../girara/commands.c:451
+#: ../girara/commands.c:452
 msgid "false"
 msgstr "falsch"
 
-#: ../girara/commands.c:483
+#: ../girara/commands.c:484
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Kein Wert für Option definiert: %s"
 
-#: ../girara/commands.c:498
+#: ../girara/commands.c:499
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"

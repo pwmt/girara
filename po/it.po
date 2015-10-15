@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2015-04-13 19:37+0200\n"
+"POT-Creation-Date: 2015-10-15 23:00+0200\n"
 "PO-Revision-Date: 2015-04-13 19:44+0200\n"
 "Last-Translator: TheLemonMan <segnalazionidalweb@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/girara/language/"
@@ -171,92 +171,92 @@ msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:273
+#: ../girara/config.c:276
 msgid "Execute a command"
 msgstr "Esegui un comando"
 
-#: ../girara/config.c:274
+#: ../girara/config.c:277
 msgid "Map a key sequence"
 msgstr "Mappa una sequenza di tasti"
 
-#: ../girara/config.c:275
+#: ../girara/config.c:278
 msgid "Quit the program"
 msgstr "Esci dal programma"
 
-#: ../girara/config.c:276
+#: ../girara/config.c:279
 msgid "Set an option"
 msgstr "Imposta un opzione"
 
-#: ../girara/config.c:277
+#: ../girara/config.c:280
 msgid "Unmap a key sequence"
 msgstr "Cancella mappatura di una sequenza di tasti"
 
-#: ../girara/config.c:279
+#: ../girara/config.c:282
 msgid "Dump settings to a file"
 msgstr ""
 
-#: ../girara/utils.c:525
+#: ../girara/utils.c:524
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Impossibile eseguire il comando: %s"
 
-#: ../girara/commands.c:109 ../girara/commands.c:309
+#: ../girara/commands.c:110 ../girara/commands.c:310
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Numero degli argomenti non valido: %zu immessi, %u attesi"
 
-#: ../girara/commands.c:143
+#: ../girara/commands.c:144
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Modalità non registrata: %s"
 
-#: ../girara/commands.c:175
+#: ../girara/commands.c:176
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Modificatore invalido in %s"
 
-#: ../girara/commands.c:214
+#: ../girara/commands.c:215
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Valore della chiave speciale %s non valido "
 
-#: ../girara/commands.c:250
+#: ../girara/commands.c:251
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Valore della chiave speciale o modalità %s non valida"
 
-#: ../girara/commands.c:331
+#: ../girara/commands.c:332
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Scorciatoia invalida: %s"
 
-#: ../girara/commands.c:419
+#: ../girara/commands.c:420
 msgid "Not enough arguments."
 msgstr "Non abbastanza argomenti specificati."
 
-#: ../girara/commands.c:424
+#: ../girara/commands.c:425
 msgid "Too many arguments."
 msgstr "Troppi argomenti specificati."
 
-#: ../girara/commands.c:437
+#: ../girara/commands.c:438
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Opzione sconosciuta: %s"
 
-#: ../girara/commands.c:451
+#: ../girara/commands.c:452
 msgid "true"
 msgstr "vero"
 
-#: ../girara/commands.c:451
+#: ../girara/commands.c:452
 msgid "false"
 msgstr "falso"
 
-#: ../girara/commands.c:483
+#: ../girara/commands.c:484
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Nessun valore definito per l' opzione: %s"
 
-#: ../girara/commands.c:498
+#: ../girara/commands.c:499
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Valore sconosciuto per l' opzione: %s"
