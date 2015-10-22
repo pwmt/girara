@@ -105,10 +105,10 @@ ${OBJECTS}: config.mk \
 
 ${BUILDDIR_RELEASE}/%.o: %.c
 	$(call colorecho,CC,$<)
-	@mkdir -p ${DEPENDDIR}/$(dir $(abspath $@))
+	@mkdir -p ${DEPENDDIR}/$(dir $@)
 	@mkdir -p $(dir $(abspath $@))
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} -o $@ $< \
-		-MMD -MF ${DEPENDDIR}/$(abspath $@).dep
+		-MMD -MF ${DEPENDDIR}/$@.dep
 
 ${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS}
 	$(call colorecho,AR,$@)
@@ -136,10 +136,10 @@ ${OBJECT_DEBUG}: config.mk \
 
 ${BUILDDIR_DEBUG}/%.o: %.c
 	$(call colorecho,CC,$<)
-	@mkdir -p ${DEPENDDIR}/$(dir $(abspath $@))
+	@mkdir -p ${DEPENDDIR}/$(dir $@)
 	@mkdir -p $(dir $(abspath $@))
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${DFLAGS} -o $@ $< \
-		-MMD -MF ${DEPENDDIR}/$(abspath $@).dep
+		-MMD -MF ${DEPENDDIR}/$@.dep
 
 ${BUILDDIR_DEBUG}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS_DEBUG}
 	$(call colorecho,AR,$@)
@@ -165,10 +165,10 @@ ${OBJECTS_GCOV}: config.mk \
 
 ${BUILDDIR_GCOV}/%.o: %.c
 	$(call colorecho,CC,$<)
-	@mkdir -p ${DEPENDDIR}/$(dir $(abspath $@))
+	@mkdir -p ${DEPENDDIR}/$(dir $@)
 	@mkdir -p $(dir $(abspath $@))
 	$(QUIET)${CC} -c ${CPPFLAGS} ${CFLAGS} ${GCOV_CFLAGS} \
-		-o $@ $< -MMD -MF ${DEPENDDIR}/$(abspath $@).dep
+		-o $@ $< -MMD -MF ${DEPENDDIR}/$@.dep
 
 ${BUILDDIR_GCOV}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS_GCOV}
 	$(call colorecho,AR,$@)
@@ -282,8 +282,9 @@ uninstall-headers:
 	$(call colorecho,UNINSTALL,"Remove pkg-config file")
 	$(QUIET)rm -f ${DESTDIR}${LIBDIR}/pkgconfig/${PROJECT}.pc
 
+DEPENDS = ${DEPENDDIRS:^=${DEPENDDIR}/}$(addprefix ${DEPENDDIR}/,${OBJECTS:.o=.o.dep})
+-include ${DEPENDS}
+
 .PHONY: all options clean debug doc test dist install install-headers uninstall \
 	uninstall-headers ${PROJECT} ${PROJECT}-debug po update-po \
 	static shared install-static install-shared
-
--include $(wildcard ${DEPENDDIR}/*.dep)
