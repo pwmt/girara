@@ -218,6 +218,8 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  TRUE,  _("Warning notifaction background color"), NULL, NULL);
   girara_setting_add(session, "notification-fg",          "#000000",            STRING,  TRUE,  _("Notification foreground color"), NULL, NULL);
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  _("Notification background color"), NULL, NULL);
+  girara_setting_add(session, "scrollbar-fg",             "#000000",            STRING,  TRUE,  _("Scroll bar foreground color"), NULL, NULL);
+  girara_setting_add(session, "scrollbar-bg",             "#000000",            STRING,  TRUE,  _("Scroll bar background color"), NULL, NULL);
   girara_setting_add(session, "tabbar-fg",                "#939393",            STRING,  TRUE,  _("Tab bar foreground color"), NULL, NULL);
   girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  _("Tab bar background color"), NULL, NULL);
   girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  _("Tab bar foreground color (active)"), NULL, NULL);
