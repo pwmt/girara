@@ -6,7 +6,7 @@ include ../colors.mk
 
 PROJECTNV  = girara
 PROJECT    = girara-gtk3
-CATALOGS   = $(wildcard *.po)
+CATALOGS   = $(sort $(wildcard *.po))
 LINGUAS   ?= $(patsubst %.po, %, $(CATALOGS))
 ifeq ($(LINGUAS),)
 ALINGUAS   =
@@ -20,7 +20,7 @@ all: ${MOS}
 clean:
 	$(QUIET)rm -rf POTFILES.in POTFILES.in.tmp $(patsubst %.po, %, $(CATALOGS)) ${PROJECT}.pot
 
-POTFILES.in: $(wildcard ../girara/*.c)
+POTFILES.in: $(sort $(wildcard ../girara/*.c))
 	$(QUIET) set -e && rm -f $@.tmp && touch $@.tmp && \
 	for f in $(^F) ; do \
 		echo girara/$$f >> $@.tmp ; \
