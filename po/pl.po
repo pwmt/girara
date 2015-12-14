@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2015-10-15 23:00+0200\n"
-"PO-Revision-Date: 2015-01-01 21:25+0100\n"
+"POT-Creation-Date: 2015-12-14 21:33+0100\n"
+"PO-Revision-Date: 2015-12-14 21:35+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Polish (http://www.transifex.net/projects/p/girara/language/"
 "pl/)\n"
@@ -109,91 +109,99 @@ msgid "Notification background color"
 msgstr "Kolor tła powiadomienia"
 
 #: ../girara/config.c:221
+msgid "Scrollbar foreground color"
+msgstr ""
+
+#: ../girara/config.c:222
+msgid "Scrollbar background color"
+msgstr ""
+
+#: ../girara/config.c:223
 msgid "Tab bar foreground color"
 msgstr "Kolor tekstu paska kart"
 
-#: ../girara/config.c:222
+#: ../girara/config.c:224
 msgid "Tab bar background color"
 msgstr "Kolor tła paska kart"
 
-#: ../girara/config.c:223
+#: ../girara/config.c:225
 msgid "Tab bar foreground color (active)"
 msgstr "Kolor tekstu bieżącej karty"
 
-#: ../girara/config.c:224
+#: ../girara/config.c:226
 msgid "Tab bar background color (active)"
 msgstr "Kolor tła bieżącej karty"
 
-#: ../girara/config.c:226
+#: ../girara/config.c:228
 msgid "Initial window width"
 msgstr "Początkowa szerokość okna"
 
-#: ../girara/config.c:227
+#: ../girara/config.c:229
 msgid "Initial window height"
 msgstr "Początkowa wysokość okna"
 
-#: ../girara/config.c:228
+#: ../girara/config.c:230
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:229
+#: ../girara/config.c:231
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:230
+#: ../girara/config.c:232
 msgid "Number of completion items"
 msgstr "Liczba wyróżnień"
 
-#: ../girara/config.c:231
+#: ../girara/config.c:233
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../girara/config.c:232
+#: ../girara/config.c:234
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../girara/config.c:233
+#: ../girara/config.c:235
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../girara/config.c:234
+#: ../girara/config.c:236
 msgid "Window icon"
 msgstr "Ikona okna"
 
-#: ../girara/config.c:235
+#: ../girara/config.c:237
 msgid "Command to execute in :exec"
 msgstr "Polecenie uruchomienia w :exec"
 
-#: ../girara/config.c:236
+#: ../girara/config.c:238
 msgid "Show or hide certain GUI elements"
 msgstr "Pokaż/ukryj niektóre elementy interfejsu."
 
-#: ../girara/config.c:237
+#: ../girara/config.c:239
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:276
+#: ../girara/config.c:278
 msgid "Execute a command"
 msgstr "Wykonaj polecenie"
 
-#: ../girara/config.c:277
+#: ../girara/config.c:279
 msgid "Map a key sequence"
 msgstr "Dowiąż sekwencję klawiszy"
 
-#: ../girara/config.c:278
+#: ../girara/config.c:280
 msgid "Quit the program"
 msgstr "Zakończ program"
 
-#: ../girara/config.c:279
+#: ../girara/config.c:281
 msgid "Set an option"
 msgstr "Ustaw opcję"
 
-#: ../girara/config.c:280
+#: ../girara/config.c:282
 msgid "Unmap a key sequence"
 msgstr "Usuń sekwencję klawiszy"
 
-#: ../girara/config.c:282
+#: ../girara/config.c:284
 msgid "Dump settings to a file"
 msgstr ""
 

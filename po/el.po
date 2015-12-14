@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2015-10-15 23:00+0200\n"
-"PO-Revision-Date: 2015-01-01 21:25+0100\n"
+"POT-Creation-Date: 2015-12-14 21:33+0100\n"
+"PO-Revision-Date: 2015-12-14 21:35+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/girara/language/"
 "el/)\n"
@@ -109,91 +109,99 @@ msgid "Notification background color"
 msgstr "Χρώμα φόντου ειδοποίησης"
 
 #: ../girara/config.c:221
+msgid "Scrollbar foreground color"
+msgstr ""
+
+#: ../girara/config.c:222
+msgid "Scrollbar background color"
+msgstr ""
+
+#: ../girara/config.c:223
 msgid "Tab bar foreground color"
 msgstr "Χρώμα μπάρας καρτελών"
 
-#: ../girara/config.c:222
+#: ../girara/config.c:224
 msgid "Tab bar background color"
 msgstr "Χρώμα φόντου μπάρας καρτελών"
 
-#: ../girara/config.c:223
+#: ../girara/config.c:225
 msgid "Tab bar foreground color (active)"
 msgstr "Χρώμα μπάρας καρτελών (ενεργό)"
 
-#: ../girara/config.c:224
+#: ../girara/config.c:226
 msgid "Tab bar background color (active)"
 msgstr "Χρώμα φόντου μπάρας καρτελών (ενεργό)"
 
-#: ../girara/config.c:226
+#: ../girara/config.c:228
 msgid "Initial window width"
 msgstr "Αρχικό πλάτος παραθύρου"
 
-#: ../girara/config.c:227
+#: ../girara/config.c:229
 msgid "Initial window height"
 msgstr "Αρχικό ύψος παραθύρου"
 
-#: ../girara/config.c:228
+#: ../girara/config.c:230
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:229
+#: ../girara/config.c:231
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:230
+#: ../girara/config.c:232
 msgid "Number of completion items"
 msgstr "Αριθμός στοιχείων συμπλήρωσης"
 
-#: ../girara/config.c:231
+#: ../girara/config.c:233
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../girara/config.c:232
+#: ../girara/config.c:234
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../girara/config.c:233
+#: ../girara/config.c:235
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../girara/config.c:234
+#: ../girara/config.c:236
 msgid "Window icon"
 msgstr "Εικονίδιο παραθύρου"
 
-#: ../girara/config.c:235
+#: ../girara/config.c:237
 msgid "Command to execute in :exec"
 msgstr "Η εντολή που θα εκτελεστεί στο :exec"
 
-#: ../girara/config.c:236
+#: ../girara/config.c:238
 msgid "Show or hide certain GUI elements"
 msgstr "Εμφάνιση είτε απόκριψη συγκεκριμένω στοιχείων του GUI"
 
-#: ../girara/config.c:237
+#: ../girara/config.c:239
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:276
+#: ../girara/config.c:278
 msgid "Execute a command"
 msgstr "Εκτέλεση εντολής"
 
-#: ../girara/config.c:277
+#: ../girara/config.c:279
 msgid "Map a key sequence"
 msgstr "Χαρτογράφηση / map αλληλουχίας πλήκτρων"
 
-#: ../girara/config.c:278
+#: ../girara/config.c:280
 msgid "Quit the program"
 msgstr "Εγκατάληψη της εφαρμογής"
 
-#: ../girara/config.c:279
+#: ../girara/config.c:281
 msgid "Set an option"
 msgstr "Ρύθμιση επιλογής"
 
-#: ../girara/config.c:280
+#: ../girara/config.c:282
 msgid "Unmap a key sequence"
 msgstr "Απόχαρτογράφηση / unmap αλληλουχίας πλήκτρων"
 
-#: ../girara/config.c:282
+#: ../girara/config.c:284
 msgid "Dump settings to a file"
 msgstr ""
 
