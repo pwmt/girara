@@ -9,6 +9,12 @@
   -GtkRange-slider-width: 0;
   -GtkRange-trough-border: 0;
 }
+#@session@ GtkScrolledWindow GtkScrollbar {
+  background-color: @scrollbar-bg@;
+}
+#@session@ GtkScrolledWindow GtkScrollbar.slider {
+  background-color: @scrollbar-fg@;
+}
 
 #@session@ * {
   color: @default-fg@;
