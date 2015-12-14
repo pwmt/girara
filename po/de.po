@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
 "POT-Creation-Date: 2015-12-14 21:33+0100\n"
-"PO-Revision-Date: 2015-12-14 21:34+0100\n"
+"PO-Revision-Date: 2015-12-14 21:49+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
 "de/)\n"
@@ -182,7 +182,7 @@ msgstr "Zeige oder verstecke bestimmte GUI Elemente"
 
 #: ../girara/config.c:239
 msgid "Enable smooth scrolling and zooming"
-msgstr ""
+msgstr "Aktiviere glattes Bildschirmrollen und Vergrößern"
 
 #. commands
 #: ../girara/config.c:278
