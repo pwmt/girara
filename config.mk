@@ -2,7 +2,7 @@
 
 GIRARA_VERSION_MAJOR = 0
 GIRARA_VERSION_MINOR = 2
-GIRARA_VERSION_REV   = 4
+GIRARA_VERSION_REV   = 5
 VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 
 # Rules for the SOMAJOR and SOMINOR.
@@ -46,7 +46,7 @@ BINDIR ?= bin
 
 # GTK+
 GTK_VERSION_CHECK ?= 1
-GTK_MIN_VERSION = 3.2
+GTK_MIN_VERSION = 3.4
 GTK_PKG_CONFIG_NAME = gtk+-3.0
 # glib
 GLIB_VERSION_CHECK ?= 1
@@ -70,8 +70,11 @@ endif
 INCS = ${GTK_INC} ${LIBNOTIFY_INC} ${JSON_INC}
 LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} ${JSON_LIB} -lm
 
-# flags
-CFLAGS += -std=c99 -pedantic -Wall -Wextra -fPIC $(INCS)
+# pre-processor flags
+CPPFLAGS += -D_FILE_OFFSET_BITS=64
+
+# compiler flags
+CFLAGS += -std=c11 -pedantic -Wall -Wextra -fPIC $(INCS)
 
 # linker flags
 LDFLAGS += -fPIC

@@ -218,6 +218,8 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  TRUE,  _("Warning notifaction background color"), NULL, NULL);
   girara_setting_add(session, "notification-fg",          "#000000",            STRING,  TRUE,  _("Notification foreground color"), NULL, NULL);
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  _("Notification background color"), NULL, NULL);
+  girara_setting_add(session, "scrollbar-fg",             "#DDDDDD",            STRING,  TRUE,  _("Scrollbar foreground color"), NULL, NULL);
+  girara_setting_add(session, "scrollbar-bg",             "#000000",            STRING,  TRUE,  _("Scrollbar background color"), NULL, NULL);
   girara_setting_add(session, "tabbar-fg",                "#939393",            STRING,  TRUE,  _("Tab bar foreground color"), NULL, NULL);
   girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  _("Tab bar background color"), NULL, NULL);
   girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  _("Tab bar foreground color (active)"), NULL, NULL);
@@ -237,16 +239,19 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "smooth-scroll",            &use_smooth_scroll,   BOOLEAN, TRUE,  _("Enable smooth scrolling and zooming"), NULL, NULL);
 
   /* shortcuts */
-  girara_shortcut_add(session, 0,                GDK_KEY_Escape, NULL, girara_sc_abort,           normal_mode, 0, NULL);
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_c,      NULL, girara_sc_abort,           normal_mode, 0, NULL);
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_q,      NULL, girara_sc_quit,            normal_mode, 0, NULL);
-  girara_shortcut_add(session, 0,                GDK_KEY_colon,  NULL, girara_sc_focus_inputbar,  normal_mode, 0, ":");
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_w,      NULL, girara_sc_tab_close,       normal_mode, 0, NULL);
-  girara_shortcut_add(session, 0,                0,              "gt", girara_sc_tab_navigate,    normal_mode, GIRARA_NEXT,     NULL);
-  girara_shortcut_add(session, 0,                0,              "gT", girara_sc_tab_navigate,    normal_mode, GIRARA_PREVIOUS, NULL);
+  girara_shortcut_add(session, 0,                GDK_KEY_Escape,      NULL, girara_sc_abort,           normal_mode, 0, NULL);
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_bracketleft, NULL, girara_sc_abort,           normal_mode, 0, NULL);
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_c,           NULL, girara_sc_abort,           normal_mode, 0, NULL);
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_q,           NULL, girara_sc_quit,            normal_mode, 0, NULL);
+  girara_shortcut_add(session, 0,                GDK_KEY_colon,       NULL, girara_sc_focus_inputbar,  normal_mode, 0, ":");
+  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_w,           NULL, girara_sc_tab_close,       normal_mode, 0, NULL);
+  girara_shortcut_add(session, 0,                0,                   "gt", girara_sc_tab_navigate,    normal_mode, GIRARA_NEXT,     NULL);
+  girara_shortcut_add(session, 0,                0,                   "gT", girara_sc_tab_navigate,    normal_mode, GIRARA_PREVIOUS, NULL);
 
   /* inputbar shortcuts */
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_j,            girara_isc_activate,            0,                           NULL);
   girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Escape,       girara_isc_abort,               0,                           NULL);
+  girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_bracketleft,  girara_isc_abort,               0,                           NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_c,            girara_isc_abort,               0,                           NULL);
   girara_inputbar_shortcut_add(session, 0,                GDK_KEY_Tab,          girara_isc_completion,          GIRARA_NEXT,                 NULL);
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_Tab,          girara_isc_completion,          GIRARA_NEXT_GROUP,           NULL);

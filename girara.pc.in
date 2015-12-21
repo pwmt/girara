@@ -10,4 +10,4 @@ Version: ${version}
 URL: http://pwmt.org/projects/girara
 Cflags: -I${includedir}
 Libs: -L${libdir} -l${project}
-Requires.private: gtk+-3.0 @LIBNOTIFY_PC_NAME@
+Requires.private: gtk+-3.0 @LIBNOTIFY_PC_NAME@ @JSON_PC_NAME@

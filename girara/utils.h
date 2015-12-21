@@ -117,22 +117,22 @@ void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2);
  * Prints a debug message. The arguments are passed to @ref _girara_debug as
  * last argument.
  */
-#define girara_debug(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_DEBUG,   __VA_ARGS__)
+#define girara_debug(...)   _girara_debug(__func__, __LINE__, GIRARA_DEBUG,   __VA_ARGS__)
 /**
  * Prints an info message. The arguments are passed to @ref _girara_debug as
  * last argument.
  */
-#define girara_info(...)    _girara_debug(__FUNCTION__, __LINE__, GIRARA_INFO,    __VA_ARGS__)
+#define girara_info(...)    _girara_debug(__func__, __LINE__, GIRARA_INFO,    __VA_ARGS__)
 /**
  * Prints a warning message. The arguments are passed to @ref _girara_debug as
  * last argument.
  */
-#define girara_warning(...) _girara_debug(__FUNCTION__, __LINE__, GIRARA_WARNING, __VA_ARGS__)
+#define girara_warning(...) _girara_debug(__func__, __LINE__, GIRARA_WARNING, __VA_ARGS__)
 /**
  * Prints an error message. The arguments are passed to @ref _girara_debug as
  * last argument.
  */
-#define girara_error(...)   _girara_debug(__FUNCTION__, __LINE__, GIRARA_ERROR,   __VA_ARGS__)
+#define girara_error(...)   _girara_debug(__func__, __LINE__, GIRARA_ERROR,   __VA_ARGS__)
 
 /**
  * Print a message.

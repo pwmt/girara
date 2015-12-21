@@ -149,6 +149,13 @@ girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut)
 }
 
 bool
+girara_isc_activate(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
+{
+    girara_callback_inputbar_activate(session->gtk.inputbar_entry, session);
+    return true;
+}
+
+bool
 girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
 {
   g_return_val_if_fail(session != NULL, false);
