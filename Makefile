@@ -294,6 +294,14 @@ uninstall-headers:
 	$(call colorecho,UNINSTALL,"Remove pkg-config file")
 	$(QUIET)rm -f ${DESTDIR}${LIBDIR}/pkgconfig/${PROJECT}.pc
 
+# format and tidy
+
+format:
+	clang-tidy -fix -checks=readability-braces-around-statements $(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
+
+tidy:
+	clang-tidy $(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
+
 DEPENDS = ${DEPENDDIRS:^=${DEPENDDIR}/}$(addprefix ${DEPENDDIR}/,${OBJECTS:.o=.o.dep})
 -include ${DEPENDS}
 

@@ -211,7 +211,8 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       i = pos - 1;
 
       /* remove trailing spaces */
-      for (; i >= 0 && input[i] == ' '; i--);
+      for (; i >= 0 && input[i] == ' '; i--) {
+      }
 
       /* find the beginning of the word */
       while ((i == (pos - 1)) || ((i > 0) && !strchr(separator, input[i]))) {
