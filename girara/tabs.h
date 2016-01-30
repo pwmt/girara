@@ -34,7 +34,7 @@ void girara_tabs_enable(girara_session_t* session);
  * @param widget Displayed widget
  * @param next_to_current Tab should be created right next to the current one
  * @param data Custom data
- * @return A new tab object or NULL if an error occured
+ * @return A new tab object or NULL if an error occurred
  */
 girara_tab_t* girara_tab_new(girara_session_t* session, const char* title,
     GtkWidget* widget, bool next_to_current, void* data);
@@ -52,7 +52,7 @@ void girara_tab_remove(girara_session_t* session, girara_tab_t* tab);
  *
  * @param session The girara session
  * @param index Index of the tab
- * @return The tab object or NULL if an error occured
+ * @return The tab object or NULL if an error occurred
  */
 girara_tab_t* girara_tab_get(girara_session_t* session, unsigned int index);
 
@@ -75,7 +75,7 @@ void girara_tab_update(girara_session_t* session);
  * Returns the current tab
  *
  * @param session The girara session
- * @return The current tab or NULL if an error occured
+ * @return The current tab or NULL if an error occurred
  */
 girara_tab_t* girara_tab_current_get(girara_session_t* session);
 
@@ -99,7 +99,7 @@ void girara_tab_title_set(girara_tab_t* tab, const char* title);
  * Returns the title of the tab
  *
  * @param tab The tab
- * @return The title of the tab or NULL if an error occured
+ * @return The title of the tab or NULL if an error occurred
  */
 const char* girara_tab_title_get(girara_tab_t* tab);
 
@@ -108,7 +108,7 @@ const char* girara_tab_title_get(girara_tab_t* tab);
  *
  * @param session Girara session
  * @param tab The tab
- * @return The id of the tab or -1 if an error occured
+ * @return The id of the tab or -1 if an error occurred
  */
 int girara_tab_position_get(girara_session_t* session, girara_tab_t* tab);
 

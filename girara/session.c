@@ -670,7 +670,7 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  bool error_class = false;
+  bool error_class   = false;
   bool warning_class = false;
 
   switch (level) {

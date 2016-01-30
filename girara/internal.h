@@ -68,8 +68,8 @@ HIDDEN girara_completion_t* girara_cc_set(girara_session_t* session,
  *
  * @param session The used girara session
  * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 HIDDEN bool girara_cmd_map(girara_session_t* session,
     girara_list_t* argument_list);
@@ -79,8 +79,8 @@ HIDDEN bool girara_cmd_map(girara_session_t* session,
  *
  * @param session The used girara session
  * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 HIDDEN bool girara_cmd_unmap(girara_session_t* session,
     girara_list_t* argument_list);
@@ -90,8 +90,8 @@ HIDDEN bool girara_cmd_unmap(girara_session_t* session,
  *
  * @param session The used girara session
  * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 HIDDEN bool girara_cmd_quit(girara_session_t* session,
     girara_list_t* argument_list);
@@ -101,8 +101,8 @@ HIDDEN bool girara_cmd_quit(girara_session_t* session,
  *
  * @param session The used girara session
  * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 HIDDEN bool girara_cmd_set(girara_session_t* session,
     girara_list_t* argument_list);
@@ -112,8 +112,8 @@ HIDDEN bool girara_cmd_set(girara_session_t* session,
  *
  * @param session The used girara session
  * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 HIDDEN bool girara_cmd_exec(girara_session_t* session,
     girara_list_t* argument_list);
@@ -124,8 +124,8 @@ HIDDEN bool girara_cmd_exec(girara_session_t* session,
  *
  * @param session The used girara session
  * @param argument_list List of passed arguments
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 HIDDEN bool girara_cmd_dump_config(girara_session_t* session,
     girara_list_t* argument_list);
@@ -138,8 +138,8 @@ HIDDEN bool girara_cmd_dump_config(girara_session_t* session,
  * @param argument The argument
  * @param event Event type
  * @param t Number of times
- * @return true No error occured
- * @return false An error occured
+ * @return true No error occurred
+ * @return false An error occurred
  */
 HIDDEN bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* event, unsigned int t);
@@ -243,7 +243,7 @@ struct girara_config_handle_s
 struct girara_statusbar_item_s
 {
   GtkWidget* box; /**< Event box */
-  GtkLabel *text; /**< Text label */
+  GtkLabel*  text; /**< Text label */
 };
 
 /**

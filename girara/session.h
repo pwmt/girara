@@ -109,7 +109,7 @@ struct girara_session_s
  * Creates a girara session
  *
  * @return A valid session object
- * @return NULL when an error occured
+ * @return NULL when an error occurred
  */
 girara_session_t* girara_session_create();
 
@@ -118,8 +118,8 @@ girara_session_t* girara_session_create();
  *
  * @param session The used girara session
  * @param appname Name of the session (can be NULL)
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_session_init(girara_session_t* session, const char* appname);
 
@@ -127,8 +127,8 @@ bool girara_session_init(girara_session_t* session, const char* appname);
  * Destroys an girara session
  *
  * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_session_destroy(girara_session_t* session);
 
@@ -137,8 +137,8 @@ bool girara_session_destroy(girara_session_t* session);
  *
  * @param session The used girara session
  * @param widget The widget that should be displayed
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_set_view(girara_session_t* session, GtkWidget* widget);
 
@@ -218,8 +218,8 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  *
  * @param session The used girara session
  * @param name The new name of the session
- * @return true if no error occured
- * @return false if an error occured
+ * @return true if no error occurred
+ * @return false if an error occurred
  */
 bool girara_set_window_title(girara_session_t* session, const char* name);
 
@@ -228,8 +228,8 @@ bool girara_set_window_title(girara_session_t* session, const char* name);
  *
  * @param session The used girara session
  * @param name the name of the themed icon
- * @return true if no error occured
- * @return false if an error occured
+ * @return true if no error occurred
+ * @return false if an error occurred
  */
 bool girara_set_window_icon(girara_session_t* session, const char* name);
 

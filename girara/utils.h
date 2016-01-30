@@ -19,7 +19,7 @@ typedef enum {
 } girara_xdg_path_t;
 
 /**
- * Returns the home directory for the given user. $HOME is prefered over the
+ * Returns the home directory for the given user. $HOME is preferred over the
  * value from g_get_home_dir.
  *
  * @param user a username or NULL to get home directory of the current user.
@@ -46,7 +46,7 @@ char* girara_get_xdg_path(girara_xdg_path_t path);
 bool girara_xdg_open(const char* uri);
 
 /**
- * Splits paths seperated by : (as in $PATH) into a list.
+ * Splits paths separated by : (as in $PATH) into a list.
  *
  * @param patharray String like $PATH to split
  * @return a list of paths and NULL on failure.
@@ -67,7 +67,7 @@ char* girara_fix_path(const char* path);
  *
  * @param path Path of the file
  * @param mode Mode that the file should be opened
- * @return NULL if an error occured
+ * @return NULL if an error occurred
  */
 FILE* girara_file_open(const char* path, const char* mode);
 
@@ -76,7 +76,7 @@ FILE* girara_file_open(const char* path, const char* mode);
  * g_free.
  *
  * @param file The file stream
- * @return Read line or NULL if an error occured
+ * @return Read line or NULL if an error occurred
  */
 char* girara_file_read_line(FILE* file);
 
@@ -84,7 +84,7 @@ char* girara_file_read_line(FILE* file);
  * Reads the whole content from a file. Returned string has to be freed.
  *
  * @param path Path to the file
- * @return Read file or NULL if an error occured
+ * @return Read file or NULL if an error occurred
  */
 char* girara_file_read(const char* path);
 
@@ -92,7 +92,7 @@ char* girara_file_read(const char* path);
  * Reads the whole content from a file. Returned string has to be freed.
  *
  * @param file file to read
- * @return Read file or NULL if an error occured
+ * @return Read file or NULL if an error occurred
  */
 char* girara_file_read2(FILE* file);
 
@@ -166,7 +166,7 @@ void girara_set_debug_level(girara_debug_level_t level);
 char* girara_escape_string(const char* value);
 
 /**
- * Replaces all occurences of \ref old in \ref string with \ref new and returns
+ * Replaces all occurrences of \ref old in \ref string with \ref new and returns
  * a new allocated string
  *
  * @param string The original string
@@ -182,7 +182,7 @@ char* girara_replace_substring(const char* string, const char* old, const char* 
  *
  * @param session The used girara session
  * @param argument_list The argument list
- * @return true if no error occured
+ * @return true if no error occurred
  */
 bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list);
 

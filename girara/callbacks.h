@@ -12,7 +12,7 @@
  * @param widget The widget
  * @param event Event
  * @param data Custom data
- * @return true if no error occured
+ * @return true if no error occurred
  */
 typedef bool (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget,
     GdkEventKey* event, void* data);
@@ -22,7 +22,7 @@ typedef bool (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget,
  *
  * @param entry The inputbar
  * @param data Custom data
- * @return true if no error occured
+ * @return true if no error occurred
  */
 typedef bool (*girara_callback_inputbar_activate_t)(GtkEntry* entry,
     void* data);
@@ -31,10 +31,10 @@ typedef bool (*girara_callback_inputbar_activate_t)(GtkEntry* entry,
  * Default callback for key press events in the view area
  *
  * @param widget The used widget
- * @param event The occured event
+ * @param event The occurred event
  * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event,
     girara_session_t* session);
@@ -92,8 +92,8 @@ bool girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* event,
  *
  * @param entry The inputbar entry
  * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_callback_inputbar_activate(GtkEntry* entry,
     girara_session_t* session);
@@ -102,10 +102,10 @@ bool girara_callback_inputbar_activate(GtkEntry* entry,
  * Default callback if an key in the input bar gets pressed
  *
  * @param widget The used widget
- * @param event The occured event
+ * @param event The occurred event
  * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_callback_inputbar_key_press_event(GtkWidget* widget,
     GdkEventKey* event, girara_session_t* session);
@@ -115,8 +115,8 @@ bool girara_callback_inputbar_key_press_event(GtkWidget* widget,
  *
  * @param widget The used widget
  * @param session The used girara session
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_callback_inputbar_changed_event(GtkEditable* widget,
     girara_session_t* session);
