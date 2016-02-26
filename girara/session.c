@@ -612,9 +612,9 @@ girara_libnotify(girara_session_t* session, const char *summary,
 
 #ifdef WITH_LIBNOTIFY
 
-  bool was_initialized = notify_is_initted();
+  const bool was_initialized = notify_is_initted();
 
-  if (!was_initialized) {
+  if (was_initialized == false) {
     notify_init(session->private_data->session_name);
   }
 
@@ -648,7 +648,7 @@ girara_libnotify(girara_session_t* session, const char *summary,
   notify_notification_show(libnotify_notification, NULL);
   g_object_unref(G_OBJECT(libnotify_notification));
 
-  if (!was_initialized) {
+  if (was_initialized == false) {
     notify_uninit();
   }
 
