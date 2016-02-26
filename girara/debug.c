@@ -2,6 +2,7 @@
 
 #include "utils.h"
 #include <stdarg.h>
+#include <stdio.h>
 
 static girara_debug_level_t debug_level = GIRARA_DEBUG;
 
