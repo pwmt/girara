@@ -670,30 +670,14 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  bool error_class   = false;
-  bool warning_class = false;
-
-  switch (level) {
-    case GIRARA_ERROR:
-      error_class = true;
-      break;
-    case GIRARA_WARNING:
-      warning_class = true;
-      break;
-    case GIRARA_INFO:
-      break;
-    default:
-      return;
-  }
-
-  if (error_class == true) {
+  if (level == GIRARA_ERROR) {
     widget_add_class(session->gtk.notification_area, "notification-error");
     widget_add_class(session->gtk.notification_text, "notification-error");
   } else {
     widget_remove_class(session->gtk.notification_area, "notification-error");
     widget_remove_class(session->gtk.notification_text, "notification-error");
   }
-  if (warning_class == true) {
+  if (level == GIRARA_WARNING) {
     widget_add_class(session->gtk.notification_area, "notification-warning");
     widget_add_class(session->gtk.notification_text, "notification-warning");
   } else {
