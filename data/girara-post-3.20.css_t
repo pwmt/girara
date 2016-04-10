@@ -1,6 +1,6 @@
 /* Hide scrollbars from GtkScrolledWindow */
 #@session@ scrolledwindow scrollbar:disabled {
-  slider {
+  scrollbar slider {
     min-width: 0;
   }
   through {
