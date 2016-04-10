@@ -1,9 +1,3 @@
-/* No resize grip */
-#@session@ {
-  -GtkWindow-resize-grip-height: 0;
-  -GtkWindow-resize-grip-width: 0;
-}
-
 /* Hide scrollbars from GtkScrolledWindow */
 #@session@ scrolledwindow scrollbar:disabled {
   slider {
