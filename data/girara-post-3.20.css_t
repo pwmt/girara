@@ -21,6 +21,7 @@
 #@session@ .inputbar {
   color: @inputbar-fg@;
   background-color: @inputbar-bg@;
+  box-shadow: none; /* maybe use some user-definable color here */
 }
 
 /* Completion entries and groups */
