@@ -74,7 +74,7 @@
   background-color: @tabbar-bg@;
 }
 
-#@session@ GtkLabel.tab {
+#@session@ label.tab {
   padding: 4px;
 }
 
