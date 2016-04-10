@@ -1,17 +1,17 @@
 /* Hide scrollbars from GtkScrolledWindow */
-#@session@ scrolledwindow scrollbar:disabled {
-  scrollbar slider {
+#@session@ scrolledwindow scrollbar:disabled > slider {
     min-width: 0;
-  }
+}
+#@session@ scrolledwindow scrollbar:disabled > through {
   through {
     margin: 0;
   }
 }
 #@session@ scrolledwindow scrollbar {
   background-color: @scrollbar-bg@;
-  slider: {
-    background-color: @scrollbar-fg@;
-  }
+}
+#@session@ scrolledwindow scrollbar > slider {
+  background-color: @scrollbar-fg@;
 }
 
 #@session@ * {
