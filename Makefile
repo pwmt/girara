@@ -88,7 +88,7 @@ ${PROJECTNV}/version.h: ${PROJECTNV}/version.h.in config.mk
 		${PROJECTNV}/version.h.in > ${PROJECTNV}/version.h.tmp
 	$(QUIET)mv ${PROJECTNV}/version.h.tmp ${PROJECTNV}/version.h
 
-${PROJECTNV}/css-definitions.c: data/girara-pre-3.20.css_t
+${PROJECTNV}/css-definitions.c: data/girara-pre-3.20.css_t data/girara-post-3.20.css_t
 	$(call colorecho,GEN,$@)
 	$(QUIET)echo '#include "css-definitions.h"' > $@.tmp
 	$(QUIET)echo 'const char* CSS_TEMPLATE_PRE_3_20 =' >> $@.tmp
