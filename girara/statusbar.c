@@ -7,7 +7,8 @@
 #include "settings.h"
 
 girara_statusbar_item_t*
-girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left, girara_statusbar_event_t callback)
+girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill,
+                          bool left, girara_statusbar_event_t callback)
 {
   g_return_val_if_fail(session != NULL && session->elements.statusbar_items, FALSE);
 

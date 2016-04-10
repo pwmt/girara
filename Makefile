@@ -88,12 +88,16 @@ ${PROJECTNV}/version.h: ${PROJECTNV}/version.h.in config.mk
 		${PROJECTNV}/version.h.in > ${PROJECTNV}/version.h.tmp
 	$(QUIET)mv ${PROJECTNV}/version.h.tmp ${PROJECTNV}/version.h
 
-${PROJECTNV}/css-definitions.c: data/girara.css_t
+${PROJECTNV}/css-definitions.c: data/girara-pre-3.20.css_t
 	$(call colorecho,GEN,$@)
 	$(QUIET)echo '#include "css-definitions.h"' > $@.tmp
-	$(QUIET)echo 'const char* CSS_TEMPLATE =' >> $@.tmp
-	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' $< >> $@.tmp
+	$(QUIET)echo 'const char* CSS_TEMPLATE_PRE_3_20 =' >> $@.tmp
+	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' data/girara-pre-3.20.css_t >> $@.tmp
 	$(QUIET)echo ';' >> $@.tmp
+	$(QUIET)echo 'const char* CSS_TEMPLATE_POST_3_20 =' >> $@.tmp
+	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' data/girara-post-3.20.css_t >> $@.tmp
+	$(QUIET)echo ';' >> $@.tmp
+
 	$(QUIET)mv $@.tmp $@
 
 ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
@@ -297,7 +301,9 @@ uninstall-headers:
 # format and tidy
 
 format:
-	clang-tidy -fix -checks=readability-braces-around-statements $(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
+	clang-tidy -fix -checks=readability-braces-around-statements \
+		$(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
+	clang-format-3.8 -i $(SOURCE) $(HEADERS)
 
 tidy:
 	clang-tidy $(SOURCE) -- $(CPPFLAGS) $(CFLAGS)

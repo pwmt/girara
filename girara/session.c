@@ -234,7 +234,11 @@ girara_session_create()
       (girara_free_function_t) girara_setting_free);
 
   /* CSS style provider */
-  session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE);
+  if (gtk_check_version(3, 20, 0) == NULL) {
+    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_PRE_3_20);
+  } else {
+    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_POST_3_20);
+  }
   session->private_data->gtk.cssprovider = NULL;
   init_template_engine(session->private_data->csstemplate);
 
