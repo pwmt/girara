@@ -108,13 +108,21 @@
     @bottombox-padding4@px;
 }
 
-#@session@ GtkScrolledWindow .undershoot.top,
-#@session@ GtkScrolledWindow .undershoot.top:backdrop,
-#@session@ GtkScrolledWindow .undershoot.bottom,
-#@session@ GtkScrolledWindow .undershoot.bottom:backdrop,
-#@session@ GtkScrolledWindow .undershoot.left,
-#@session@ GtkScrolledWindow .undershoot.left:backdrop,
-#@session@ GtkScrolledWindow .undershoot.right,
-#@session@ GtkScrolledWindow .undershoot.right:backdrop {
+#@session@ scrolledwindow .undershoot.top,
+#@session@ scrolledwindow .undershoot.top:backdrop,
+#@session@ scrolledwindow .undershoot.bottom,
+#@session@ scrolledwindow .undershoot.bottom:backdrop,
+#@session@ scrolledwindow .undershoot.left,
+#@session@ scrolledwindow .undershoot.left:backdrop,
+#@session@ scrolledwindow .undershoot.right,
+#@session@ scrolledwindow .undershoot.right:backdrop
+#@session@ scrolledwindow .overshoot.top,
+#@session@ scrolledwindow .overshoot.top:backdrop,
+#@session@ scrolledwindow .overshoot.bottom,
+#@session@ scrolledwindow .overshoot.bottom:backdrop,
+#@session@ scrolledwindow .overshoot.left,
+#@session@ scrolledwindow .overshoot.left:backdrop,
+#@session@ scrolledwindow .overshoot.right,
+#@session@ scrolledwindow .overshoot.right:backdrop {
   background-color: transparent;
 }
