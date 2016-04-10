@@ -5,15 +5,19 @@
 }
 
 /* Hide scrollbars from GtkScrolledWindow */
-#@session@ GtkScrolledWindow GtkScrollbar:disabled {
-  -GtkRange-slider-width: 0;
-  -GtkRange-trough-border: 0;
+#@session@ scrolledwindow scrollbar:disabled {
+  slider {
+    min-width: 0;
+  }
+  through {
+    margin: 0;
+  }
 }
-#@session@ GtkScrolledWindow GtkScrollbar {
+#@session@ scrolledwindow scrollbar {
   background-color: @scrollbar-bg@;
-}
-#@session@ GtkScrolledWindow GtkScrollbar.slider {
-  background-color: @scrollbar-fg@;
+  slider: {
+    background-color: @scrollbar-fg@;
+  }
 }
 
 #@session@ * {
@@ -25,7 +29,7 @@
 
 /* Inputbar */
 
-#@session@ GtkEntry.inputbar {
+#@session@ entry.inputbar {
   background-color: @inputbar-bg@;
 }
 
