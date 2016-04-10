@@ -5,7 +5,7 @@
 }
 
 /* Hide scrollbars from GtkScrolledWindow */
-#@session@ GtkScrolledWindow GtkScrollbar:insensitive {
+#@session@ GtkScrolledWindow GtkScrollbar:disabled {
   -GtkRange-slider-width: 0;
   -GtkRange-trough-border: 0;
 }
