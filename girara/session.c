@@ -205,6 +205,48 @@ css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session)
   session->private_data->gtk.cssprovider = provider;
 }
 
+void
+scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window,
+                                         bool               show_horizontal,
+                                         bool               show_vertical)
+{
+#if GTK_CHECK_VERSION(3, 16, 0)
+  if (gtk_check_version(3, 16, 0) == NULL) {
+    GtkPolicyType hpolicy = GTK_POLICY_AUTOMATIC;
+    GtkPolicyType vpolicy = GTK_POLICY_AUTOMATIC;
+
+    if (show_horizontal == false) {
+      hpolicy = GTK_POLICY_EXTERNAL;
+    }
+    if (show_vertical == false) {
+      vpolicy = GTK_POLICY_EXTERNAL;
+    }
+
+    gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
+    return;
+  }
+#endif
+
+  GtkWidget* vscrollbar = gtk_scrolled_window_get_vscrollbar(window);
+  GtkWidget* hscrollbar = gtk_scrolled_window_get_hscrollbar(window);
+
+  if (vscrollbar != NULL) {
+    if (show_vertical == true) {
+      gtk_widget_unset_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
+  }
+  if (hscrollbar != NULL) {
+    if (show_horizontal == true) {
+      gtk_widget_unset_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
+  }
+}
+
+
 girara_session_t*
 girara_session_create()
 {
@@ -360,20 +402,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   /* invisible scrollbars */
-  GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
-  GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
-
   char* guioptions = NULL;
   girara_setting_get(session, "guioptions", &guioptions);
 
-  if (vscrollbar != NULL && strchr(guioptions, 'v') == NULL) {
-    gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-  }
-  if (hscrollbar != NULL) {
-    if (strchr(guioptions, 'h') == NULL) {
-     gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-    }
-  }
+  const bool show_hscrollbar = strchr(guioptions, 'h') != NULL;
+  const bool show_vscrollbar = strchr(guioptions, 'v') != NULL;
+
+  scrolled_window_set_scrollbar_visibility(
+    GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
   g_free(guioptions);
 
   /* viewport */
