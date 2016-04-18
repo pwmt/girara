@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2015-12-14 22:01+0100\n"
+"POT-Creation-Date: 2016-04-18 20:45+0200\n"
 "PO-Revision-Date: 2013-11-20 09:46+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Hebrew (http://www.transifex.com/projects/p/girara/language/"
@@ -86,176 +86,176 @@ msgid "Unknown value for option: %s"
 msgstr ""
 
 #. settings
-#: ../girara/config.c:202
+#: ../girara/config.c:187
 msgid "Font"
 msgstr ""
 
-#: ../girara/config.c:203
+#: ../girara/config.c:188
 msgid "Default foreground color"
 msgstr ""
 
-#: ../girara/config.c:204
+#: ../girara/config.c:189
 msgid "Default background color"
 msgstr ""
 
-#: ../girara/config.c:205
+#: ../girara/config.c:190
 msgid "Inputbar foreground color"
 msgstr ""
 
-#: ../girara/config.c:206
+#: ../girara/config.c:191
 msgid "Inputbar background color"
 msgstr ""
 
-#: ../girara/config.c:207
+#: ../girara/config.c:192
 msgid "Statusbar foreground color"
 msgstr ""
 
-#: ../girara/config.c:208
+#: ../girara/config.c:193
 msgid "Statsubar background color"
 msgstr ""
 
-#: ../girara/config.c:209
+#: ../girara/config.c:194
 msgid "Completion foreground color"
 msgstr ""
 
-#: ../girara/config.c:210
+#: ../girara/config.c:195
 msgid "Completion background color"
 msgstr ""
 
-#: ../girara/config.c:211
+#: ../girara/config.c:196
 msgid "Completion group foreground color"
 msgstr ""
 
-#: ../girara/config.c:212
+#: ../girara/config.c:197
 msgid "Completion group background color"
 msgstr ""
 
-#: ../girara/config.c:213
+#: ../girara/config.c:198
 msgid "Completion highlight foreground color"
 msgstr ""
 
-#: ../girara/config.c:214
+#: ../girara/config.c:199
 msgid "Completion highlight background color"
 msgstr ""
 
-#: ../girara/config.c:215
+#: ../girara/config.c:200
 msgid "Error notification foreground color"
 msgstr ""
 
-#: ../girara/config.c:216
+#: ../girara/config.c:201
 msgid "Error notification background color"
 msgstr ""
 
-#: ../girara/config.c:217
+#: ../girara/config.c:202
 msgid "Warning notification foreground color"
 msgstr ""
 
-#: ../girara/config.c:218
+#: ../girara/config.c:203
 msgid "Warning notifaction background color"
 msgstr ""
 
-#: ../girara/config.c:219
+#: ../girara/config.c:204
 msgid "Notification foreground color"
 msgstr ""
 
-#: ../girara/config.c:220
+#: ../girara/config.c:205
 msgid "Notification background color"
 msgstr ""
 
-#: ../girara/config.c:221
+#: ../girara/config.c:206
 msgid "Scrollbar foreground color"
 msgstr ""
 
-#: ../girara/config.c:222
+#: ../girara/config.c:207
 msgid "Scrollbar background color"
 msgstr ""
 
-#: ../girara/config.c:223
+#: ../girara/config.c:208
 msgid "Tab bar foreground color"
 msgstr ""
 
-#: ../girara/config.c:224
+#: ../girara/config.c:209
 msgid "Tab bar background color"
 msgstr ""
 
-#: ../girara/config.c:225
+#: ../girara/config.c:210
 msgid "Tab bar foreground color (active)"
 msgstr ""
 
-#: ../girara/config.c:226
+#: ../girara/config.c:211
 msgid "Tab bar background color (active)"
 msgstr ""
 
-#: ../girara/config.c:228
+#: ../girara/config.c:213
 msgid "Initial window width"
 msgstr ""
 
-#: ../girara/config.c:229
+#: ../girara/config.c:214
 msgid "Initial window height"
 msgstr ""
 
-#: ../girara/config.c:230
+#: ../girara/config.c:215
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:231
+#: ../girara/config.c:216
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:232
+#: ../girara/config.c:217
 msgid "Number of completion items"
 msgstr ""
 
-#: ../girara/config.c:233
+#: ../girara/config.c:218
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../girara/config.c:234
+#: ../girara/config.c:219
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../girara/config.c:235
+#: ../girara/config.c:220
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../girara/config.c:236
+#: ../girara/config.c:221
 msgid "Window icon"
 msgstr ""
 
-#: ../girara/config.c:237
+#: ../girara/config.c:222
 msgid "Command to execute in :exec"
 msgstr ""
 
-#: ../girara/config.c:238
+#: ../girara/config.c:223
 msgid "Show or hide certain GUI elements"
 msgstr ""
 
-#: ../girara/config.c:239
+#: ../girara/config.c:224
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:278
+#: ../girara/config.c:263
 msgid "Execute a command"
 msgstr ""
 
-#: ../girara/config.c:279
+#: ../girara/config.c:264
 msgid "Map a key sequence"
 msgstr ""
 
-#: ../girara/config.c:280
+#: ../girara/config.c:265
 msgid "Quit the program"
 msgstr ""
 
-#: ../girara/config.c:281
+#: ../girara/config.c:266
 msgid "Set an option"
 msgstr ""
 
-#: ../girara/config.c:282
+#: ../girara/config.c:267
 msgid "Unmap a key sequence"
 msgstr ""
 
-#: ../girara/config.c:284
+#: ../girara/config.c:269
 msgid "Dump settings to a file"
 msgstr ""
 
