@@ -19,7 +19,7 @@ void girara_config_parse(girara_session_t* session, const char* path);
  * @param session The girara session
  * @param identifier Identifier of the handle
  * @param handle Handle
- * @return true if no error occured, otherwise false
+ * @return true if no error occurred, otherwise false
  */
 bool girara_config_handle_add(girara_session_t* session, const char* identifier,
     girara_command_function_t handle);

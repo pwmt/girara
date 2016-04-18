@@ -11,10 +11,10 @@
  * Function declaration for a statusbar event callback
  *
  * @param widget The statusbar item
- * @param event The occured event
+ * @param event The occurred event
  * @param session The current girara session
- * @return TRUE No error occured
- * @return FALSE Error occured (and forward event)
+ * @return TRUE No error occurred
+ * @return FALSE Error occurred (and forward event)
  */
 typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event,
     girara_session_t* session);
@@ -28,7 +28,7 @@ typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event,
  * @param left True if it should be aligned to the left
  * @param callback Function that gets executed when an event occurs
  * @return The created statusbar item
- * @return NULL An error occured
+ * @return NULL An error occurred
  */
 girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session,
     bool expand, bool fill, bool left, girara_statusbar_event_t callback);
@@ -39,8 +39,8 @@ girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session,
  * @param session The used girara session
  * @param item The statusbar item
  * @param text Text that should be displayed
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_statusbar_item_set_text(girara_session_t* session,
     girara_statusbar_item_t* item, const char* text);

@@ -44,6 +44,17 @@ UNAME := $(shell uname -s)
 ifeq ($(UNAME), Darwin)
 SONAME_FLAG = -install_name
 SHARED_FLAG = -dynamiclib
+SOFILE = lib${PROJECT}.dylib
+SOVERSIONFILE = lib${PROJECT}.${SOVERSION}.dylib
+SOMAJORFILE = lib${PROJECT}.${SOMAJOR}.dylib
+BUILDSOMAJORFILE = ${LIBDIR}/${SOMAJORFILE}
+PLATFORMFLAGS = -current_version ${SOVERSION} -compatibility_version ${SOMAJOR}
+else
+SOFILE = lib${PROJECT}.so
+SOVERSIONFILE = ${SOFILE}.${SOVERSION}
+SOMAJORFILE = ${SOFILE}.${SOMAJOR}
+BUILDSOMAJORFILE = ${SOMAJORFILE}
+PLATFORMFLAGS =
 endif
 
 all: ${PROJECTNV} ${BUILDDIR}/${PROJECT}.pc po
@@ -60,10 +71,11 @@ all: ${PROJECTNV} ${BUILDDIR}/${PROJECT}.pc po
 
 options:
 	@echo ${PROJECTNV} build options:
-	@echo "CFLAGS  = ${CFLAGS}"
-	@echo "LDFLAGS = ${LDFLAGS}"
-	@echo "DFLAGS  = ${DFLAGS}"
-	@echo "CC      = ${CC}"
+	@echo "CFLAGS             = ${CFLAGS}"
+	@echo "LDFLAGS            = ${LDFLAGS}"
+	@echo "DFLAGS             = ${DFLAGS}"
+	@echo "CC                 = ${CC}"
+	@echo "PLATFORMFLAGS      = ${PLATFORMFLAGS}"
 
 # generated files
 
@@ -76,12 +88,16 @@ ${PROJECTNV}/version.h: ${PROJECTNV}/version.h.in config.mk
 		${PROJECTNV}/version.h.in > ${PROJECTNV}/version.h.tmp
 	$(QUIET)mv ${PROJECTNV}/version.h.tmp ${PROJECTNV}/version.h
 
-${PROJECTNV}/css-definitions.c: data/girara.css_t
+${PROJECTNV}/css-definitions.c: data/girara-pre-3.20.css_t data/girara-post-3.20.css_t
 	$(call colorecho,GEN,$@)
 	$(QUIET)echo '#include "css-definitions.h"' > $@.tmp
-	$(QUIET)echo 'const char* CSS_TEMPLATE =' >> $@.tmp
-	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' $< >> $@.tmp
+	$(QUIET)echo 'const char* CSS_TEMPLATE_PRE_3_20 =' >> $@.tmp
+	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' data/girara-pre-3.20.css_t >> $@.tmp
 	$(QUIET)echo ';' >> $@.tmp
+	$(QUIET)echo 'const char* CSS_TEMPLATE_POST_3_20 =' >> $@.tmp
+	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' data/girara-post-3.20.css_t >> $@.tmp
+	$(QUIET)echo ';' >> $@.tmp
+
 	$(QUIET)mv $@.tmp $@
 
 ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
@@ -115,16 +131,16 @@ ${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS}
 	@mkdir -p ${BUILDDIR_RELEASE}/${BINDIR}
 	$(QUIET)${AR} rcs $@ ${OBJECTS}
 
-${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}: ${OBJECTS}
+${BUILDDIR_RELEASE}/${BINDIR}/${SOVERSIONFILE}: ${OBJECTS}
 	$(call colorecho,LD,$@)
 	@mkdir -p ${BUILDDIR_RELEASE}/${BINDIR}
-	$(QUIET)${CC} -Wl,${SONAME_FLAG},lib${PROJECT}.so.${SOMAJOR} \
-		${SHARED_FLAG} ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS}
+	$(QUIET)${CC} -Wl,${SONAME_FLAG},${BUILDSOMAJORFILE} \
+		${SHARED_FLAG} ${PLATFORMFLAGS} ${LDFLAGS} -o $@ ${OBJECTS} ${LIBS}
 
 ${PROJECT}: static shared
 ${PROJECTNV}: ${PROJECT}
 static: ${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.a
-shared: ${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}
+shared: ${BUILDDIR_RELEASE}/${BINDIR}/${SOVERSIONFILE}
 release: ${PROJECT}
 
 # debug build
@@ -146,14 +162,14 @@ ${BUILDDIR_DEBUG}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS_DEBUG}
 	@mkdir -p ${BUILDDIR_DEBUG}/${BINDIR}
 	$(QUIET)${AR} rcs $@ ${OBJECTS_DEBUG}
 
-${BUILDDIR_DEBUG}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}: ${OBJECTS_DEBUG}
+${BUILDDIR_DEBUG}/${BINDIR}/${SOVERSIONFILE}: ${OBJECTS_DEBUG}
 	$(call colorecho,LD,$@)
 	@mkdir -p ${BUILDDIR_DEBUG}/${BINDIR}
-	$(QUIET)${CC} -Wl,${SONAME_FLAG},lib${PROJECT}.so.${SOMAJOR} ${SHARED_FLAG} ${LDFLAGS} -o $@ ${OBJECTS_DEBUG} ${LIBS}
+	$(QUIET)${CC} -Wl,${SONAME_FLAG},${BUILDSOMAJORFILE} ${SHARED_FLAG} ${PLATFORMFLAGS} ${LDFLAGS} -o $@ ${OBJECTS_DEBUG} ${LIBS}
 
 ${PROJECT}-debug: \
 	${BUILDDIR_DEBUG}/${BINDIR}/lib${PROJECT}.a \
-	${BUILDDIR_DEBUG}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}
+	${BUILDDIR_DEBUG}/${BINDIR}/${SOVERSIONFILE}
 debug: ${PROJECT}-debug
 
 # gcov build
@@ -175,11 +191,11 @@ ${BUILDDIR_GCOV}/${BINDIR}/lib${PROJECT}.a: ${OBJECTS_GCOV}
 	@mkdir -p ${BUILDDIR_GCOV}/${BINDIR}
 	$(QUIET)${AR} rcs $@ ${OBJECTS_GCOV}
 
-${BUILDDIR_GCOV}/${BINDIR}/lib${PROJECT}.so.${SOVERSION}: ${OBJECTS_GCOV}
+${BUILDDIR_GCOV}/${BINDIR}/${SOVERSIONFILE}: ${OBJECTS_GCOV}
 	$(call colorecho,LD,$@)
 	@mkdir -p ${BUILDDIR_GCOV}/${BINDIR}
-	$(QUIET)${CC} -Wl,${SONAME_FLAG},lib${PROJECT}.so.${SOMAJOR} ${SHARED_FLAG} \
-		${GCOV_LDFLAGS} -o $@ ${OBJECTS_GCOV} ${LIBS}
+	$(QUIET)${CC} -Wl,${SONAME_FLAG},${BUILDSOMAJORFILE} ${SHARED_FLAG} \
+		${PLATFORMFLAGS} ${GCOV_LDFLAGS} -o $@ ${OBJECTS_GCOV} ${LIBS}
 
 ${PROJECT}-gcov: ${BUILDDIR_GCOV}/${BINDIR}/lib${PROJECT}.a
 gcov: ${PROJECT}-gcov
@@ -249,11 +265,11 @@ install-static: static
 install-shared: shared
 	$(call colorecho,INSTALL,"Install shared library")
 	$(QUIET)mkdir -m 755 -p ${DESTDIR}${LIBDIR}
-	$(QUIET)install -m 644 ${BUILDDIR_RELEASE}/${BINDIR}/lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}
-	$(QUIET)ln -sf lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} || \
-		echo "Failed to create lib${PROJECT}.so.${SOMAJOR}. Please check if it exists and points to the correct version of lib${PROJECT}.so."
-	$(QUIET)ln -sf lib${PROJECT}.so.${SOVERSION} ${DESTDIR}${LIBDIR}/lib${PROJECT}.so || \
-		echo "Failed to create lib${PROJECT}.so. Please check if it exists and points to the correct version of lib${PROJECT}.so."
+	$(QUIET)install -m 644 ${BUILDDIR_RELEASE}/${BINDIR}/${SOVERSIONFILE} ${DESTDIR}${LIBDIR}
+	$(QUIET)ln -sf ${SOVERSIONFILE} ${DESTDIR}${LIBDIR}/${SOMAJORFILE} || \
+		echo "Failed to create ${SOMAJORFILE}. Please check if it exists and points to the correct version of ${SOFILE}."
+	$(QUIET)ln -sf ${SOVERSIONFILE} ${DESTDIR}${LIBDIR}/${SOFILE} || \
+		echo "Failed to create ${SOFILE}. Please check if it exists and points to the correct version of ${SOFILE}."
 
 install-headers: ${PROJECTNV}/version.h ${BUILDDIR}/${PROJECT}.pc
 	$(call colorecho,INSTALL,"Install pkg-config file")
@@ -272,8 +288,8 @@ install: install-po install-static install-shared install-headers
 
 uninstall: uninstall-headers
 	$(call colorecho,UNINSTALL,"Remove library files")
-	$(QUIET)rm -f ${LIBDIR}/lib${PROJECT}.a ${LIBDIR}/lib${PROJECT}.so.${SOVERSION} \
-		${LIBDIR}/lib${PROJECT}.so.${SOMAJOR} ${LIBDIR}/lib${PROJECT}.so
+	$(QUIET)rm -f ${LIBDIR}/lib${PROJECT}.a ${LIBDIR}/${SOVERSIONFILE} \
+		${LIBDIR}/${SOMAJORFILE} ${LIBDIR}/${SOFILE}
 	$(QUIET)${MAKE} -C po uninstall
 
 uninstall-headers:
@@ -281,6 +297,16 @@ uninstall-headers:
 	$(QUIET)rm -rf ${DESTDIR}${INCLUDEDIR}/girara
 	$(call colorecho,UNINSTALL,"Remove pkg-config file")
 	$(QUIET)rm -f ${DESTDIR}${LIBDIR}/pkgconfig/${PROJECT}.pc
+
+# format and tidy
+
+format:
+	clang-tidy -fix -checks=readability-braces-around-statements \
+		$(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
+	clang-format-3.8 -i $(SOURCE) $(HEADERS)
+
+tidy:
+	clang-tidy $(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
 
 DEPENDS = ${DEPENDDIRS:^=${DEPENDDIR}/}$(addprefix ${DEPENDDIR}/,${OBJECTS:.o=.o.dep})
 -include ${DEPENDS}

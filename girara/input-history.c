@@ -310,7 +310,11 @@ girara_list_t*
 girara_input_history_list(GiraraInputHistory* history)
 {
   g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
-  return GIRARA_INPUT_HISTORY_GET_CLASS(history)->list(history);
+
+  GiraraInputHistoryClass* klass = GIRARA_INPUT_HISTORY_GET_CLASS(history);
+  g_return_val_if_fail(klass != NULL && klass->list != NULL, NULL);
+
+  return klass->list(history);
 }
 
 const char*
@@ -331,5 +335,9 @@ void
 girara_input_history_reset(GiraraInputHistory* history)
 {
   g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
-  GIRARA_INPUT_HISTORY_GET_CLASS(history)->reset(history);
+
+  GiraraInputHistoryClass* klass = GIRARA_INPUT_HISTORY_GET_CLASS(history);
+  g_return_if_fail(klass != NULL && klass->reset != NULL);
+
+  klass->reset(history);
 }

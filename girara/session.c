@@ -205,6 +205,48 @@ css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session)
   session->private_data->gtk.cssprovider = provider;
 }
 
+void
+scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window,
+                                         bool               show_horizontal,
+                                         bool               show_vertical)
+{
+#if GTK_CHECK_VERSION(3, 16, 0)
+  if (gtk_check_version(3, 16, 0) == NULL) {
+    GtkPolicyType hpolicy = GTK_POLICY_AUTOMATIC;
+    GtkPolicyType vpolicy = GTK_POLICY_AUTOMATIC;
+
+    if (show_horizontal == false) {
+      hpolicy = GTK_POLICY_EXTERNAL;
+    }
+    if (show_vertical == false) {
+      vpolicy = GTK_POLICY_EXTERNAL;
+    }
+
+    gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
+    return;
+  }
+#endif
+
+  GtkWidget* vscrollbar = gtk_scrolled_window_get_vscrollbar(window);
+  GtkWidget* hscrollbar = gtk_scrolled_window_get_hscrollbar(window);
+
+  if (vscrollbar != NULL) {
+    if (show_vertical == true) {
+      gtk_widget_unset_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
+  }
+  if (hscrollbar != NULL) {
+    if (show_horizontal == true) {
+      gtk_widget_unset_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE);
+    } else {
+      gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
+    }
+  }
+}
+
+
 girara_session_t*
 girara_session_create()
 {
@@ -234,7 +276,11 @@ girara_session_create()
       (girara_free_function_t) girara_setting_free);
 
   /* CSS style provider */
-  session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE);
+  if (gtk_check_version(3, 20, 0) == NULL) {
+    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_POST_3_20);
+  } else {
+    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_PRE_3_20);
+  }
   session->private_data->gtk.cssprovider = NULL;
   init_template_engine(session->private_data->csstemplate);
 
@@ -356,20 +402,14 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   /* invisible scrollbars */
-  GtkWidget *vscrollbar = gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
-  GtkWidget *hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(session->gtk.view));
-
   char* guioptions = NULL;
   girara_setting_get(session, "guioptions", &guioptions);
 
-  if (vscrollbar != NULL && strchr(guioptions, 'v') == NULL) {
-    gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-  }
-  if (hscrollbar != NULL) {
-    if (strchr(guioptions, 'h') == NULL) {
-     gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-    }
-  }
+  const bool show_hscrollbar = strchr(guioptions, 'h') != NULL;
+  const bool show_vscrollbar = strchr(guioptions, 'v') != NULL;
+
+  scrolled_window_set_scrollbar_visibility(
+    GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
   g_free(guioptions);
 
   /* viewport */
@@ -612,9 +652,9 @@ girara_libnotify(girara_session_t* session, const char *summary,
 
 #ifdef WITH_LIBNOTIFY
 
-  bool was_initialized = notify_is_initted();
+  const bool was_initialized = notify_is_initted();
 
-  if (!was_initialized) {
+  if (was_initialized == false) {
     notify_init(session->private_data->session_name);
   }
 
@@ -648,7 +688,7 @@ girara_libnotify(girara_session_t* session, const char *summary,
   notify_notification_show(libnotify_notification, NULL);
   g_object_unref(G_OBJECT(libnotify_notification));
 
-  if (!was_initialized) {
+  if (was_initialized == false) {
     notify_uninit();
   }
 
@@ -670,30 +710,14 @@ girara_notify(girara_session_t* session, int level, const char* format, ...)
     return;
   }
 
-  bool error_class = false;
-  bool warning_class = false;
-
-  switch (level) {
-    case GIRARA_ERROR:
-      error_class = true;
-      break;
-    case GIRARA_WARNING:
-      warning_class = true;
-      break;
-    case GIRARA_INFO:
-      break;
-    default:
-      return;
-  }
-
-  if (error_class == true) {
+  if (level == GIRARA_ERROR) {
     widget_add_class(session->gtk.notification_area, "notification-error");
     widget_add_class(session->gtk.notification_text, "notification-error");
   } else {
     widget_remove_class(session->gtk.notification_area, "notification-error");
     widget_remove_class(session->gtk.notification_text, "notification-error");
   }
-  if (warning_class == true) {
+  if (level == GIRARA_WARNING) {
     widget_add_class(session->gtk.notification_area, "notification-warning");
     widget_add_class(session->gtk.notification_text, "notification-warning");
   } else {

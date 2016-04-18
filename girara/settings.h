@@ -15,9 +15,9 @@
  * @param init_only Will only available on initialization
  * @param description Description of the setting
  * @param callback Function that is called when the setting changes
- * @param data Arbitary data that can be used by callbacks
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @param data Arbitrary data that can be used by callbacks
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_setting_add(girara_session_t* session, const char* name,
     void* value, girara_setting_type_t type, bool init_only,
@@ -29,13 +29,13 @@ bool girara_setting_add(girara_session_t* session, const char* name,
  * @param session The used girara session
  * @param name The name of the setting
  * @param value The new value of the setting
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_setting_set(girara_session_t* session, const char* name, void* value);
 
 /**
- * Retreive the value of a setting. If the setting is a string, the value stored
+ * Retrieve the value of a setting. If the setting is a string, the value stored
  * in dest has to be deallocated with g_free.
  * @param session The used girara session
  * @param name The name of the setting

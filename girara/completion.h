@@ -9,7 +9,7 @@
  * Creates an girara completion object
  *
  * @return Completion object
- * @return NULL An error occured
+ * @return NULL An error occurred
  */
 girara_completion_t* girara_completion_init();
 
@@ -17,7 +17,7 @@ girara_completion_t* girara_completion_init();
  * Creates an girara completion group
  *
  * @return Completion object
- * @return NULL An error occured
+ * @return NULL An error occurred
  */
 girara_completion_group_t* girara_completion_group_create(
     girara_session_t* session, const char* name);

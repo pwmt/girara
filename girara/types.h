@@ -84,8 +84,8 @@ typedef girara_completion_t* (*girara_completion_function_t)(
  * @param session The current girara session
  * @param input The current input
  * @param argument The given argument
- * @return TRUE No error occured
- * @return FALSE Error occured
+ * @return TRUE No error occurred
+ * @return FALSE Error occurred
  */
 typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session,
     const char* input, girara_argument_t* argument);
@@ -149,7 +149,7 @@ typedef enum girara_setting_type_e
  * Function declaration for a settings callback
  *
  * @param session The current girara session
- * @param name The name of the affected settting
+ * @param name The name of the affected setting
  * @param type The type of the affected setting
  * @param value Pointer to the new value
  * @param data User data
@@ -212,8 +212,8 @@ struct girara_event_s
 {
   girara_event_type_t type; /**< The event type */
 
-  double x; /**< X coordinates where the event occured */
-  double y; /**< Y coordinates where the event occured */
+  double x; /**< X coordinates where the event occurred */
+  double y; /**< Y coordinates where the event occurred */
 };
 
 typedef struct girara_input_history_io_s GiraraInputHistoryIO;

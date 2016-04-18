@@ -11,7 +11,7 @@
 /**
  * Create a new list.
  *
- * @return The girara list object or NULL if an error occured
+ * @return The girara list object or NULL if an error occurred
  */
 girara_list_t* girara_list_new(void);
 
@@ -19,7 +19,7 @@ girara_list_t* girara_list_new(void);
  * Create a new list.
  *
  * @param gfree Pointer to the free function
- * @return The girara list object or NULL if an error occured.
+ * @return The girara list object or NULL if an error occurred.
  */
 girara_list_t* girara_list_new2(girara_free_function_t gfree);
 
@@ -27,7 +27,7 @@ girara_list_t* girara_list_new2(girara_free_function_t gfree);
  * Create a new (sorted) list.
  *
  * @param cmp Pointer to the compare function.
- * @return The girara list object or NULL if an error occured.
+ * @return The girara list object or NULL if an error occurred.
  */
 girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp);
 
@@ -36,7 +36,7 @@ girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp);
  *
  * @param cmp Pointer to the compare function.
  * @param gfree Pointer to the free function
- * @return The girara list object or NULL if an error occured.
+ * @return The girara list object or NULL if an error occurred.
  */
 
 girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp,
@@ -94,7 +94,7 @@ void girara_list_remove(girara_list_t* list, void* data);
  *
  * @param list The girara list object
  * @param n Index of the entry
- * @return The nth element or NULL if an error occured
+ * @return The nth element or NULL if an error occurred
  */
 void* girara_list_nth(girara_list_t* list, size_t n);
 
@@ -147,7 +147,7 @@ void* girara_list_find(girara_list_t* list, girara_compare_function_t compare,
  * Create an iterator pointing at the start of list.
  *
  * @param list The girara list object
- * @return The list iterator or NULL if an error occured
+ * @return The list iterator or NULL if an error occurred
  */
 girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
 
@@ -155,7 +155,7 @@ girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
  * Create an iterator pointing to the same element as iter.
  *
  * @param iter The girara list iterator to be copied
- * @return The list iterator or NULL if an error occured
+ * @return The list iterator or NULL if an error occurred
  */
 girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter);
 
@@ -163,7 +163,7 @@ girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter);
  * Move iterator to next element.
  *
  * @param iter The list iterator
- * @return The moved iterator or NULL if an error occured
+ * @return The moved iterator or NULL if an error occurred
  */
 girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
 
@@ -179,7 +179,7 @@ bool girara_list_iterator_has_next(girara_list_iterator_t* iter);
  * Move iterator to previous element.
  *
  * @param iter The list iterator
- * @return The moved iterator or NULL if an error occured
+ * @return The moved iterator or NULL if an error occurred
  */
 girara_list_iterator_t* girara_list_iterator_previous(girara_list_iterator_t* iter);
 
@@ -267,7 +267,7 @@ girara_list_t* girara_list_merge(girara_list_t* list, girara_list_t* other);
  * Create a new node.
  *
  * @param data Data of the new node
- * @return A girara node object or NULL if an error occured
+ * @return A girara node object or NULL if an error occurred
  */
 girara_tree_node_t* girara_node_new(void* data);
 
@@ -301,7 +301,7 @@ void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child);
  *
  * @param parent The parent node
  * @param data The data of the node
- * @return The node object or NULL if an error occured
+ * @return The node object or NULL if an error occurred
  */
 girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent,
     void* data);
@@ -310,7 +310,7 @@ girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent,
  * Get parent node.
  *
  * @param node The girara node object
- * @return The parent node or NULL if an error occured or no parent exists
+ * @return The parent node or NULL if an error occurred or no parent exists
  */
 girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node);
 
@@ -318,7 +318,7 @@ girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node);
  * Get root node.
  *
  * @param node The girara node object
- * @return The root node or NULL if an error occured
+ * @return The root node or NULL if an error occurred
  */
 girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node);
 
@@ -326,7 +326,7 @@ girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node);
  * Get list of children.
  *
  * @param node The girara node object
- * @return List object containing all child nodes or NULL if an error occured
+ * @return List object containing all child nodes or NULL if an error occurred
  */
 girara_list_t* girara_node_get_children(girara_tree_node_t* node);
 

@@ -14,8 +14,8 @@
  * @param function Executed function
  * @param completion Completion function
  * @param description Description of the command
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_inputbar_command_add(girara_session_t* session,
     const char* command, const char* abbreviation,
@@ -32,8 +32,8 @@ bool girara_inputbar_command_add(girara_session_t* session,
  *        (e.g.: incremental search)
  * @param argument_n Argument identifier
  * @param argument_data Argument data
- * @return TRUE No error occured
- * @return FALSE An error occured
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
  */
 bool girara_special_command_add(girara_session_t* session, char identifier,
     girara_inputbar_special_function_t function, bool always, int argument_n,
