@@ -186,9 +186,12 @@ girara_split_path_array(const char* patharray)
 FILE*
 girara_file_open(const char* path, const char* mode)
 {
-  char* fixed_path = girara_fix_path(path);
+  if (path == NULL || mode == NULL) {
+    return NULL;
+  }
 
-  if (fixed_path == NULL || mode == NULL) {
+  char* fixed_path = girara_fix_path(path);
+  if (fixed_path == NULL) {
     return NULL;
   }
 
