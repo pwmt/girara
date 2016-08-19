@@ -362,8 +362,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   }
 #endif
 
-  gtk_widget_set_name(GTK_WIDGET(session->gtk.window),
-      session->private_data->session_name);
+  gtk_widget_set_name(session->gtk.window, session->private_data->session_name);
 
   /* apply CSS style */
   css_template_changed(session->private_data->csstemplate, session);
