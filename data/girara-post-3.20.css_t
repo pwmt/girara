@@ -1,15 +1,18 @@
-#@session@ scrolledwindow scrollbar {
-  background-color: @scrollbar-bg@;
-}
-#@session@ scrolledwindow scrollbar > slider {
-  background-color: @scrollbar-fg@;
-}
-
 #@session@ * {
   color: @default-fg@;
   background-color: @default-bg@;
   background-image: none;
   font: @font@;
+}
+
+/* Scrollbar */
+
+#@session@ scrolledwindow scrollbar {
+  background-color: @scrollbar-bg@;
+}
+
+#@session@ scrolledwindow scrollbar > slider {
+  background-color: @scrollbar-fg@;
 }
 
 /* Inputbar */
