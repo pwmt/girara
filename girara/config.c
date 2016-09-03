@@ -50,8 +50,7 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  girara_template_set_variable_value(session->private_data->csstemplate, "font",
-      value);
+  css_template_fill_font(session->private_data->csstemplate, value);
 }
 
 static void

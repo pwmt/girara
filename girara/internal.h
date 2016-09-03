@@ -148,6 +148,8 @@ HIDDEN bool girara_cmd_dump_config(girara_session_t* session,
 HIDDEN bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* event, unsigned int t);
 
+HIDDEN void css_template_fill_font(GiraraTemplate* csstemplate, const char* font);
+
 /**
  * Structure of a command
  */

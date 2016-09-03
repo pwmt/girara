@@ -2,7 +2,15 @@
   color: @default-fg@;
   background-color: @default-bg@;
   background-image: none;
-  font: @font@;
+  font-family: @font-family@;
+  font-size: @font-size@;
+  font-weight: @font-weight@;
+  box-shadow: none;
+  border-style: none;
+  margin: 0px;
+  padding: @bottombox-padding1@px @bottombox-padding2@px @bottombox-padding3@px
+    @bottombox-padding4@px;
+
 }
 
 /* Scrollbar */
@@ -114,4 +122,5 @@
 #@session@ scrolledwindow overshoot.right,
 #@session@ scrolledwindow overshoot.right:backdrop {
   background-color: transparent;
+  background-image: none;
 }
