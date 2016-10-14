@@ -5,6 +5,7 @@
 #include <glib/gi18n-lib.h>
 
 #include "config.h"
+#include "css-definitions.h"
 #include "commands.h"
 #include "datastructures.h"
 #include "internal.h"
@@ -184,7 +185,7 @@ girara_config_load_default(girara_session_t* session)
   session->global.autohide_inputbar = true;
 
   /* settings */
-  girara_setting_add(session, "font",                     "monospace normal 9", STRING,  FALSE, _("Font"), cb_font, NULL);
+  girara_setting_add(session, "font",                     DEFAULT_FONT,         STRING,  FALSE, _("Font"), cb_font, NULL);
   girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING,  TRUE,  _("Default foreground color"), NULL, NULL);
   girara_setting_add(session, "default-bg",               "#000000",            STRING,  TRUE,  _("Default background color"), NULL, NULL);
   girara_setting_add(session, "inputbar-fg",              "#9FBC00",            STRING,  TRUE,  _("Inputbar foreground color"), NULL, NULL);

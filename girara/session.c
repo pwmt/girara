@@ -94,7 +94,7 @@ fill_template_with_values(girara_session_t* session)
     girara_template_set_variable_value(csstemplate, "font", font);
     g_free(font);
   } else {
-    girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
+    girara_template_set_variable_value(csstemplate, "font", DEFAULT_FONT);
   };
 
   /* parse color values */
