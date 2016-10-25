@@ -5,10 +5,10 @@
 #include "session.h"
 #include "shortcuts.h"
 #include "input-history.h"
+#include "internal.h"
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
-#include "internal.h"
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
 static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK |
