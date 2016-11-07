@@ -7,7 +7,7 @@ include common.mk
 PROJECTNV     = girara
 PROJECT       = girara-gtk3
 
-SOURCE        = $(wildcard ${PROJECTNV}/*.c)
+SOURCE        = $(sort $(wildcard ${PROJECTNV}/*.c))
 CSOURCE       = $(filter-out ${PROJECTNV}/css-definitions.c, ${SOURCE})
 
 OBJECTS       = $(addprefix ${BUILDDIR_RELEASE}/,${CSOURCE:.c=.o}) \
@@ -17,7 +17,7 @@ OBJECTS_DEBUG = $(addprefix ${BUILDDIR_DEBUG}/,${CSOURCE:.c=.o}) \
 OBJECTS_GCOV  = $(addprefix ${BUILDDIR_GCOV}/,${CSOURCE:.c=.o}) \
 	${BUILDDIR_GCOV}/${PROJECTNV}/css-definitions.o
 
-HEADERS       = $(filter-out ${PROJECTNV}/internal.h, $(wildcard ${PROJECTNV}/*.h))
+HEADERS       = $(filter-out ${PROJECTNV}/internal.h, $(sort $(wildcard ${PROJECTNV}/*.h)))
 
 ifneq (${WITH_LIBNOTIFY},0)
 CPPFLAGS += -DWITH_LIBNOTIFY
