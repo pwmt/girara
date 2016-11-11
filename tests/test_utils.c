@@ -116,7 +116,6 @@ static void
 xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
     const gchar* expected)
 {
-#if GLIB_CHECK_VERSION(2, 35, 3)
   const gchar* home = g_getenv("HOME");
   gchar* home_env_var = NULL;
   gchar** envp = NULL;
@@ -132,9 +131,6 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   }
 
   envp[0] = g_strdup_printf("%s=", envvar);
-#else
-  gchar* envp[] = { g_strdup_printf("%s=", envvar), NULL };
-#endif
   gchar* argv[] = { XDG_TEST_HELPER, g_strdup_printf("%d", path), NULL };
 
   gchar* output = NULL;
@@ -166,10 +162,8 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   g_free(envp[0]);
   g_free(argv[1]);
 
-#if GLIB_CHECK_VERSION(2, 35, 3)
   g_free(home_env_var);
   g_free(envp);
-#endif
 }
 
 START_TEST(test_xdg_path) {
