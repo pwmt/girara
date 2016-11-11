@@ -6,9 +6,10 @@
 #include "shortcuts.h"
 #include "input-history.h"
 #include "internal.h"
+#include "utils.h"
+
 #include <string.h>
 #include <glib/gi18n-lib.h>
-
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
 static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK |
@@ -526,16 +527,18 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 
   guint keyval = 0;
   guint clean  = 0;
-
   if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
+    girara_debug("clean_mask returned false.");
     return false;
   }
+  girara_debug("Proccessing key %u with mask %x.", keyval, clean);
 
   if (custom_ret == false) {
     GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
       if (inputbar_shortcut->key == keyval
        && inputbar_shortcut->mask == clean)
       {
+        girara_debug("found shortcut for key %u and mask %x", keyval, clean);
         if (inputbar_shortcut->function != NULL) {
           inputbar_shortcut->function(session, &(inputbar_shortcut->argument), NULL, 0);
         }
