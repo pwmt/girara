@@ -212,7 +212,7 @@ fill_template_with_values(girara_session_t* session)
     "tabbar-focus-bg",
   };
 
-  for (size_t i = 0; i < LENGTH(color_settings); i++) {
+  for (size_t i = 0; i < LENGTH(color_settings); ++i) {
     char* tmp_value = NULL;
     girara_setting_get(session, color_settings[i], &tmp_value);
 
