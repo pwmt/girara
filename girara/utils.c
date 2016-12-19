@@ -55,8 +55,12 @@ girara_fix_path(const char* path)
 
     rpath = g_build_filename(home_path, path + idx, NULL);
     g_free(home_path);
-  } else {
+  } else if (g_path_is_absolute(path) == TRUE) {
     rpath = g_strdup(path);
+  } else {
+    char* curdir = g_get_current_dir();
+    rpath = g_build_filename(curdir, path, NULL);
+    g_free(curdir);
   }
 
   return rpath;
