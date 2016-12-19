@@ -80,13 +80,13 @@ START_TEST(test_home_directory_set_HOME) {
 } END_TEST
 
 START_TEST(test_fix_path_basic) {
-  gchar* result = girara_fix_path("test");
-  fail_unless(g_strcmp0(result, "test") == 0,
+  gchar* result = girara_fix_path("/test");
+  fail_unless(g_strcmp0(result, "/test") == 0,
       "Fix path result does not match (got: %s, expected: %s)", result, "test", NULL);
   g_free(result);
 
-  result = girara_fix_path("test/test");
-  fail_unless(g_strcmp0(result, "test/test") == 0,
+  result = girara_fix_path("/test/test");
+  fail_unless(g_strcmp0(result, "/test/test") == 0,
       "Fix path result does not match (got: %s, expected: %s)", result, "test/test", NULL);
   g_free(result);
 } END_TEST
