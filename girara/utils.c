@@ -129,19 +129,13 @@ char*
 girara_get_xdg_path(girara_xdg_path_t path)
 {
   static const char* VARS[] = {
-    "XDG_CONFIG_HOME",
-    "XDG_DATA_HOME",
-    "XDG_CONFIG_DIRS",
-    "XDG_DATA_DIRS",
-    "XDG_CACHE_HOME",
+    [XDG_CONFIG_DIRS] = "XDG_CONFIG_DIRS",
+    [XDG_DATA_DIRS] = "XDG_DATA_DIRS"
   };
 
   static const char* DEFAULTS[] = {
-    "NOTUSED",
-    "NOTUSED",
-    "/etc/xdg",
-    "/usr/local/share/:/usr/share",
-    "NOTUSED"
+    [XDG_CONFIG_DIRS] = "/etc/xdg",
+    [XDG_DATA_DIRS] = "/usr/local/share/:/usr/share"
   };
 
   switch (path) {
