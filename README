@@ -13,6 +13,7 @@ glib (>= 2.36)
 gtk3 (>= 3.4)
 intltool
 libnotify (optional, for notification support)
+jscon-c (optional, for configuration dumping support)
 
 Please note that you need to have a working pkg-config installation
 and that the Makefile is only compatible with GNU make.
