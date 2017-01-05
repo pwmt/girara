@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2016-04-18 20:45+0200\n"
+"POT-Creation-Date: 2017-01-05 15:50+0100\n"
 "PO-Revision-Date: 2015-12-14 21:49+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
@@ -23,7 +23,7 @@ msgstr ""
 "X-Generator: Poedit 1.6.10\n"
 
 #. unhandled command
-#: ../girara/callbacks.c:501
+#: ../girara/callbacks.c:502
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
@@ -90,178 +90,178 @@ msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"
 
 #. settings
-#: ../girara/config.c:187
+#: ../girara/config.c:186
 msgid "Font"
 msgstr "Schriftart"
 
-#: ../girara/config.c:188
+#: ../girara/config.c:187
 msgid "Default foreground color"
 msgstr "Standardfarbe des Vordergrunds"
 
-#: ../girara/config.c:189
+#: ../girara/config.c:188
 msgid "Default background color"
 msgstr "Standardfarbe des Hintergrunds"
 
-#: ../girara/config.c:190
+#: ../girara/config.c:189
 msgid "Inputbar foreground color"
 msgstr "Vordergrundfarbe der Eingabezeile"
 
-#: ../girara/config.c:191
+#: ../girara/config.c:190
 msgid "Inputbar background color"
 msgstr "Hintergrundfarbe der Eingabezeile"
 
-#: ../girara/config.c:192
+#: ../girara/config.c:191
 msgid "Statusbar foreground color"
 msgstr "Vordergrundfarbe der Statuszeile"
 
-#: ../girara/config.c:193
+#: ../girara/config.c:192
 msgid "Statsubar background color"
 msgstr "Hintergrundfarbe der Statuszeile"
 
-#: ../girara/config.c:194
+#: ../girara/config.c:193
 msgid "Completion foreground color"
 msgstr "Vordergrundfarbe der Vervollständigung"
 
-#: ../girara/config.c:195
+#: ../girara/config.c:194
 msgid "Completion background color"
 msgstr "Hintergrundfarbe der Vervollständigung"
 
-#: ../girara/config.c:196
+#: ../girara/config.c:195
 msgid "Completion group foreground color"
 msgstr "Vordergrundfarbe der Vervollständigung (Gruppe)"
 
-#: ../girara/config.c:197
+#: ../girara/config.c:196
 msgid "Completion group background color"
 msgstr "Hintergrundfarbe der Vervollständigung (Gruppe)"
 
-#: ../girara/config.c:198
+#: ../girara/config.c:197
 msgid "Completion highlight foreground color"
 msgstr "Vordergrundfarbe der Vervollständigung (Hervorhebung)"
 
-#: ../girara/config.c:199
+#: ../girara/config.c:198
 msgid "Completion highlight background color"
 msgstr "Hintergrundfarbe der Vervollständigung (Hervorhebung)"
 
-#: ../girara/config.c:200
+#: ../girara/config.c:199
 msgid "Error notification foreground color"
 msgstr "Vordergrundfarbe der Benachrichtigung (Fehler)"
 
-#: ../girara/config.c:201
+#: ../girara/config.c:200
 msgid "Error notification background color"
 msgstr "Hintergrundfarbe der Benachrichtigung (Fehler)"
 
-#: ../girara/config.c:202
+#: ../girara/config.c:201
 msgid "Warning notification foreground color"
 msgstr "Vordergrundfarbe der Benachrichtigung (Warnung)"
 
-#: ../girara/config.c:203
+#: ../girara/config.c:202
 msgid "Warning notifaction background color"
 msgstr "Hintergrundfarbe der Benachrichtigung (Warnung)"
 
-#: ../girara/config.c:204
+#: ../girara/config.c:203
 msgid "Notification foreground color"
 msgstr "Vordergrundfarbe der Benachrichtigung"
 
-#: ../girara/config.c:205
+#: ../girara/config.c:204
 msgid "Notification background color"
 msgstr "Hintergrundfarbe der Benachrichtigung"
 
-#: ../girara/config.c:206
+#: ../girara/config.c:205
 msgid "Scrollbar foreground color"
 msgstr "Vordergrundfarbe der Bildlaufleiste"
 
-#: ../girara/config.c:207
+#: ../girara/config.c:206
 msgid "Scrollbar background color"
 msgstr "Hintergrundfarbe der Bildlaufleiste"
 
-#: ../girara/config.c:208
+#: ../girara/config.c:207
 msgid "Tab bar foreground color"
 msgstr "Registerleisten Vordergrundfarbe"
 
-#: ../girara/config.c:209
+#: ../girara/config.c:208
 msgid "Tab bar background color"
 msgstr "Registerleisten Hintergrundfarbe"
 
-#: ../girara/config.c:210
+#: ../girara/config.c:209
 msgid "Tab bar foreground color (active)"
 msgstr "Registerleisten Vordergrundfarbe (aktiv)"
 
-#: ../girara/config.c:211
+#: ../girara/config.c:210
 msgid "Tab bar background color (active)"
 msgstr "Registerleisten Hintergrundfarbe (aktiv)"
 
-#: ../girara/config.c:213
+#: ../girara/config.c:212
 msgid "Initial window width"
 msgstr "Ausgangsbreite des Fensters"
 
-#: ../girara/config.c:214
+#: ../girara/config.c:213
 msgid "Initial window height"
 msgstr "Ausgangshöhe des Fensters"
 
-#: ../girara/config.c:215
+#: ../girara/config.c:214
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 "Horizontaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
-#: ../girara/config.c:216
+#: ../girara/config.c:215
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 "Vertikaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
-#: ../girara/config.c:217
+#: ../girara/config.c:216
 msgid "Number of completion items"
 msgstr "Anzahl der Elemente in der Vervollständigung"
 
-#: ../girara/config.c:218
+#: ../girara/config.c:217
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr "Zeige horizontale und vertikale Bildlaufleiste"
 
-#: ../girara/config.c:219
+#: ../girara/config.c:218
 msgid "Show the horizontal scrollbar"
 msgstr "Zeige horizontale Bildlaufleiste"
 
-#: ../girara/config.c:220
+#: ../girara/config.c:219
 msgid "Show the vertical scrollbar"
 msgstr "Zeige vertikale Bildlaufleiste"
 
-#: ../girara/config.c:221
+#: ../girara/config.c:220
 msgid "Window icon"
 msgstr "Fenstericon"
 
-#: ../girara/config.c:222
+#: ../girara/config.c:221
 msgid "Command to execute in :exec"
 msgstr "Befehl, der von :exec ausgeführt werden soll"
 
-#: ../girara/config.c:223
+#: ../girara/config.c:222
 msgid "Show or hide certain GUI elements"
 msgstr "Zeige oder verstecke bestimmte GUI Elemente"
 
-#: ../girara/config.c:224
+#: ../girara/config.c:223
 msgid "Enable smooth scrolling and zooming"
 msgstr "Aktiviere glattes Bildschirmrollen und Vergrößern"
 
 #. commands
-#: ../girara/config.c:263
+#: ../girara/config.c:262
 msgid "Execute a command"
 msgstr "Führe einen Befehl aus."
 
-#: ../girara/config.c:264
+#: ../girara/config.c:263
 msgid "Map a key sequence"
 msgstr "Tastenfolge zuweisen"
 
-#: ../girara/config.c:265
+#: ../girara/config.c:264
 msgid "Quit the program"
 msgstr "Beende das Programm"
 
-#: ../girara/config.c:266
+#: ../girara/config.c:265
 msgid "Set an option"
 msgstr "Setze eine Option"
 
-#: ../girara/config.c:267
+#: ../girara/config.c:266
 msgid "Unmap a key sequence"
 msgstr "Tastenfolge entbinden"
 
-#: ../girara/config.c:269
+#: ../girara/config.c:268
 msgid "Dump settings to a file"
 msgstr "Speichere Einstellungen in einer Datei"
 
@@ -270,7 +270,7 @@ msgstr "Speichere Einstellungen in einer Datei"
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Ungültige Anzahl an Argumente übergeben: %zu anstatt von 1"
 
-#: ../girara/utils.c:524
+#: ../girara/utils.c:520
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Konnte Befehl nicht ausführen: %s"
