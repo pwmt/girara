@@ -50,7 +50,7 @@ girara_log(const char* location, girara_log_level_t level, const char* format, .
 }
 
 girara_log_level_t
-girara_get_log_level()
+girara_get_log_level(void)
 {
   return log_level;
 }

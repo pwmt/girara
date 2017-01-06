@@ -55,7 +55,7 @@ void girara_vlog(const char* location, girara_log_level_t level,
  * Get the log level.
  * @returns The log level.
  */
-girara_log_level_t girara_get_log_level();
+girara_log_level_t girara_get_log_level(void);
 
 /**
  * Set the log level. Any message with a level lower than the log level will
