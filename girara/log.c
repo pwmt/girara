@@ -64,7 +64,7 @@ girara_set_log_level(girara_log_level_t level)
 /* old compat function, remove once we bump the SONAME */
 
 void
-_girara_log(const char* file, int line, girara_log_level_t level, const char* format, ...)
+_girara_debug(const char* file, int line, girara_log_level_t level, const char* format, ...)
 {
   char* tmp = g_strdup_printf("%s:%d", file, line);
   va_list ap;
