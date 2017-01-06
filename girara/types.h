@@ -53,15 +53,15 @@ enum
 };
 
 /**
- * Debug levels
+ * Log levels
  */
-typedef enum girara_debug_level_e
+typedef enum girara_log_level_e
 {
   GIRARA_DEBUG, /**> Debug messages */
   GIRARA_INFO, /**> Information debug output */
   GIRARA_WARNING, /**> Warning level */
   GIRARA_ERROR /**> Error */
-} girara_debug_level_t;
+} girara_log_level_t;
 
 /**
  * Mode identifier
