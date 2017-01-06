@@ -60,12 +60,13 @@ girara_set_log_level(girara_log_level_t level)
 void
 _girara_debug(const char* function, int line, girara_log_level_t level, const char* format, ...)
 {
-  char* tmp = g_strdup_printf("%d", line);
+  char buffer[G_ASCII_DTOSTR_BUF_SIZE] = { '\0' };
+  g_ascii_dtostr(buffer, G_ASCII_DTOSTR_BUF_SIZE, line);
+
   va_list ap;
   va_start(ap, format);
-  girara_vlog(function, tmp, level, format, ap);
+  girara_vlog(function, buffer, level, format, ap);
   va_end(ap);
-  g_free(tmp);
 }
 
 girara_log_level_t
