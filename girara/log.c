@@ -71,6 +71,7 @@ _girara_debug(const char* file, int line, girara_log_level_t level, const char* 
   va_start(ap, format);
   girara_vlog(tmp, level, format, ap);
   va_end(ap);
+  g_free(tmp);
 }
 
 girara_log_level_t
