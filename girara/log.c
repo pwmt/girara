@@ -7,45 +7,39 @@
 
 static girara_log_level_t log_level = GIRARA_DEBUG;
 
+static const char* NAMES[] = {
+  [GIRARA_DEBUG] = "debug",
+  [GIRARA_INFO] = "info",
+  [GIRARA_WARNING] = "warning",
+  [GIRARA_ERROR] = "error"
+};
+
 void
-girara_vlog(const char* location, girara_log_level_t level, const char* format, va_list ap)
+girara_vlog(const char* location, const char* function, girara_log_level_t level, const char* format, va_list ap)
 {
-  if (level < log_level) {
+  if (level < log_level || level < GIRARA_DEBUG || level > GIRARA_ERROR ) {
     return;
   }
 
-  switch (level)
-  {
-    case GIRARA_WARNING:
-      fprintf(stderr, "warning: ");
-      break;
-    case GIRARA_ERROR:
-      fprintf(stderr, "error: ");
-      break;
-    case GIRARA_INFO:
-      fprintf(stderr, "info: ");
-      break;
-    case GIRARA_DEBUG:
-      if (location != NULL) {
-        fprintf(stderr, "debug: %s: ", location);
-      } else {
-        fprintf(stderr, "debug: ");
-      }
-      break;
-    default:
-      return;
+  fprintf(stderr, "%s: ", NAMES[level]);
+  if (level == GIRARA_DEBUG) {
+    if (location != NULL) {
+      fprintf(stderr, "%s: ", location);
+    }
+    if (function != NULL) {
+      fprintf(stderr, "%s(): ", function);
+    }
   }
-
   vfprintf(stderr, format, ap);
   fprintf(stderr, "\n");
 }
 
 void
-girara_log(const char* location, girara_log_level_t level, const char* format, ...)
+girara_log(const char* location, const char* function, girara_log_level_t level, const char* format, ...)
 {
   va_list ap;
   va_start(ap, format);
-  girara_vlog(location, level, format, ap);
+  girara_vlog(location, function, level, format, ap);
   va_end(ap);
 }
 
@@ -64,12 +58,12 @@ girara_set_log_level(girara_log_level_t level)
 /* old compat function, remove once we bump the SONAME */
 
 void
-_girara_debug(const char* file, int line, girara_log_level_t level, const char* format, ...)
+_girara_debug(const char* function, int line, girara_log_level_t level, const char* format, ...)
 {
-  char* tmp = g_strdup_printf("%s:%d", file, line);
+  char* tmp = g_strdup_printf("%d", line);
   va_list ap;
   va_start(ap, format);
-  girara_vlog(tmp, level, format, ap);
+  girara_vlog(function, tmp, level, format, ap);
   va_end(ap);
   g_free(tmp);
 }
