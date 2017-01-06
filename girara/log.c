@@ -27,9 +27,9 @@ girara_vlog(const char* location, girara_log_level_t level, const char* format, 
       break;
     case GIRARA_DEBUG:
       if (location != NULL) {
-        fprintf(stderr, "log: %s: ", location);
+        fprintf(stderr, "debug: %s: ", location);
       } else {
-        fprintf(stderr, "log: ");
+        fprintf(stderr, "debug: ");
       }
       break;
     default:
