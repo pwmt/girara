@@ -1,15 +1,20 @@
-#@session@ scrolledwindow scrollbar {
-  background-color: @scrollbar-bg@;
-}
-#@session@ scrolledwindow scrollbar > slider {
-  background-color: @scrollbar-fg@;
-}
-
 #@session@ * {
   color: @default-fg@;
   background-color: @default-bg@;
   background-image: none;
-  font: @font@;
+  font-family: @font-family@;
+  font-size: @font-size@;
+  font-weight: @font-weight@;
+}
+
+/* Scrollbar */
+
+#@session@ scrolledwindow scrollbar {
+  background-color: @scrollbar-bg@;
+}
+
+#@session@ scrolledwindow scrollbar > slider {
+  background-color: @scrollbar-fg@;
 }
 
 /* Inputbar */
@@ -111,4 +116,5 @@
 #@session@ scrolledwindow overshoot.right,
 #@session@ scrolledwindow overshoot.right:backdrop {
   background-color: transparent;
+  background-image: none;
 }

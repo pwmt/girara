@@ -349,6 +349,11 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
         }
 
         GIRARA_LIST_FOREACH(result->groups, girara_completion_group_t*, iter, group)
+          if (group->elements == NULL || girara_list_size(group->elements) == 0) {
+            girara_list_iterator_next(iter);
+            continue;
+          }
+
           /* create group entry */
           if (group->value != NULL) {
             girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);

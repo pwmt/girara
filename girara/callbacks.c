@@ -5,10 +5,11 @@
 #include "session.h"
 #include "shortcuts.h"
 #include "input-history.h"
+#include "internal.h"
+#include "utils.h"
+
 #include <string.h>
 #include <glib/gi18n-lib.h>
-
-#include "internal.h"
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
 static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK |
@@ -72,7 +73,7 @@ clean_mask(guint hardware_keycode, GdkModifierType state, gint group, guint* cle
 }
 
 /* callback implementation */
-bool
+gboolean
 girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
     GdkEventKey* event, girara_session_t* session)
 {
@@ -201,7 +202,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
   return FALSE;
 }
 
-bool
+gboolean
 girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
     GdkEventButton* button, girara_session_t* session)
 {
@@ -248,7 +249,7 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
   return false;
 }
 
-bool
+gboolean
 girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventButton* button, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, false);
@@ -279,7 +280,7 @@ girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventBut
   return false;
 }
 
-bool
+gboolean
 girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEventMotion* button, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, false);
@@ -310,7 +311,7 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
   return false;
 }
 
-bool
+gboolean
 girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scroll, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, false);
@@ -362,7 +363,7 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
   return false;
 }
 
-bool
+gboolean
 girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -505,13 +506,13 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   return false;
 }
 
-bool
+gboolean
 girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, false);
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
-  bool custom_ret = false;
+  gboolean custom_ret = false;
   if (session->signals.inputbar_custom_key_press_event != NULL) {
     custom_ret = session->signals.inputbar_custom_key_press_event(entry, event, session->signals.inputbar_custom_data);
     if (custom_ret == true) {
@@ -526,16 +527,18 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 
   guint keyval = 0;
   guint clean  = 0;
-
   if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
+    girara_debug("clean_mask returned false.");
     return false;
   }
+  girara_debug("Proccessing key %u with mask %x.", keyval, clean);
 
   if (custom_ret == false) {
     GIRARA_LIST_FOREACH(session->bindings.inputbar_shortcuts, girara_inputbar_shortcut_t*, iter, inputbar_shortcut)
       if (inputbar_shortcut->key == keyval
        && inputbar_shortcut->mask == clean)
       {
+        girara_debug("found shortcut for key %u and mask %x", keyval, clean);
         if (inputbar_shortcut->function != NULL) {
           inputbar_shortcut->function(session, &(inputbar_shortcut->argument), NULL, 0);
         }
@@ -556,7 +559,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   return custom_ret;
 }
 
-bool
+gboolean
 girara_callback_inputbar_changed_event(GtkEditable* entry, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, false);

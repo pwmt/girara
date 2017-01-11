@@ -1,6 +1,6 @@
 // See LICENSE file for license and copyright information
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
 #define _POSIX_SOURCE
 #endif
@@ -80,14 +80,19 @@ START_TEST(test_home_directory_set_HOME) {
 } END_TEST
 
 START_TEST(test_fix_path_basic) {
-  gchar* result = girara_fix_path("test");
-  fail_unless(g_strcmp0(result, "test") == 0,
+  gchar* result = girara_fix_path("/test");
+  fail_unless(g_strcmp0(result, "/test") == 0,
       "Fix path result does not match (got: %s, expected: %s)", result, "test", NULL);
   g_free(result);
 
-  result = girara_fix_path("test/test");
-  fail_unless(g_strcmp0(result, "test/test") == 0,
+  result = girara_fix_path("/test/test");
+  fail_unless(g_strcmp0(result, "/test/test") == 0,
       "Fix path result does not match (got: %s, expected: %s)", result, "test/test", NULL);
+  g_free(result);
+
+  result = girara_fix_path("test");
+  fail_unless(g_str_has_suffix(result, "/test") == TRUE,
+      "Fix path result does not match (got: %s, expected: %s)", result, ".../test", NULL);
   g_free(result);
 } END_TEST
 
@@ -116,7 +121,6 @@ static void
 xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
     const gchar* expected)
 {
-#if GLIB_CHECK_VERSION(2, 35, 3)
   const gchar* home = g_getenv("HOME");
   gchar* home_env_var = NULL;
   gchar** envp = NULL;
@@ -132,9 +136,6 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   }
 
   envp[0] = g_strdup_printf("%s=", envvar);
-#else
-  gchar* envp[] = { g_strdup_printf("%s=", envvar), NULL };
-#endif
   gchar* argv[] = { XDG_TEST_HELPER, g_strdup_printf("%d", path), NULL };
 
   gchar* output = NULL;
@@ -166,10 +167,8 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   g_free(envp[0]);
   g_free(argv[1]);
 
-#if GLIB_CHECK_VERSION(2, 35, 3)
   g_free(home_env_var);
   g_free(envp);
-#endif
 }
 
 START_TEST(test_xdg_path) {

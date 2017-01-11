@@ -55,8 +55,12 @@ girara_fix_path(const char* path)
 
     rpath = g_build_filename(home_path, path + idx, NULL);
     g_free(home_path);
-  } else {
+  } else if (g_path_is_absolute(path) == TRUE) {
     rpath = g_strdup(path);
+  } else {
+    char* curdir = g_get_current_dir();
+    rpath = g_build_filename(curdir, path, NULL);
+    g_free(curdir);
   }
 
   return rpath;
@@ -90,12 +94,7 @@ char*
 girara_get_home_directory(const char* user)
 {
   if (user == NULL || g_strcmp0(user, g_get_user_name()) == 0) {
-#if GLIB_CHECK_VERSION(2, 35, 3)
     return g_strdup(g_get_home_dir());
-#else
-    const char* homedir = g_getenv("HOME");
-    return g_strdup(homedir ? homedir : g_get_home_dir());
-#endif
   }
 
   // XXX: The following code is very unportable.
@@ -130,19 +129,13 @@ char*
 girara_get_xdg_path(girara_xdg_path_t path)
 {
   static const char* VARS[] = {
-    "XDG_CONFIG_HOME",
-    "XDG_DATA_HOME",
-    "XDG_CONFIG_DIRS",
-    "XDG_DATA_DIRS",
-    "XDG_CACHE_HOME",
+    [XDG_CONFIG_DIRS] = "XDG_CONFIG_DIRS",
+    [XDG_DATA_DIRS] = "XDG_DATA_DIRS"
   };
 
   static const char* DEFAULTS[] = {
-    "NOTUSED",
-    "NOTUSED",
-    "/etc/xdg",
-    "/usr/local/share/:/usr/share",
-    "NOTUSED"
+    [XDG_CONFIG_DIRS] = "/etc/xdg",
+    [XDG_DATA_DIRS] = "/usr/local/share/:/usr/share"
   };
 
   switch (path) {
@@ -186,9 +179,12 @@ girara_split_path_array(const char* patharray)
 FILE*
 girara_file_open(const char* path, const char* mode)
 {
-  char* fixed_path = girara_fix_path(path);
+  if (path == NULL || mode == NULL) {
+    return NULL;
+  }
 
-  if (fixed_path == NULL || mode == NULL) {
+  char* fixed_path = girara_fix_path(path);
+  if (fixed_path == NULL) {
     return NULL;
   }
 

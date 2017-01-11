@@ -14,7 +14,7 @@
  * @param data Custom data
  * @return true if no error occurred
  */
-typedef bool (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget,
+typedef gboolean (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget,
     GdkEventKey* event, void* data);
 
 /**
@@ -24,7 +24,7 @@ typedef bool (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget,
  * @param data Custom data
  * @return true if no error occurred
  */
-typedef bool (*girara_callback_inputbar_activate_t)(GtkEntry* entry,
+typedef gboolean (*girara_callback_inputbar_activate_t)(GtkEntry* entry,
     void* data);
 
 /**
@@ -36,7 +36,7 @@ typedef bool (*girara_callback_inputbar_activate_t)(GtkEntry* entry,
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event,
+gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event,
     girara_session_t* session);
 
 /**
@@ -48,7 +48,7 @@ bool girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event,
  * @return true to stop other handlers from being invoked for the event.
  * @return false to propagate the event further.
  */
-bool girara_callback_view_button_press_event(GtkWidget* widget,
+gboolean girara_callback_view_button_press_event(GtkWidget* widget,
     GdkEventButton* button, girara_session_t* session);
 
 /**
@@ -60,7 +60,7 @@ bool girara_callback_view_button_press_event(GtkWidget* widget,
  * @return true to stop other handlers from being invoked for the event.
  * @return false to propagate the event further.
  */
-bool girara_callback_view_button_release_event(GtkWidget* widget,
+gboolean girara_callback_view_button_release_event(GtkWidget* widget,
     GdkEventButton* button, girara_session_t* session);
 
 /**
@@ -72,7 +72,7 @@ bool girara_callback_view_button_release_event(GtkWidget* widget,
  * @return true to stop other handlers from being invoked for the event.
  * @return false to propagate the event further.
  */
-bool girara_callback_view_button_motion_notify_event(GtkWidget* widget,
+gboolean girara_callback_view_button_motion_notify_event(GtkWidget* widget,
     GdkEventMotion* button, girara_session_t* session);
 
 /**
@@ -84,7 +84,7 @@ bool girara_callback_view_button_motion_notify_event(GtkWidget* widget,
  * @return true to stop other handlers from being invoked for the event.
  * @return false to propagate the event further.
  */
-bool girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* event,
+gboolean girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* event,
     girara_session_t* session);
 
 /**
@@ -95,7 +95,7 @@ bool girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* event,
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_callback_inputbar_activate(GtkEntry* entry,
+gboolean girara_callback_inputbar_activate(GtkEntry* entry,
     girara_session_t* session);
 
 /**
@@ -107,7 +107,7 @@ bool girara_callback_inputbar_activate(GtkEntry* entry,
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_callback_inputbar_key_press_event(GtkWidget* widget,
+gboolean girara_callback_inputbar_key_press_event(GtkWidget* widget,
     GdkEventKey* event, girara_session_t* session);
 
 /**
@@ -118,7 +118,7 @@ bool girara_callback_inputbar_key_press_event(GtkWidget* widget,
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_callback_inputbar_changed_event(GtkEditable* widget,
+gboolean girara_callback_inputbar_changed_event(GtkEditable* widget,
     girara_session_t* session);
 
 #endif

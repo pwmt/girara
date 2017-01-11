@@ -4,8 +4,10 @@
 #define GIRARA_UTILS_H
 
 #include <stdio.h>
+
 #include "types.h"
 #include "macros.h"
+#include "log.h"
 
 /**
  * Enum for directories specified in the XDG specification.
@@ -112,51 +114,6 @@ void girara_clean_line(char* line);
  * @return Pointer to the allocated memory block or NULL
  */
 void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2);
-
-/**
- * Prints a debug message. The arguments are passed to @ref _girara_debug as
- * last argument.
- */
-#define girara_debug(...)   _girara_debug(__func__, __LINE__, GIRARA_DEBUG,   __VA_ARGS__)
-/**
- * Prints an info message. The arguments are passed to @ref _girara_debug as
- * last argument.
- */
-#define girara_info(...)    _girara_debug(__func__, __LINE__, GIRARA_INFO,    __VA_ARGS__)
-/**
- * Prints a warning message. The arguments are passed to @ref _girara_debug as
- * last argument.
- */
-#define girara_warning(...) _girara_debug(__func__, __LINE__, GIRARA_WARNING, __VA_ARGS__)
-/**
- * Prints an error message. The arguments are passed to @ref _girara_debug as
- * last argument.
- */
-#define girara_error(...)   _girara_debug(__func__, __LINE__, GIRARA_ERROR,   __VA_ARGS__)
-
-/**
- * Print a message.
- *
- * @param function The calling function
- * @param line The line of the call
- * @param level The debug level of the message.
- * @param format printf like format string
- */
-void _girara_debug(const char* function, int line, girara_debug_level_t level,
-    const char* format, ...) GIRARA_PRINTF(4, 5);
-
-/**
- * Get the debug level.
- * @returns The debug level.
- */
-girara_debug_level_t girara_get_debug_level();
-
-/**
- * Set the debug level. Any message with a level lower than the debug level will
- * be discarded.
- * @param level The new debug level.
- */
-void girara_set_debug_level(girara_debug_level_t level);
 
 /**
  * Escape \\, \\t, ", ' and spaces in strings.
