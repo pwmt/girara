@@ -971,7 +971,7 @@ girara_session_get_template(girara_session_t* session)
 void
 girara_session_set_template(girara_session_t* session, GiraraTemplate *template)
 {
-  g_return_val_if_fail(session != NULL, NULL);
+  g_return_if_fail(session != NULL);
 
   session->private_data->csstemplate = template;
   css_template_changed(template, session);
