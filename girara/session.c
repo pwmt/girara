@@ -969,7 +969,7 @@ girara_session_get_template(girara_session_t* session)
 }
 
 void
-girara_session_set_template(girara_session_t* session, GiraraTemplate *template)
+girara_session_set_template(girara_session_t* session, GiraraTemplate* template)
 {
   g_return_if_fail(session != NULL);
   g_return_if_fail(template != NULL);
