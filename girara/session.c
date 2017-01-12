@@ -969,7 +969,7 @@ girara_session_get_template(girara_session_t* session)
 }
 
 void
-girara_session_set_template(girara_session_t* session, GiraraTemplate* template)
+girara_session_set_template(girara_session_t* session, GiraraTemplate* template, bool init_variables)
 {
   g_return_if_fail(session != NULL);
   g_return_if_fail(template != NULL);
@@ -979,6 +979,11 @@ girara_session_set_template(girara_session_t* session, GiraraTemplate* template)
   }
 
   session->private_data->csstemplate = template;
+  if (init_variables == true) {
+    init_template_engine(template);
+    fill_template_with_values(template);
+  }
+
   css_template_changed(template, session);
 }
 

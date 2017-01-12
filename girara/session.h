@@ -252,14 +252,16 @@ girara_list_t* girara_get_command_history(girara_session_t* session);
 GiraraTemplate* girara_session_get_template(girara_session_t* session);
 
 /**
- * Replaces the internal template object, thus provides entirely user-defined styling
+ * Replaces the internal template object, thus provides entirely user-defined styling.
  *
  * @param session The girara session
  * @param template The template to apply, @ref girara_template_new
+ * @param init_variables Defines whether the default variables and current
+ *    values should be added to the the template
  *
  * @note Using the template @c girara_template_new("") will use the default gtk style
  *
  */
-void girara_session_set_template(girara_session_t* session, GiraraTemplate *template);
+void girara_session_set_template(girara_session_t* session, GiraraTemplate* template, bool init_variables);
 
 #endif
