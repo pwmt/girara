@@ -981,7 +981,7 @@ girara_session_set_template(girara_session_t* session, GiraraTemplate* template,
   session->private_data->csstemplate = template;
   if (init_variables == true) {
     init_template_engine(template);
-    fill_template_with_values(template);
+    fill_template_with_values(session);
   }
 
   css_template_changed(template, session);
