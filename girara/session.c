@@ -631,14 +631,8 @@ girara_session_private_free(girara_session_private_t* session)
   }
 
   /* clean up CSS style provider */
-  if (session->gtk.cssprovider != NULL) {
-    g_object_unref(session->gtk.cssprovider);
-  }
-  session->gtk.cssprovider = NULL;
-  if (session->csstemplate != NULL) {
-    g_object_unref(session->csstemplate);
-  }
-  session->csstemplate = NULL;
+  g_clear_object(&session->gtk.cssprovider);
+  g_clear_object(&session->csstemplate);
 
   /* clean up settings */
   girara_list_free(session->settings);
@@ -673,8 +667,7 @@ girara_session_destroy(girara_session_t* session)
   session->bindings.mouse_events = NULL;
 
   /* clean up input histry */
-  g_object_unref(session->command_history);
-  session->command_history = NULL;
+  g_clear_object(&session->command_history);
 
   /* clean up statusbar items */
   girara_list_free(session->elements.statusbar_items);
@@ -974,9 +967,7 @@ girara_session_set_template(girara_session_t* session, GiraraTemplate* template,
   g_return_if_fail(session != NULL);
   g_return_if_fail(template != NULL);
 
-  if (session->private_data->csstemplate != NULL) {
-    g_object_unref(session->private_data->csstemplate);
-  }
+  g_clear_object(&session->private_data->csstemplate);
 
   session->private_data->csstemplate = template;
   if (init_variables == true) {

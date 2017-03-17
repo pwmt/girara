@@ -111,15 +111,11 @@ ih_set_property(GObject* object, guint prop_id, const GValue* value,
 
   switch (prop_id) {
     case PROP_IO: {
-      if (priv->io != NULL) {
-        g_object_unref(priv->io);
-      }
+      g_clear_object(&priv->io);
 
       gpointer* tmp = g_value_dup_object(value);
       if (tmp != NULL) {
         priv->io = GIRARA_INPUT_HISTORY_IO(tmp);
-      } else {
-        priv->io = NULL;
       }
       girara_input_history_reset(GIRARA_INPUT_HISTORY(object));
       break;
