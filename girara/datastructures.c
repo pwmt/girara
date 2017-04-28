@@ -76,7 +76,7 @@ girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gf
 void
 girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree)
 {
-  g_return_if_fail(list);
+  g_return_if_fail(list != NULL);
   list->free = gfree;
 }
 
@@ -334,7 +334,7 @@ girara_list_iterator_free(girara_list_iterator_t* iter)
 size_t
 girara_list_size(girara_list_t* list)
 {
-  g_return_val_if_fail(list, 0);
+  g_return_val_if_fail(list != NULL, 0);
 
   if (list->start == NULL) {
     return 0;
