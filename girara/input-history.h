@@ -43,7 +43,7 @@ struct girara_input_history_io_interface_s {
 #define GIRARA_INPUT_HISTORY_IO_GET_INTERFACE(obj) \
   (G_TYPE_INSTANCE_GET_INTERFACE((obj), GIRARA_TYPE_INPUT_HISTORY_IO, GiraraInputHistoryIOInterface))
 
-GType girara_input_history_io_get_type(void);
+GType girara_input_history_io_get_type(void) G_GNUC_CONST;
 
 void girara_input_history_io_append(GiraraInputHistoryIO* io, const char* input);
 
@@ -128,7 +128,7 @@ struct girara_input_history_class_s {
  *
  * @return the type
  */
-GType girara_input_history_get_type(void);
+GType girara_input_history_get_type(void) G_GNUC_CONST;
 
 /**
  * Create new input history object.

@@ -36,7 +36,7 @@ struct girara_template_class_s {
  *
  * @return the type
  */
-GType girara_template_get_type(void);
+GType girara_template_get_type(void) G_GNUC_CONST;
 
 /**
  * Create new template object.
