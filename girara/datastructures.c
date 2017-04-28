@@ -34,18 +34,18 @@ struct girara_list_iterator_s
 girara_list_t*
 girara_list_new(void)
 {
-  return g_try_malloc0(sizeof(girara_list_t));
+  return girara_list_new2(NULL);
 }
 
 girara_list_t*
 girara_list_new2(girara_free_function_t gfree)
 {
-  girara_list_t* list = girara_list_new();
+  girara_list_t* list = g_try_malloc0(sizeof(girara_list_t));
   if (list == NULL) {
     return NULL;
   }
 
-  girara_list_set_free_function(list, gfree);
+  list->free = gfree;
   return list;
 }
 
