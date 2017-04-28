@@ -8,8 +8,8 @@
 
 struct girara_tree_node_s
 {
-  girara_free_function_t free; /**> The free function */
   GNode* node; /* The node object */
+  girara_free_function_t free; /**> The free function */
 };
 
 typedef struct girara_tree_node_data_s
@@ -20,9 +20,9 @@ typedef struct girara_tree_node_data_s
 
 struct girara_list_s
 {
+  GList* start; /**> List start */
   girara_free_function_t free; /**> The free function */
   girara_compare_function_t cmp; /**> The sort function */
-  GList* start; /**> List start */
 };
 
 struct girara_list_iterator_s
