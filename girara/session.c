@@ -118,7 +118,7 @@ css_template_fill_font(GiraraTemplate* csstemplate, const char* font)
       break;
 
     case PANGO_WEIGHT_SEMILIGHT:
-      girara_template_set_variable_value(csstemplate, "font-weight", "light");
+      girara_template_set_variable_value(csstemplate, "font-weight", "semilight");
       break;
 
     case PANGO_WEIGHT_LIGHT:
