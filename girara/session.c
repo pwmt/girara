@@ -71,30 +71,20 @@ init_template_engine(GiraraTemplate* csstemplate)
     "bottombox-padding1",
     "bottombox-padding2",
     "bottombox-padding3",
-    "bottombox-padding4"
+    "bottombox-padding4",
+    "font-family",
+    "font-size",
+    "font-weight"
   };
 
   for (size_t idx = 0; idx < LENGTH(variable_names); ++idx) {
     girara_template_add_variable(csstemplate, variable_names[idx]);
-  }
-
-  if (gtk_check_version(3, 20, 0) == NULL) {
-    girara_template_add_variable(csstemplate, "font-family");
-    girara_template_add_variable(csstemplate, "font-size");
-    girara_template_add_variable(csstemplate, "font-weight");
-  } else {
-    girara_template_add_variable(csstemplate, "font");
   }
 }
 
 void
 css_template_fill_font(GiraraTemplate* csstemplate, const char* font)
 {
-  if (gtk_check_version(3, 20, 0) != NULL) {
-    girara_template_set_variable_value(csstemplate, "font", font);
-    return;
-  }
-
   PangoFontDescription* descr = pango_font_description_from_string(font);
   if (descr == NULL) {
     return;
@@ -175,13 +165,9 @@ fill_template_with_values(girara_session_t* session)
     css_template_fill_font(csstemplate, font);
     g_free(font);
   } else {
-    if (gtk_check_version(3, 20, 0) == NULL) {
-      girara_template_set_variable_value(csstemplate, "font-family", "monospace");
-      girara_template_set_variable_value(csstemplate, "font-size", "9pt");
-      girara_template_set_variable_value(csstemplate, "font-weight", "normal");
-    } else {
-      girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
-    }
+    girara_template_set_variable_value(csstemplate, "font-family", "monospace");
+    girara_template_set_variable_value(csstemplate, "font-size", "9pt");
+    girara_template_set_variable_value(csstemplate, "font-weight", "normal");
   };
 
   /* parse color values */

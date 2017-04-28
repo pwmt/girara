@@ -20,7 +20,7 @@
   color: @default-fg@;
   background-color: @default-bg@;
   background-image: none;
-  font: @font@;
+  font: @font-family@ @font-weight@ @font-size@;
 }
 
 /* Inputbar */
