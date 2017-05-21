@@ -9,8 +9,6 @@
 #include "types.h"
 #include "macros.h"
 
-#define GIRARA_INDIRECT(x) x
-
 /**
  * Prints a debug message. The arguments are passed to @ref girara_log as
  * last argument.
