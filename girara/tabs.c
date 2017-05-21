@@ -14,7 +14,7 @@
  * @param data Additional data
  * @return true if an error occurred, otherwise false
  */
-static bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
+static gboolean girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event, gpointer data);
 
 void
 girara_tabs_enable(girara_session_t* session)
@@ -255,7 +255,7 @@ girara_tab_position_set(girara_session_t* session, girara_tab_t* tab, unsigned i
   gtk_notebook_reorder_child(session->gtk.tabs, tab->widget, position);
 }
 
-static bool
+static gboolean
 girara_callback_tab_clicked(GtkWidget* UNUSED(widget), GdkEventButton* event, gpointer data)
 {
   if (data == NULL) {
