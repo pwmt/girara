@@ -398,7 +398,6 @@ girara_session_create()
   session->gtk.inputbar_dialog   = GTK_LABEL(gtk_label_new(NULL));
   session->gtk.inputbar_entry    = GTK_ENTRY(girara_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
-  session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
 
   return session;
 }
@@ -539,10 +538,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.inputbar), TRUE, TRUE, 0);
   gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.notification_area), TRUE, TRUE, 0);
   gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.statusbar), TRUE, TRUE, 0);
-
-  /* tabs */
-  gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
-  gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
 
   /* packing */
   gtk_box_set_spacing(session->gtk.box, 0);

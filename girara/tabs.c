@@ -19,9 +19,14 @@ static bool girara_callback_tab_clicked(GtkWidget* widget, GdkEventButton* event
 void
 girara_tabs_enable(girara_session_t* session)
 {
-  if (session == NULL || session->gtk.tabs == NULL) {
+  if (session == NULL || session->gtk.tabs != NULL) {
     return;
   }
+
+  session->gtk.tabs = GTK_NOTEBOOK(gtk_notebook_new());
+
+  gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
+  gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
 
   /* Display tab view */
   girara_set_view(session, GTK_WIDGET(session->gtk.tabs));
