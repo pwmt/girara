@@ -1,4 +1,4 @@
-#@session@ * {
+#@session@ {
   color: @default-fg@;
   background-color: @default-bg@;
   background-image: none;
@@ -115,6 +115,5 @@
 #@session@ scrolledwindow overshoot.left:backdrop,
 #@session@ scrolledwindow overshoot.right,
 #@session@ scrolledwindow overshoot.right:backdrop {
-  background-color: transparent;
   background-image: none;
 }
