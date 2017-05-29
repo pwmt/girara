@@ -246,36 +246,32 @@ fill_template_with_values(girara_session_t* session)
 static void
 css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session)
 {
-  GtkCssProvider* old = session->private_data->gtk.cssprovider;
-  char* css_data      = girara_template_evaluate(csstemplate);
+  GtkCssProvider* provider = session->private_data->gtk.cssprovider;
+  char* css_data           = girara_template_evaluate(csstemplate);
   if (css_data == NULL) {
     girara_error("Error while evaluating templates.");
     return;
   }
 
-  GtkCssProvider* provider = gtk_css_provider_new();
+  if (provider == NULL) {
+    provider = session->private_data->gtk.cssprovider = gtk_css_provider_new();
+
+    /* add CSS style provider */
+    GdkDisplay* display = gdk_display_get_default();
+    GdkScreen* screen = gdk_display_get_default_screen(display);
+    gtk_style_context_add_provider_for_screen(screen,
+                                              GTK_STYLE_PROVIDER(provider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  }
+
   GError* error            = NULL;
   if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
     girara_error("Unable to load CSS: %s", error->message);
     g_free(css_data);
     g_error_free(error);
-    g_object_unref(provider);
     return;
   }
   g_free(css_data);
-
-  /* add CSS style provider */
-  GdkDisplay* display = gdk_display_get_default();
-  GdkScreen* screen = gdk_display_get_default_screen(display);
-  gtk_style_context_add_provider_for_screen(screen,
-      GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-  if (old != NULL) {
-    gtk_style_context_remove_provider_for_screen(screen, GTK_STYLE_PROVIDER(old));
-    g_object_unref(old);
-
-    gtk_widget_queue_draw(GTK_WIDGET(session->gtk.window));
-  }
-  session->private_data->gtk.cssprovider = provider;
 }
 
 void
