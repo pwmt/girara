@@ -19,6 +19,9 @@ SOVERSION = ${SOMAJOR}.${SOMINOR}
 # pkg-config binary
 PKG_CONFIG ?= pkg-config
 
+# glib-compile-resource binary
+GLIB_COMPILE_RESOURCES ?= glib-compile-resources
+
 # libnotify
 WITH_LIBNOTIFY ?= $(shell (${PKG_CONFIG} libnotify --atleast-version=0.7.0 && echo 1) || echo 0)
 

@@ -88,17 +88,12 @@ ${PROJECTNV}/version.h: ${PROJECTNV}/version.h.in config.mk
 		${PROJECTNV}/version.h.in > ${PROJECTNV}/version.h.tmp
 	$(QUIET)mv ${PROJECTNV}/version.h.tmp ${PROJECTNV}/version.h
 
-${PROJECTNV}/css-definitions.c: data/girara-pre-3.20.css_t data/girara-post-3.20.css_t
+${PROJECTNV}/css-definitions.%: data/girara-css.gresource.xml config.mk
 	$(call colorecho,GEN,$@)
-	$(QUIET)echo '#include "css-definitions.h"' > $@.tmp
-	$(QUIET)echo 'const char* CSS_TEMPLATE_PRE_3_20 =' >> $@.tmp
-	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' data/girara-pre-3.20.css_t >> $@.tmp
-	$(QUIET)echo ';' >> $@.tmp
-	$(QUIET)echo 'const char* CSS_TEMPLATE_POST_3_20 =' >> $@.tmp
-	$(QUIET)sed 's/^\(.*\)$$/"\1\\n"/' data/girara-post-3.20.css_t >> $@.tmp
-	$(QUIET)echo ';' >> $@.tmp
-
-	$(QUIET)mv $@.tmp $@
+	@mkdir -p ${DEPENDDIR}/$(dir $@)
+	$(QUIET)$(GLIB_COMPILE_RESOURCES) --generate --c-name=girara_css --internal \
+		--dependency-file=$(DEPENDDIR)/$@.dep \
+		--sourcedir=data --target=$@ data/girara-css.gresource.xml
 
 ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 	$(call colorecho,GEN,$(shell basename $@))
@@ -116,6 +111,7 @@ ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 
 ${OBJECTS}: config.mk \
 	${PROJECTNV}/version.h \
+	${PROJECTNV}/css-definitions.h \
 	.version-checks/GTK \
 	.version-checks/GLIB
 
@@ -147,6 +143,7 @@ release: ${PROJECT}
 
 ${OBJECT_DEBUG}: config.mk \
 	${PROJECTNV}/version.h \
+	${PROJECTNV}/css-definitions.h \
 	.version-checks/GTK \
 	.version-checks/GLIB
 
@@ -176,6 +173,7 @@ debug: ${PROJECT}-debug
 
 ${OBJECTS_GCOV}: config.mk \
 	${PROJECTNV}/version.h \
+	${PROJECTNV}/css-definitions.h \
 	.version-checks/GLIB \
 	.version-checks/GTK
 
@@ -222,7 +220,7 @@ clean:
 		${PROJECTNV}/version.h \
 		${PROJECTNV}/version.h.tmp \
 		${PROJECTNV}/css-definitions.c \
-		${PROJECTNV}/css-definitions.c.tmp
+		${PROJECTNV}/css-definitions.h \
 	$(QUIET)$(MAKE) -C tests clean
 	$(QUIET)$(MAKE) -C po clean
 	$(QUIET)$(MAKE) -C doc clean

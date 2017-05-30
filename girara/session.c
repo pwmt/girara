@@ -345,11 +345,18 @@ girara_session_create()
       (girara_free_function_t) girara_setting_free);
 
   /* CSS style provider */
+  GResource* css_resource = girara_css_get_resource();
+  GBytes* css_data = NULL;
   if (gtk_check_version(3, 20, 0) == NULL) {
-    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_POST_3_20);
+    css_data = g_resource_lookup_data(css_resource, "/org/pwmt/girara/CSS/girara-post-3.20.css_t", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
   } else {
-    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_PRE_3_20);
+    css_data = g_resource_lookup_data(css_resource, "/org/pwmt/girara/CSS/girara-pre-3.20.css_t", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
   }
+  if (css_data != NULL) {
+    session->private_data->csstemplate = girara_template_new(g_bytes_get_data(css_data, NULL));
+    g_bytes_unref(css_data);
+  }
+
   session->private_data->gtk.cssprovider = NULL;
   init_template_engine(session->private_data->csstemplate);
 
