@@ -257,7 +257,7 @@ css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session)
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   }
 
-  GError* error            = NULL;
+  GError* error = NULL;
   if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
     girara_error("Unable to load CSS: %s", error->message);
     g_free(css_data);
@@ -382,7 +382,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   bool smooth_scroll = false;
   girara_setting_get(session, "smooth-scroll", &smooth_scroll);
-  if (smooth_scroll) {
+  if (smooth_scroll == true) {
     gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
   }
 
