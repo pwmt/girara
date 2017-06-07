@@ -456,19 +456,11 @@ girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* UNUSED(arg
   return true;
 }
 
-bool
-girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-  g_return_val_if_fail(session  != NULL, false);
-
-  if (argument == NULL || argument->data == NULL) {
-    return false;
-  }
-
-  /* create argument list */
+static girara_list_t*
+argument_to_argument_list(girara_argument_t* argument) {
   girara_list_t* argument_list = girara_list_new();
   if (argument_list == NULL) {
-    return false;
+    return NULL;
   }
 
   gchar** argv = NULL;
@@ -476,12 +468,30 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
 
   girara_list_set_free_function(argument_list, g_free);
   if (g_shell_parse_argv((const gchar*) argument->data, &argc, &argv, NULL) != FALSE) {
-    for(int i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++) {
       char* argument = g_strdup(argv[i]);
       girara_list_append(argument_list, (void*) argument);
     }
-  } else {
-    girara_list_free(argument_list);
+
+    return argument_list;
+  }
+
+  girara_list_free(argument_list);
+  return NULL;
+}
+
+bool
+girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  if (argument == NULL || argument->data == NULL) {
+    return false;
+  }
+
+  /* create argument list */
+  girara_list_t* argument_list = argument_to_argument_list(argument);
+  if (argument_list == NULL) {
     return false;
   }
 
