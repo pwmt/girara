@@ -274,6 +274,7 @@ girara_config_load_default(girara_session_t* session)
   girara_config_handle_add(session, "unmap", girara_cmd_unmap);
 
   /* shortcut mappings */
+  girara_shortcut_mapping_add(session, "exec",           girara_sc_exec);
   girara_shortcut_mapping_add(session, "feedkeys",       girara_sc_feedkeys);
   girara_shortcut_mapping_add(session, "focus_inputbar", girara_sc_focus_inputbar);
   girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
