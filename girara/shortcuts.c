@@ -505,6 +505,30 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
 }
 
 bool
+girara_sc_exec(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  if (argument == NULL || argument->data == NULL) {
+    return false;
+  }
+
+  /* create argument list */
+  girara_list_t* argument_list = argument_to_argument_list(argument);
+  if (argument_list == NULL) {
+    return false;
+  }
+
+  /* call exec */
+  girara_cmd_exec(session, argument_list);
+
+  /* cleanup */
+  girara_list_free(argument_list);
+
+  return false;
+}
+
+bool
 girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* UNUSED(event), unsigned int t)
 {
