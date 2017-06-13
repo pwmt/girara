@@ -99,7 +99,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
       && shortcut->function != NULL
       )
     {
-      int t = (session->buffer.n > 0) ? session->buffer.n : 1;
+      const int t = (session->buffer.n > 0) ? session->buffer.n : 1;
       for (int i = 0; i < t; i++) {
         if (shortcut->function(session, &(shortcut->argument), NULL, session->buffer.n) == false) {
           break;
@@ -210,7 +210,10 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
   g_return_val_if_fail(button  != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event;
+  girara_event_t event = {
+    .x = button->x,
+    .y = button->y
+  };
 
   switch (button->type) {
     case GDK_BUTTON_PRESS:
@@ -226,9 +229,6 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
       event.type = GIRARA_EVENT_OTHER;
       break;
   }
-
-  event.x = button->x;
-  event.y = button->y;
 
   const guint state = button->state & MOUSE_MASK;
 
@@ -256,10 +256,11 @@ girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventBut
   g_return_val_if_fail(button  != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event;
-  event.type = GIRARA_EVENT_BUTTON_RELEASE;
-  event.x    = button->x;
-  event.y    = button->y;
+  girara_event_t event = {
+    .type = GIRARA_EVENT_BUTTON_RELEASE,
+    .x    = button->x,
+    .y    = button->y
+  };
 
   const guint state = button->state & MOUSE_MASK;
 
@@ -318,9 +319,10 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
   g_return_val_if_fail(scroll  != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event;
-  event.x    = scroll->x;
-  event.y    = scroll->y;
+  girara_event_t event = {
+    .x    = scroll->x,
+    .y    = scroll->y
+  };
 
   switch (scroll->direction) {
     case GDK_SCROLL_UP:
