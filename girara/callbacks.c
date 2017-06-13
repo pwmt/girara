@@ -407,26 +407,13 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   const char* command = gtk_entry_get_text(entry);
   girara_input_history_append(session->command_history, command);
 
-  /* parse input */
-  gchar** argv = NULL;
-  gint    argc = 0;
-
-  if (g_shell_parse_argv(input, &argc, &argv, NULL) == FALSE) {
-    g_free(input);
-    return false;
-  }
-
-  gchar *cmd = argv[0];
-
   /* special commands */
   char *identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
   if (identifier_s == NULL) {
-    g_free(input);
-    g_strfreev(argv);
     return false;
   }
 
-  char identifier = identifier_s[0];
+  const char identifier = identifier_s[0];
   g_free(identifier_s);
 
   GIRARA_LIST_FOREACH(session->bindings.special_commands, girara_special_command_t*, iter, special_command)
@@ -444,6 +431,18 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
       return true;
     }
   GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, special_command);
+
+  /* parse input */
+  gchar** argv = NULL;
+  gint    argc = 0;
+
+  if (g_shell_parse_argv(input, &argc, &argv, NULL) == FALSE) {
+    girara_debug("Failed to parse argument.");
+    g_free(input);
+    return false;
+  }
+
+  gchar *cmd = argv[0];
 
   /* search commands */
   GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, command)
