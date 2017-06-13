@@ -280,40 +280,17 @@ scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window,
                                          bool               show_horizontal,
                                          bool               show_vertical)
 {
-#if GTK_CHECK_VERSION(3, 16, 0)
-  if (gtk_check_version(3, 16, 0) == NULL) {
-    GtkPolicyType hpolicy = GTK_POLICY_AUTOMATIC;
-    GtkPolicyType vpolicy = GTK_POLICY_AUTOMATIC;
+  GtkPolicyType hpolicy = GTK_POLICY_AUTOMATIC;
+  GtkPolicyType vpolicy = GTK_POLICY_AUTOMATIC;
 
-    if (show_horizontal == false) {
-      hpolicy = GTK_POLICY_EXTERNAL;
-    }
-    if (show_vertical == false) {
-      vpolicy = GTK_POLICY_EXTERNAL;
-    }
-
-    gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
-    return;
+  if (show_horizontal == false) {
+    hpolicy = GTK_POLICY_EXTERNAL;
   }
-#endif
-
-  GtkWidget* vscrollbar = gtk_scrolled_window_get_vscrollbar(window);
-  GtkWidget* hscrollbar = gtk_scrolled_window_get_hscrollbar(window);
-
-  if (vscrollbar != NULL) {
-    if (show_vertical == true) {
-      gtk_widget_unset_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE);
-    } else {
-      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-    }
+  if (show_vertical == false) {
+    vpolicy = GTK_POLICY_EXTERNAL;
   }
-  if (hscrollbar != NULL) {
-    if (show_horizontal == true) {
-      gtk_widget_unset_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE);
-    } else {
-      gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-    }
-  }
+
+  gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
 }
 
 

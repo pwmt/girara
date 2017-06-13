@@ -10,7 +10,7 @@ enhance the user interface that is used by zathura and jumanji.
 Requirements
 ------------
 glib (>= 2.50)
-gtk3 (>= 3.4)
+gtk3 (>= 3.16)
 intltool
 libnotify (optional, for notification support)
 jscon-c (optional, for configuration dumping support)
