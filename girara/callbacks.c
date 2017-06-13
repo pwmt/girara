@@ -1,15 +1,16 @@
 /* See LICENSE file for license and copyright information */
 
 #include "callbacks.h"
+
 #include "datastructures.h"
-#include "session.h"
-#include "shortcuts.h"
 #include "input-history.h"
 #include "internal.h"
+#include "session.h"
+#include "shortcuts.h"
 #include "utils.h"
 
-#include <string.h>
 #include <glib/gi18n-lib.h>
+#include <string.h>
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
 static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK |
@@ -418,8 +419,10 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   const char identifier = identifier_s[0];
   g_free(identifier_s);
 
+  girara_debug("Processing special command with identifier '%c'.", identifier);
   GIRARA_LIST_FOREACH(session->bindings.special_commands, girara_special_command_t*, iter, special_command)
     if (special_command->identifier == identifier) {
+      girara_debug("Found special command.");
       if (special_command->always != true) {
         special_command->function(session, input, &(special_command->argument));
       }
@@ -512,6 +515,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   /* a custom handler has been installed (e.g. by girara_dialog) */
   gboolean custom_ret = false;
   if (session->signals.inputbar_custom_key_press_event != NULL) {
+    girara_debug("Running custom key press event handler.");
     custom_ret = session->signals.inputbar_custom_key_press_event(entry, event, session->signals.inputbar_custom_data);
     if (custom_ret == true) {
       girara_isc_abort(session, NULL, NULL, 0);

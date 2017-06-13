@@ -1,15 +1,16 @@
 /* See LICENSE file for license and copyright information */
 
 #include "shortcuts.h"
+
 #include "datastructures.h"
+#include "input-history.h"
 #include "internal.h"
 #include "session.h"
 #include "settings.h"
 #include "tabs.h"
-#include "input-history.h"
 
-#include <string.h>
 #include <gtk/gtk.h>
+#include <string.h>
 
 static void girara_toggle_widget_visibility(GtkWidget* widget);
 static bool simulate_key_press(girara_session_t* session, int state, int key);

@@ -1,12 +1,5 @@
 /* See LICENSE file for license and copyright information */
 
-#include <stdlib.h>
-#include <glib/gi18n-lib.h>
-
-#ifdef WITH_LIBNOTIFY
-#include <libnotify/notify.h>
-#endif
-
 #include "session.h"
 
 #include "callbacks.h"
@@ -21,6 +14,14 @@
 #include "shortcuts.h"
 #include "template.h"
 #include "utils.h"
+
+#include <glib/gi18n-lib.h>
+#include <stdlib.h>
+
+#ifdef WITH_LIBNOTIFY
+#include <libnotify/notify.h>
+#endif
+
 
 static int
 cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)

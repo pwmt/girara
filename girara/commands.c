@@ -1,16 +1,17 @@
 /* See LICENSE file for license and copyright information */
 
-#include <string.h>
-#include <stdlib.h>
-#include <glib/gi18n-lib.h>
-
 #include "commands.h"
+
 #include "datastructures.h"
-#include "session.h"
 #include "internal.h"
-#include "utils.h"
+#include "session.h"
 #include "settings.h"
 #include "shortcuts.h"
+#include "utils.h"
+
+#include <glib/gi18n-lib.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* default commands implementation */
 bool
