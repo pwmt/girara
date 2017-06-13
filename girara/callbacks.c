@@ -424,9 +424,6 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
         special_command->function(session, input, &(special_command->argument));
       }
 
-      g_free(input);
-      g_strfreev(argv);
-
       girara_isc_abort(session, NULL, NULL, 0);
 
       girara_list_iterator_free(iter);
