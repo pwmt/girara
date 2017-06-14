@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2017-01-05 15:50+0100\n"
+"POT-Creation-Date: 2017-06-14 21:52+0200\n"
 "PO-Revision-Date: 2015-12-14 21:36+0100\n"
 "Last-Translator: Vladimir Lomov <irk.translator@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/mlq/girara/language/ru/)\n"
@@ -20,68 +20,68 @@ msgstr ""
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. unhandled command
-#: ../girara/callbacks.c:502
+#: ../girara/callbacks.c:503
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Неправильная команда: %s"
 
-#: ../girara/commands.c:110 ../girara/commands.c:310
+#: ../girara/commands.c:111 ../girara/commands.c:311
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Передано неверное количество аргументов: %zu вместо как минимум %u"
 
-#: ../girara/commands.c:144
+#: ../girara/commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Указан незарегистрированный режим: %s"
 
-#: ../girara/commands.c:176
+#: ../girara/commands.c:177
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Неправильный модификатор в %s"
 
-#: ../girara/commands.c:215
+#: ../girara/commands.c:216
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Неправильное значение для специальной клавиши %s"
 
-#: ../girara/commands.c:251
+#: ../girara/commands.c:252
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Неправильное значения для специальной клавиши или режим %s"
 
-#: ../girara/commands.c:332
+#: ../girara/commands.c:333
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Неправильная функция комбинации: %s"
 
-#: ../girara/commands.c:420
+#: ../girara/commands.c:421
 msgid "Not enough arguments."
 msgstr "Недостаточно аргументов."
 
-#: ../girara/commands.c:425
+#: ../girara/commands.c:426
 msgid "Too many arguments."
 msgstr "Слишком много аргументов."
 
-#: ../girara/commands.c:438
+#: ../girara/commands.c:439
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Неизвестный параметр: %s"
 
-#: ../girara/commands.c:452
+#: ../girara/commands.c:453
 msgid "true"
 msgstr "правда"
 
-#: ../girara/commands.c:452
+#: ../girara/commands.c:453
 msgid "false"
 msgstr "ложь"
 
-#: ../girara/commands.c:484
+#: ../girara/commands.c:485
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Для параметра: %s не задано значение"
 
-#: ../girara/commands.c:499
+#: ../girara/commands.c:500
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Неизвестное значение для параметра: %s"

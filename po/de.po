@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2017-01-05 15:50+0100\n"
+"POT-Creation-Date: 2017-06-14 21:52+0200\n"
 "PO-Revision-Date: 2015-12-14 21:49+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
@@ -23,68 +23,68 @@ msgstr ""
 "X-Generator: Poedit 1.6.10\n"
 
 #. unhandled command
-#: ../girara/callbacks.c:502
+#: ../girara/callbacks.c:503
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
 
-#: ../girara/commands.c:110 ../girara/commands.c:310
+#: ../girara/commands.c:111 ../girara/commands.c:311
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Ungültige Anzahl an Argumente übergeben: %zu anstatt von mindestens %u"
 
-#: ../girara/commands.c:144
+#: ../girara/commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Modus ist nicht registriert: %s"
 
-#: ../girara/commands.c:176
+#: ../girara/commands.c:177
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Ungültiger Modifikator in %s"
 
-#: ../girara/commands.c:215
+#: ../girara/commands.c:216
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Ungültige Sondertaste für %s"
 
-#: ../girara/commands.c:251
+#: ../girara/commands.c:252
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Ungültige Sondertaste oder Modus %s"
 
-#: ../girara/commands.c:332
+#: ../girara/commands.c:333
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Ungültige zugewiesene Funktion: %s"
 
-#: ../girara/commands.c:420
+#: ../girara/commands.c:421
 msgid "Not enough arguments."
 msgstr "Zu wenige Argumente."
 
-#: ../girara/commands.c:425
+#: ../girara/commands.c:426
 msgid "Too many arguments."
 msgstr "Zu viele Argumente."
 
-#: ../girara/commands.c:438
+#: ../girara/commands.c:439
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Unbekannte Otion: %s"
 
-#: ../girara/commands.c:452
+#: ../girara/commands.c:453
 msgid "true"
 msgstr "wahr"
 
-#: ../girara/commands.c:452
+#: ../girara/commands.c:453
 msgid "false"
 msgstr "falsch"
 
-#: ../girara/commands.c:484
+#: ../girara/commands.c:485
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Kein Wert für Option definiert: %s"
 
-#: ../girara/commands.c:499
+#: ../girara/commands.c:500
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Unbekannter Wert für Option: %s"
