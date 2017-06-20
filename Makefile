@@ -220,7 +220,7 @@ clean:
 		${PROJECTNV}/version.h \
 		${PROJECTNV}/version.h.tmp \
 		${PROJECTNV}/css-definitions.c \
-		${PROJECTNV}/css-definitions.h \
+		${PROJECTNV}/css-definitions.h
 	$(QUIET)$(MAKE) -C tests clean
 	$(QUIET)$(MAKE) -C po clean
 	$(QUIET)$(MAKE) -C doc clean
@@ -301,7 +301,7 @@ uninstall-headers:
 format:
 	clang-tidy -fix -checks=readability-braces-around-statements \
 		$(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
-	clang-format-3.8 -i $(SOURCE) $(HEADERS)
+	clang-format -i $(SOURCE) $(HEADERS)
 
 tidy:
 	clang-tidy $(SOURCE) -- $(CPPFLAGS) $(CFLAGS)
