@@ -316,6 +316,7 @@ base_changed(GiraraTemplate* object)
       if (priv->valid == true) {
         if (girara_list_find(priv->variables, compare_variable_name,
                              variable) == NULL) {
+          girara_debug("Variable '%s' not set.", variable);
           priv->valid = false;
         }
       }
