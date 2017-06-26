@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2017-06-14 21:52+0200\n"
+"POT-Creation-Date: 2017-06-26 18:53+0200\n"
 "PO-Revision-Date: 2015-12-14 21:49+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/girara/language/"
@@ -174,94 +174,78 @@ msgstr "Vordergrundfarbe der Bildlaufleiste"
 msgid "Scrollbar background color"
 msgstr "Hintergrundfarbe der Bildlaufleiste"
 
-#: ../girara/config.c:207
-msgid "Tab bar foreground color"
-msgstr "Registerleisten Vordergrundfarbe"
-
 #: ../girara/config.c:208
-msgid "Tab bar background color"
-msgstr "Registerleisten Hintergrundfarbe"
-
-#: ../girara/config.c:209
-msgid "Tab bar foreground color (active)"
-msgstr "Registerleisten Vordergrundfarbe (aktiv)"
-
-#: ../girara/config.c:210
-msgid "Tab bar background color (active)"
-msgstr "Registerleisten Hintergrundfarbe (aktiv)"
-
-#: ../girara/config.c:212
 msgid "Initial window width"
 msgstr "Ausgangsbreite des Fensters"
 
-#: ../girara/config.c:213
+#: ../girara/config.c:209
 msgid "Initial window height"
 msgstr "Ausgangshöhe des Fensters"
 
-#: ../girara/config.c:214
+#: ../girara/config.c:210
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 "Horizontaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
-#: ../girara/config.c:215
+#: ../girara/config.c:211
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 "Vertikaler innerer Rand für das Statusfeld und die Benachrichtigungsleiste"
 
-#: ../girara/config.c:216
+#: ../girara/config.c:212
 msgid "Number of completion items"
 msgstr "Anzahl der Elemente in der Vervollständigung"
 
-#: ../girara/config.c:217
+#: ../girara/config.c:213
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr "Zeige horizontale und vertikale Bildlaufleiste"
 
-#: ../girara/config.c:218
+#: ../girara/config.c:214
 msgid "Show the horizontal scrollbar"
 msgstr "Zeige horizontale Bildlaufleiste"
 
-#: ../girara/config.c:219
+#: ../girara/config.c:215
 msgid "Show the vertical scrollbar"
 msgstr "Zeige vertikale Bildlaufleiste"
 
-#: ../girara/config.c:220
+#: ../girara/config.c:216
 msgid "Window icon"
 msgstr "Fenstericon"
 
-#: ../girara/config.c:221
+#: ../girara/config.c:217
 msgid "Command to execute in :exec"
 msgstr "Befehl, der von :exec ausgeführt werden soll"
 
-#: ../girara/config.c:222
+#: ../girara/config.c:218
 msgid "Show or hide certain GUI elements"
 msgstr "Zeige oder verstecke bestimmte GUI Elemente"
 
-#: ../girara/config.c:223
+#: ../girara/config.c:219
 msgid "Enable smooth scrolling and zooming"
 msgstr "Aktiviere glattes Bildschirmrollen und Vergrößern"
 
 #. commands
-#: ../girara/config.c:262
+#: ../girara/config.c:255
 msgid "Execute a command"
 msgstr "Führe einen Befehl aus."
 
-#: ../girara/config.c:263
+#: ../girara/config.c:256
 msgid "Map a key sequence"
 msgstr "Tastenfolge zuweisen"
 
-#: ../girara/config.c:264
+#: ../girara/config.c:257
 msgid "Quit the program"
 msgstr "Beende das Programm"
 
-#: ../girara/config.c:265
+#: ../girara/config.c:258
 msgid "Set an option"
 msgstr "Setze eine Option"
 
-#: ../girara/config.c:266
+#: ../girara/config.c:259
 msgid "Unmap a key sequence"
 msgstr "Tastenfolge entbinden"
 
-#: ../girara/config.c:268
+#: ../girara/config.c:261
 msgid "Dump settings to a file"
 msgstr "Speichere Einstellungen in einer Datei"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2017-06-14 21:52+0200\n"
+"POT-Creation-Date: 2017-06-26 18:53+0200\n"
 "PO-Revision-Date: 2015-12-14 21:36+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
@@ -174,92 +174,76 @@ msgstr ""
 msgid "Scrollbar background color"
 msgstr ""
 
-#: ../girara/config.c:207
-msgid "Tab bar foreground color"
-msgstr "Sekme çubuğu yazı tipi rengi"
-
 #: ../girara/config.c:208
-msgid "Tab bar background color"
-msgstr "Sekme çubuğu arka plan rengi"
-
-#: ../girara/config.c:209
-msgid "Tab bar foreground color (active)"
-msgstr "Seçme çubuğu yazı tipi rengi (etkin)"
-
-#: ../girara/config.c:210
-msgid "Tab bar background color (active)"
-msgstr "Sekme çubuğu arka plan rengi (etkin)"
-
-#: ../girara/config.c:212
 msgid "Initial window width"
 msgstr "Başlangıçtaki pencere genişliği"
 
-#: ../girara/config.c:213
+#: ../girara/config.c:209
 msgid "Initial window height"
 msgstr "Başlangıçtaki pencere yüksekliği"
 
-#: ../girara/config.c:214
+#: ../girara/config.c:210
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:215
+#: ../girara/config.c:211
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:216
+#: ../girara/config.c:212
 msgid "Number of completion items"
 msgstr "Tamamlama öğelerinin sayısı"
 
-#: ../girara/config.c:217
+#: ../girara/config.c:213
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../girara/config.c:218
+#: ../girara/config.c:214
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../girara/config.c:219
+#: ../girara/config.c:215
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../girara/config.c:220
+#: ../girara/config.c:216
 msgid "Window icon"
 msgstr "Pencere ikonu"
 
-#: ../girara/config.c:221
+#: ../girara/config.c:217
 msgid "Command to execute in :exec"
 msgstr ":exec için yürütülecek komut"
 
-#: ../girara/config.c:222
+#: ../girara/config.c:218
 msgid "Show or hide certain GUI elements"
 msgstr "Belirlenmiş GUI bileşenlerini göster ya da gizle"
 
-#: ../girara/config.c:223
+#: ../girara/config.c:219
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:262
+#: ../girara/config.c:255
 msgid "Execute a command"
 msgstr "Komut yürüt"
 
-#: ../girara/config.c:263
+#: ../girara/config.c:256
 msgid "Map a key sequence"
 msgstr "Tuş kombinasyonu eşleştir"
 
-#: ../girara/config.c:264
+#: ../girara/config.c:257
 msgid "Quit the program"
 msgstr "Programdan çık"
 
-#: ../girara/config.c:265
+#: ../girara/config.c:258
 msgid "Set an option"
 msgstr "Seçenekleri değiştir"
 
-#: ../girara/config.c:266
+#: ../girara/config.c:259
 msgid "Unmap a key sequence"
 msgstr "Tuş kombinasyonu eşleşimini kaldır"
 
-#: ../girara/config.c:268
+#: ../girara/config.c:261
 msgid "Dump settings to a file"
 msgstr ""
 
