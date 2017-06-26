@@ -7,7 +7,6 @@
 #include "internal.h"
 #include "session.h"
 #include "settings.h"
-#include "tabs.h"
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -352,67 +351,6 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), g
   return false;
 }
 
-bool
-girara_sc_tab_close(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-  g_return_val_if_fail(session != NULL, false);
-
-  girara_tab_t* tab = girara_tab_current_get(session);
-
-  if (tab != NULL) {
-    girara_tab_remove(session, tab);
-  }
-
-  return false;
-}
-
-bool
-girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int t)
-{
-  g_return_val_if_fail(session != NULL, false);
-
-  const unsigned int number_of_tabs = girara_get_number_of_tabs(session);
-  if (number_of_tabs == 0) {
-    return false;
-  }
-
-  unsigned int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
-  unsigned int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
-  unsigned int new_tab        = (current_tab + step) % number_of_tabs;
-
-  if (t != 0 && t <= number_of_tabs) {
-    new_tab = t - 1;
-  }
-
-  girara_tab_t* tab = girara_tab_get(session, new_tab);
-
-  if (tab != NULL) {
-    girara_tab_current_set(session, tab);
-  }
-
-  girara_tab_update(session);
-
-  return false;
-}
-
-bool
-girara_sc_tab_navigate_next(girara_session_t* session,
-                            girara_argument_t* argument,
-                            girara_event_t* event, unsigned int t)
-{
-  argument->n = GIRARA_NEXT;
-  return girara_sc_tab_navigate(session, argument, event, t);
-}
-
-bool
-girara_sc_tab_navigate_prev(girara_session_t* session,
-                            girara_argument_t* argument,
-                            girara_event_t* event, unsigned int t)
-{
-  argument->n = GIRARA_PREVIOUS;
-  return girara_sc_tab_navigate(session, argument, event, t);
-}
-
 static void
 girara_toggle_widget_visibility(GtkWidget* widget)
 {
@@ -443,16 +381,6 @@ girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* UNUSED(
   g_return_val_if_fail(session != NULL, false);
 
   girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.statusbar));
-
-  return true;
-}
-
-bool
-girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-  g_return_val_if_fail(session != NULL, false);
-
-  girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.tabbar));
 
   return true;
 }

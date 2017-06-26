@@ -29,12 +29,10 @@ struct girara_session_s
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
     GtkWidget       *notification_area; /**< The notification area */
     GtkWidget       *notification_text; /**< The notification entry */
-    GtkWidget       *tabbar; /**< The tabbar */
     GtkBox          *inputbar_box; /**< Inputbar box */
     GtkWidget       *inputbar; /**< Inputbar event box */
     GtkLabel        *inputbar_dialog; /**< Inputbar dialog */
     GtkEntry        *inputbar_entry; /**< Inputbar entry */
-    GtkNotebook     *tabs; /**< The tabs notebook */
     GtkBox          *results; /**< Completion results */
     Window          embed; /**< Embedded window */
   } gtk;

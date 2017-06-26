@@ -65,10 +65,6 @@ init_template_engine(GiraraTemplate* csstemplate)
     "notification-bg",
     "scrollbar-fg",
     "scrollbar-bg",
-    "tabbar-fg",
-    "tabbar-bg",
-    "tabbar-focus-fg",
-    "tabbar-focus-bg",
     "bottombox-padding1",
     "bottombox-padding2",
     "bottombox-padding3",
@@ -192,11 +188,7 @@ fill_template_with_values(girara_session_t* session)
     "notification-fg",
     "notification-bg",
     "scrollbar-fg",
-    "scrollbar-bg",
-    "tabbar-fg",
-    "tabbar-bg",
-    "tabbar-focus-fg",
-    "tabbar-focus-bg",
+    "scrollbar-bg"
   };
 
   for (size_t i = 0; i < LENGTH(color_settings); ++i) {
@@ -366,9 +358,7 @@ girara_session_create()
   session->private_data->gtk.overlay    = gtk_overlay_new();
   session->private_data->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session->gtk.statusbar_entries        = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-  session->gtk.tabbar                   = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   session->gtk.inputbar_box             = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-  gtk_box_set_homogeneous(GTK_BOX(session->gtk.tabbar), TRUE);
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
@@ -522,7 +512,6 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   /* packing */
   gtk_box_set_spacing(session->gtk.box, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar), FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),   TRUE,  TRUE, 0);
 
   /* box */

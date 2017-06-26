@@ -58,22 +58,6 @@
   background-color: @statusbar-bg@;
 }
 
-/* Tabbar */
-
-#@session@ .tab {
-  color: @tabbar-fg@;
-  background-color: @tabbar-bg@;
-}
-
-#@session@ label.tab {
-  padding: 4px;
-}
-
-#@session@ .tab:selected {
-  color: @tabbar-focus-fg@;
-  background-color: @tabbar-focus-bg@;
-}
-
 /* Notification area */
 
 #@session@ .notification {

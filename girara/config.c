@@ -204,10 +204,6 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  _("Notification background color"), NULL, NULL);
   girara_setting_add(session, "scrollbar-fg",             "#DDDDDD",            STRING,  TRUE,  _("Scrollbar foreground color"), NULL, NULL);
   girara_setting_add(session, "scrollbar-bg",             "#000000",            STRING,  TRUE,  _("Scrollbar background color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-fg",                "#939393",            STRING,  TRUE,  _("Tab bar foreground color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  _("Tab bar background color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  _("Tab bar foreground color (active)"), NULL, NULL);
-  girara_setting_add(session, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  _("Tab bar background color (active)"), NULL, NULL);
   girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
@@ -228,9 +224,6 @@ girara_config_load_default(girara_session_t* session)
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_c,           NULL, girara_sc_abort,           normal_mode, 0, NULL);
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_q,           NULL, girara_sc_quit,            normal_mode, 0, NULL);
   girara_shortcut_add(session, 0,                GDK_KEY_colon,       NULL, girara_sc_focus_inputbar,  normal_mode, 0, ":");
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_w,           NULL, girara_sc_tab_close,       normal_mode, 0, NULL);
-  girara_shortcut_add(session, 0,                0,                   "gt", girara_sc_tab_navigate,    normal_mode, GIRARA_NEXT,     NULL);
-  girara_shortcut_add(session, 0,                0,                   "gT", girara_sc_tab_navigate,    normal_mode, GIRARA_PREVIOUS, NULL);
 
   /* inputbar shortcuts */
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_j,            girara_isc_activate,            0,                           NULL);
@@ -279,8 +272,6 @@ girara_config_load_default(girara_session_t* session)
   girara_shortcut_mapping_add(session, "focus_inputbar",   girara_sc_focus_inputbar);
   girara_shortcut_mapping_add(session, "quit",             girara_sc_quit);
   girara_shortcut_mapping_add(session, "set",              girara_sc_set);
-  girara_shortcut_mapping_add(session, "tab_next",         girara_sc_tab_navigate_next);
-  girara_shortcut_mapping_add(session, "tab_prev",         girara_sc_tab_navigate_prev);
   girara_shortcut_mapping_add(session, "toggle_inputbar",  girara_sc_toggle_inputbar);
   girara_shortcut_mapping_add(session, "toggle_statusbar", girara_sc_toggle_statusbar);
 }
