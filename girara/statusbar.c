@@ -10,7 +10,10 @@ girara_statusbar_item_t*
 girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill,
                           bool left, girara_statusbar_event_t callback)
 {
-  g_return_val_if_fail(session != NULL && session->elements.statusbar_items, FALSE);
+  g_return_val_if_fail(session != NULL, FALSE);
+
+  girara_session_private_t* session_private = session->private_data;
+  g_return_val_if_fail(session_private->elements.statusbar_items != NULL, FALSE);
 
   girara_statusbar_item_t* item = g_slice_new(girara_statusbar_item_t);
 
@@ -43,7 +46,7 @@ girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill,
   gtk_box_pack_start(session->gtk.statusbar_entries, GTK_WIDGET(item->box), expand, fill, 0);
   gtk_widget_show_all(GTK_WIDGET(item->box));
 
-  girara_list_prepend(session->elements.statusbar_items, item);
+  girara_list_prepend(session_private->elements.statusbar_items, item);
   return item;
 }
 

@@ -281,6 +281,11 @@ struct girara_session_private_s
 
   struct
   {
+    girara_list_t* statusbar_items; /**< List of statusbar items */
+  } elements;
+
+  struct
+  {
     int n; /**< Numeric buffer */
     GString *command; /**< Command in buffer */
   } buffer;

@@ -306,7 +306,7 @@ girara_session_create()
   session->bindings.inputbar_shortcuts = girara_list_new2(
       (girara_free_function_t) girara_inputbar_shortcut_free);
 
-  session->elements.statusbar_items = girara_list_new2(
+  session->private_data->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
 
   /* settings */
@@ -581,6 +581,16 @@ girara_session_private_free(girara_session_private_t* session)
     g_free(session->session_name);
   }
 
+  /* clean up buffer */
+  if (session->buffer.command) {
+    g_string_free(session->buffer.command, TRUE);
+  }
+  session->buffer.command = NULL;
+
+  /* clean up statusbar items */
+  girara_list_free(session->elements.statusbar_items);
+  session->elements.statusbar_items = NULL;
+
   /* clean up CSS style provider */
   g_clear_object(&session->gtk.cssprovider);
   g_clear_object(&session->csstemplate);
@@ -588,12 +598,6 @@ girara_session_private_free(girara_session_private_t* session)
   /* clean up settings */
   girara_list_free(session->settings);
   session->settings = NULL;
-
-  /* clean up buffer */
-  if (session->buffer.command) {
-    g_string_free(session->buffer.command, TRUE);
-  }
-  session->buffer.command = NULL;
 
   g_slice_free(girara_session_private_t, session);
 }
@@ -625,10 +629,6 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up input histry */
   g_clear_object(&session->command_history);
-
-  /* clean up statusbar items */
-  girara_list_free(session->elements.statusbar_items);
-  session->elements.statusbar_items = NULL;
 
   /* clean up config handles */
   girara_list_free(session->config.handles);

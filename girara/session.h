@@ -48,11 +48,6 @@ struct girara_session_s
 
   struct
   {
-    girara_list_t* statusbar_items; /**< List of statusbar items */
-  } elements;
-
-  struct
-  {
     int inputbar_activate; /**< Inputbar activation */
     int inputbar_key_pressed; /**< Pressed key in inputbar */
     int inputbar_changed; /**< Inputbar text changed */
