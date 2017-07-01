@@ -57,21 +57,36 @@ GLIB_MIN_VERSION = 2.50
 GLIB_PKG_CONFIG_NAME = glib-2.0
 
 # libs
-GTK_INC ?= $(shell ${PKG_CONFIG} --cflags gtk+-3.0)
-GTK_LIB ?= $(shell ${PKG_CONFIG} --libs gtk+-3.0)
+ifeq (${GTK_INC}-${GTK_LIB},-)
+PKG_CONFIG_LIBS += gtk+-3.0
+else
+INCS += ${GTK_INC}
+LIBS += ${GTK_LIB}
+endif
 
 ifneq (${WITH_LIBNOTIFY},0)
-LIBNOTIFY_INC ?= $(shell ${PKG_CONFIG} --cflags libnotify)
-LIBNOTIFY_LIB ?= $(shell ${PKG_CONFIG} --libs libnotify)
+ifeq (${LIBNOTIFY_INC}-${LIBNOTIFY_LIB},-)
+PKG_CONFIG_LIBS += libnotify
+else
+INCS += ${LIBNOTIFY_INC}
+LIBS += ${LIBNOTIFY_LIB}
+endif
 endif
 
 ifneq (${WITH_JSON},0)
-JSON_INC ?= $(shell ${PKG_CONFIG} --cflags json-c)
-JSON_LIB ?= $(shell ${PKG_CONFIG} --libs json-c)
+ifeq (${JSON_INC}-${JSON_LIB},-)
+PKG_CONFIG_LIBS += json-c
+else
+INCS += ${JSON_INC}
+LIBS += ${JSON_LIB}
+endif
 endif
 
-INCS = ${GTK_INC} ${LIBNOTIFY_INC} ${JSON_INC}
-LIBS = ${GTK_LIB} ${LIBNOTIFY_LIB} ${JSON_LIB} -lm
+ifneq (${PKG_CONFIG_LIBS},)
+INCS += $(shell ${PKG_CONFIG} --cflags ${PKG_CONFIG_LIBS})
+LIBS += $(shell ${PKG_CONFIG} --libs ${PKG_CONFIG_LIBS})
+endif
+LIBS += -lm
 
 # pre-processor flags
 CPPFLAGS += -D_FILE_OFFSET_BITS=64
