@@ -90,12 +90,6 @@ struct girara_session_s
 
   struct
   {
-    int n; /**< Numeric buffer */
-    GString *command; /**< Command in buffer */
-  } buffer;
-
-  struct
-  {
     girara_list_t* handles;
     girara_list_t* shortcut_mappings;
     girara_list_t* argument_mappings;

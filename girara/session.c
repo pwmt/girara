@@ -589,6 +589,12 @@ girara_session_private_free(girara_session_private_t* session)
   girara_list_free(session->settings);
   session->settings = NULL;
 
+  /* clean up buffer */
+  if (session->buffer.command) {
+    g_string_free(session->buffer.command, TRUE);
+  }
+  session->buffer.command = NULL;
+
   g_slice_free(girara_session_private_t, session);
 }
 
@@ -641,15 +647,9 @@ girara_session_destroy(girara_session_t* session)
   session->modes.identifiers = NULL;
 
   /* clean up buffer */
-  if (session->buffer.command) {
-    g_string_free(session->buffer.command, TRUE);
-  }
-
   if (session->global.buffer) {
-    g_string_free(session->global.buffer,  TRUE);
+    g_string_free(session->global.buffer, TRUE);
   }
-
-  session->buffer.command = NULL;
   session->global.buffer  = NULL;
 
   /* clean up private data */
