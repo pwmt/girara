@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/pwmt/girara/CSS">
-    <file compressed="true">girara-post-3.20.css_t</file>
-    <file compressed="true">girara-pre-3.20.css_t</file>
+    <file compressed="true">girara.css_t</file>
   </gresource>
 </gresources>
