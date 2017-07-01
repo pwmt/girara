@@ -294,6 +294,8 @@ girara_session_create()
   girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
   session->private_data     = g_slice_alloc0(sizeof(girara_session_private_t));
 
+  girara_session_private_t* session_private = session->private_data;
+
   /* init values */
   session->bindings.mouse_events       = girara_list_new2(
       (girara_free_function_t) girara_mouse_event_free);
@@ -306,11 +308,11 @@ girara_session_create()
   session->bindings.inputbar_shortcuts = girara_list_new2(
       (girara_free_function_t) girara_inputbar_shortcut_free);
 
-  session->private_data->elements.statusbar_items = girara_list_new2(
+  session_private->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
 
   /* settings */
-  session->private_data->settings = girara_sorted_list_new2(
+  session_private->settings = girara_sorted_list_new2(
       (girara_compare_function_t) cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
 
@@ -323,12 +325,12 @@ girara_session_create()
     css_data = g_resource_lookup_data(css_resource, "/org/pwmt/girara/CSS/girara-pre-3.20.css_t", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
   }
   if (css_data != NULL) {
-    session->private_data->csstemplate = girara_template_new(g_bytes_get_data(css_data, NULL));
+    session_private->csstemplate = girara_template_new(g_bytes_get_data(css_data, NULL));
     g_bytes_unref(css_data);
   }
 
-  session->private_data->gtk.cssprovider = NULL;
-  init_template_engine(session->private_data->csstemplate);
+  session_private->gtk.cssprovider = NULL;
+  init_template_engine(session_private->csstemplate);
 
   /* init modes */
   session->modes.identifiers  = girara_list_new2(
@@ -340,11 +342,11 @@ girara_session_create()
   session->modes.inputbar     = inputbar_mode;
 
   /* config handles */
-  session->config.handles           = girara_list_new2(
+  session_private->config.handles           = girara_list_new2(
       (girara_free_function_t) girara_config_handle_free);
-  session->config.shortcut_mappings = girara_list_new2(
+  session_private->config.shortcut_mappings = girara_list_new2(
       (girara_free_function_t) girara_shortcut_mapping_free);
-  session->config.argument_mappings = girara_list_new2(
+  session_private->config.argument_mappings = girara_list_new2(
       (girara_free_function_t) girara_argument_mapping_free);
 
   /* command history */
@@ -355,8 +357,8 @@ girara_session_create()
 
   /* create widgets */
   session->gtk.box                      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-  session->private_data->gtk.overlay    = gtk_overlay_new();
-  session->private_data->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session_private->gtk.overlay    = gtk_overlay_new();
+  session_private->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session->gtk.statusbar_entries        = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   session->gtk.inputbar_box             = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
@@ -581,6 +583,18 @@ girara_session_private_free(girara_session_private_t* session)
     g_free(session->session_name);
   }
 
+  /* clean up config handles */
+  girara_list_free(session->config.handles);
+  session->config.handles = NULL;
+
+  /* clean up shortcut mappings */
+  girara_list_free(session->config.shortcut_mappings);
+  session->config.shortcut_mappings = NULL;
+
+  /* clean up argument mappings */
+  girara_list_free(session->config.argument_mappings);
+  session->config.argument_mappings = NULL;
+
   /* clean up buffer */
   if (session->buffer.command) {
     g_string_free(session->buffer.command, TRUE);
@@ -629,18 +643,6 @@ girara_session_destroy(girara_session_t* session)
 
   /* clean up input histry */
   g_clear_object(&session->command_history);
-
-  /* clean up config handles */
-  girara_list_free(session->config.handles);
-  session->config.handles = NULL;
-
-  /* clean up shortcut mappings */
-  girara_list_free(session->config.shortcut_mappings);
-  session->config.shortcut_mappings = NULL;
-
-  /* clean up argument mappings */
-  girara_list_free(session->config.argument_mappings);
-  session->config.argument_mappings = NULL;
 
   /* clean up modes */
   girara_list_free(session->modes.identifiers);

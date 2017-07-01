@@ -83,13 +83,6 @@ struct girara_session_s
     girara_mode_t inputbar; /**< The inputbar mode */
   } modes;
 
-  struct
-  {
-    girara_list_t* handles;
-    girara_list_t* shortcut_mappings;
-    girara_list_t* argument_mappings;
-  } config;
-
   GiraraInputHistory* command_history; /**< Command history */
   girara_session_private_t* private_data; /**< Private data of a girara session */
 };

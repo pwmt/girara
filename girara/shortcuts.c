@@ -587,20 +587,21 @@ girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, g
     return false;
   }
 
-  GIRARA_LIST_FOREACH(session->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data)
+  girara_session_private_t* session_private = session->private_data;
+  GIRARA_LIST_FOREACH(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data)
     if (strcmp(data->identifier, identifier) == 0) {
       data->function = function;
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data);
+  GIRARA_LIST_FOREACH_END(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data);
 
   /* add new config handle */
   girara_shortcut_mapping_t* mapping = g_slice_new(girara_shortcut_mapping_t);
 
   mapping->identifier = g_strdup(identifier);
   mapping->function   = function;
-  girara_list_append(session->config.shortcut_mappings, mapping);
+  girara_list_append(session_private->config.shortcut_mappings, mapping);
 
   return true;
 }
@@ -625,20 +626,21 @@ girara_argument_mapping_add(girara_session_t* session, const char* identifier, i
     return false;
   }
 
-  GIRARA_LIST_FOREACH(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
+  girara_session_private_t* session_private = session->private_data;
+  GIRARA_LIST_FOREACH(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
     if (g_strcmp0(mapping->identifier, identifier) == 0) {
       mapping->value = value;
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
+  GIRARA_LIST_FOREACH_END(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
 
   /* add new config handle */
   girara_argument_mapping_t* mapping = g_slice_new(girara_argument_mapping_t);
 
   mapping->identifier = g_strdup(identifier);
   mapping->value      = value;
-  girara_list_append(session->config.argument_mappings, mapping);
+  girara_list_append(session_private->config.argument_mappings, mapping);
 
   return true;
 }
