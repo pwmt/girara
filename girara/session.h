@@ -8,12 +8,10 @@
 #include "callbacks.h"
 
 #include <gtk/gtk.h>
+
 #ifdef GDK_WINDOWING_X11
 #include <gtk/gtkx.h>
-#endif
-#include <gdk/gdkkeysyms.h>
-
-#ifndef GDK_WINDOWING_X11
+#else
 typedef int Window;
 #endif
 
