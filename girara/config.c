@@ -1,18 +1,19 @@
 /* See LICENSE file for license and copyright information */
 
+#include "config.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
-#include "config.h"
 #include "commands.h"
 #include "datastructures.h"
 #include "internal.h"
 #include "session.h"
 #include "settings.h"
 #include "shortcuts.h"
-#include "utils.h"
 #include "template.h"
+#include "utils.h"
 
 #define COMMENT_PREFIX "\"#"
 

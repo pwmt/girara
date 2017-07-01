@@ -412,8 +412,7 @@ girara_template_set_variable_value(GiraraTemplate* object, const char* name,
     return;
   }
 
-  if (g_strcmp0(variable->value, value) != 0)
-  {
+  if (g_strcmp0(variable->value, value) != 0) {
     g_free(variable->value);
     variable->value = g_strdup(value);
 
