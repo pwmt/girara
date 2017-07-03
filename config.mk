@@ -6,7 +6,7 @@ GIRARA_VERSION_REV   = 7
 VERSION = ${GIRARA_VERSION_MAJOR}.${GIRARA_VERSION_MINOR}.${GIRARA_VERSION_REV}
 
 # Rules for the SOMAJOR and SOMINOR.
-# Before a release check perform the following checks against the last release:
+# Before a release perform the following checks against the last release:
 # * If a function has been removed or the paramaters of a function have changed
 #   bump SOMAJOR and set SOMINOR to 0.
 # * If any of the exported datastructures have changed in a incompatible way
