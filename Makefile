@@ -111,9 +111,9 @@ ${BUILDDIR}/${PROJECT}.pc: ${PROJECTNV}.pc.in config.mk
 
 ${OBJECTS}: config.mk \
 	${PROJECTNV}/version.h \
-	${PROJECTNV}/css-definitions.h \
 	.version-checks/GTK \
-	.version-checks/GLIB
+	.version-checks/GLIB \
+	${PROJECTNV}/css-definitions.h
 
 ${BUILDDIR_RELEASE}/%.o: %.c
 	$(call colorecho,CC,$<)
@@ -143,9 +143,9 @@ release: ${PROJECT}
 
 ${OBJECT_DEBUG}: config.mk \
 	${PROJECTNV}/version.h \
-	${PROJECTNV}/css-definitions.h \
 	.version-checks/GTK \
-	.version-checks/GLIB
+	.version-checks/GLIB \
+	${PROJECTNV}/css-definitions.h
 
 ${BUILDDIR_DEBUG}/%.o: %.c
 	$(call colorecho,CC,$<)
