@@ -367,6 +367,9 @@ girara_session_create()
   session->gtk.inputbar_entry    = GTK_ENTRY(girara_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
 
+  /* make notification text selectable */
+  gtk_label_set_selectable(session->gtk.notification_text, TRUE);
+
   return session;
 }
 
