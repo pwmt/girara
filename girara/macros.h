@@ -3,6 +3,10 @@
 #ifndef GIRARA_MACROS_H
 #define GIRARA_MACROS_H
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
 #ifndef GIRARA_PRINTF
 # if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4) || defined(__clang__)
 #  define GIRARA_PRINTF(format_idx, arg_idx) \
