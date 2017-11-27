@@ -121,21 +121,9 @@ static void
 xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
     const gchar* expected)
 {
-  const gchar* home = g_getenv("HOME");
-  gchar* home_env_var = NULL;
-  gchar** envp = NULL;
+  gchar** envp = g_get_environ();
 
-  if (home != NULL) {
-    home_env_var = g_strdup_printf("HOME=%s", home);
-    envp = calloc(3, sizeof(gchar*));
-    fail_unless(envp != NULL, "Failed to allocate memory for ENV");
-    envp[1] = home_env_var;
-  } else {
-    envp = calloc(2, sizeof(gchar*));
-    fail_unless(envp != NULL, "Failed to allocate memory for ENV");
-  }
-
-  envp[0] = g_strdup_printf("%s=", envvar);
+  envp = g_environ_setenv(envp, envvar, "", TRUE);
   gchar* argv[] = { XDG_TEST_HELPER, g_strdup_printf("%d", path), NULL };
 
   gchar* output = NULL;
@@ -146,8 +134,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
       output, expected, NULL);
   g_free(output);
 
-  g_free(envp[0]);
-  envp[0] = g_strdup_printf("%s=~/xdg", envvar);
+  envp = g_environ_setenv(envp, envvar, "~/xdg", TRUE);
 
   result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
@@ -155,8 +142,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   fail_unless(g_strcmp0(output, "~/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
       output, "~/xdg", NULL);
 
-  g_free(envp[0]);
-  envp[0] = g_strdup_printf("%s=/home/test/xdg", envvar);
+  envp = g_environ_setenv(envp, envvar, "/home/test/xdg", TRUE);
 
   result= g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
@@ -164,11 +150,8 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   fail_unless(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
       output, "/home/test/xdg", NULL);
 
-  g_free(envp[0]);
   g_free(argv[1]);
-
-  g_free(home_env_var);
-  g_free(envp);
+  g_strfreev(envp);
 }
 
 START_TEST(test_xdg_path) {
