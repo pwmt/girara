@@ -39,18 +39,7 @@ read_pwd_info(void)
 
 START_TEST(test_home_directory) {
   const gchar* user = g_get_home_dir();
-  gchar* oldenv = g_getenv("HOME") ? g_strdup(g_getenv("HOME")) : NULL;
-
-  if (oldenv) {
-    gchar* result = girara_get_home_directory(NULL);
-    fail_unless(result != oldenv, "Home directory is not the same", NULL);
-    g_free(result);
-  }
-
-  g_unsetenv("HOME");
-  gchar* result = girara_get_home_directory(NULL);
-  fail_unless(result != user, "Home directory is not the same", NULL);
-  g_free(result);
+  const gchar* home = g_getenv("HOME");
 
   girara_list_t* list = read_pwd_info();
   girara_list_iterator_t* iter = girara_list_iterator(list);
@@ -59,24 +48,24 @@ START_TEST(test_home_directory) {
   {
     const char* username = (const char*) girara_list_iterator_data(iter);
     gchar* result = girara_get_home_directory(username);
-    fail_unless(result != NULL && strlen(result) != 0, "Home directory is empty", NULL);
+    if (!home || g_strcmp0(user, username) != 0) {
+      fail_unless(result != NULL && strlen(result) != 0, "Home directory is empty", NULL);
+    }
     g_free(result);
     girara_list_iterator_next(iter);
   }
   girara_list_iterator_free(iter);
   girara_list_free(list);
-
-  if (oldenv) {
-    g_setenv("HOME", oldenv, TRUE);
-    g_free(oldenv);
-  }
 } END_TEST
 
-START_TEST(test_home_directory_set_HOME) {
-  g_setenv("HOME", "/home/test", TRUE);
-  char* result = girara_get_home_directory(NULL);
-  fail_unless(g_strcmp0(result, "/home/test") == 0, "Home directory is not the same", NULL);
-  g_free(result);
+START_TEST(test_home_directory_get_HOME) {
+  const gchar* home = g_getenv("HOME");
+
+  if (home) {
+    gchar* result = girara_get_home_directory(NULL);
+    fail_unless(g_strcmp0(result, home) == 0, "Home directory is not the same", NULL);
+    g_free(result);
+  }
 } END_TEST
 
 START_TEST(test_fix_path_basic) {
@@ -97,24 +86,21 @@ START_TEST(test_fix_path_basic) {
 } END_TEST
 
 START_TEST(test_fix_path_extended) {
-  gchar* oldenv = g_getenv("HOME") ? g_strdup(g_getenv("HOME")) : NULL;
-  g_unsetenv("HOME");
+  const gchar* user = g_get_home_dir();
+  const gchar* home = g_getenv("HOME");
 
   girara_list_t* list = read_pwd_info();
   GIRARA_LIST_FOREACH(list, const char*, iter, username)
     gchar* path = g_strdup_printf("~%s/test", username);
     gchar* result = girara_fix_path(path);
-    fail_unless(result != NULL && strlen(result) != 0,
-        "Fix path result is empty");
+    if (!home || g_strcmp0(user, username) != 0) {
+      fail_unless(result != NULL && strlen(result) != 0,
+          "Fix path result is empty");
+    }
     g_free(result);
     g_free(path);
   GIRARA_LIST_FOREACH_END(list, const char*, iter, pwdinfo);
   girara_list_free(list);
-
-  if (oldenv) {
-    g_setenv("HOME", oldenv, TRUE);
-    g_free(oldenv);
-  }
 } END_TEST
 
 static void
@@ -285,7 +271,7 @@ Suite* suite_utils()
   /* home directory */
   tcase = tcase_create("home_directory");
   tcase_add_test(tcase, test_home_directory);
-  tcase_add_test(tcase, test_home_directory_set_HOME);
+  tcase_add_test(tcase, test_home_directory_get_HOME);
   suite_add_tcase(suite, tcase);
 
   /* fix path */
