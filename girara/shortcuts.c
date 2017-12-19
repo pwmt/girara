@@ -1,15 +1,15 @@
 /* See LICENSE file for license and copyright information */
 
 #include "shortcuts.h"
+
 #include "datastructures.h"
+#include "input-history.h"
 #include "internal.h"
 #include "session.h"
 #include "settings.h"
-#include "tabs.h"
-#include "input-history.h"
 
-#include <string.h>
 #include <gtk/gtk.h>
+#include <string.h>
 
 static void girara_toggle_widget_visibility(GtkWidget* widget);
 static bool simulate_key_press(girara_session_t* session, int state, int key);
@@ -351,67 +351,6 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), g
   return false;
 }
 
-bool
-girara_sc_tab_close(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-  g_return_val_if_fail(session != NULL, false);
-
-  girara_tab_t* tab = girara_tab_current_get(session);
-
-  if (tab != NULL) {
-    girara_tab_remove(session, tab);
-  }
-
-  return false;
-}
-
-bool
-girara_sc_tab_navigate(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int t)
-{
-  g_return_val_if_fail(session != NULL, false);
-
-  const unsigned int number_of_tabs = girara_get_number_of_tabs(session);
-  if (number_of_tabs == 0) {
-    return false;
-  }
-
-  unsigned int current_tab    = girara_tab_position_get(session, girara_tab_current_get(session));
-  unsigned int step           = (argument->n == GIRARA_PREVIOUS) ? -1 : 1;
-  unsigned int new_tab        = (current_tab + step) % number_of_tabs;
-
-  if (t != 0 && t <= number_of_tabs) {
-    new_tab = t - 1;
-  }
-
-  girara_tab_t* tab = girara_tab_get(session, new_tab);
-
-  if (tab != NULL) {
-    girara_tab_current_set(session, tab);
-  }
-
-  girara_tab_update(session);
-
-  return false;
-}
-
-bool
-girara_sc_tab_navigate_next(girara_session_t* session,
-                            girara_argument_t* argument,
-                            girara_event_t* event, unsigned int t)
-{
-  argument->n = GIRARA_NEXT;
-  return girara_sc_tab_navigate(session, argument, event, t);
-}
-
-bool
-girara_sc_tab_navigate_prev(girara_session_t* session,
-                            girara_argument_t* argument,
-                            girara_event_t* event, unsigned int t)
-{
-  argument->n = GIRARA_PREVIOUS;
-  return girara_sc_tab_navigate(session, argument, event, t);
-}
-
 static void
 girara_toggle_widget_visibility(GtkWidget* widget)
 {
@@ -446,29 +385,11 @@ girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* UNUSED(
   return true;
 }
 
-bool
-girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-  g_return_val_if_fail(session != NULL, false);
-
-  girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.tabbar));
-
-  return true;
-}
-
-bool
-girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-  g_return_val_if_fail(session  != NULL, false);
-
-  if (argument == NULL || argument->data == NULL) {
-    return false;
-  }
-
-  /* create argument list */
+static girara_list_t*
+argument_to_argument_list(girara_argument_t* argument) {
   girara_list_t* argument_list = girara_list_new();
   if (argument_list == NULL) {
-    return false;
+    return NULL;
   }
 
   gchar** argv = NULL;
@@ -476,17 +397,59 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
 
   girara_list_set_free_function(argument_list, g_free);
   if (g_shell_parse_argv((const gchar*) argument->data, &argc, &argv, NULL) != FALSE) {
-    for(int i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++) {
       char* argument = g_strdup(argv[i]);
       girara_list_append(argument_list, (void*) argument);
     }
-  } else {
-    girara_list_free(argument_list);
+
+    return argument_list;
+  }
+
+  girara_list_free(argument_list);
+  return NULL;
+}
+
+bool
+girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  if (argument == NULL || argument->data == NULL) {
+    return false;
+  }
+
+  /* create argument list */
+  girara_list_t* argument_list = argument_to_argument_list(argument);
+  if (argument_list == NULL) {
     return false;
   }
 
   /* call set */
   girara_cmd_set(session, argument_list);
+
+  /* cleanup */
+  girara_list_free(argument_list);
+
+  return false;
+}
+
+bool
+girara_sc_exec(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
+{
+  g_return_val_if_fail(session != NULL, false);
+
+  if (argument == NULL || argument->data == NULL) {
+    return false;
+  }
+
+  /* create argument list */
+  girara_list_t* argument_list = argument_to_argument_list(argument);
+  if (argument_list == NULL) {
+    return false;
+  }
+
+  /* call exec */
+  girara_cmd_exec(session, argument_list);
 
   /* cleanup */
   girara_list_free(argument_list);
@@ -624,20 +587,21 @@ girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, g
     return false;
   }
 
-  GIRARA_LIST_FOREACH(session->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data)
+  girara_session_private_t* session_private = session->private_data;
+  GIRARA_LIST_FOREACH(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data)
     if (strcmp(data->identifier, identifier) == 0) {
       data->function = function;
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data);
+  GIRARA_LIST_FOREACH_END(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, data);
 
   /* add new config handle */
   girara_shortcut_mapping_t* mapping = g_slice_new(girara_shortcut_mapping_t);
 
   mapping->identifier = g_strdup(identifier);
   mapping->function   = function;
-  girara_list_append(session->config.shortcut_mappings, mapping);
+  girara_list_append(session_private->config.shortcut_mappings, mapping);
 
   return true;
 }
@@ -662,20 +626,21 @@ girara_argument_mapping_add(girara_session_t* session, const char* identifier, i
     return false;
   }
 
-  GIRARA_LIST_FOREACH(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
+  girara_session_private_t* session_private = session->private_data;
+  GIRARA_LIST_FOREACH(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
     if (g_strcmp0(mapping->identifier, identifier) == 0) {
       mapping->value = value;
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
+  GIRARA_LIST_FOREACH_END(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
 
   /* add new config handle */
   girara_argument_mapping_t* mapping = g_slice_new(girara_argument_mapping_t);
 
   mapping->identifier = g_strdup(identifier);
   mapping->value      = value;
-  girara_list_append(session->config.argument_mappings, mapping);
+  girara_list_append(session_private->config.argument_mappings, mapping);
 
   return true;
 }

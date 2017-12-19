@@ -1,16 +1,17 @@
 /* See LICENSE file for license and copyright information */
 
-#include <string.h>
-#include <stdlib.h>
-#include <glib/gi18n-lib.h>
-
 #include "commands.h"
+
 #include "datastructures.h"
-#include "session.h"
 #include "internal.h"
-#include "utils.h"
+#include "session.h"
 #include "settings.h"
 #include "shortcuts.h"
+#include "utils.h"
+
+#include <glib/gi18n-lib.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* default commands implementation */
 bool
@@ -316,16 +317,18 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     }
   }
 
+  girara_session_private_t* session_private = session->private_data;
+
   /* Check for passed shortcut command */
   if (unmap == false) {
     bool found_mapping = false;
-    GIRARA_LIST_FOREACH(session->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, mapping)
+    GIRARA_LIST_FOREACH(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, mapping)
       if (!g_strcmp0(tmp, mapping->identifier)) {
         shortcut_function = mapping->function;
         found_mapping = true;
         break;
       }
-    GIRARA_LIST_FOREACH_END(session->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, mapping);
+    GIRARA_LIST_FOREACH_END(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, mapping);
 
     if (found_mapping == false) {
       girara_warning("Not a valid shortcut function: %s", tmp);
@@ -342,12 +345,12 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     if (++current_command < number_of_arguments) {
       tmp = (char*) girara_list_nth(argument_list, current_command);
 
-      GIRARA_LIST_FOREACH(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping)
+      GIRARA_LIST_FOREACH(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping)
         if (!g_strcmp0(tmp, mapping->identifier)) {
           shortcut_argument_n = mapping->value;
           break;
         }
-      GIRARA_LIST_FOREACH_END(session->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
+      GIRARA_LIST_FOREACH_END(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
 
       /* If no known argument is passed we save it in the data field */
       if (shortcut_argument_n == 0) {

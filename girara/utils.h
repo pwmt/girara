@@ -123,7 +123,7 @@ void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2);
 char* girara_escape_string(const char* value);
 
 /**
- * Replaces all occurrences of \ref old in \ref string with \ref new and returns
+ * Replaces all occurrences of old in string with new and returns
  * a new allocated string
  *
  * @param string The original string

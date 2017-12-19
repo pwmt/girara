@@ -8,12 +8,10 @@
 #include "callbacks.h"
 
 #include <gtk/gtk.h>
+
 #ifdef GDK_WINDOWING_X11
 #include <gtk/gtkx.h>
-#endif
-#include <gdk/gdkkeysyms.h>
-
-#ifndef GDK_WINDOWING_X11
+#else
 typedef int Window;
 #endif
 
@@ -29,12 +27,10 @@ struct girara_session_s
     GtkBox          *statusbar_entries; /**< Statusbar entry box */
     GtkWidget       *notification_area; /**< The notification area */
     GtkWidget       *notification_text; /**< The notification entry */
-    GtkWidget       *tabbar; /**< The tabbar */
     GtkBox          *inputbar_box; /**< Inputbar box */
     GtkWidget       *inputbar; /**< Inputbar event box */
     GtkLabel        *inputbar_dialog; /**< Inputbar dialog */
     GtkEntry        *inputbar_entry; /**< Inputbar entry */
-    GtkNotebook     *tabs; /**< The tabs notebook */
     GtkBox          *results; /**< Completion results */
     Window          embed; /**< Embedded window */
   } gtk;
@@ -47,11 +43,6 @@ struct girara_session_s
     girara_list_t* special_commands; /**< List of special commands */
     girara_list_t* inputbar_shortcuts; /**< List of inputbar shortcuts */
   } bindings;
-
-  struct
-  {
-    girara_list_t* statusbar_items; /**< List of statusbar items */
-  } elements;
 
   struct
   {
@@ -89,19 +80,6 @@ struct girara_session_s
     girara_mode_t normal; /**< The normal mode */
     girara_mode_t inputbar; /**< The inputbar mode */
   } modes;
-
-  struct
-  {
-    int n; /**< Numeric buffer */
-    GString *command; /**< Command in buffer */
-  } buffer;
-
-  struct
-  {
-    girara_list_t* handles;
-    girara_list_t* shortcut_mappings;
-    girara_list_t* argument_mappings;
-  } config;
 
   GiraraInputHistory* command_history; /**< Command history */
   girara_session_private_t* private_data; /**< Private data of a girara session */
@@ -250,5 +228,18 @@ girara_list_t* girara_get_command_history(girara_session_t* session);
  * @returns GiraraTemplate object
  */
 GiraraTemplate* girara_session_get_template(girara_session_t* session);
+
+/**
+ * Replaces the internal template object, thus provides entirely user-defined styling.
+ *
+ * @param session The girara session
+ * @param template The template to apply, @ref girara_template_new
+ * @param init_variables Defines whether the default variables and current
+ *    values should be added to the the template
+ *
+ * @note Using the template @c girara_template_new("") will use the default gtk style
+ *
+ */
+void girara_session_set_template(girara_session_t* session, GiraraTemplate* template, bool init_variables);
 
 #endif

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: http://bugs.pwmt.org\n"
-"POT-Creation-Date: 2017-01-05 15:50+0100\n"
+"POT-Creation-Date: 2017-06-26 18:53+0200\n"
 "PO-Revision-Date: 2015-12-14 21:35+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,68 +18,68 @@ msgstr ""
 "X-Generator: Poedit 1.6.10\n"
 
 #. unhandled command
-#: ../girara/callbacks.c:502
+#: ../girara/callbacks.c:503
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Nevalida kurtnomo de funkcio: %s"
 
-#: ../girara/commands.c:110 ../girara/commands.c:310
+#: ../girara/commands.c:111 ../girara/commands.c:311
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Nevalida nombro da argumentoj transdonita: %zu anstataŭ de almenaŭ %u"
 
-#: ../girara/commands.c:144
+#: ../girara/commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Neregistrita modo specifita: %s"
 
-#: ../girara/commands.c:176
+#: ../girara/commands.c:177
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Nevalida modifilo en %s"
 
-#: ../girara/commands.c:215
+#: ../girara/commands.c:216
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Nevalida speciala klavvaloro por %s"
 
-#: ../girara/commands.c:251
+#: ../girara/commands.c:252
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Nevalida speciala klavvaloro aŭ reĝimo %s"
 
-#: ../girara/commands.c:332
+#: ../girara/commands.c:333
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Nevalida kurtnomo de funkcio: %s"
 
-#: ../girara/commands.c:420
+#: ../girara/commands.c:421
 msgid "Not enough arguments."
 msgstr "Ne sufiĉe da argumentoj."
 
-#: ../girara/commands.c:425
+#: ../girara/commands.c:426
 msgid "Too many arguments."
 msgstr "Tro multe da argumentoj."
 
-#: ../girara/commands.c:438
+#: ../girara/commands.c:439
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Nekonata opcio: %s"
 
-#: ../girara/commands.c:452
+#: ../girara/commands.c:453
 msgid "true"
 msgstr "vero"
 
-#: ../girara/commands.c:452
+#: ../girara/commands.c:453
 msgid "false"
 msgstr "falso"
 
-#: ../girara/commands.c:484
+#: ../girara/commands.c:485
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Neniu valoro difinita por opcio: %s"
 
-#: ../girara/commands.c:499
+#: ../girara/commands.c:500
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Nekonata valoro por opcio: %s"
@@ -169,92 +169,76 @@ msgstr ""
 msgid "Scrollbar background color"
 msgstr ""
 
-#: ../girara/config.c:207
-msgid "Tab bar foreground color"
-msgstr "Malfona koloro de slipbreto"
-
 #: ../girara/config.c:208
-msgid "Tab bar background color"
-msgstr "Fona koloro de slipbreto"
-
-#: ../girara/config.c:209
-msgid "Tab bar foreground color (active)"
-msgstr "Malfona koloro de slipbreto (aktiva)"
-
-#: ../girara/config.c:210
-msgid "Tab bar background color (active)"
-msgstr "Fona koloro de slipbreto (aktiva)"
-
-#: ../girara/config.c:212
 msgid "Initial window width"
 msgstr "Larĝeco de inita fenestro"
 
-#: ../girara/config.c:213
+#: ../girara/config.c:209
 msgid "Initial window height"
 msgstr "Alteco de inita fenestro"
 
-#: ../girara/config.c:214
+#: ../girara/config.c:210
 msgid "Horizontal padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:215
+#: ../girara/config.c:211
 msgid "Vertical padding for the status input and notification bars"
 msgstr ""
 
-#: ../girara/config.c:216
+#: ../girara/config.c:212
 msgid "Number of completion items"
 msgstr "Nombro da kompletigeroj"
 
-#: ../girara/config.c:217
+#: ../girara/config.c:213
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: ../girara/config.c:218
+#: ../girara/config.c:214
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: ../girara/config.c:219
+#: ../girara/config.c:215
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: ../girara/config.c:220
+#: ../girara/config.c:216
 msgid "Window icon"
 msgstr "Fenestra piktogramo"
 
-#: ../girara/config.c:221
+#: ../girara/config.c:217
 msgid "Command to execute in :exec"
 msgstr "Komando por plenumi en :exec"
 
-#: ../girara/config.c:222
+#: ../girara/config.c:218
 msgid "Show or hide certain GUI elements"
 msgstr ""
 
-#: ../girara/config.c:223
+#: ../girara/config.c:219
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: ../girara/config.c:262
+#: ../girara/config.c:255
 msgid "Execute a command"
 msgstr "Plenumi komandon"
 
-#: ../girara/config.c:263
+#: ../girara/config.c:256
 msgid "Map a key sequence"
 msgstr "Mapu klavan sinsekvon"
 
-#: ../girara/config.c:264
+#: ../girara/config.c:257
 msgid "Quit the program"
 msgstr "Eliru el programo"
 
-#: ../girara/config.c:265
+#: ../girara/config.c:258
 msgid "Set an option"
 msgstr "Agordu opcion"
 
-#: ../girara/config.c:266
+#: ../girara/config.c:259
 msgid "Unmap a key sequence"
 msgstr "Malmapu klavan sinsekvon"
 
-#: ../girara/config.c:268
+#: ../girara/config.c:261
 msgid "Dump settings to a file"
 msgstr ""
 

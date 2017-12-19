@@ -108,58 +108,6 @@ bool girara_sc_quit(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* event, unsigned int t);
 
 /**
- * Closes the current tab
- *
- * @param session The used girara session
- * @param argument The argument
- * @param event Girara event
- * @param t Number of executions
- * @return true No error occurred
- * @return false An error occurred (abort execution)
- */
-bool girara_sc_tab_close(girara_session_t* session, girara_argument_t* argument,
-    girara_event_t* event, unsigned int t);
-
-/**
- * Default shortcut function to navigate through tabs
- *
- * @param session The used girara session
- * @param argument The argument
- * @param event Girara event
- * @param t Number of execution
- * @return true No error occurred
- * @return false An error occurred (abort execution)
- */
-bool girara_sc_tab_navigate(girara_session_t* session, girara_argument_t*
-    argument, girara_event_t* event, unsigned int t);
-
-/**
- * Navigate to the next tab
- *
- * @param session The used girara session
- * @param argument The used argument
- * @param event Girara event
- * @param t Number of executions
- * @return true if no error occurred otherwise false
- */
-bool girara_sc_tab_navigate_next(girara_session_t* session,
-                                 girara_argument_t* argument,
-                                 girara_event_t* event, unsigned int t);
-
-/**
- * Navigate to the previous tab
- *
- * @param session The used girara session
- * @param argument The used argument
- * @param event Girara event
- * @param t Number of executions
- * @return true if no error occurred otherwise false
- */
-bool girara_sc_tab_navigate_prev(girara_session_t* session,
-                                 girara_argument_t* argument,
-                                 girara_event_t* event, unsigned int t);
-
-/**
  * Toggles the visibility of the inputbar
  *
  * @param session The used girara session
@@ -186,19 +134,6 @@ bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t*
     argument, girara_event_t* event, unsigned int t);
 
 /**
- * Toggles the visibility of the tabbar
- *
- * @param session The used girara session
- * @param argument The argument
- * @param event Girara event
- * @param t Number of execution
- * @return true No error occurred
- * @return false An error occurred (abort execution)
- */
-bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t*
-    argument, girara_event_t* event, unsigned int t);
-
-/**
  * Passes the argument to the set command
  *
  * @param session The used girara session
@@ -209,6 +144,19 @@ bool girara_sc_toggle_tabbar(girara_session_t* session, girara_argument_t*
  * @return false An error occurred (abort execution)
  */
 bool girara_sc_set(girara_session_t* session, girara_argument_t* argument,
+    girara_event_t* event, unsigned int t);
+
+/**
+ * Executes a command.
+ *
+ * @param session The used girara session
+ * @param argument The argument
+ * @param event Girara event
+ * @param t Number ofexecutions
+ * @return true No error occurred
+ * @return false An error occurred (abort execution)
+ */
+bool girara_sc_exec(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* event, unsigned int t);
 
 /**

@@ -1,18 +1,19 @@
 /* See LICENSE file for license and copyright information */
 
+#include "config.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
-#include "config.h"
 #include "commands.h"
 #include "datastructures.h"
 #include "internal.h"
 #include "session.h"
 #include "settings.h"
 #include "shortcuts.h"
-#include "utils.h"
 #include "template.h"
+#include "utils.h"
 
 #define COMMENT_PREFIX "\"#"
 
@@ -204,10 +205,6 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  TRUE,  _("Notification background color"), NULL, NULL);
   girara_setting_add(session, "scrollbar-fg",             "#DDDDDD",            STRING,  TRUE,  _("Scrollbar foreground color"), NULL, NULL);
   girara_setting_add(session, "scrollbar-bg",             "#000000",            STRING,  TRUE,  _("Scrollbar background color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-fg",                "#939393",            STRING,  TRUE,  _("Tab bar foreground color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-bg",                "#000000",            STRING,  TRUE,  _("Tab bar background color"), NULL, NULL);
-  girara_setting_add(session, "tabbar-focus-fg",          "#9FBC00",            STRING,  TRUE,  _("Tab bar foreground color (active)"), NULL, NULL);
-  girara_setting_add(session, "tabbar-focus-bg",          "#000000",            STRING,  TRUE,  _("Tab bar background color (active)"), NULL, NULL);
   girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
@@ -228,9 +225,6 @@ girara_config_load_default(girara_session_t* session)
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_c,           NULL, girara_sc_abort,           normal_mode, 0, NULL);
   girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_q,           NULL, girara_sc_quit,            normal_mode, 0, NULL);
   girara_shortcut_add(session, 0,                GDK_KEY_colon,       NULL, girara_sc_focus_inputbar,  normal_mode, 0, ":");
-  girara_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_w,           NULL, girara_sc_tab_close,       normal_mode, 0, NULL);
-  girara_shortcut_add(session, 0,                0,                   "gt", girara_sc_tab_navigate,    normal_mode, GIRARA_NEXT,     NULL);
-  girara_shortcut_add(session, 0,                0,                   "gT", girara_sc_tab_navigate,    normal_mode, GIRARA_PREVIOUS, NULL);
 
   /* inputbar shortcuts */
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_j,            girara_isc_activate,            0,                           NULL);
@@ -274,12 +268,13 @@ girara_config_load_default(girara_session_t* session)
   girara_config_handle_add(session, "unmap", girara_cmd_unmap);
 
   /* shortcut mappings */
-  girara_shortcut_mapping_add(session, "focus_inputbar", girara_sc_focus_inputbar);
-  girara_shortcut_mapping_add(session, "quit",           girara_sc_quit);
-  girara_shortcut_mapping_add(session, "set",            girara_sc_set);
-  girara_shortcut_mapping_add(session, "feedkeys",       girara_sc_feedkeys);
-  girara_shortcut_mapping_add(session, "tab_next",       girara_sc_tab_navigate_next);
-  girara_shortcut_mapping_add(session, "tab_prev",       girara_sc_tab_navigate_prev);
+  girara_shortcut_mapping_add(session, "exec",             girara_sc_exec);
+  girara_shortcut_mapping_add(session, "feedkeys",         girara_sc_feedkeys);
+  girara_shortcut_mapping_add(session, "focus_inputbar",   girara_sc_focus_inputbar);
+  girara_shortcut_mapping_add(session, "quit",             girara_sc_quit);
+  girara_shortcut_mapping_add(session, "set",              girara_sc_set);
+  girara_shortcut_mapping_add(session, "toggle_inputbar",  girara_sc_toggle_inputbar);
+  girara_shortcut_mapping_add(session, "toggle_statusbar", girara_sc_toggle_statusbar);
 }
 
 bool
@@ -288,21 +283,22 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(identifier != NULL, false);
 
+  girara_session_private_t* session_private = session->private_data;
   /* search for existing config handle */
-  GIRARA_LIST_FOREACH(session->config.handles, girara_config_handle_t*, iter, data)
+  GIRARA_LIST_FOREACH(session_private->config.handles, girara_config_handle_t*, iter, data)
     if (strcmp(data->identifier, identifier) == 0) {
       data->handle = handle;
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, data);
+  GIRARA_LIST_FOREACH_END(session_private->config.handles, girara_config_handle_t*, iter, data);
 
   /* add new config handle */
   girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
 
   config_handle->identifier = g_strdup(identifier);
   config_handle->handle     = handle;
-  girara_list_append(session->config.handles, config_handle);
+  girara_list_append(session_private->config.handles, config_handle);
 
   return true;
 }
@@ -390,8 +386,9 @@ config_parse(girara_session_t* session, const char* path)
       }
     } else {
       /* search for config handle */
+      girara_session_private_t* session_private = session->private_data;
       girara_config_handle_t* handle = NULL;
-      GIRARA_LIST_FOREACH(session->config.handles, girara_config_handle_t*, iter, tmp)
+      GIRARA_LIST_FOREACH(session_private->config.handles, girara_config_handle_t*, iter, tmp)
         handle = tmp;
         if (strcmp(handle->identifier, argv[0]) == 0) {
           handle->handle(session, argument_list);
@@ -399,7 +396,7 @@ config_parse(girara_session_t* session, const char* path)
         } else {
           handle = NULL;
         }
-      GIRARA_LIST_FOREACH_END(session->config.handles, girara_config_handle_t*, iter, tmp);
+      GIRARA_LIST_FOREACH_END(session_private->config.handles, girara_config_handle_t*, iter, tmp);
 
       if (handle == NULL) {
         girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);

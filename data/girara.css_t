@@ -1,4 +1,4 @@
-#@session@ * {
+#@session@ {
   color: @default-fg@;
   background-color: @default-bg@;
   background-image: none;
@@ -58,22 +58,6 @@
   background-color: @statusbar-bg@;
 }
 
-/* Tabbar */
-
-#@session@ .tab {
-  color: @tabbar-fg@;
-  background-color: @tabbar-bg@;
-}
-
-#@session@ label.tab {
-  padding: 4px;
-}
-
-#@session@ .tab:selected {
-  color: @tabbar-focus-fg@;
-  background-color: @tabbar-focus-bg@;
-}
-
 /* Notification area */
 
 #@session@ .notification {
@@ -115,6 +99,5 @@
 #@session@ scrolledwindow overshoot.left:backdrop,
 #@session@ scrolledwindow overshoot.right,
 #@session@ scrolledwindow overshoot.right:backdrop {
-  background-color: transparent;
   background-image: none;
 }

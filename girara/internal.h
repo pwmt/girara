@@ -278,6 +278,24 @@ struct girara_session_private_s
     GtkBox*    bottom_box; /**< Box grouping input, status and notification */
     GtkCssProvider* cssprovider;
   } gtk;
+
+  struct
+  {
+    girara_list_t* statusbar_items; /**< List of statusbar items */
+  } elements;
+
+  struct
+  {
+    int n; /**< Numeric buffer */
+    GString *command; /**< Command in buffer */
+  } buffer;
+
+  struct
+  {
+    girara_list_t* handles;
+    girara_list_t* shortcut_mappings;
+    girara_list_t* argument_mappings;
+  } config;
 };
 
 #endif

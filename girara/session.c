@@ -1,12 +1,5 @@
 /* See LICENSE file for license and copyright information */
 
-#include <stdlib.h>
-#include <glib/gi18n-lib.h>
-
-#ifdef WITH_LIBNOTIFY
-#include <libnotify/notify.h>
-#endif
-
 #include "session.h"
 
 #include "callbacks.h"
@@ -21,6 +14,14 @@
 #include "shortcuts.h"
 #include "template.h"
 #include "utils.h"
+
+#include <glib/gi18n-lib.h>
+#include <stdlib.h>
+
+#ifdef WITH_LIBNOTIFY
+#include <libnotify/notify.h>
+#endif
+
 
 static int
 cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
@@ -64,37 +65,23 @@ init_template_engine(GiraraTemplate* csstemplate)
     "notification-bg",
     "scrollbar-fg",
     "scrollbar-bg",
-    "tabbar-fg",
-    "tabbar-bg",
-    "tabbar-focus-fg",
-    "tabbar-focus-bg",
     "bottombox-padding1",
     "bottombox-padding2",
     "bottombox-padding3",
-    "bottombox-padding4"
+    "bottombox-padding4",
+    "font-family",
+    "font-size",
+    "font-weight"
   };
 
   for (size_t idx = 0; idx < LENGTH(variable_names); ++idx) {
     girara_template_add_variable(csstemplate, variable_names[idx]);
-  }
-
-  if (gtk_check_version(3, 20, 0) == NULL) {
-    girara_template_add_variable(csstemplate, "font-family");
-    girara_template_add_variable(csstemplate, "font-size");
-    girara_template_add_variable(csstemplate, "font-weight");
-  } else {
-    girara_template_add_variable(csstemplate, "font");
   }
 }
 
 void
 css_template_fill_font(GiraraTemplate* csstemplate, const char* font)
 {
-  if (gtk_check_version(3, 20, 0) != NULL) {
-    girara_template_set_variable_value(csstemplate, "font", font);
-    return;
-  }
-
   PangoFontDescription* descr = pango_font_description_from_string(font);
   if (descr == NULL) {
     return;
@@ -118,7 +105,7 @@ css_template_fill_font(GiraraTemplate* csstemplate, const char* font)
       break;
 
     case PANGO_WEIGHT_SEMILIGHT:
-      girara_template_set_variable_value(csstemplate, "font-weight", "light");
+      girara_template_set_variable_value(csstemplate, "font-weight", "semilight");
       break;
 
     case PANGO_WEIGHT_LIGHT:
@@ -175,13 +162,9 @@ fill_template_with_values(girara_session_t* session)
     css_template_fill_font(csstemplate, font);
     g_free(font);
   } else {
-    if (gtk_check_version(3, 20, 0) == NULL) {
-      girara_template_set_variable_value(csstemplate, "font-family", "monospace");
-      girara_template_set_variable_value(csstemplate, "font-size", "9pt");
-      girara_template_set_variable_value(csstemplate, "font-weight", "normal");
-    } else {
-      girara_template_set_variable_value(csstemplate, "font", "monospace normal 9");
-    }
+    girara_template_set_variable_value(csstemplate, "font-family", "monospace");
+    girara_template_set_variable_value(csstemplate, "font-size", "9pt");
+    girara_template_set_variable_value(csstemplate, "font-weight", "normal");
   };
 
   /* parse color values */
@@ -205,11 +188,7 @@ fill_template_with_values(girara_session_t* session)
     "notification-fg",
     "notification-bg",
     "scrollbar-fg",
-    "scrollbar-bg",
-    "tabbar-fg",
-    "tabbar-bg",
-    "tabbar-focus-fg",
-    "tabbar-focus-bg",
+    "scrollbar-bg"
   };
 
   for (size_t i = 0; i < LENGTH(color_settings); ++i) {
@@ -260,36 +239,32 @@ fill_template_with_values(girara_session_t* session)
 static void
 css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session)
 {
-  GtkCssProvider* old = session->private_data->gtk.cssprovider;
-  char* css_data      = girara_template_evaluate(csstemplate);
+  GtkCssProvider* provider = session->private_data->gtk.cssprovider;
+  char* css_data           = girara_template_evaluate(csstemplate);
   if (css_data == NULL) {
     girara_error("Error while evaluating templates.");
     return;
   }
 
-  GtkCssProvider* provider = gtk_css_provider_new();
-  GError* error            = NULL;
+  if (provider == NULL) {
+    provider = session->private_data->gtk.cssprovider = gtk_css_provider_new();
+
+    /* add CSS style provider */
+    GdkDisplay* display = gdk_display_get_default();
+    GdkScreen* screen = gdk_display_get_default_screen(display);
+    gtk_style_context_add_provider_for_screen(screen,
+                                              GTK_STYLE_PROVIDER(provider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  }
+
+  GError* error = NULL;
   if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
     girara_error("Unable to load CSS: %s", error->message);
     g_free(css_data);
     g_error_free(error);
-    g_object_unref(provider);
     return;
   }
   g_free(css_data);
-
-  /* add CSS style provider */
-  GdkDisplay* display = gdk_display_get_default();
-  GdkScreen* screen = gdk_display_get_default_screen(display);
-  gtk_style_context_add_provider_for_screen(screen,
-      GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-  if (old != NULL) {
-    gtk_style_context_remove_provider_for_screen(screen, GTK_STYLE_PROVIDER(old));
-    g_object_unref(old);
-
-    gtk_widget_queue_draw(GTK_WIDGET(session->gtk.window));
-  }
-  session->private_data->gtk.cssprovider = provider;
 }
 
 void
@@ -297,40 +272,17 @@ scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window,
                                          bool               show_horizontal,
                                          bool               show_vertical)
 {
-#if GTK_CHECK_VERSION(3, 16, 0)
-  if (gtk_check_version(3, 16, 0) == NULL) {
-    GtkPolicyType hpolicy = GTK_POLICY_AUTOMATIC;
-    GtkPolicyType vpolicy = GTK_POLICY_AUTOMATIC;
+  GtkPolicyType hpolicy = GTK_POLICY_AUTOMATIC;
+  GtkPolicyType vpolicy = GTK_POLICY_AUTOMATIC;
 
-    if (show_horizontal == false) {
-      hpolicy = GTK_POLICY_EXTERNAL;
-    }
-    if (show_vertical == false) {
-      vpolicy = GTK_POLICY_EXTERNAL;
-    }
-
-    gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
-    return;
+  if (show_horizontal == false) {
+    hpolicy = GTK_POLICY_EXTERNAL;
   }
-#endif
-
-  GtkWidget* vscrollbar = gtk_scrolled_window_get_vscrollbar(window);
-  GtkWidget* hscrollbar = gtk_scrolled_window_get_hscrollbar(window);
-
-  if (vscrollbar != NULL) {
-    if (show_vertical == true) {
-      gtk_widget_unset_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE);
-    } else {
-      gtk_widget_set_state_flags(vscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-    }
+  if (show_vertical == false) {
+    vpolicy = GTK_POLICY_EXTERNAL;
   }
-  if (hscrollbar != NULL) {
-    if (show_horizontal == true) {
-      gtk_widget_unset_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE);
-    } else {
-      gtk_widget_set_state_flags(hscrollbar, GTK_STATE_FLAG_INSENSITIVE, false);
-    }
-  }
+
+  gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
 }
 
 
@@ -341,6 +293,8 @@ girara_session_create()
 
   girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
   session->private_data     = g_slice_alloc0(sizeof(girara_session_private_t));
+
+  girara_session_private_t* session_private = session->private_data;
 
   /* init values */
   session->bindings.mouse_events       = girara_list_new2(
@@ -354,22 +308,24 @@ girara_session_create()
   session->bindings.inputbar_shortcuts = girara_list_new2(
       (girara_free_function_t) girara_inputbar_shortcut_free);
 
-  session->elements.statusbar_items = girara_list_new2(
+  session_private->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
 
   /* settings */
-  session->private_data->settings = girara_sorted_list_new2(
+  session_private->settings = girara_sorted_list_new2(
       (girara_compare_function_t) cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
 
   /* CSS style provider */
-  if (gtk_check_version(3, 20, 0) == NULL) {
-    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_POST_3_20);
-  } else {
-    session->private_data->csstemplate     = girara_template_new(CSS_TEMPLATE_PRE_3_20);
+  GResource* css_resource = girara_css_get_resource();
+  GBytes* css_data = g_resource_lookup_data(css_resource, "/org/pwmt/girara/CSS/girara.css_t", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+  if (css_data != NULL) {
+    session_private->csstemplate = girara_template_new(g_bytes_get_data(css_data, NULL));
+    g_bytes_unref(css_data);
   }
-  session->private_data->gtk.cssprovider = NULL;
-  init_template_engine(session->private_data->csstemplate);
+
+  session_private->gtk.cssprovider = NULL;
+  init_template_engine(session_private->csstemplate);
 
   /* init modes */
   session->modes.identifiers  = girara_list_new2(
@@ -381,11 +337,11 @@ girara_session_create()
   session->modes.inputbar     = inputbar_mode;
 
   /* config handles */
-  session->config.handles           = girara_list_new2(
+  session_private->config.handles           = girara_list_new2(
       (girara_free_function_t) girara_config_handle_free);
-  session->config.shortcut_mappings = girara_list_new2(
+  session_private->config.shortcut_mappings = girara_list_new2(
       (girara_free_function_t) girara_shortcut_mapping_free);
-  session->config.argument_mappings = girara_list_new2(
+  session_private->config.argument_mappings = girara_list_new2(
       (girara_free_function_t) girara_argument_mapping_free);
 
   /* command history */
@@ -396,12 +352,10 @@ girara_session_create()
 
   /* create widgets */
   session->gtk.box                      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-  session->private_data->gtk.overlay    = gtk_overlay_new();
-  session->private_data->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session_private->gtk.overlay    = gtk_overlay_new();
+  session_private->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session->gtk.statusbar_entries        = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-  session->gtk.tabbar                   = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   session->gtk.inputbar_box             = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-  gtk_box_set_homogeneous(GTK_BOX(session->gtk.tabbar), TRUE);
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
@@ -412,7 +366,9 @@ girara_session_create()
   session->gtk.inputbar_dialog   = GTK_LABEL(gtk_label_new(NULL));
   session->gtk.inputbar_entry    = GTK_ENTRY(girara_entry_new());
   session->gtk.inputbar          = gtk_event_box_new();
-  session->gtk.tabs              = GTK_NOTEBOOK(gtk_notebook_new());
+
+  /* make notification text selectable */
+  gtk_label_set_selectable(GTK_LABEL(session->gtk.notification_text), TRUE);
 
   return session;
 }
@@ -426,7 +382,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   bool smooth_scroll = false;
   girara_setting_get(session, "smooth-scroll", &smooth_scroll);
-  if (smooth_scroll) {
+  if (smooth_scroll == true) {
     gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
   }
 
@@ -554,13 +510,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.notification_area), TRUE, TRUE, 0);
   gtk_box_pack_end(GTK_BOX(session->private_data->gtk.bottom_box), GTK_WIDGET(session->gtk.statusbar), TRUE, TRUE, 0);
 
-  /* tabs */
-  gtk_notebook_set_show_border(session->gtk.tabs, FALSE);
-  gtk_notebook_set_show_tabs(session->gtk.tabs,   FALSE);
-
   /* packing */
   gtk_box_set_spacing(session->gtk.box, 0);
-  gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.tabbar), FALSE, FALSE, 0);
   gtk_box_pack_start(session->gtk.box, GTK_WIDGET(session->gtk.view),   TRUE,  TRUE, 0);
 
   /* box */
@@ -630,15 +581,31 @@ girara_session_private_free(girara_session_private_t* session)
     g_free(session->session_name);
   }
 
+  /* clean up config handles */
+  girara_list_free(session->config.handles);
+  session->config.handles = NULL;
+
+  /* clean up shortcut mappings */
+  girara_list_free(session->config.shortcut_mappings);
+  session->config.shortcut_mappings = NULL;
+
+  /* clean up argument mappings */
+  girara_list_free(session->config.argument_mappings);
+  session->config.argument_mappings = NULL;
+
+  /* clean up buffer */
+  if (session->buffer.command) {
+    g_string_free(session->buffer.command, TRUE);
+  }
+  session->buffer.command = NULL;
+
+  /* clean up statusbar items */
+  girara_list_free(session->elements.statusbar_items);
+  session->elements.statusbar_items = NULL;
+
   /* clean up CSS style provider */
-  if (session->gtk.cssprovider != NULL) {
-    g_object_unref(session->gtk.cssprovider);
-  }
-  session->gtk.cssprovider = NULL;
-  if (session->csstemplate != NULL) {
-    g_object_unref(session->csstemplate);
-  }
-  session->csstemplate = NULL;
+  g_clear_object(&session->gtk.cssprovider);
+  g_clear_object(&session->csstemplate);
 
   /* clean up settings */
   girara_list_free(session->settings);
@@ -673,39 +640,16 @@ girara_session_destroy(girara_session_t* session)
   session->bindings.mouse_events = NULL;
 
   /* clean up input histry */
-  g_object_unref(session->command_history);
-  session->command_history = NULL;
-
-  /* clean up statusbar items */
-  girara_list_free(session->elements.statusbar_items);
-  session->elements.statusbar_items = NULL;
-
-  /* clean up config handles */
-  girara_list_free(session->config.handles);
-  session->config.handles = NULL;
-
-  /* clean up shortcut mappings */
-  girara_list_free(session->config.shortcut_mappings);
-  session->config.shortcut_mappings = NULL;
-
-  /* clean up argument mappings */
-  girara_list_free(session->config.argument_mappings);
-  session->config.argument_mappings = NULL;
+  g_clear_object(&session->command_history);
 
   /* clean up modes */
   girara_list_free(session->modes.identifiers);
   session->modes.identifiers = NULL;
 
   /* clean up buffer */
-  if (session->buffer.command) {
-    g_string_free(session->buffer.command, TRUE);
-  }
-
   if (session->global.buffer) {
-    g_string_free(session->global.buffer,  TRUE);
+    g_string_free(session->global.buffer, TRUE);
   }
-
-  session->buffer.command = NULL;
   session->global.buffer  = NULL;
 
   /* clean up private data */
@@ -966,5 +910,22 @@ girara_session_get_template(girara_session_t* session)
   g_return_val_if_fail(session != NULL, NULL);
 
   return session->private_data->csstemplate;
+}
+
+void
+girara_session_set_template(girara_session_t* session, GiraraTemplate* template, bool init_variables)
+{
+  g_return_if_fail(session != NULL);
+  g_return_if_fail(template != NULL);
+
+  g_clear_object(&session->private_data->csstemplate);
+
+  session->private_data->csstemplate = template;
+  if (init_variables == true) {
+    init_template_engine(template);
+    fill_template_with_values(session);
+  }
+
+  css_template_changed(template, session);
 }
 

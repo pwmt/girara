@@ -40,7 +40,7 @@ struct girara_entry_class_s
   void (*paste_primary)(GiraraEntry*);
 };
 
-GType girara_entry_get_type(void) GIRARA_HIDDEN;
+GType girara_entry_get_type(void) G_GNUC_CONST GIRARA_HIDDEN;
 
 GiraraEntry* girara_entry_new(void) GIRARA_HIDDEN;
 

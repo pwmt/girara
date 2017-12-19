@@ -195,48 +195,6 @@ girara_file_open(const char* path, const char* mode)
   }
 
   return fp;
-
-  /* TODO */
-  /*FILE* fp;*/
-  /*struct stat lstat;*/
-  /*struct stat fstat;*/
-  /*int fd;*/
-  /*char* mode = "rb+";*/
-
-  /*if (lstat(path, &lstat) == -1) {*/
-    /*if (errno != ENOENT) {*/
-      /*return NULL;*/
-    /*}*/
-
-    /*if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR, 0600)) == -1) {*/
-      /*return NULL;*/
-    /*}*/
-
-    /*mode = "wb";*/
-  /*} else {*/
-    /*if ((fd = open(path, O_RDONLY)) == -1) {*/
-      /*return NULL;*/
-    /*}*/
-
-    /*if (fstat(fd, &fstat) == -1) {*/
-      /*if (lstat.st_mode != fstat.st_mode ||*/
-          /*lstat.st_ino  != fstat.st_ino ||*/
-          /*lstat.st_dev  != fstat.st_dev) {*/
-        /*close(fd);*/
-        /*return NULL;*/
-      /*}*/
-    /*}*/
-
-    /*ftruncate(fd, 0);*/
-  /*}*/
-
-  /*if ((fp = fdopen(fd, mode)) == NULL) {*/
-    /*close(fd);*/
-    /*unlink(path);*/
-    /*return NULL;*/
-  /*}*/
-
-  /*return fp;*/
 }
 
 #if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)

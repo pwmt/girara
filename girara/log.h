@@ -9,25 +9,23 @@
 #include "types.h"
 #include "macros.h"
 
-#define GIRARA_INDIRECT(x) x
-
 /**
- * Prints a debug message. The arguments are passed to @ref _girara_log as
+ * Prints a debug message. The arguments are passed to @ref girara_log as
  * last argument.
  */
 #define girara_debug(...)   girara_log(G_STRLOC, __func__, GIRARA_DEBUG,   __VA_ARGS__)
 /**
- * Prints an info message. The arguments are passed to @ref _girara_log as
+ * Prints an info message. The arguments are passed to @ref girara_log as
  * last argument.
  */
 #define girara_info(...)    girara_log(G_STRLOC, __func__, GIRARA_INFO,    __VA_ARGS__)
 /**
- * Prints a warning message. The arguments are passed to @ref _girara_log as
+ * Prints a warning message. The arguments are passed to @ref girara_log as
  * last argument.
  */
 #define girara_warning(...) girara_log(G_STRLOC, __func__, GIRARA_WARNING, __VA_ARGS__)
 /**
- * Prints an error message. The arguments are passed to @ref _girara_log as
+ * Prints an error message. The arguments are passed to @ref girara_log as
  * last argument.
  */
 #define girara_error(...)   girara_log(G_STRLOC, __func__, GIRARA_ERROR,   __VA_ARGS__)
