@@ -353,13 +353,13 @@ girara_list_position(girara_list_t* list, void* data)
   }
 
   size_t pos = 0;
-  GIRARA_LIST_FOREACH(list, void*, iter, tmp)
+  GIRARA_LIST_FOREACH_BODY_WITH_ITER(list, void*, iter, tmp,
     if (tmp == data) {
       girara_list_iterator_free(iter);
       return pos;
     }
     ++pos;
-  GIRARA_LIST_FOREACH_END(list, void*, iter, tmp);
+  );
 
   return -1;
 }
@@ -398,9 +398,9 @@ girara_list_merge(girara_list_t* list, girara_list_t* other)
   }
   other->free = NULL;
 
-  GIRARA_LIST_FOREACH(other, void*, iter, data)
+  GIRARA_LIST_FOREACH_BODY(other, void*, data,
     girara_list_append(list, data);
-  GIRARA_LIST_FOREACH_END(other, void*, iter, data);
+  );
   return list;
 }
 

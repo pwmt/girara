@@ -339,13 +339,13 @@ variable_changed(GiraraTemplate* object, const char* GIRARA_UNUSED(name))
   private_t* priv = GET_PRIVATE(object);
   priv->valid = true;
 
-  GIRARA_LIST_FOREACH(priv->variables_in_base, char*, iter, variable)
+  GIRARA_LIST_FOREACH_BODY(priv->variables_in_base, char*, variable,
     if (priv->valid == true &&
         girara_list_find(priv->variables, compare_variable_name,
                          variable) == NULL) {
       priv->valid = false;
     }
-  GIRARA_LIST_FOREACH_END(priv->variables_in_base, char*, iter, variable);
+  );
 }
 
 static void

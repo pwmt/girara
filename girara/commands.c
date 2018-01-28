@@ -132,13 +132,13 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
   if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_length - 1] == ']') {
     char* tmp_inner = g_strndup(tmp + 1, tmp_length - 2);
 
-    GIRARA_LIST_FOREACH(session->modes.identifiers, girara_mode_string_t*, iter, mode)
+    GIRARA_LIST_FOREACH_BODY(session->modes.identifiers, girara_mode_string_t*, mode,
       if (!g_strcmp0(tmp_inner, mode->name)) {
         shortcut_mode = mode->index;
         is_mode       = true;
         break;
       }
-    GIRARA_LIST_FOREACH_END(session->modes.identifiers, girara_mode_string_t*, iter, mode);
+    );
 
     if (is_mode == false) {
       girara_warning("Unregistered mode specified: %s", tmp_inner);
@@ -322,13 +322,13 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
   /* Check for passed shortcut command */
   if (unmap == false) {
     bool found_mapping = false;
-    GIRARA_LIST_FOREACH(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, mapping)
+    GIRARA_LIST_FOREACH_BODY(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, mapping,
       if (!g_strcmp0(tmp, mapping->identifier)) {
         shortcut_function = mapping->function;
         found_mapping = true;
         break;
       }
-    GIRARA_LIST_FOREACH_END(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, iter, mapping);
+    );
 
     if (found_mapping == false) {
       girara_warning("Not a valid shortcut function: %s", tmp);
@@ -345,12 +345,12 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     if (++current_command < number_of_arguments) {
       tmp = (char*) girara_list_nth(argument_list, current_command);
 
-      GIRARA_LIST_FOREACH(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping)
+      GIRARA_LIST_FOREACH_BODY(session_private->config.argument_mappings, girara_argument_mapping_t*, mapping,
         if (!g_strcmp0(tmp, mapping->identifier)) {
           shortcut_argument_n = mapping->value;
           break;
         }
-      GIRARA_LIST_FOREACH_END(session_private->config.argument_mappings, girara_argument_mapping_t*, iter, mapping);
+      );
 
       /* If no known argument is passed we save it in the data field */
       if (shortcut_argument_n == 0) {
@@ -535,7 +535,7 @@ girara_inputbar_command_add(girara_session_t* session, const char* command,
   g_return_val_if_fail(function != NULL, false);
 
   /* search for existing binding */
-  GIRARA_LIST_FOREACH(session->bindings.commands, girara_command_t*, iter, commands_it)
+  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.commands, girara_command_t*, iter, commands_it,
     if (g_strcmp0(commands_it->command, command) == 0) {
       g_free(commands_it->abbr);
       g_free(commands_it->description);
@@ -548,7 +548,7 @@ girara_inputbar_command_add(girara_session_t* session, const char* command,
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->bindings.commands, girara_command_t*, iter, commands_it);
+  );
 
   /* add new inputbar command */
   girara_command_t* new_command = g_slice_new(girara_command_t);
@@ -572,7 +572,7 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   girara_argument_t argument = {argument_n, argument_data};
 
   /* search for existing special command */
-  GIRARA_LIST_FOREACH(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it)
+  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it,
     if (scommand_it->identifier == identifier) {
       scommand_it->function = function;
       scommand_it->always   = always;
@@ -580,7 +580,7 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
       girara_list_iterator_free(iter);
       return true;
     }
-  GIRARA_LIST_FOREACH_END(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it);
+  );
 
   /* create new special command */
   girara_special_command_t* special_command = g_slice_new(girara_special_command_t);

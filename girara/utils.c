@@ -460,7 +460,7 @@ girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argumen
   GString* command = g_string_new(cmd ? cmd : "");
   g_free(cmd);
 
-  GIRARA_LIST_FOREACH(argument_list, char*, iter, value)
+  GIRARA_LIST_FOREACH_BODY(argument_list, char*, value, {
     if (dont_append_first_space == false) {
       g_string_append_c(command, ' ');
     }
@@ -468,7 +468,7 @@ girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argumen
     char* tmp = g_shell_quote(value);
     g_string_append(command, tmp);
     g_free(tmp);
-  GIRARA_LIST_FOREACH_END(argument_list, char*, iter, value);
+  });
 
   GError* error = NULL;
   girara_info("executing: %s", command->str);

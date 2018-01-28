@@ -176,12 +176,12 @@ girara_setting_find(girara_session_t* session, const char* name)
   g_return_val_if_fail(name != NULL, NULL);
 
   girara_setting_t* result = NULL;
-  GIRARA_LIST_FOREACH(session->private_data->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH_BODY(session->private_data->settings, girara_setting_t*, setting,
     if (g_strcmp0(setting->name, name) == 0) {
       result = setting;
       break;
     }
-  GIRARA_LIST_FOREACH_END(session->private_data->settings, girara_setting_t*, iter, setting);
+  );
 
   return result;
 }
@@ -218,12 +218,12 @@ girara_cc_set(girara_session_t* session, const char* input)
 
   unsigned int input_length = strlen(input);
 
-  GIRARA_LIST_FOREACH(session->private_data->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH_BODY(session->private_data->settings, girara_setting_t*, setting,
     if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
         !strncmp(input, setting->name, input_length)) {
       girara_completion_group_add_element(group, setting->name, setting->description);
     }
-  GIRARA_LIST_FOREACH_END(session->private_data->settings, girara_setting_t*, iter, setting);
+  );
 
   return completion;
 }
@@ -250,7 +250,7 @@ girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
 
   json_object* json_config = json_object_new_object();
 
-  GIRARA_LIST_FOREACH(session->private_data->settings, girara_setting_t*, iter, setting)
+  GIRARA_LIST_FOREACH_BODY(session->private_data->settings, girara_setting_t*, setting,
     json_object* json_setting = json_object_new_object();
 
     json_object* json_value = NULL;
@@ -288,7 +288,7 @@ girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
         json_object_new_boolean(setting->init_only));
 
     json_object_object_add(json_config, setting->name, json_setting);
-  GIRARA_LIST_FOREACH_END(session->private_data->settings, girara_setting_t*, iter, setting);
+  );
 
   json_object_to_file_ext(girara_list_nth(argument_list, 0), json_config,
       JSON_C_TO_STRING_PRETTY);
