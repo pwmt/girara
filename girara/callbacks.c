@@ -236,21 +236,23 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
   const guint state = button->state & MOUSE_MASK;
   girara_session_private_t* session_private = session->private_data;
 
+  bool handled = false;
+
   /* search registered mouse events */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event,
+  GIRARA_LIST_FOREACH_BODY(session->bindings.mouse_events, girara_mouse_event_t*, mouse_event,
     if (mouse_event->function != NULL
         && button->button == mouse_event->button
         && state  == mouse_event->mask
         && mouse_event->event_type == event.type
         && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
-        mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
-        girara_list_iterator_free(iter);
-      return true;
+      mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
+      handled = true;
+      break;
     }
   );
 
-  return false;
+  return handled;
 }
 
 gboolean
@@ -268,22 +270,23 @@ girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventBut
 
   const guint state = button->state & MOUSE_MASK;
   girara_session_private_t* session_private = session->private_data;
+  bool handled = false;
 
   /* search registered mouse events */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event,
+  GIRARA_LIST_FOREACH_BODY(session->bindings.mouse_events, girara_mouse_event_t*, mouse_event,
     if (mouse_event->function != NULL
         && button->button == mouse_event->button
         && state  == mouse_event->mask
         && mouse_event->event_type == GIRARA_EVENT_BUTTON_RELEASE
         && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
-        mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
-        girara_list_iterator_free(iter);
-      return true;
+      mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
+      handled = true;
+      break;
     }
   );
 
-  return false;
+  return handled;
 }
 
 gboolean
@@ -301,21 +304,22 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
 
   const guint state = button->state & MOUSE_MASK;
   girara_session_private_t* session_private = session->private_data;
+  bool handled = false;
 
   /* search registered mouse events */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event,
+  GIRARA_LIST_FOREACH_BODY(session->bindings.mouse_events, girara_mouse_event_t*, mouse_event,
     if (mouse_event->function != NULL
         && state  == mouse_event->mask
         && mouse_event->event_type == event.type
         && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
-        mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
-        girara_list_iterator_free(iter);
-      return true;
+      mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
+      handled = true;
+      break;
     }
   );
 
-  return false;
+  return handled;
 }
 
 gboolean
@@ -354,22 +358,23 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
 
   const guint state = scroll->state & MOUSE_MASK;
   girara_session_private_t* session_private = session->private_data;
+  bool handled = false;
 
   /* search registered mouse events */
   /* TODO: Filter correct event */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.mouse_events, girara_mouse_event_t*, iter, mouse_event,
+  GIRARA_LIST_FOREACH_BODY(session->bindings.mouse_events, girara_mouse_event_t*, mouse_event,
     if (mouse_event->function != NULL
         && state  == mouse_event->mask
         && mouse_event->event_type == event.type
         && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
-        mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
-        girara_list_iterator_free(iter);
-        return true;
+      mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
+      handled = true;
+      break;
     }
   );
 
-  return false;
+  return handled;
 }
 
 gboolean
@@ -578,17 +583,18 @@ girara_callback_inputbar_changed_event(GtkEditable* entry, girara_session_t* ses
 
   char identifier    = identifier_s[0];
   g_free(identifier_s);
+  bool handled = false;
 
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.special_commands, girara_special_command_t*, iter, special_command,
+  GIRARA_LIST_FOREACH_BODY(session->bindings.special_commands, girara_special_command_t*, special_command,
     if ((special_command->identifier == identifier) &&
        (special_command->always == true)) {
       gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
       special_command->function(session, input, &(special_command->argument));
       g_free(input);
-      girara_list_iterator_free(iter);
-      return true;
+      handled = true;
+      break;
     }
   );
 
-  return false;
+  return handled;
 }

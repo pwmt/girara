@@ -284,21 +284,25 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
   g_return_val_if_fail(identifier != NULL, false);
 
   girara_session_private_t* session_private = session->private_data;
+  bool found = false;
+
   /* search for existing config handle */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session_private->config.handles, girara_config_handle_t*, iter, data,
+  GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, data,
     if (strcmp(data->identifier, identifier) == 0) {
       data->handle = handle;
-      girara_list_iterator_free(iter);
-      return true;
+      found = true;
+      break;
     }
   );
 
-  /* add new config handle */
-  girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
+  if (found == false) {
+    /* add new config handle */
+    girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
 
-  config_handle->identifier = g_strdup(identifier);
-  config_handle->handle     = handle;
-  girara_list_append(session_private->config.handles, config_handle);
+    config_handle->identifier = g_strdup(identifier);
+    config_handle->handle     = handle;
+    girara_list_append(session_private->config.handles, config_handle);
+  }
 
   return true;
 }

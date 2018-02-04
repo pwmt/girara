@@ -534,8 +534,9 @@ girara_inputbar_command_add(girara_session_t* session, const char* command,
   g_return_val_if_fail(command  != NULL, false);
   g_return_val_if_fail(function != NULL, false);
 
+  bool found = false;
   /* search for existing binding */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.commands, girara_command_t*, iter, commands_it,
+  GIRARA_LIST_FOREACH_BODY(session->bindings.commands, girara_command_t*, commands_it,
     if (g_strcmp0(commands_it->command, command) == 0) {
       g_free(commands_it->abbr);
       g_free(commands_it->description);
@@ -545,20 +546,22 @@ girara_inputbar_command_add(girara_session_t* session, const char* command,
       commands_it->completion  = completion;
       commands_it->description = description ? g_strdup(description) : NULL;
 
-      girara_list_iterator_free(iter);
-      return true;
+      found = true;
+      break;
     }
   );
 
-  /* add new inputbar command */
-  girara_command_t* new_command = g_slice_new(girara_command_t);
+  if (found == false) {
+    /* add new inputbar command */
+    girara_command_t* new_command = g_slice_new(girara_command_t);
 
-  new_command->command     = g_strdup(command);
-  new_command->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
-  new_command->function    = function;
-  new_command->completion  = completion;
-  new_command->description = description ? g_strdup(description) : NULL;
-  girara_list_append(session->bindings.commands, new_command);
+    new_command->command     = g_strdup(command);
+    new_command->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
+    new_command->function    = function;
+    new_command->completion  = completion;
+    new_command->description = description ? g_strdup(description) : NULL;
+    girara_list_append(session->bindings.commands, new_command);
+  }
 
   return true;
 }
@@ -570,6 +573,7 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
   g_return_val_if_fail(function != NULL, false);
 
   girara_argument_t argument = {argument_n, argument_data};
+  bool found                 = false;
 
   /* search for existing special command */
   GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.special_commands, girara_special_command_t*, iter, scommand_it,
@@ -577,20 +581,22 @@ girara_special_command_add(girara_session_t* session, char identifier, girara_in
       scommand_it->function = function;
       scommand_it->always   = always;
       scommand_it->argument = argument;
-      girara_list_iterator_free(iter);
-      return true;
+      found = true;
+      break;
     }
   );
 
-  /* create new special command */
-  girara_special_command_t* special_command = g_slice_new(girara_special_command_t);
+  if (found == false) {
+    /* create new special command */
+    girara_special_command_t* special_command = g_slice_new(girara_special_command_t);
 
-  special_command->identifier = identifier;
-  special_command->function   = function;
-  special_command->always     = always;
-  special_command->argument   = argument;
+    special_command->identifier = identifier;
+    special_command->function   = function;
+    special_command->always     = always;
+    special_command->argument   = argument;
 
-  girara_list_append(session->bindings.special_commands, special_command);
+    girara_list_append(session->bindings.special_commands, special_command);
+  }
 
   return true;
 }
