@@ -22,6 +22,7 @@
 #include "datastructures.h"
 #include "session.h"
 #include "settings.h"
+#include "internal.h"
 
 #define BLOCK_SIZE 64
 
