@@ -14,7 +14,7 @@
 #include <string.h>
 
 /* default commands implementation */
-bool
+static bool
 girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     bool unmap)
 {
