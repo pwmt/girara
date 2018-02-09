@@ -13,6 +13,7 @@
 
 #include "utils.h"
 #include "datastructures.h"
+#include "tests.h"
 
 static girara_list_t*
 read_pwd_info(void)
@@ -262,7 +263,7 @@ START_TEST(test_strings_replace_substrings_4) {
   g_free(result);
 } END_TEST
 
-Suite* suite_utils()
+Suite* suite_utils(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Utils");

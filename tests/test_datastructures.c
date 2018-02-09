@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <datastructures.h>
 
+#include "tests.h"
+
 static unsigned int list_free_called = 0;
 static unsigned int node_free_called = 0;
 
@@ -383,7 +385,7 @@ START_TEST(test_datastructures_list_prepend) {
   girara_list_free(list);
 } END_TEST
 
-Suite* suite_datastructures()
+Suite* suite_datastructures(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Datastructures");

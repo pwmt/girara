@@ -4,6 +4,7 @@
 
 #include "template.h"
 #include "datastructures.h"
+#include "tests.h"
 
 START_TEST(test_new) {
   GiraraTemplate* obj = girara_template_new(NULL);
@@ -121,10 +122,7 @@ START_TEST(test_full_2) {
   g_object_unref(obj);
 } END_TEST
 
-
-extern void setup(void);
-
-Suite* suite_template()
+Suite* suite_template(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Template");
