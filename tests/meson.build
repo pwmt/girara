@@ -19,12 +19,14 @@ if check.found()
 
   xdg_test_helper = executable('xdg_test_helper', 'xdg_test_helper.c',
     dependencies: [ glib, declare_dependency(link_with: girara) ],
-    include_directories: include_directories
+    include_directories: include_directories,
+    c_args: defines + flags
   )
 
   tests = executable('tests', test_sources,
     dependencies: build_dependencies + test_dependencies,
     include_directories: include_directories,
+    c_args: defines + flags
   )
 
   env = environment()

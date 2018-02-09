@@ -32,7 +32,8 @@ pc_requires = ['glib-2.0', 'gtk+-3.0']
 
 defines = [
   '-DGETTEXT_PACKAGE="libgirara-gtk3-@0@"'.format(so_major),
-  '-DLOCALEDIR="@0@"'.format(join_paths(prefix, localedir))
+  '-DLOCALEDIR="@0@"'.format(join_paths(prefix, localedir)),
+  '-D_DEFAULT_SOURCE',
 ]
 
 flags = [

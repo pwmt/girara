@@ -1,10 +1,5 @@
 /* See LICENSE file for license and copyright information */
 
-#define _DEFAULT_SOURCE
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__APPLE__)
-#define _XOPEN_SOURCE 700
-#endif
-
 #include <ctype.h>
 #include <glib.h>
 #include <glib/gi18n-lib.h>
