@@ -8,6 +8,13 @@ version_minor = '2'
 version_rev = '8'
 version = '@0@.@1@.@2@'.format(version_major, version_minor, version_rev)
 
+# Rules for so_major and so_minor:
+# Before a release perform the following checks against the last release:
+# * If a function has been removed or the paramaters of a function have changed
+#   bump SOMAJOR and set SOMINOR to 0.
+# * If any of the exported datastructures have changed in a incompatible way
+#   bump SOMAJOR and set SOMINOR to 0.
+# * If a function has been added bump SOMINOR.
 so_major = '3'
 so_minor = '0'
 so_version = '@0@.@1@'.format(so_major, so_minor)
