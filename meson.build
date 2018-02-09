@@ -1,12 +1,11 @@
 project('girara', 'c',
+  version: '0.2.8',
   meson_version: '>=0.43',
-  default_options: 'c_std=c11'
+  default_options: 'c_std=c11',
 )
 
-version_major = '0'
-version_minor = '2'
-version_rev = '8'
-version = '@0@.@1@.@2@'.format(version_major, version_minor, version_rev)
+version = meson.project_version()
+version_array = version.split('.')
 
 # Rules for so_major and so_minor:
 # Before a release perform the following checks against the last release:
@@ -20,9 +19,9 @@ so_minor = '0'
 so_version = '@0@.@1@'.format(so_major, so_minor)
 
 conf_data = configuration_data()
-conf_data.set('GVMAJOR', version_major)
-conf_data.set('GVMINOR', version_minor)
-conf_data.set('GVREV', version_rev)
+conf_data.set('GVMAJOR', version_array[0])
+conf_data.set('GVMINOR', version_array[1])
+conf_data.set('GVREV', version_array[2])
 conf_data.set('version', version)
 
 cc = meson.get_compiler('c', required: false)
