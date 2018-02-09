@@ -106,7 +106,6 @@ headers = files(
   'girara/commands.h',
   'girara/completion.h',
   'girara/config.h',
-  'girara/css-definitions.h',
   'girara/datastructures.h',
   'girara/entry.h',
   'girara/girara.h',
