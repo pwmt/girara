@@ -10,6 +10,7 @@
 #include "settings.h"
 #include "datastructures.h"
 #include "utils.h"
+#include "shortcuts.h"
 
 static GtkEventBox* girara_completion_row_create(const char*, const char*, bool);
 static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
@@ -64,7 +65,7 @@ completion_element_free(girara_completion_element_t* element)
 }
 
 girara_completion_t*
-girara_completion_init()
+girara_completion_init(void)
 {
   girara_completion_t *completion = g_slice_new(girara_completion_t);
   completion->groups = girara_list_new2(

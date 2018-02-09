@@ -11,7 +11,7 @@
  * @return Completion object
  * @return NULL An error occurred
  */
-girara_completion_t* girara_completion_init();
+girara_completion_t* girara_completion_init(void);
 
 /**
  * Creates an girara completion group
