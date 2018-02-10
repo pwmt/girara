@@ -35,6 +35,7 @@ gtk3 = dependency('gtk+-3.0', version: '>=3.20')
 
 build_dependencies = [libm, glib, gtk3]
 pc_requires = ['glib-2.0', 'gtk+-3.0']
+pc_requires_private = []
 
 defines = [
   '-DGETTEXT_PACKAGE="libgirara-gtk3-@0@"'.format(so_major),
@@ -56,7 +57,7 @@ if get_option('enable-notify')
   if libnotify.found()
     build_dependencies += libnotify
     defines += '-DWITH_LIBNOTIFY'
-    pc_requires += 'libnotify'
+    pc_requires_private += 'libnotify'
   endif
 endif
 
@@ -65,7 +66,7 @@ if get_option('enable-json')
   if jsonc.found()
     build_dependencies += jsonc
     defines += '-DWITH_JSONC'
-    pc_requires += 'json-c'
+    pc_requires_private += 'json-c'
   endif
 endif
 
@@ -139,7 +140,8 @@ pkg.generate(
   url: 'https://pwmt.org/projects/girara',
   version: version,
   libraries: girara,
-  requires_private: pc_requires,
+  requires: pc_requires,
+  requires_private: pc_requires_private,
 )
 
 subdir('tests')
