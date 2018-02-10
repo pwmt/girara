@@ -5,4 +5,6 @@ option('enable-notify',
 )
 option('enable-json',
   type: 'boolean',
-  value: true)
+  value: true,
+  description: 'Enable json-c support if available.'
+)
