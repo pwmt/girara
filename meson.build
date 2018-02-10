@@ -56,22 +56,18 @@ flags = cc.get_supported_arguments(flags)
 
 # optional dependencies
 pc_requires_private = []
-if get_option('enable-notify')
-  libnotify = dependency('libnotify', version: '>=0.7.0', required: false)
-  if libnotify.found()
-    build_dependencies += libnotify
-    defines += '-DWITH_LIBNOTIFY'
-    pc_requires_private += 'libnotify'
-  endif
+libnotify = dependency('libnotify', version: '>=0.7.0', required: false)
+jsonc = dependency('json-c', required: false)
+if get_option('enable-notify') and libnotify.found()
+  build_dependencies += libnotify
+  defines += '-DWITH_LIBNOTIFY'
+  pc_requires_private += 'libnotify'
 endif
 
-if get_option('enable-json')
-  jsonc = dependency('json-c', required: false)
-  if jsonc.found()
-    build_dependencies += jsonc
-    defines += '-DWITH_JSONC'
-    pc_requires_private += 'json-c'
-  endif
+if get_option('enable-json') and jsonc.found()
+  build_dependencies += jsonc
+  defines += '-DWITH_JSONC'
+  pc_requires_private += 'json-c'
 endif
 
 # generate version header file
