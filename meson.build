@@ -153,4 +153,5 @@ pkg.generate(
   requires_private: pc_requires_private,
 )
 
+subdir('doc')
 subdir('tests')

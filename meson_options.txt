@@ -8,3 +8,8 @@ option('enable-json',
   value: true,
   description: 'Enable json-c support if available.'
 )
+option('enable-docs',
+  type: 'boolean',
+  value: true,
+  description: 'Build Doxygen documentation if available.'
+)
