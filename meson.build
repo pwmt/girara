@@ -29,20 +29,22 @@ cc = meson.get_compiler('c', required: false)
 prefix = get_option('prefix')
 localedir = get_option('localedir')
 
+# required dependencies
 libm = cc.find_library('libm')
 glib = dependency('glib-2.0', version: '>=2.50')
 gtk3 = dependency('gtk+-3.0', version: '>=3.20')
 
 build_dependencies = [libm, glib, gtk3]
 pc_requires = ['glib-2.0', 'gtk+-3.0']
-pc_requires_private = []
 
+# defines
 defines = [
   '-DGETTEXT_PACKAGE="libgirara-gtk3-@0@"'.format(so_major),
   '-DLOCALEDIR="@0@"'.format(join_paths(prefix, localedir)),
   '-D_DEFAULT_SOURCE',
 ]
 
+# compile flags
 flags = [
   '-Wall',
   '-Wextra',
@@ -52,6 +54,8 @@ flags = [
 ]
 flags = cc.get_supported_arguments(flags)
 
+# optional dependencies
+pc_requires_private = []
 if get_option('enable-notify')
   libnotify = dependency('libnotify', version: '>=0.7.0', required: false)
   if libnotify.found()
@@ -70,6 +74,7 @@ if get_option('enable-json')
   endif
 endif
 
+# generate version header file
 version_header = configure_file(
   input: 'girara/version.h.in',
   output: 'version.h',
@@ -82,6 +87,7 @@ include_directories = [
 subdir('data')
 subdir('po')
 
+# source files
 sources = files(
   'girara/callbacks.c',
   'girara/completion.c',
@@ -101,6 +107,7 @@ sources = files(
 )
 sources += girara_css
 
+# header fiels to install
 headers = files(
   'girara/callbacks.h',
   'girara/commands.h',
@@ -122,6 +129,7 @@ headers = files(
 )
 headers += version_header
 
+# girara library
 girara = library(
   'girara-gtk3',
   sources,
@@ -133,6 +141,7 @@ girara = library(
 )
 install_headers(headers, subdir: 'girara')
 
+# pkg-config file
 pkg = import('pkgconfig')
 pkg.generate(
   name: 'girara-gtk3',
