@@ -505,3 +505,9 @@ widget_remove_class(GtkWidget* widget, const char* styleclass)
     gtk_style_context_remove_class(context, styleclass);
   }
 }
+
+const char*
+girara_version(void)
+{
+  return GIRARA_VERSION;
+}
