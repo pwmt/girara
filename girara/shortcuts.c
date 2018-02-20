@@ -752,10 +752,11 @@ simulate_key_press(girara_session_t* session, int state, int key)
 
   g_object_ref(event->key.window);
 
-  GdkKeymapKey* keys;
-  gint number_of_keys;
+  GdkDisplay* display = gtk_widget_get_display(GTK_WIDGET(session->gtk.box));
+  GdkKeymapKey* keys  = NULL;
+  gint number_of_keys = 0;
 
-  if (gdk_keymap_get_entries_for_keyval(gdk_keymap_get_default(),
+  if (gdk_keymap_get_entries_for_keyval(gdk_keymap_get_for_display(display),
         event->key.keyval, &keys, &number_of_keys) == FALSE) {
     gdk_event_free(event);
     return false;

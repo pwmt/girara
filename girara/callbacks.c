@@ -17,11 +17,13 @@ static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MAS
   GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK;
 
 static bool
-clean_mask(guint hardware_keycode, GdkModifierType state, gint group, guint* clean, guint* keyval)
+clean_mask(GtkWidget* widget, guint hardware_keycode, GdkModifierType state, gint group, guint* clean, guint* keyval)
 {
+  GdkDisplay* display      = gtk_widget_get_display(widget);
   GdkModifierType consumed = 0;
+
   if ((gdk_keymap_translate_keyboard_state(
-        gdk_keymap_get_default(),
+        gdk_keymap_get_for_display(display),
         hardware_keycode,
         state, group,
         keyval,
@@ -75,7 +77,7 @@ clean_mask(guint hardware_keycode, GdkModifierType state, gint group, guint* cle
 
 /* callback implementation */
 gboolean
-girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
+girara_callback_view_key_press_event(GtkWidget* widget,
     GdkEventKey* event, girara_session_t* session)
 {
   g_return_val_if_fail(session != NULL, FALSE);
@@ -83,7 +85,7 @@ girara_callback_view_key_press_event(GtkWidget* UNUSED(widget),
   guint clean  = 0;
   guint keyval = 0;
 
-  if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
+  if (clean_mask(widget, event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
     return false;
   }
 
@@ -539,7 +541,7 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
 
   guint keyval = 0;
   guint clean  = 0;
-  if (clean_mask(event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
+  if (clean_mask(entry, event->hardware_keycode, event->state, event->group, &clean, &keyval) == false) {
     girara_debug("clean_mask returned false.");
     return false;
   }
