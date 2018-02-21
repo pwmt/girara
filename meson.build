@@ -73,7 +73,7 @@ endif
 # generate version header file
 version_header = configure_file(
   input: 'girara/version.h.in',
-  output: 'version.h',
+  output: 'girara-version.h',
   configuration: conf_data
 )
 include_directories = [
