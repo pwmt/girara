@@ -2,7 +2,6 @@ girara/callbacks.c
 girara/commands.c
 girara/completion.c
 girara/config.c
-girara/css-definitions.c
 girara/datastructures.c
 girara/entry.c
 girara/input-history-io.c
