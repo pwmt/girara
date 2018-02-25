@@ -561,9 +561,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
   if (window_icon != NULL) {
-    if (strlen(window_icon) != 0) {
-      girara_setting_set(session, "window-icon", window_icon);
-    }
+    girara_set_window_icon(session, window_icon);
     g_free(window_icon);
   }
 
@@ -892,7 +890,23 @@ girara_set_window_icon(girara_session_t* session, const char* name)
     return false;
   }
 
-  gtk_window_set_icon_name(GTK_WINDOW(session->gtk.window), name);
+  char* path        = girara_fix_path(name);
+  GtkWindow* window = GTK_WINDOW(session->gtk.window);
+
+  girara_debug("Loading window icon from file: %s", path);
+  GError* error = NULL;
+  gtk_window_set_icon_from_file(window, path, &error);
+  free(path);
+
+  if (error == NULL) {
+    return true;
+  }
+
+  girara_debug("Failed to load window icon (file): %s", error->message);
+  g_error_free(error);
+
+  girara_debug("Loading window icon with name: %s", name);
+  gtk_window_set_icon_name(window, name);
 
   return true;
 }

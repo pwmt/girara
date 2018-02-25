@@ -27,22 +27,7 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name),
     return;
   }
 
-  char* path        = girara_fix_path(value);
-  GtkWindow* window = GTK_WINDOW(session->gtk.window);
-
-  GError* error = NULL;
-  gtk_window_set_icon_from_file(window, path, &error);
-  free(path);
-
-  if (error == NULL) {
-    return;
-  }
-
-  girara_debug("Failed to load window icon (file): %s", error->message);
-  girara_debug("Trying name instead.");
-  g_error_free(error);
-
-  gtk_window_set_icon_name(window, value);
+  girara_set_window_icon(session, value);
 }
 
 static void
