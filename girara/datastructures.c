@@ -352,16 +352,17 @@ girara_list_position(girara_list_t* list, void* data)
     return -1;
   }
 
-  size_t pos = 0;
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(list, void*, iter, tmp,
+  bool found = false;
+  ssize_t pos = 0;
+  GIRARA_LIST_FOREACH_BODY(list, void*, tmp,
     if (tmp == data) {
-      girara_list_iterator_free(iter);
-      return pos;
+      found = true;
+      break;
     }
     ++pos;
   );
 
-  return -1;
+  return found ? pos : -1;
 }
 
 void
@@ -383,6 +384,13 @@ girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* 
   g_list_foreach(list->start, callback, data);
 }
 
+static void
+list_append(void* data, void* userdata)
+{
+  girara_list_t* list = userdata;
+  girara_list_append(list, data);
+}
+
 girara_list_t*
 girara_list_merge(girara_list_t* list, girara_list_t* other)
 {
@@ -398,9 +406,7 @@ girara_list_merge(girara_list_t* list, girara_list_t* other)
   }
   other->free = NULL;
 
-  GIRARA_LIST_FOREACH_BODY(other, void*, data,
-    girara_list_append(list, data);
-  );
+  girara_list_foreach(other, list_append, list);
   return list;
 }
 
