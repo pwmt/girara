@@ -50,7 +50,8 @@ flags = [
   '-Wextra',
   '-pedantic',
   '-Wmissing-declarations',
-  '-Werror=implicit-function-declaration'
+  '-Werror=implicit-function-declaration',
+  '-Werror=vla'
 ]
 flags = cc.get_supported_arguments(flags)
 
@@ -58,6 +59,7 @@ flags = cc.get_supported_arguments(flags)
 pc_requires_private = []
 libnotify = dependency('libnotify', version: '>=0.7.0', required: false)
 jsonc = dependency('json-c', required: false)
+
 if get_option('enable-notify') and libnotify.found()
   build_dependencies += libnotify
   defines += '-DWITH_LIBNOTIFY'
@@ -103,7 +105,7 @@ sources = files(
 )
 sources += girara_css
 
-# header fiels to install
+# header files to install
 headers = files(
   'girara/callbacks.h',
   'girara/commands.h',
