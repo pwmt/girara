@@ -34,7 +34,13 @@ if check.found()
   env.set('HOME', '/home/test')
   test('tests-with-home', tests, env: env)
 
-  # Cannot unset environment variables.
-  # env.unset('HOME')
-  # test('tests-without-home', tests, env: env)
+  env_bin = find_program('env', required: false)
+  if env_bin.found()
+    env = environment()
+    env.set('XDG_TEST_HELPER_PATH', meson.current_build_dir())
+
+    test('tests-without-home', env_bin,
+      args: ['-u', 'HOME', tests],
+      env: env)
+  endif
 endif
