@@ -68,7 +68,7 @@ endif
 
 if get_option('enable-json') and jsonc.found()
   build_dependencies += jsonc
-  defines += '-DWITH_JSONC'
+  defines += '-DWITH_JSON'
   pc_requires_private += 'json-c'
 endif
 
