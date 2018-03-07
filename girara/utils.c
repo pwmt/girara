@@ -124,12 +124,12 @@ girara_get_home_directory(const char* user)
 char*
 girara_get_xdg_path(girara_xdg_path_t path)
 {
-  static const char* VARS[] = {
+  static const char VARS[][16] = {
     [XDG_CONFIG_DIRS] = "XDG_CONFIG_DIRS",
     [XDG_DATA_DIRS] = "XDG_DATA_DIRS"
   };
 
-  static const char* DEFAULTS[] = {
+  static const char DEFAULTS[][29] = {
     [XDG_CONFIG_DIRS] = "/etc/xdg",
     [XDG_DATA_DIRS] = "/usr/local/share/:/usr/share"
   };

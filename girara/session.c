@@ -43,7 +43,7 @@ ensure_gettext_initialized(void)
 static void
 init_template_engine(GiraraTemplate* csstemplate)
 {
-  static const char* variable_names[] = {
+  static const char variable_names[][24] = {
     "session",
     "default-fg",
     "default-bg",

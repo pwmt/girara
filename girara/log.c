@@ -7,7 +7,7 @@
 
 static girara_log_level_t log_level = GIRARA_DEBUG;
 
-static const char* NAMES[] = {
+static const char NAMES[][8] = {
   [GIRARA_DEBUG] = "debug",
   [GIRARA_INFO] = "info",
   [GIRARA_WARNING] = "warning",
