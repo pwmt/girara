@@ -132,7 +132,7 @@ girara = library(
   'girara-gtk3',
   sources,
   dependencies: build_dependencies,
-  soversion: so_version,
+  version: so_version,
   install: true,
   include_directories: include_directories,
   c_args: defines + flags
