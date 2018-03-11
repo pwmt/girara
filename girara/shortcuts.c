@@ -401,8 +401,8 @@ argument_to_argument_list(girara_argument_t* argument) {
   girara_list_set_free_function(argument_list, g_free);
   if (g_shell_parse_argv((const gchar*) argument->data, &argc, &argv, NULL) != FALSE) {
     for (int i = 0; i < argc; i++) {
-      char* argument = g_strdup(argv[i]);
-      girara_list_append(argument_list, (void*) argument);
+      char* arg = g_strdup(argv[i]);
+      girara_list_append(argument_list, arg);
     }
 
     return argument_list;
@@ -544,9 +544,9 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
             keyval = tmp[2];
             found  = true;
           } else {
-            for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
-              if (g_strcmp0(tmp + 2, gdk_keyboard_buttons[i].identifier) == 0) {
-                keyval = gdk_keyboard_buttons[i].keyval;
+            for (unsigned int j = 0; j < LENGTH(gdk_keyboard_buttons); ++j) {
+              if (g_strcmp0(tmp + 2, gdk_keyboard_buttons[j].identifier) == 0) {
+                keyval = gdk_keyboard_buttons[j].keyval;
                 found = true;
                 break;
               }
@@ -554,9 +554,9 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
           }
         /* Possible special key */
         } else {
-          for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
-            if (g_strcmp0(tmp, gdk_keyboard_buttons[i].identifier) == 0) {
-              keyval = gdk_keyboard_buttons[i].keyval;
+          for (unsigned int j = 0; i < LENGTH(gdk_keyboard_buttons); ++j) {
+            if (g_strcmp0(tmp, gdk_keyboard_buttons[j].identifier) == 0) {
+              keyval = gdk_keyboard_buttons[j].keyval;
               found = true;
               break;
             }

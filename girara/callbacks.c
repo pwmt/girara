@@ -460,9 +460,9 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   gchar *cmd = argv[0];
 
   /* search commands */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.commands, girara_command_t*, iter, command,
-    if ((g_strcmp0(cmd, command->command) == 0) ||
-        (g_strcmp0(cmd, command->abbr)    == 0)) {
+  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.commands, girara_command_t*, iter, binding_command,
+    if ((g_strcmp0(cmd, binding_command->command) == 0) ||
+        (g_strcmp0(cmd, binding_command->abbr)    == 0)) {
       girara_list_t* argument_list = girara_list_new();
       if (argument_list == NULL) {
         g_free(input);
@@ -478,7 +478,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
         girara_list_append(argument_list, (void*) argument);
       }
 
-      command->function(session, argument_list);
+      binding_command->function(session, argument_list);
 
       girara_list_free(argument_list);
       g_free(input);
