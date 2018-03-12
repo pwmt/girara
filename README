@@ -16,7 +16,10 @@ glib (>= 2.50)
 gtk3 (>= 3.20)
 intltool
 libnotify (optional, for notification support)
-jscon-c (optional, for configuration dumping support)
+json-c (optional, for configuration dumping support)
+
+To disable the optional support for libnotify and json-c, configure the build
+system with -Denable-notify=false or -Denable-json=false.
 
 Installation
 ------------
