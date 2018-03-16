@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.2.8',
+  version: '0.2.9',
   meson_version: '>=0.43',
   default_options: 'c_std=c11',
 )
@@ -15,7 +15,7 @@ version_array = version.split('.')
 #   bump SOMAJOR and set SOMINOR to 0.
 # * If a function has been added bump SOMINOR.
 so_major = '3'
-so_minor = '0'
+so_minor = '1'
 so_version = '@0@.@1@'.format(so_major, so_minor)
 
 conf_data = configuration_data()
