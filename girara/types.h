@@ -3,7 +3,7 @@
 #ifndef GIRARA_TYPES_H
 #define GIRARA_TYPES_H
 
-#include "version.h"
+#include "girara-version.h"
 #include <stdbool.h>
 
 typedef struct girara_tree_node_s girara_tree_node_t;

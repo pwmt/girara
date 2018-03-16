@@ -352,16 +352,17 @@ girara_list_position(girara_list_t* list, void* data)
     return -1;
   }
 
-  size_t pos = 0;
-  GIRARA_LIST_FOREACH(list, void*, iter, tmp)
+  bool found = false;
+  ssize_t pos = 0;
+  GIRARA_LIST_FOREACH_BODY(list, void*, tmp,
     if (tmp == data) {
-      girara_list_iterator_free(iter);
-      return pos;
+      found = true;
+      break;
     }
     ++pos;
-  GIRARA_LIST_FOREACH_END(list, void*, iter, tmp);
+  );
 
-  return -1;
+  return found ? pos : -1;
 }
 
 void
@@ -383,6 +384,13 @@ girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* 
   g_list_foreach(list->start, callback, data);
 }
 
+static void
+list_append(void* data, void* userdata)
+{
+  girara_list_t* list = userdata;
+  girara_list_append(list, data);
+}
+
 girara_list_t*
 girara_list_merge(girara_list_t* list, girara_list_t* other)
 {
@@ -398,9 +406,7 @@ girara_list_merge(girara_list_t* list, girara_list_t* other)
   }
   other->free = NULL;
 
-  GIRARA_LIST_FOREACH(other, void*, iter, data)
-    girara_list_append(list, data);
-  GIRARA_LIST_FOREACH_END(other, void*, iter, data);
+  girara_list_foreach(other, list_append, list);
   return list;
 }
 
@@ -446,7 +452,7 @@ girara_node_free(girara_tree_node_t* node)
   }
 
   g_return_if_fail(node->node);
-  girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) node->node->data;
+  girara_tree_node_data_t* nodedata = node->node->data;
   g_return_if_fail(nodedata);
 
   if (node->free != NULL) {
@@ -457,8 +463,8 @@ girara_node_free(girara_tree_node_t* node)
 
   GNode* childnode = node->node->children;
   while (childnode != NULL) {
-    girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*) childnode->data;
-    girara_node_free(nodedata->node);
+    girara_tree_node_data_t* childnodedata = childnode->data;
+    girara_node_free(childnodedata->node);
     childnode = childnode->next;
   }
 

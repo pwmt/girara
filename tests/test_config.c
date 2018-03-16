@@ -8,6 +8,7 @@
 #include "session.h"
 #include "settings.h"
 #include "config.h"
+#include "tests.h"
 
 START_TEST(test_config_parse) {
   girara_session_t* session = girara_session_create();
@@ -48,9 +49,7 @@ START_TEST(test_config_parse) {
   girara_session_destroy(session);
 } END_TEST
 
-extern void setup(void);
-
-Suite* suite_config()
+Suite* suite_config(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Config");

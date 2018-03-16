@@ -143,4 +143,11 @@ char* girara_replace_substring(const char* string, const char* old, const char* 
  */
 bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list);
 
+/**
+ * Return version of girara.
+ *
+ * @return version string
+ */
+const char* girara_version(void);
+
 #endif

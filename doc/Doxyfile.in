@@ -2,7 +2,7 @@
 
 # General information
 PROJECT_NAME          = girara
-OUTPUT_DIRECTORY      = build
+OUTPUT_DIRECTORY      = @DOXYGEN_OUTPUT@
 OUTPUT_LANGUAGE       = English
 TAB_SIZE              = 2
 EXTRACT_ALL           = YES
@@ -16,7 +16,7 @@ WARNINGS             = YES
 WARN_IF_UNDOCUMENTED = YES
 
 # Input files
-INPUT         = ../
+INPUT         = @DOXYGEN_INPUT@
 EXCLUDE       = ../tests
 FILE_PATTERNS = *.h
 RECURSIVE     = YES

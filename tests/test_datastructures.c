@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <datastructures.h>
 
+#include "tests.h"
+
 static unsigned int list_free_called = 0;
 static unsigned int node_free_called = 0;
 
@@ -323,7 +325,7 @@ START_TEST(test_datastructures_node) {
     girara_list_iterator_t* iter2 = girara_list_iterator(grandchildren);
     while (girara_list_iterator_is_valid(iter2))
     {
-      char* expected = g_strdup_printf("child_%u_%u", i, j);
+      expected = g_strdup_printf("child_%u_%u", i, j);
       girara_tree_node_t* gchild = (girara_tree_node_t*)girara_list_iterator_data(iter2);
       fail_unless((g_strcmp0((char*)girara_node_get_data(gchild), expected) == 0), NULL);
       fail_unless((girara_node_get_parent(gchild) == child), NULL);
@@ -383,7 +385,7 @@ START_TEST(test_datastructures_list_prepend) {
   girara_list_free(list);
 } END_TEST
 
-Suite* suite_datastructures()
+Suite* suite_datastructures(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Datastructures");

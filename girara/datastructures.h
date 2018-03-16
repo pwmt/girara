@@ -253,6 +253,16 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback,
     girara_list_iterator_free(iter); \
   } while(0)
 
+#define GIRARA_LIST_FOREACH_BODY_WITH_ITER(list, type, iter, data, ...) \
+  GIRARA_LIST_FOREACH(list, type, iter, data) \
+  __VA_ARGS__ \
+  GIRARA_LIST_FOREACH_END(list, type, iter, data)
+
+#define GIRARA_LIST_FOREACH_BODY(list, type, data, ...) \
+  GIRARA_LIST_FOREACH(list, type, girara_list_foreach_iterator, data) \
+  __VA_ARGS__ \
+  GIRARA_LIST_FOREACH_END(list, type, girara_list_foreach_iterator, data)
+
 /**
  * Merge a list into another one. Both lists need to have the same free
  * function. If other has a source free function set it will be set to NULL as

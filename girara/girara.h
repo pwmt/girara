@@ -9,7 +9,6 @@
 #include "datastructures.h"
 #include "settings.h"
 #include "completion.h"
-#include "tabs.h"
 #include "config.h"
 #include "statusbar.h"
 #include "shortcuts.h"

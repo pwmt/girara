@@ -36,6 +36,14 @@
 # endif
 #endif
 
+#ifndef GIRARA_VISIBLE
+# if (defined(__GNUC__) && (__GNUC__ >= 4)) || defined(__clang__)
+#  define GIRARA_VISIBLE __attribute__((visibility("default")))
+# else
+#  define GIRARA_VISIBLE
+# endif
+#endif
+
 #ifndef GIRARA_DEPRECATED
 # if defined(__GNUC__)
 #  define GIRARA_DEPRECATED(x) x __attribute__((deprecated))

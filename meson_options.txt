@@ -1,0 +1,15 @@
+option('enable-notify',
+  type: 'boolean',
+  value: true,
+  description: 'Enable libnotify support if available.'
+)
+option('enable-json',
+  type: 'boolean',
+  value: true,
+  description: 'Enable json-c support if available.'
+)
+option('enable-docs',
+  type: 'boolean',
+  value: true,
+  description: 'Build Doxygen documentation if available.'
+)

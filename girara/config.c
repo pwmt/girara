@@ -27,22 +27,7 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name),
     return;
   }
 
-  char* path        = girara_fix_path(value);
-  GtkWindow* window = GTK_WINDOW(session->gtk.window);
-
-  GError* error = NULL;
-  gtk_window_set_icon_from_file(window, path, &error);
-  free(path);
-
-  if (error == NULL) {
-    return;
-  }
-
-  girara_debug("Failed to load window icon (file): %s", error->message);
-  girara_debug("Trying name instead.");
-  g_error_free(error);
-
-  gtk_window_set_icon_name(window, value);
+  girara_set_window_icon(session, value);
 }
 
 static void
@@ -284,21 +269,25 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
   g_return_val_if_fail(identifier != NULL, false);
 
   girara_session_private_t* session_private = session->private_data;
+  bool found = false;
+
   /* search for existing config handle */
-  GIRARA_LIST_FOREACH(session_private->config.handles, girara_config_handle_t*, iter, data)
+  GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, data,
     if (strcmp(data->identifier, identifier) == 0) {
       data->handle = handle;
-      girara_list_iterator_free(iter);
-      return true;
+      found = true;
+      break;
     }
-  GIRARA_LIST_FOREACH_END(session_private->config.handles, girara_config_handle_t*, iter, data);
+  );
 
-  /* add new config handle */
-  girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
+  if (found == false) {
+    /* add new config handle */
+    girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
 
-  config_handle->identifier = g_strdup(identifier);
-  config_handle->handle     = handle;
-  girara_list_append(session_private->config.handles, config_handle);
+    config_handle->identifier = g_strdup(identifier);
+    config_handle->handle     = handle;
+    girara_list_append(session_private->config.handles, config_handle);
+  }
 
   return true;
 }
@@ -388,7 +377,7 @@ config_parse(girara_session_t* session, const char* path)
       /* search for config handle */
       girara_session_private_t* session_private = session->private_data;
       girara_config_handle_t* handle = NULL;
-      GIRARA_LIST_FOREACH(session_private->config.handles, girara_config_handle_t*, iter, tmp)
+      GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, tmp,
         handle = tmp;
         if (strcmp(handle->identifier, argv[0]) == 0) {
           handle->handle(session, argument_list);
@@ -396,7 +385,7 @@ config_parse(girara_session_t* session, const char* path)
         } else {
           handle = NULL;
         }
-      GIRARA_LIST_FOREACH_END(session_private->config.handles, girara_config_handle_t*, iter, tmp);
+      );
 
       if (handle == NULL) {
         girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);

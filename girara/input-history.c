@@ -285,9 +285,9 @@ ih_reset(GiraraInputHistory* history)
 
     girara_list_t* newlist = girara_input_history_io_read(priv->io);
     if (newlist != NULL) {
-      GIRARA_LIST_FOREACH(newlist, const char*, iter, data)
+      GIRARA_LIST_FOREACH_BODY(newlist, const char*, data,
         girara_list_append(list, g_strdup(data));
-      GIRARA_LIST_FOREACH_END(newlist, const char*, iter, data);
+      );
       girara_list_free(newlist);
     }
   }

@@ -4,12 +4,7 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 
-Suite* suite_utils();
-Suite* suite_datastructures();
-Suite* suite_settings();
-Suite* suite_session();
-Suite* suite_config();
-Suite* suite_template();
+#include "tests.h"
 
 void setup(void)
 {

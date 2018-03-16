@@ -1,10 +1,5 @@
 // See LICENSE file for license and copyright information
 
-#define _DEFAULT_SOURCE
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__)
-#define _POSIX_SOURCE
-#endif
-
 #include <check.h>
 
 #include <glib.h>
@@ -18,6 +13,7 @@
 
 #include "utils.h"
 #include "datastructures.h"
+#include "tests.h"
 
 static girara_list_t*
 read_pwd_info(void)
@@ -107,10 +103,13 @@ static void
 xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
     const gchar* expected)
 {
+  const char* xdg_test_helper_path = g_getenv("XDG_TEST_HELPER_PATH");
+  fail_unless(xdg_test_helper_path != NULL, "XDG_TEST_HELPER_PATH is not set", NULL);
+
   gchar** envp = g_get_environ();
 
   envp = g_environ_setenv(envp, envvar, "", TRUE);
-  gchar* argv[] = { XDG_TEST_HELPER, g_strdup_printf("%d", path), NULL };
+  gchar* argv[] = { g_build_filename(xdg_test_helper_path, "xdg_test_helper", NULL), g_strdup_printf("%d", path), NULL };
 
   gchar* output = NULL;
   bool result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
@@ -136,6 +135,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   fail_unless(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
       output, "/home/test/xdg", NULL);
 
+  g_free(argv[0]);
   g_free(argv[1]);
   g_strfreev(envp);
 }
@@ -263,7 +263,7 @@ START_TEST(test_strings_replace_substrings_4) {
   g_free(result);
 } END_TEST
 
-Suite* suite_utils()
+Suite* suite_utils(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Utils");
@@ -313,7 +313,6 @@ Suite* suite_utils()
   tcase_add_test(tcase, test_strings_replace_substrings_2);
   tcase_add_test(tcase, test_strings_replace_substrings_3);
   suite_add_tcase(suite, tcase);
-
 
   return suite;
 }

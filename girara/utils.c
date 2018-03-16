@@ -1,10 +1,5 @@
 /* See LICENSE file for license and copyright information */
 
-#define _DEFAULT_SOURCE
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__APPLE__)
-#define _XOPEN_SOURCE 700
-#endif
-
 #include <ctype.h>
 #include <glib.h>
 #include <glib/gi18n-lib.h>
@@ -22,6 +17,7 @@
 #include "datastructures.h"
 #include "session.h"
 #include "settings.h"
+#include "internal.h"
 
 #define BLOCK_SIZE 64
 
@@ -128,12 +124,12 @@ girara_get_home_directory(const char* user)
 char*
 girara_get_xdg_path(girara_xdg_path_t path)
 {
-  static const char* VARS[] = {
+  static const char VARS[][16] = {
     [XDG_CONFIG_DIRS] = "XDG_CONFIG_DIRS",
     [XDG_DATA_DIRS] = "XDG_DATA_DIRS"
   };
 
-  static const char* DEFAULTS[] = {
+  static const char DEFAULTS[][29] = {
     [XDG_CONFIG_DIRS] = "/etc/xdg",
     [XDG_DATA_DIRS] = "/usr/local/share/:/usr/share"
   };
@@ -460,7 +456,7 @@ girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argumen
   GString* command = g_string_new(cmd ? cmd : "");
   g_free(cmd);
 
-  GIRARA_LIST_FOREACH(argument_list, char*, iter, value)
+  GIRARA_LIST_FOREACH_BODY(argument_list, char*, value, {
     if (dont_append_first_space == false) {
       g_string_append_c(command, ' ');
     }
@@ -468,7 +464,7 @@ girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argumen
     char* tmp = g_shell_quote(value);
     g_string_append(command, tmp);
     g_free(tmp);
-  GIRARA_LIST_FOREACH_END(argument_list, char*, iter, value);
+  });
 
   GError* error = NULL;
   girara_info("executing: %s", command->str);
@@ -508,4 +504,10 @@ widget_remove_class(GtkWidget* widget, const char* styleclass)
   if (gtk_style_context_has_class(context, styleclass) == TRUE) {
     gtk_style_context_remove_class(context, styleclass);
   }
+}
+
+const char*
+girara_version(void)
+{
+  return GIRARA_VERSION;
 }

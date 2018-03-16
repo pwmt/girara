@@ -43,7 +43,7 @@ ensure_gettext_initialized(void)
 static void
 init_template_engine(GiraraTemplate* csstemplate)
 {
-  static const char* variable_names[] = {
+  static const char variable_names[][24] = {
     "session",
     "default-fg",
     "default-bg",
@@ -561,9 +561,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
   if (window_icon != NULL) {
-    if (strlen(window_icon) != 0) {
-      girara_setting_set(session, "window-icon", window_icon);
-    }
+    girara_set_window_icon(session, window_icon);
     g_free(window_icon);
   }
 
@@ -839,11 +837,11 @@ girara_mode_add(girara_session_t* session, const char* name)
   g_return_val_if_fail(name != NULL && name[0] != '\0', FALSE);
 
   girara_mode_t last_index = 0;
-  GIRARA_LIST_FOREACH(session->modes.identifiers, girara_mode_string_t*, iter, mode)
+  GIRARA_LIST_FOREACH_BODY(session->modes.identifiers, girara_mode_string_t*, mode,
     if (mode->index > last_index) {
       last_index = mode->index;
     }
-  GIRARA_LIST_FOREACH_END(session->modes.identifiers, girara_mode_string_t*, iter, mode);
+  );
 
   /* create new mode identifier */
   girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);
@@ -892,7 +890,23 @@ girara_set_window_icon(girara_session_t* session, const char* name)
     return false;
   }
 
-  gtk_window_set_icon_name(GTK_WINDOW(session->gtk.window), name);
+  char* path        = girara_fix_path(name);
+  GtkWindow* window = GTK_WINDOW(session->gtk.window);
+
+  girara_debug("Loading window icon from file: %s", path);
+  GError* error = NULL;
+  gtk_window_set_icon_from_file(window, path, &error);
+  free(path);
+
+  if (error == NULL) {
+    return true;
+  }
+
+  girara_debug("Failed to load window icon (file): %s", error->message);
+  g_error_free(error);
+
+  girara_debug("Loading window icon with name: %s", name);
+  gtk_window_set_icon_name(window, name);
 
   return true;
 }

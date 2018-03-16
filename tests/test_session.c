@@ -3,6 +3,7 @@
 #include <check.h>
 
 #include "session.h"
+#include "tests.h"
 
 START_TEST(test_create) {
   girara_session_t* session = girara_session_create();
@@ -18,9 +19,7 @@ START_TEST(test_init) {
   girara_session_destroy(session);
 } END_TEST
 
-extern void setup(void);
-
-Suite* suite_session()
+Suite* suite_session(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Session");
