@@ -34,7 +34,8 @@ if check.found()
   env.set('HOME', '/home/test')
   test('tests-with-home', tests,
     env: env,
-    timeout: 60*60
+    timeout: 60*60,
+    is_parallel: false
   )
 
   env_bin = find_program('env', required: false)
@@ -45,7 +46,8 @@ if check.found()
     test('tests-without-home', env_bin,
       args: ['-u', 'HOME', tests],
       env: env,
-      timeout: 60*60
+      timeout: 60*60,
+      is_parallel: false
     )
   endif
 endif
