@@ -106,7 +106,7 @@ START_TEST(test_datastructures_list_merge) {
 
   fail_unless((girara_list_merge(NULL, NULL) == NULL), NULL);
   fail_unless((girara_list_merge(list1, NULL) == list1), NULL);
-  fail_unless((girara_list_merge(NULL, list2) == list2), NULL);
+  fail_unless((girara_list_merge(NULL, list2) == NULL), NULL);
 
   girara_list_append(list1, (void*)0);
   girara_list_append(list2, (void*)1);

@@ -397,9 +397,7 @@ list_append(void* data, void* userdata)
 girara_list_t*
 girara_list_merge(girara_list_t* list, girara_list_t* other)
 {
-  if (list == NULL) {
-    return other;
-  }
+  g_return_val_if_fail(list != NULL, NULL);
   if (other == NULL) {
     return list;
   }
