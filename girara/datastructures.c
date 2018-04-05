@@ -379,7 +379,10 @@ girara_list_sort(girara_list_t* list, girara_compare_function_t compare)
 void
 girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data)
 {
-  g_return_if_fail(list && list->start && callback);
+  g_return_if_fail(list != NULL && callback != NULL);
+  if (list->start == NULL) {
+    return;
+  }
 
   g_list_foreach(list->start, callback, data);
 }
