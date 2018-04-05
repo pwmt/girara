@@ -680,7 +680,6 @@ girara_libnotify(girara_session_t* session, const char *summary,
   }
 
 #ifdef WITH_LIBNOTIFY
-
   const bool was_initialized = notify_is_initted();
 
   if (was_initialized == false) {
@@ -720,11 +719,8 @@ girara_libnotify(girara_session_t* session, const char *summary,
   if (was_initialized == false) {
     notify_uninit();
   }
-
 #else
-
   girara_notify(session, GIRARA_WARNING, "Girara was compiled without libnotify support.");
-
 #endif
 }
 
