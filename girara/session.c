@@ -16,6 +16,7 @@
 #include "utils.h"
 
 #include <glib/gi18n-lib.h>
+#include <pango/pango-font.h>
 #include <stdlib.h>
 
 #ifdef WITH_LIBNOTIFY
