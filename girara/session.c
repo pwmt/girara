@@ -288,7 +288,7 @@ scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window,
 
 
 girara_session_t*
-girara_session_create()
+girara_session_create(void)
 {
   ensure_gettext_initialized();
 
