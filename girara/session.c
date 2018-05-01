@@ -893,7 +893,7 @@ girara_set_window_icon(girara_session_t* session, const char* name)
   girara_debug("Loading window icon from file: %s", path);
   GError* error = NULL;
   gtk_window_set_icon_from_file(window, path, &error);
-  free(path);
+  g_free(path);
 
   if (error == NULL) {
     return true;
