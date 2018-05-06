@@ -227,30 +227,6 @@ START_TEST(test_datastructures_sorted_list) {
   girara_list_free(unsorted_list);
 } END_TEST
 
-START_TEST(test_datastructures_list_iterator_remove) {
-  girara_list_t* list = girara_list_new();
-  for (intptr_t i = 0; i != 10; ++i) {
-    girara_list_append(list, (void*)i);
-  }
-  fail_unless(girara_list_size(list) == 10);
-
-  intptr_t next = 0;
-  GIRARA_LIST_FOREACH(list, intptr_t, iter, data)
-    fail_unless(next++ == data);
-    if (data == 5) {
-      /* this is broken … this will cause an invalid read */
-      girara_list_remove(list, (void*) data);
-    }
-  GIRARA_LIST_FOREACH_END(list, intptr_t, iter, data);
-
-  for (intptr_t s = 0; s != 5; ++s) {
-    fail_unless((intptr_t)girara_list_nth(list, s) == s);
-  }
-  for (intptr_t s = 5; s != 9; ++s) {
-    fail_unless((intptr_t)girara_list_nth(list, s) == s + 1);
-  }
-} END_TEST
-
 static void
 node_free(void* data)
 {
