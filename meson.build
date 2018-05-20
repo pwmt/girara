@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.2.9',
+  version: '0.3.0',
   meson_version: '>=0.43',
   default_options: 'c_std=c11',
 )
