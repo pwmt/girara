@@ -402,7 +402,6 @@ Suite* suite_datastructures(void)
 
   /* list iterators */
   tcase = tcase_create("list_iterators");
-  /* tcase_add_test(tcase, test_datastructures_list_iterator_remove); */
   suite_add_tcase(suite, tcase);
 
   /* node free */
@@ -416,4 +415,20 @@ Suite* suite_datastructures(void)
   suite_add_tcase(suite, tcase);
 
   return suite;
+}
+
+int main()
+{
+  Suite* suite          = NULL;
+  SRunner* suite_runner = NULL;
+  int number_failed     = 0;
+
+  /* test datastructures */
+  suite        = suite_datastructures();
+  suite_runner = srunner_create(suite);
+  srunner_run_all(suite_runner, CK_NORMAL);
+  number_failed += srunner_ntests_failed(suite_runner);
+  srunner_free(suite_runner);
+
+  return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
