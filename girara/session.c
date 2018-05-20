@@ -381,14 +381,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     return false;
   }
 
+  /* set session name */
+  session->private_data->session_name = g_strdup(
+      (sessionname == NULL) ? "girara" : sessionname);
+
   bool smooth_scroll = false;
   girara_setting_get(session, "smooth-scroll", &smooth_scroll);
   if (smooth_scroll == true) {
     gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
   }
-
-  session->private_data->session_name = g_strdup(
-      (sessionname == NULL) ? "girara" : sessionname);
 
   /* load CSS style */
   fill_template_with_values(session);
