@@ -2,13 +2,15 @@
 # See LICENSE file for license and copyright information
 #
 # Translators:
-# salmora8 <shorterfire@gmail.com>, 2012-2013
+# Alexandro Casanova <shorterfire@gmail.com>, 2013-2014
+# Alexandro Casanova <shorterfire@gmail.com>, 2012-2013
+# Alexandro Casanova <shorterfire@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-25 17:52+0100\n"
-"PO-Revision-Date: 2015-12-14 21:36+0100\n"
+"PO-Revision-Date: 2018-02-04 10:06+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
 "girara/language/pt_BR/)\n"
@@ -181,7 +183,7 @@ msgstr "Altura de janela inicial"
 
 #: girara/config.c:196
 msgid "Horizontal padding for the status input and notification bars"
-msgstr ""
+msgstr "Preenchimento horizontal para a entrada de status e barras de notificações"
 
 #: girara/config.c:197
 msgid "Vertical padding for the status input and notification bars"
@@ -218,7 +220,7 @@ msgstr "Mostrar ou ocultar certos elementos da GUI"
 
 #: girara/config.c:205
 msgid "Enable smooth scrolling and zooming"
-msgstr ""
+msgstr "Ativar rolagem suave e zoom"
 
 #. commands
 #: girara/config.c:241

@@ -9,7 +9,7 @@
 struct girara_input_history_io_interface_s {
   GTypeInterface parent_iface;
 
-  /* interface methords */
+  /* interface methods */
 
   /**
    * Write a line of input to the input history storage.
@@ -111,7 +111,7 @@ struct girara_input_history_class_s {
 };
 
 #define GIRARA_TYPE_INPUT_HISTORY \
-  (girara_input_history_get_type ())
+  (girara_input_history_get_type())
 #define GIRARA_INPUT_HISTORY(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST ((obj), GIRARA_TYPE_INPUT_HISTORY, GiraraInputHistory))
 #define GIRARA_INPUT_HISTORY_CLASS(obj) \

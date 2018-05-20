@@ -16,6 +16,7 @@
 #include "utils.h"
 
 #include <glib/gi18n-lib.h>
+#include <pango/pango-font.h>
 #include <stdlib.h>
 
 #ifdef WITH_LIBNOTIFY
@@ -287,7 +288,7 @@ scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window,
 
 
 girara_session_t*
-girara_session_create()
+girara_session_create(void)
 {
   ensure_gettext_initialized();
 
@@ -380,14 +381,15 @@ girara_session_init(girara_session_t* session, const char* sessionname)
     return false;
   }
 
+  /* set session name */
+  session->private_data->session_name = g_strdup(
+      (sessionname == NULL) ? "girara" : sessionname);
+
   bool smooth_scroll = false;
   girara_setting_get(session, "smooth-scroll", &smooth_scroll);
   if (smooth_scroll == true) {
     gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
   }
-
-  session->private_data->session_name = g_strdup(
-      (sessionname == NULL) ? "girara" : sessionname);
 
   /* load CSS style */
   fill_template_with_values(session);
@@ -679,7 +681,6 @@ girara_libnotify(girara_session_t* session, const char *summary,
   }
 
 #ifdef WITH_LIBNOTIFY
-
   const bool was_initialized = notify_is_initted();
 
   if (was_initialized == false) {
@@ -719,11 +720,8 @@ girara_libnotify(girara_session_t* session, const char *summary,
   if (was_initialized == false) {
     notify_uninit();
   }
-
 #else
-
   girara_notify(session, GIRARA_WARNING, "Girara was compiled without libnotify support.");
-
 #endif
 }
 
@@ -890,25 +888,27 @@ girara_set_window_icon(girara_session_t* session, const char* name)
     return false;
   }
 
-  char* path        = girara_fix_path(name);
   GtkWindow* window = GTK_WINDOW(session->gtk.window);
+  char* path        = girara_fix_path(name);
+  bool success      = true;
 
-  girara_debug("Loading window icon from file: %s", path);
-  GError* error = NULL;
-  gtk_window_set_icon_from_file(window, path, &error);
-  free(path);
+  if (g_file_test(path, G_FILE_TEST_EXISTS) == TRUE) {
+    girara_debug("Loading window icon from file: %s", path);
 
-  if (error == NULL) {
-    return true;
+    GError* error = NULL;
+    success = gtk_window_set_icon_from_file(window, path, &error);
+
+    if (success == false) {
+      girara_debug("Failed to load window icon (file): %s", error->message);
+      g_error_free(error);
+    }
+  } else {
+    girara_debug("Loading window icon with name: %s", name);
+    gtk_window_set_icon_name(window, name);
   }
 
-  girara_debug("Failed to load window icon (file): %s", error->message);
-  g_error_free(error);
-
-  girara_debug("Loading window icon with name: %s", name);
-  gtk_window_set_icon_name(window, name);
-
-  return true;
+  g_free(path);
+  return success;
 }
 
 girara_list_t*

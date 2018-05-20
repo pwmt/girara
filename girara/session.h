@@ -91,7 +91,7 @@ struct girara_session_s
  * @return A valid session object
  * @return NULL when an error occurred
  */
-girara_session_t* girara_session_create();
+girara_session_t* girara_session_create(void);
 
 /**
  * Initializes an girara session

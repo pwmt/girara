@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.2.9',
+  version: '0.3.0',
   meson_version: '>=0.43',
   default_options: 'c_std=c11',
 )
@@ -30,11 +30,12 @@ prefix = get_option('prefix')
 localedir = get_option('localedir')
 
 # required dependencies
-libm = cc.find_library('libm')
+libm = cc.find_library('libm', required: false)
 glib = dependency('glib-2.0', version: '>=2.50')
 gtk3 = dependency('gtk+-3.0', version: '>=3.20')
+pango = dependency('pango', version: '>=1.14')
 
-build_dependencies = [libm, glib, gtk3]
+build_dependencies = [libm, glib, gtk3, pango]
 pc_requires = ['glib-2.0', 'gtk+-3.0']
 
 # defines
@@ -56,7 +57,7 @@ flags = [
 flags = cc.get_supported_arguments(flags)
 
 # optional dependencies
-pc_requires_private = []
+pc_requires_private = ['pango']
 libnotify = dependency('libnotify', version: '>=0.7.0', required: false)
 jsonc = dependency('json-c', required: false)
 

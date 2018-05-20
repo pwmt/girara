@@ -6,8 +6,18 @@
 #include <glib.h>
 #include <stdarg.h>
 
-#include "types.h"
 #include "macros.h"
+
+/**
+ * Log levels
+ */
+typedef enum girara_log_level_e
+{
+  GIRARA_DEBUG, /**> Debug messages */
+  GIRARA_INFO, /**> Information debug output */
+  GIRARA_WARNING, /**> Warning level */
+  GIRARA_ERROR /**> Error */
+} girara_log_level_t;
 
 /**
  * Prints a debug message. The arguments are passed to @ref girara_log as

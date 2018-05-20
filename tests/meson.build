@@ -32,7 +32,11 @@ if check.found()
   env = environment()
   env.set('XDG_TEST_HELPER_PATH', meson.current_build_dir())
   env.set('HOME', '/home/test')
-  test('tests-with-home', tests, env: env)
+  test('tests-with-home', tests,
+    env: env,
+    timeout: 60*60,
+    is_parallel: false
+  )
 
   env_bin = find_program('env', required: false)
   if env_bin.found()
@@ -41,6 +45,9 @@ if check.found()
 
     test('tests-without-home', env_bin,
       args: ['-u', 'HOME', tests],
-      env: env)
+      env: env,
+      timeout: 60*60,
+      is_parallel: false
+    )
   endif
 endif

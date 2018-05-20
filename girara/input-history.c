@@ -214,7 +214,7 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
 
   size_t i = 0;
   const char* command = NULL;
-  while (i < length) {
+  for (; i < length; ++i) {
     if (priv->reset == true || next == false) {
       if (priv->current < 1) {
         priv->reset = false;
@@ -247,8 +247,6 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
       priv->current_match = priv->current;
       break;
     }
-
-    ++i;
   }
 
   if (i == length) {
