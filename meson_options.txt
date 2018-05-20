@@ -1,6 +1,6 @@
 option('enable-notify',
   type: 'boolean',
-  value: true,
+  value: false,
   description: 'Enable libnotify support if available.'
 )
 option('enable-json',
