@@ -34,5 +34,5 @@ int run_suite(Suite* suite)
 
 void setup(void)
 {
-  gtk_init(NULL, NULL);
+  fail_unless(gtk_init_check(NULL, NULL) == TRUE, "GTK+ initializitation failed", NULL);
 }
