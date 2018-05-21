@@ -23,7 +23,7 @@ if check.found()
     is_parallel: false
   )
 
-  datastructures = executable('test_datastructures', ['test_datastructures.c'],
+  datastructures = executable('test_datastructures', ['test_datastructures.c', 'tests.c'],
     dependencies: build_dependencies + test_dependencies,
     include_directories: include_directories,
     c_args: defines + flags
@@ -52,7 +52,7 @@ if check.found()
     is_parallel: false
   )
 
-  template = executable('test_template', ['test_template.c'],
+  template = executable('test_template', ['test_template.c', 'tests.c'],
     dependencies: build_dependencies + test_dependencies,
     include_directories: include_directories,
     c_args: defines + flags
@@ -61,7 +61,7 @@ if check.found()
     timeout: 60*60
   )
 
-  utils = executable('test_utils', ['test_utils.c'],
+  utils = executable('test_utils', ['test_utils.c', 'tests.c'],
     dependencies: build_dependencies + test_dependencies,
     include_directories: include_directories,
     c_args: defines + flags
