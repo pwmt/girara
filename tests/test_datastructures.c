@@ -361,7 +361,7 @@ START_TEST(test_datastructures_list_prepend) {
   girara_list_free(list);
 } END_TEST
 
-Suite* suite_datastructures(void)
+static Suite* suite_datastructures(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Datastructures");

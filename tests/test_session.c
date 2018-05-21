@@ -19,7 +19,7 @@ START_TEST(test_init) {
   girara_session_destroy(session);
 } END_TEST
 
-Suite* suite_session(void)
+static Suite* suite_session(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Session");

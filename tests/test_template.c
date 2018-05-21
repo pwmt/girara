@@ -122,7 +122,7 @@ START_TEST(test_full_2) {
   g_object_unref(obj);
 } END_TEST
 
-Suite* suite_template(void)
+static Suite* suite_template(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Template");
