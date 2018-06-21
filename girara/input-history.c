@@ -232,8 +232,6 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
       } else {
         ++priv->current;
       }
-    } else {
-      return NULL;
     }
 
     command = girara_list_nth(list, priv->current);
