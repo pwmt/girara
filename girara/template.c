@@ -264,9 +264,6 @@ girara_template_new(const char* base)
 {
   GObject* obj = g_object_new(GIRARA_TYPE_TEMPLATE, NULL);
   g_return_val_if_fail(obj, NULL);
-  if (obj == NULL) {
-    return NULL;
-  }
 
   GiraraTemplate* object = GIRARA_TEMPLATE(obj);
   if (base != NULL) {
