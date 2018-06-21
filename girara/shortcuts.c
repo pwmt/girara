@@ -218,7 +218,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       }
 
       /* find the beginning of the word */
-      while ((i == (pos - 1)) || ((i > 0) && !strchr(separator, input[i]))) {
+      while ((i == (pos - 1)) || ((i > 0) && seperator != NULL && !strchr(separator, input[i]))) {
         i--;
       }
 
