@@ -554,7 +554,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
           }
         /* Possible special key */
         } else {
-          for (unsigned int j = 0; i < LENGTH(gdk_keyboard_buttons); ++j) {
+          for (unsigned int j = 0; j < LENGTH(gdk_keyboard_buttons); ++j) {
             if (g_strcmp0(tmp, gdk_keyboard_buttons[j].identifier) == 0) {
               keyval = gdk_keyboard_buttons[j].keyval;
               found = true;
