@@ -743,14 +743,12 @@ simulate_key_press(girara_session_t* session, int state, int key)
 
   GdkEvent* event = gdk_event_new(GDK_KEY_PRESS);
 
-  event->key.type       = GDK_KEY_PRESS;
-  event->key.window     = gtk_widget_get_parent_window(GTK_WIDGET(session->gtk.box));
+  event->any.type       = GDK_KEY_PRESS;
+  event->key.window     = g_object_ref(gtk_widget_get_parent_window(GTK_WIDGET(session->gtk.box)));
   event->key.send_event = false;
   event->key.time       = GDK_CURRENT_TIME;
   event->key.state      = state;
   event->key.keyval     = key;
-
-  g_object_ref(event->key.window);
 
   GdkDisplay* display = gtk_widget_get_display(GTK_WIDGET(session->gtk.box));
   GdkKeymapKey* keys  = NULL;
