@@ -6,8 +6,6 @@
 
 #include <glib.h>
 
-G_DEFINE_TYPE(GiraraTemplate, girara_template, G_TYPE_OBJECT)
-
 /**
  * Private data of the template
  */
@@ -18,12 +16,9 @@ typedef struct private_s {
   girara_list_t* variables_in_base;
   girara_list_t* variables;
   bool valid;
-} private_t;
+} GiraraTemplatePrivate;
 
-typedef struct private_s GiraraTemplatePrivate;
-
-#define GET_PRIVATE(obj) \
-  (G_TYPE_INSTANCE_GET_PRIVATE((obj), GIRARA_TYPE_TEMPLATE, private_t))
+G_DEFINE_TYPE_WITH_CODE(GiraraTemplate, girara_template, G_TYPE_OBJECT, G_ADD_PRIVATE(GiraraTemplate))
 
 /**
  * Internal variables
@@ -109,9 +104,6 @@ static guint signals[LAST_SIGNAL] = { 0 };
 static void
 girara_template_class_init(GiraraTemplateClass* class)
 {
-  /* add private members */
-  g_type_class_add_private(class, sizeof(private_t));
-
   /* overwrite methods */
   GObjectClass* object_class = G_OBJECT_CLASS(class);
   object_class->dispose      = dispose;
@@ -184,7 +176,7 @@ girara_template_init(GiraraTemplate* history)
     g_error_free(error);
   }
 
-  private_t* priv            = GET_PRIVATE(history);
+  GiraraTemplatePrivate* priv            = girara_template_get_instance_private(history);
   priv->base                 = g_strdup("");
   priv->variable_regex       = regex;
   priv->variable_check_regex = check_regex;
@@ -197,7 +189,8 @@ girara_template_init(GiraraTemplate* history)
 static void
 dispose(GObject* object)
 {
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplate* obj = GIRARA_TEMPLATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(obj);
 
   g_regex_unref(priv->variable_regex);
   g_regex_unref(priv->variable_check_regex);
@@ -212,7 +205,8 @@ dispose(GObject* object)
 static void
 finalize(GObject* object)
 {
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplate* obj = GIRARA_TEMPLATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(obj);
 
   g_free(priv->base);
   girara_list_free(priv->variables_in_base);
@@ -277,7 +271,7 @@ girara_template_set_base(GiraraTemplate* object, const char* base)
 {
   g_return_if_fail(GIRARA_IS_TEMPLATE(object));
 
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   if (g_strcmp0(base, priv->base) != 0) {
     g_free(priv->base);
     priv->base = g_strdup(base != NULL ? base : "");
@@ -292,14 +286,14 @@ girara_template_get_base(GiraraTemplate* object)
 {
   g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), NULL);
 
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   return priv->base;
 }
 
 static void
 base_changed(GiraraTemplate* object)
 {
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   girara_list_clear(priv->variables_in_base);
   priv->valid = true;
 
@@ -333,7 +327,7 @@ base_changed(GiraraTemplate* object)
 static void
 variable_changed(GiraraTemplate* object, const char* GIRARA_UNUSED(name))
 {
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   priv->valid = true;
 
   GIRARA_LIST_FOREACH_BODY(priv->variables_in_base, char*, variable,
@@ -355,7 +349,7 @@ girara_template_referenced_variables(GiraraTemplate* object)
 {
   g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), NULL);
 
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   return priv->variables_in_base;
 }
 
@@ -365,7 +359,7 @@ girara_template_add_variable(GiraraTemplate* object, const char* name)
   g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), false);
   g_return_val_if_fail(name != NULL, false);
 
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
 
   if (g_regex_match(priv->variable_check_regex, name, 0, NULL) == FALSE) {
     girara_debug("'%s' is not a valid variable name.", name);
@@ -400,7 +394,7 @@ girara_template_set_variable_value(GiraraTemplate* object, const char* name,
   g_return_if_fail(name != NULL);
   g_return_if_fail(value != NULL);
 
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
 
   variable_t* variable = girara_list_find(priv->variables, compare_variable_name,
                                           name);
@@ -439,7 +433,7 @@ girara_template_evaluate(GiraraTemplate* object)
 {
   g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), NULL);
 
-  private_t* priv = GET_PRIVATE(object);
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   if (priv->valid == false) {
     girara_error("Base contains variables that do not have a value assigned.");
     return NULL;
