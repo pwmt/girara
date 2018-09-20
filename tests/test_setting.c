@@ -67,7 +67,7 @@ START_TEST(test_settings_callback) {
   girara_session_destroy(session);
 } END_TEST
 
-Suite* suite_settings(void)
+static Suite* suite_settings(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Settings");
@@ -85,4 +85,9 @@ Suite* suite_settings(void)
   tcase_add_test(tcase, test_settings_callback);
 
   return suite;
+}
+
+int main()
+{
+  return run_suite(suite_settings());
 }

@@ -218,7 +218,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       }
 
       /* find the beginning of the word */
-      while ((i == (pos - 1)) || ((i > 0) && !strchr(separator, input[i]))) {
+      while ((i == (pos - 1)) || ((i > 0) && separator != NULL && !strchr(separator, input[i]))) {
         i--;
       }
 
@@ -554,7 +554,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
           }
         /* Possible special key */
         } else {
-          for (unsigned int j = 0; i < LENGTH(gdk_keyboard_buttons); ++j) {
+          for (unsigned int j = 0; j < LENGTH(gdk_keyboard_buttons); ++j) {
             if (g_strcmp0(tmp, gdk_keyboard_buttons[j].identifier) == 0) {
               keyval = gdk_keyboard_buttons[j].keyval;
               found = true;
@@ -743,14 +743,12 @@ simulate_key_press(girara_session_t* session, int state, int key)
 
   GdkEvent* event = gdk_event_new(GDK_KEY_PRESS);
 
-  event->key.type       = GDK_KEY_PRESS;
-  event->key.window     = gtk_widget_get_parent_window(GTK_WIDGET(session->gtk.box));
+  event->any.type       = GDK_KEY_PRESS;
+  event->key.window     = g_object_ref(gtk_widget_get_parent_window(GTK_WIDGET(session->gtk.box)));
   event->key.send_event = false;
   event->key.time       = GDK_CURRENT_TIME;
   event->key.state      = state;
   event->key.keyval     = key;
-
-  g_object_ref(event->key.window);
 
   GdkDisplay* display = gtk_widget_get_display(GTK_WIDGET(session->gtk.box));
   GdkKeymapKey* keys  = NULL;

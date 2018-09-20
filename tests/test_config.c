@@ -49,7 +49,7 @@ START_TEST(test_config_parse) {
   girara_session_destroy(session);
 } END_TEST
 
-Suite* suite_config(void)
+static Suite* suite_config(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Config");
@@ -61,4 +61,9 @@ Suite* suite_config(void)
   suite_add_tcase(suite, tcase);
 
   return suite;
+}
+
+int main()
+{
+  return run_suite(suite_config());
 }

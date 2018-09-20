@@ -449,12 +449,12 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   char* guioptions = NULL;
   girara_setting_get(session, "guioptions", &guioptions);
 
-  const bool show_hscrollbar = strchr(guioptions, 'h') != NULL;
-  const bool show_vscrollbar = strchr(guioptions, 'v') != NULL;
+  const bool show_hscrollbar = guioptions != NULL && strchr(guioptions, 'h') != NULL;
+  const bool show_vscrollbar = guioptions != NULL && strchr(guioptions, 'v') != NULL;
+  g_free(guioptions);
 
   scrolled_window_set_scrollbar_visibility(
     GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
-  g_free(guioptions);
 
   /* viewport */
   gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
@@ -562,10 +562,10 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
-  if (window_icon != NULL) {
+  if (window_icon != NULL && strlen(window_icon) != 0) {
     girara_set_window_icon(session, window_icon);
-    g_free(window_icon);
   }
+  g_free(window_icon);
 
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 
@@ -885,6 +885,11 @@ bool
 girara_set_window_icon(girara_session_t* session, const char* name)
 {
   if (session == NULL || session->gtk.window == NULL || name == NULL) {
+    return false;
+  }
+
+  if (strlen(name) == 0) {
+    girara_warning("Empty icon name.");
     return false;
   }
 

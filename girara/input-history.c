@@ -3,10 +3,8 @@
 #include "input-history.h"
 #include "datastructures.h"
 
-G_DEFINE_TYPE(GiraraInputHistory, girara_input_history, G_TYPE_OBJECT)
-
 /**
- * Private data of the settings manager
+ * Private data of the input history
  */
 typedef struct ih_private_s {
   girara_list_t* history; /**< List of stored inputs */
@@ -15,11 +13,9 @@ typedef struct ih_private_s {
   size_t current_match;
   GiraraInputHistoryIO* io;
   char* command_line;
-} ih_private_t;
+} GiraraInputHistoryPrivate;
 
-#define GIRARA_INPUT_HISTORY_GET_PRIVATE(obj) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GIRARA_TYPE_INPUT_HISTORY, \
-                                ih_private_t))
+G_DEFINE_TYPE_WITH_CODE(GiraraInputHistory, girara_input_history, G_TYPE_OBJECT, G_ADD_PRIVATE(GiraraInputHistory))
 
 /* Methods */
 static void ih_dispose(GObject* object);
@@ -46,9 +42,6 @@ enum {
 static void
 girara_input_history_class_init(GiraraInputHistoryClass* class)
 {
-  /* add private members */
-  g_type_class_add_private(class, sizeof(ih_private_t));
-
   /* overwrite methods */
   GObjectClass* object_class = G_OBJECT_CLASS(class);
   object_class->dispose      = ih_dispose;
@@ -74,7 +67,7 @@ girara_input_history_class_init(GiraraInputHistoryClass* class)
 static void
 girara_input_history_init(GiraraInputHistory* history)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
   priv->history = girara_list_new2((girara_free_function_t) g_free);
   priv->reset   = true;
   priv->io      = NULL;
@@ -84,7 +77,8 @@ girara_input_history_init(GiraraInputHistory* history)
 static void
 ih_dispose(GObject* object)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
+  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
 
   g_clear_object(&priv->io);
 
@@ -95,7 +89,8 @@ ih_dispose(GObject* object)
 static void
 ih_finalize(GObject* object)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
+  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
   girara_list_free(priv->history);
   g_free(priv->command_line);
 
@@ -107,7 +102,8 @@ static void
 ih_set_property(GObject* object, guint prop_id, const GValue* value,
     GParamSpec* pspec)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
+  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
 
   switch (prop_id) {
     case PROP_IO: {
@@ -130,7 +126,8 @@ static void
 ih_get_property(GObject* object, guint prop_id, GValue* value,
     GParamSpec* pspec)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(object);
+  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
 
   switch (prop_id) {
     case PROP_IO:
@@ -170,7 +167,7 @@ ih_append(GiraraInputHistory* history, const char* input)
 
   girara_list_append(list, g_strdup(input));
 
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
   if (priv->io != NULL) {
     girara_input_history_io_append(priv->io, input);
   }
@@ -182,14 +179,14 @@ ih_append(GiraraInputHistory* history, const char* input)
 static girara_list_t*
 ih_list(GiraraInputHistory* history)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
   return priv->history;
 }
 
 static const char*
 find_next(GiraraInputHistory* history, const char* current_input, bool next)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
 
   girara_list_t* list = girara_input_history_list(history);
   if (list == NULL) {
@@ -232,8 +229,6 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
       } else {
         ++priv->current;
       }
-    } else {
-      return NULL;
     }
 
     command = girara_list_nth(list, priv->current);
@@ -271,7 +266,7 @@ ih_previous(GiraraInputHistory* history, const char* current_input)
 static void
 ih_reset(GiraraInputHistory* history)
 {
-  ih_private_t* priv = GIRARA_INPUT_HISTORY_GET_PRIVATE(history);
+  GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
   priv->reset = true;
 
   if (priv->io != NULL) {

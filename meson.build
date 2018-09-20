@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.3.0',
+  version: '0.3.1',
   meson_version: '>=0.43',
   default_options: 'c_std=c11',
 )
@@ -24,7 +24,7 @@ conf_data.set('GVMINOR', version_array[1])
 conf_data.set('GVREV', version_array[2])
 conf_data.set('version', version)
 
-cc = meson.get_compiler('c', required: false)
+cc = meson.get_compiler('c')
 
 prefix = get_option('prefix')
 localedir = get_option('localedir')

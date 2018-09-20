@@ -256,7 +256,7 @@ START_TEST(test_strings_replace_substrings_3) {
   g_free(result);
 } END_TEST
 
-Suite* suite_utils(void)
+static Suite* suite_utils(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Utils");
@@ -308,4 +308,9 @@ Suite* suite_utils(void)
   suite_add_tcase(suite, tcase);
 
   return suite;
+}
+
+int main()
+{
+  return run_suite(suite_utils());
 }

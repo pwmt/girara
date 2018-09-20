@@ -286,7 +286,7 @@ girara_list_iterator_remove(girara_list_iterator_t* iter) {
   }
 
   GList* el = iter->element;
-  if (iter->list != NULL && iter->list->free != NULL) {
+  if (iter->list->free != NULL) {
     (iter->list->free)(iter->element->data);
   }
 

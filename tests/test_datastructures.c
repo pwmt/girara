@@ -4,6 +4,8 @@
 #include <glib.h>
 #include <stdint.h>
 #include <datastructures.h>
+#include <macros.h>
+#include <log.h>
 
 #include "tests.h"
 
@@ -361,13 +363,28 @@ START_TEST(test_datastructures_list_prepend) {
   girara_list_free(list);
 } END_TEST
 
-Suite* suite_datastructures(void)
+static void
+critical_print(const gchar* GIRARA_UNUSED(log_domain), GLogLevelFlags GIRARA_UNUSED(log_level),
+               const gchar* message, gpointer GIRARA_UNUSED(user_data))
+{
+  girara_debug("expected glib critical: %s", message);
+}
+
+static void
+setup_logger(void)
+{
+  g_log_set_handler(NULL, G_LOG_LEVEL_CRITICAL, critical_print, NULL);
+}
+
+static Suite*
+suite_datastructures(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Datastructures");
 
   /* list free */
   tcase = tcase_create("list_free_function");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_list_free_empty);
   tcase_add_test(tcase, test_datastructures_list_free_already_cleared);
   tcase_add_test(tcase, test_datastructures_list_free_free_function);
@@ -376,44 +393,57 @@ Suite* suite_datastructures(void)
 
   /* list create */
   tcase = tcase_create("list_basics");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_list);
   suite_add_tcase(suite, tcase);
 
   /* sorted list */
   tcase = tcase_create("list_sorted");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_sorted_list_basic);
   tcase_add_test(tcase, test_datastructures_sorted_list);
   suite_add_tcase(suite, tcase);
 
   /* merge lists */
   tcase = tcase_create("list_merge");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_list_merge);
   suite_add_tcase(suite, tcase);
 
   /* search lists */
   tcase = tcase_create("list_find");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_list_find);
   suite_add_tcase(suite, tcase);
 
   /* prepend lists */
   tcase = tcase_create("list_prepend");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_list_prepend);
   suite_add_tcase(suite, tcase);
 
   /* list iterators */
   tcase = tcase_create("list_iterators");
-  /* tcase_add_test(tcase, test_datastructures_list_iterator_remove); */
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   suite_add_tcase(suite, tcase);
 
   /* node free */
   tcase = tcase_create("node_free");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_sorted_list);
   suite_add_tcase(suite, tcase);
 
   /* node basics */
   tcase = tcase_create("node_basics");
+  tcase_add_checked_fixture(tcase, setup_logger, NULL);
   tcase_add_test(tcase, test_datastructures_node);
   suite_add_tcase(suite, tcase);
 
   return suite;
+}
+
+int
+main()
+{
+  return run_suite(suite_datastructures());
 }

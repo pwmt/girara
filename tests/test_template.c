@@ -122,14 +122,13 @@ START_TEST(test_full_2) {
   g_object_unref(obj);
 } END_TEST
 
-Suite* suite_template(void)
+static Suite* suite_template(void)
 {
   TCase* tcase = NULL;
   Suite* suite = suite_create("Template");
 
   /* girara_template_new */
   tcase = tcase_create("object creation");
-  tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_new);
   tcase_add_test(tcase, test_new_with_null);
   tcase_add_test(tcase, test_new_with_base);
@@ -137,7 +136,6 @@ Suite* suite_template(void)
 
   /* base processing */
   tcase = tcase_create("base processing");
-  tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_base_variables_none);
   tcase_add_test(tcase, test_base_variables_one);
   tcase_add_test(tcase, test_base_variables_one_twice);
@@ -145,7 +143,6 @@ Suite* suite_template(void)
 
   /* basic variable operations */
   tcase = tcase_create("variables");
-  tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_variable_add);
   tcase_add_test(tcase, test_variable_add_invalid);
   tcase_add_test(tcase, test_variable_set);
@@ -153,10 +150,14 @@ Suite* suite_template(void)
 
   /* full processing */
   tcase = tcase_create("full");
-  tcase_add_checked_fixture(tcase, setup, NULL);
   tcase_add_test(tcase, test_full_1);
   tcase_add_test(tcase, test_full_2);
   suite_add_tcase(suite, tcase);
 
   return suite;
+}
+
+int main()
+{
+  return run_suite(suite_template());
 }

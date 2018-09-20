@@ -1,64 +1,36 @@
 /* See LICENSE file for license and copyright information */
 
-#include <check.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
 
 #include "tests.h"
 
-void setup(void)
+int run_suite(Suite* suite)
 {
-  gtk_init(NULL, NULL);
+  SRunner* suite_runner = srunner_create(suite);
+  srunner_run_all(suite_runner, CK_NORMAL);
+  const int number_failed = srunner_ntests_failed(suite_runner);
+
+  int ret = EXIT_SUCCESS;
+  if (number_failed != 0) {
+    ret = EXIT_FAILURE;
+    TestResult** results = srunner_failures(suite_runner);
+
+    for (int i = 0; i < number_failed; ++i) {
+      if (tr_ctx(results[i]) == CK_CTX_SETUP) {
+        /* mark tests as skipped */
+        ret = 77;
+        break;
+      }
+    }
+  }
+
+  srunner_free(suite_runner);
+
+  return ret;
 }
 
-int main()
+void setup(void)
 {
-  Suite* suite          = NULL;
-  SRunner* suite_runner = NULL;
-  int number_failed     = 0;
-
-  /* test utils */
-  suite        = suite_utils();
-  suite_runner = srunner_create(suite);
-  srunner_run_all(suite_runner, CK_NORMAL);
-  number_failed += srunner_ntests_failed(suite_runner);
-  srunner_free(suite_runner);
-
-  /* test datastructures */
-  suite        = suite_datastructures();
-  suite_runner = srunner_create(suite);
-  srunner_run_all(suite_runner, CK_NORMAL);
-  number_failed += srunner_ntests_failed(suite_runner);
-  srunner_free(suite_runner);
-
-  /* test settings */
-  suite        = suite_settings();
-  suite_runner = srunner_create(suite);
-  srunner_run_all(suite_runner, CK_NORMAL);
-  number_failed += srunner_ntests_failed(suite_runner);
-  srunner_free(suite_runner);
-
-  /* test config */
-  suite        = suite_config();
-  suite_runner = srunner_create(suite);
-  srunner_run_all(suite_runner, CK_NORMAL);
-  number_failed += srunner_ntests_failed(suite_runner);
-  srunner_free(suite_runner);
-
-  /* test session */
-  suite        = suite_session();
-  suite_runner = srunner_create(suite);
-  srunner_run_all(suite_runner, CK_NORMAL);
-  number_failed += srunner_ntests_failed(suite_runner);
-  srunner_free(suite_runner);
-
-  /* test template */
-  suite        = suite_template();
-  suite_runner = srunner_create(suite);
-  srunner_run_all(suite_runner, CK_NORMAL);
-  number_failed += srunner_ntests_failed(suite_runner);
-  srunner_free(suite_runner);
-
-
-  return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+  fail_unless(gtk_init_check(NULL, NULL) == TRUE, "GTK+ initializitation failed", NULL);
 }
