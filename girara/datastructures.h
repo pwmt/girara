@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <sys/types.h>
+#include "macros.h"
 #include "types.h"
 
 /**
@@ -13,7 +14,7 @@
  *
  * @return The girara list object or NULL if an error occurred
  */
-girara_list_t* girara_list_new(void);
+girara_list_t* girara_list_new(void) GIRARA_VISIBLE;
 
 /**
  * Create a new list.
@@ -21,7 +22,7 @@ girara_list_t* girara_list_new(void);
  * @param gfree Pointer to the free function
  * @return The girara list object or NULL if an error occurred.
  */
-girara_list_t* girara_list_new2(girara_free_function_t gfree);
+girara_list_t* girara_list_new2(girara_free_function_t gfree) GIRARA_VISIBLE;
 
 /**
  * Create a new (sorted) list.
@@ -29,7 +30,7 @@ girara_list_t* girara_list_new2(girara_free_function_t gfree);
  * @param cmp Pointer to the compare function.
  * @return The girara list object or NULL if an error occurred.
  */
-girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp);
+girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp) GIRARA_VISIBLE;
 
 /**
  * Create a new (sorted) list.
@@ -40,7 +41,7 @@ girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp);
  */
 
 girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp,
-    girara_free_function_t gfree);
+    girara_free_function_t gfree) GIRARA_VISIBLE;
 
 /**
  * Set the function which should be called if the stored data should be freed.
@@ -49,21 +50,21 @@ girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp,
  * @param gfree Pointer to the free function
  */
 void girara_list_set_free_function(girara_list_t* list,
-    girara_free_function_t gfree);
+    girara_free_function_t gfree) GIRARA_VISIBLE;
 
 /**
  * Remove all elements from a list.
  *
  * @param list The girara list object
  */
-void girara_list_clear(girara_list_t* list);
+void girara_list_clear(girara_list_t* list) GIRARA_VISIBLE;
 
 /**
  * Destroy list.
  *
  * @param list The girara list object
  */
-void girara_list_free(girara_list_t* list);
+void girara_list_free(girara_list_t* list) GIRARA_VISIBLE;
 
 /**
  * Append an element to the list.
@@ -71,7 +72,7 @@ void girara_list_free(girara_list_t* list);
  * @param list The girara list object
  * @param data The element
  */
-void girara_list_append(girara_list_t* list, void* data);
+void girara_list_append(girara_list_t* list, void* data) GIRARA_VISIBLE;
 
 /**
  * Prepend an element to the list.
@@ -79,7 +80,7 @@ void girara_list_append(girara_list_t* list, void* data);
  * @param list The girara list object
  * @param data The element
  */
-void girara_list_prepend(girara_list_t* list, void* data);
+void girara_list_prepend(girara_list_t* list, void* data) GIRARA_VISIBLE;
 
 /**
  * Remove an element of the list
@@ -87,7 +88,7 @@ void girara_list_prepend(girara_list_t* list, void* data);
  * @param list The girara list object
  * @param data The element
  */
-void girara_list_remove(girara_list_t* list, void* data);
+void girara_list_remove(girara_list_t* list, void* data) GIRARA_VISIBLE;
 
 /**
  * Returns nth entry
@@ -96,7 +97,7 @@ void girara_list_remove(girara_list_t* list, void* data);
  * @param n Index of the entry
  * @return The nth element or NULL if an error occurred
  */
-void* girara_list_nth(girara_list_t* list, size_t n);
+void* girara_list_nth(girara_list_t* list, size_t n) GIRARA_VISIBLE;
 
 /**
  * Checks if the list contains the given element
@@ -105,7 +106,7 @@ void* girara_list_nth(girara_list_t* list, size_t n);
  * @param data The element
  * @return true if the list contains the element
  */
-bool girara_list_contains(girara_list_t* list, void* data);
+bool girara_list_contains(girara_list_t* list, void* data) GIRARA_VISIBLE;
 
 /**
  * Get size of the list.
@@ -113,7 +114,7 @@ bool girara_list_contains(girara_list_t* list, void* data);
  * @param list The girara list object
  * @return The size of the list
  */
-size_t girara_list_size(girara_list_t* list);
+size_t girara_list_size(girara_list_t* list) GIRARA_VISIBLE;
 
 /**
  * Returns the position of the element in the list
@@ -122,7 +123,7 @@ size_t girara_list_size(girara_list_t* list);
  * @param data The element
  * @return The position or -1 if the data is not found
  */
-ssize_t girara_list_position(girara_list_t* list, void* data);
+ssize_t girara_list_position(girara_list_t* list, void* data) GIRARA_VISIBLE;
 
 /**
  * Sort a list
@@ -130,7 +131,7 @@ ssize_t girara_list_position(girara_list_t* list, void* data);
  * @param list The list to sort
  * @param compare compare function
  */
-void girara_list_sort(girara_list_t* list, girara_compare_function_t compare);
+void girara_list_sort(girara_list_t* list, girara_compare_function_t compare) GIRARA_VISIBLE;
 
 /**
  * Find an element
@@ -141,7 +142,7 @@ void girara_list_sort(girara_list_t* list, girara_compare_function_t compare);
  * @return the element if found or NULL
  */
 void* girara_list_find(girara_list_t* list, girara_compare_function_t compare,
-    const void* data);
+    const void* data) GIRARA_VISIBLE;
 
 /**
  * Create an iterator pointing at the start of list.
@@ -149,7 +150,7 @@ void* girara_list_find(girara_list_t* list, girara_compare_function_t compare,
  * @param list The girara list object
  * @return The list iterator or NULL if an error occurred
  */
-girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
+girara_list_iterator_t* girara_list_iterator(girara_list_t* list) GIRARA_VISIBLE;
 
 /**
  * Create an iterator pointing to the same element as iter.
@@ -157,7 +158,7 @@ girara_list_iterator_t* girara_list_iterator(girara_list_t* list);
  * @param iter The girara list iterator to be copied
  * @return The list iterator or NULL if an error occurred
  */
-girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter);
+girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Move iterator to next element.
@@ -165,7 +166,7 @@ girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter);
  * @param iter The list iterator
  * @return The moved iterator or NULL if an error occurred
  */
-girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
+girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Check if iterator has next element.
@@ -173,7 +174,7 @@ girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter);
  * @param iter The list iterator
  * @return true if iterator has a next element, false otherwise
  */
-bool girara_list_iterator_has_next(girara_list_iterator_t* iter);
+bool girara_list_iterator_has_next(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Move iterator to previous element.
@@ -181,7 +182,7 @@ bool girara_list_iterator_has_next(girara_list_iterator_t* iter);
  * @param iter The list iterator
  * @return The moved iterator or NULL if an error occurred
  */
-girara_list_iterator_t* girara_list_iterator_previous(girara_list_iterator_t* iter);
+girara_list_iterator_t* girara_list_iterator_previous(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Check if iterator has previous element.
@@ -189,7 +190,7 @@ girara_list_iterator_t* girara_list_iterator_previous(girara_list_iterator_t* it
  * @param iter The list iterator
  * @return true if iterator has a previous element, false otherwise
  */
-bool girara_list_iterator_has_previous(girara_list_iterator_t* iter);
+bool girara_list_iterator_has_previous(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Remove element pointed by the iterator, and updates the iterator
@@ -197,8 +198,7 @@ bool girara_list_iterator_has_previous(girara_list_iterator_t* iter);
  *
  * @param iter The list iterator
  */
-void girara_list_iterator_remove(girara_list_iterator_t* iter);
-
+void girara_list_iterator_remove(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Check if iterator is valid
@@ -206,7 +206,7 @@ void girara_list_iterator_remove(girara_list_iterator_t* iter);
  * @param iter The list iterator
  * @return true if iterator is valid, false otherwise
  */
-bool girara_list_iterator_is_valid(girara_list_iterator_t* iter);
+bool girara_list_iterator_is_valid(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Get data from the element pointed to by the iterator.
@@ -214,7 +214,7 @@ bool girara_list_iterator_is_valid(girara_list_iterator_t* iter);
  * @param iter The list iterator
  * @return The data of the current element
  */
-void* girara_list_iterator_data(girara_list_iterator_t* iter);
+void* girara_list_iterator_data(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Set data from the element pointed to by the iterator.
@@ -222,14 +222,14 @@ void* girara_list_iterator_data(girara_list_iterator_t* iter);
  * @param iter The list iterator
  * @param data Sets the list iterator to a specific element
  */
-void girara_list_iterator_set(girara_list_iterator_t* iter, void *data);
+void girara_list_iterator_set(girara_list_iterator_t* iter, void *data) GIRARA_VISIBLE;
 
 /**
  * Destroy the iterator.
  *
  * @param iter The list iterator
  */
-void girara_list_iterator_free(girara_list_iterator_t* iter);
+void girara_list_iterator_free(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
 /**
  * Call function for each element in the list.
@@ -239,7 +239,7 @@ void girara_list_iterator_free(girara_list_iterator_t* iter);
  * @param data Passed to the callback as second argument.
  */
 void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback,
-    void* data);
+    void* data) GIRARA_VISIBLE;
 
 #define GIRARA_LIST_FOREACH(list, type, iter, data) \
   do { \
@@ -271,7 +271,7 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback,
  * @param other the source list
  * @returns list with the elements from other.
  */
-girara_list_t* girara_list_merge(girara_list_t* list, girara_list_t* other);
+girara_list_t* girara_list_merge(girara_list_t* list, girara_list_t* other) GIRARA_VISIBLE;
 
 /**
  * Create a new node.
@@ -279,7 +279,7 @@ girara_list_t* girara_list_merge(girara_list_t* list, girara_list_t* other);
  * @param data Data of the new node
  * @return A girara node object or NULL if an error occurred
  */
-girara_tree_node_t* girara_node_new(void* data);
+girara_tree_node_t* girara_node_new(void* data) GIRARA_VISIBLE;
 
 /**
  * Set the function which should be called if the stored data should be freed.
@@ -288,7 +288,7 @@ girara_tree_node_t* girara_node_new(void* data);
  * @param gfree Pointer to the free function
  */
 void girara_node_set_free_function(girara_tree_node_t* node,
-    girara_free_function_t gfree);
+    girara_free_function_t gfree) GIRARA_VISIBLE;
 
 /**
  * Free a node. This will remove the node from its' parent and will destroy all
@@ -296,7 +296,7 @@ void girara_node_set_free_function(girara_tree_node_t* node,
  *
  * @param node The girara node object
  */
-void girara_node_free(girara_tree_node_t* node);
+void girara_node_free(girara_tree_node_t* node) GIRARA_VISIBLE;
 
 /**
  * Append a node to another node.
@@ -304,7 +304,7 @@ void girara_node_free(girara_tree_node_t* node);
  * @param parent The parent node
  * @param child The child node
  */
-void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child);
+void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child) GIRARA_VISIBLE;
 
 /**
  * Append data as new node to another node.
@@ -314,7 +314,7 @@ void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child);
  * @return The node object or NULL if an error occurred
  */
 girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent,
-    void* data);
+    void* data) GIRARA_VISIBLE;
 
 /**
  * Get parent node.
@@ -322,7 +322,7 @@ girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent,
  * @param node The girara node object
  * @return The parent node or NULL if an error occurred or no parent exists
  */
-girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node);
+girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node) GIRARA_VISIBLE;
 
 /**
  * Get root node.
@@ -330,7 +330,7 @@ girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node);
  * @param node The girara node object
  * @return The root node or NULL if an error occurred
  */
-girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node);
+girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node) GIRARA_VISIBLE;
 
 /**
  * Get list of children.
@@ -338,7 +338,7 @@ girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node);
  * @param node The girara node object
  * @return List object containing all child nodes or NULL if an error occurred
  */
-girara_list_t* girara_node_get_children(girara_tree_node_t* node);
+girara_list_t* girara_node_get_children(girara_tree_node_t* node) GIRARA_VISIBLE;
 
 /**
  * Get number of children.
@@ -346,7 +346,7 @@ girara_list_t* girara_node_get_children(girara_tree_node_t* node);
  * @param node The girara node object
  * @return The number of child nodes
  */
-size_t girara_node_get_num_children(girara_tree_node_t* node);
+size_t girara_node_get_num_children(girara_tree_node_t* node) GIRARA_VISIBLE;
 
 /**
  * Get data.
@@ -354,7 +354,7 @@ size_t girara_node_get_num_children(girara_tree_node_t* node);
  * @param node The girara node object
  * @return The data of the node
  */
-void* girara_node_get_data(girara_tree_node_t* node);
+void* girara_node_get_data(girara_tree_node_t* node) GIRARA_VISIBLE;
 
 /**
  * Set data.
@@ -362,6 +362,6 @@ void* girara_node_get_data(girara_tree_node_t* node);
  * @param node The girara node object
  * @param data The new data of the object
  */
-void girara_node_set_data(girara_tree_node_t* node, void* data);
+void girara_node_set_data(girara_tree_node_t* node, void* data) GIRARA_VISIBLE;
 
 #endif

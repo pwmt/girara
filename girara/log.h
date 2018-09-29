@@ -49,7 +49,7 @@ typedef enum girara_log_level_e
  * @param format printf like format string
  */
 void girara_log(const char* location, const char* function, girara_log_level_t level,
-    const char* format, ...) GIRARA_PRINTF(4, 5);
+    const char* format, ...) GIRARA_PRINTF(4, 5) GIRARA_VISIBLE;
 
 /**
  * Print a message.
@@ -61,19 +61,19 @@ void girara_log(const char* location, const char* function, girara_log_level_t l
  * @param ap varag list
  */
 void girara_vlog(const char* location, const char* function, girara_log_level_t level,
-    const char* format, va_list ap);
+    const char* format, va_list ap) GIRARA_VISIBLE;
 
 /**
  * Get the log level.
  * @returns The log level.
  */
-girara_log_level_t girara_get_log_level(void);
+girara_log_level_t girara_get_log_level(void) GIRARA_VISIBLE;
 
 /**
  * Set the log level. Any message with a level lower than the log level will
  * be discarded.
  * @param level The new log level.
  */
-void girara_set_log_level(girara_log_level_t level);
+void girara_set_log_level(girara_log_level_t level) GIRARA_VISIBLE;
 
 #endif

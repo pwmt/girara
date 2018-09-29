@@ -4,6 +4,7 @@
 #define GIRARA_SETTINGS_H
 
 #include "types.h"
+#include "macros.h"
 
 /**
  * Adds an additional entry in the settings list
@@ -21,7 +22,7 @@
  */
 bool girara_setting_add(girara_session_t* session, const char* name,
     void* value, girara_setting_type_t type, bool init_only,
-    const char* description, girara_setting_callback_t callback, void* data);
+    const char* description, girara_setting_callback_t callback, void* data) GIRARA_VISIBLE;
 
 /**
  * Sets the value of a setting
@@ -32,7 +33,7 @@ bool girara_setting_add(girara_session_t* session, const char* name,
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_setting_set(girara_session_t* session, const char* name, void* value);
+bool girara_setting_set(girara_session_t* session, const char* name, void* value) GIRARA_VISIBLE;
 
 /**
  * Retrieve the value of a setting. If the setting is a string, the value stored
@@ -42,7 +43,7 @@ bool girara_setting_set(girara_session_t* session, const char* name, void* value
  * @param dest A pointer to the destination of the result.
  * @return true if the setting exists, false otherwise.
  */
-bool girara_setting_get(girara_session_t* session, const char* name, void* dest);
+bool girara_setting_get(girara_session_t* session, const char* name, void* dest) GIRARA_VISIBLE;
 
 /**
  * Find a setting.
@@ -51,7 +52,7 @@ bool girara_setting_get(girara_session_t* session, const char* name, void* dest)
  * @param name name of the setting
  * @return the setting or NULL if it doesn't exist
  */
-girara_setting_t* girara_setting_find(girara_session_t* session, const char* name);
+girara_setting_t* girara_setting_find(girara_session_t* session, const char* name) GIRARA_VISIBLE;
 
 /**
  * Get the setting's name.
@@ -59,7 +60,7 @@ girara_setting_t* girara_setting_find(girara_session_t* session, const char* nam
  * @param setting The setting
  * @return the setting's name
  */
-const char* girara_setting_get_name(girara_setting_t* setting);
+const char* girara_setting_get_name(girara_setting_t* setting) GIRARA_VISIBLE;
 
 /**
  * Get the setting's value. If the setting is a string, the value stored
@@ -69,7 +70,7 @@ const char* girara_setting_get_name(girara_setting_t* setting);
  * @param dest A pointer to the destination of the result.
  * @return true if the setting exists, false otherwise.
  */
-bool girara_setting_get_value(girara_setting_t* setting, void* dest);
+bool girara_setting_get_value(girara_setting_t* setting, void* dest) GIRARA_VISIBLE;
 
 /**
  * Get the setting's value.
@@ -77,7 +78,7 @@ bool girara_setting_get_value(girara_setting_t* setting, void* dest);
  * @param setting The setting
  * @return the value
  */
-girara_setting_type_t girara_setting_get_type(girara_setting_t* setting);
+girara_setting_type_t girara_setting_get_type(girara_setting_t* setting) GIRARA_VISIBLE;
 
 /**
  * Set the setting's value. If session is NULL, the setting's callback won't be
@@ -88,6 +89,6 @@ girara_setting_type_t girara_setting_get_type(girara_setting_t* setting);
  * @param value The new value
  */
 void girara_setting_set_value(girara_session_t* session,
-    girara_setting_t* setting, void* value);
+    girara_setting_t* setting, void* value) GIRARA_VISIBLE;
 
 #endif
