@@ -52,7 +52,8 @@ flags = [
   '-pedantic',
   '-Wmissing-declarations',
   '-Werror=implicit-function-declaration',
-  '-Werror=vla'
+  '-Werror=vla',
+  '-fvisibility=hidden', # replace with gnu_symbol_visibility: 'hidden' (meson >= 0.48)
 ]
 flags = cc.get_supported_arguments(flags)
 
