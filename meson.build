@@ -89,19 +89,19 @@ subdir('po')
 # source files
 sources = files(
   'girara/callbacks.c',
-  'girara/completion.c',
-  'girara/entry.c',
-  'girara/input-history-io.c',
-  'girara/session.c',
-  'girara/shortcuts.c',
-  'girara/template.c',
   'girara/commands.c',
+  'girara/completion.c',
   'girara/config.c',
   'girara/datastructures.c',
+  'girara/entry.c',
+  'girara/input-history-io.c',
   'girara/input-history.c',
   'girara/log.c',
+  'girara/session.c',
   'girara/settings.c',
+  'girara/shortcuts.c',
   'girara/statusbar.c',
+  'girara/template.c',
   'girara/utils.c'
 )
 sources += girara_css
