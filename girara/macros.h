@@ -7,6 +7,10 @@
 #define __has_attribute(x) 0
 #endif
 
+#ifndef __has_builtin
+#define __has_builtin(x) 0
+#endif
+
 #ifndef GIRARA_PRINTF
 # if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4) || defined(__clang__)
 #  define GIRARA_PRINTF(format_idx, arg_idx) \
