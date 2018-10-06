@@ -8,15 +8,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-25 17:52+0100\n"
-"PO-Revision-Date: 2018-02-04 10:06+0000\n"
+"POT-Creation-Date: 2018-10-06 10:44+0200\n"
+"PO-Revision-Date: 2018-10-06 10:54+0200\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Polish (http://www.transifex.com/pwmt/girara/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #. unhandled command
 #: girara/callbacks.c:515
@@ -86,160 +89,160 @@ msgid "Unknown value for option: %s"
 msgstr "Nieznana wartość opcji: %s"
 
 #. settings
-#: girara/config.c:172
+#: girara/config.c:188
 msgid "Font"
 msgstr "Font"
 
-#: girara/config.c:173
+#: girara/config.c:189
 msgid "Default foreground color"
 msgstr "Domyślny kolor pierwszoplanowy"
 
-#: girara/config.c:174
+#: girara/config.c:190
 msgid "Default background color"
 msgstr "Domyślny kolor tła"
 
-#: girara/config.c:175
+#: girara/config.c:191
 msgid "Inputbar foreground color"
 msgstr "Kolor tekstu w polu wprowadzania"
 
-#: girara/config.c:176
+#: girara/config.c:192
 msgid "Inputbar background color"
 msgstr "Kolor tła pola wprowadzania"
 
-#: girara/config.c:177
+#: girara/config.c:193
 msgid "Statusbar foreground color"
 msgstr "Kolor tekstu w pasku stanu"
 
-#: girara/config.c:178
+#: girara/config.c:194
 msgid "Statsubar background color"
 msgstr "Kolor tła paska stanu"
 
-#: girara/config.c:179
+#: girara/config.c:195
 msgid "Completion foreground color"
 msgstr "Kolor tekstu wyróżnienia"
 
-#: girara/config.c:180
+#: girara/config.c:196
 msgid "Completion background color"
 msgstr "Kolor tła wyróżnienia"
 
-#: girara/config.c:181
+#: girara/config.c:197
 msgid "Completion group foreground color"
 msgstr "Kolor tekstu wyróżnionej grupy "
 
-#: girara/config.c:182
+#: girara/config.c:198
 msgid "Completion group background color"
 msgstr "Kolor tła wyróżnionej grupy"
 
-#: girara/config.c:183
+#: girara/config.c:199
 msgid "Completion highlight foreground color"
 msgstr "Kolor tekstu bieżącego wyróżnienia"
 
-#: girara/config.c:184
+#: girara/config.c:200
 msgid "Completion highlight background color"
 msgstr "Kolor tła bieżącego wyróżnienia"
 
-#: girara/config.c:185
+#: girara/config.c:201
 msgid "Error notification foreground color"
 msgstr "Kolor tekstu powiadomienia o błędzie"
 
-#: girara/config.c:186
+#: girara/config.c:202
 msgid "Error notification background color"
 msgstr "Kolor tła powiadomienia o błędzie"
 
-#: girara/config.c:187
+#: girara/config.c:203
 msgid "Warning notification foreground color"
 msgstr "Kolor tekstu ostrzeżenia"
 
-#: girara/config.c:188
+#: girara/config.c:204
 msgid "Warning notifaction background color"
 msgstr "Kolor tła ostrzeżenia"
 
-#: girara/config.c:189
+#: girara/config.c:205
 msgid "Notification foreground color"
 msgstr "Kolor tekstu powiadomienia"
 
-#: girara/config.c:190
+#: girara/config.c:206
 msgid "Notification background color"
 msgstr "Kolor tła powiadomienia"
 
-#: girara/config.c:191
+#: girara/config.c:207
 msgid "Scrollbar foreground color"
 msgstr ""
 
-#: girara/config.c:192
+#: girara/config.c:208
 msgid "Scrollbar background color"
 msgstr ""
 
-#: girara/config.c:194
+#: girara/config.c:210
 msgid "Initial window width"
 msgstr "Początkowa szerokość okna"
 
-#: girara/config.c:195
+#: girara/config.c:211
 msgid "Initial window height"
 msgstr "Początkowa wysokość okna"
 
-#: girara/config.c:196
-msgid "Horizontal padding for the status input and notification bars"
-msgstr "Wyrównanie poziome paska powiadomień"
+#: girara/config.c:212
+msgid "Horizontal padding for the status, input, and notification bars"
+msgstr ""
 
-#: girara/config.c:197
-msgid "Vertical padding for the status input and notification bars"
-msgstr "Wyrównanie pionowe paska powiadomień"
+#: girara/config.c:213
+msgid "Vertical padding for the status, input, and notification bars"
+msgstr ""
 
-#: girara/config.c:198
+#: girara/config.c:214
 msgid "Number of completion items"
 msgstr "Liczba wyróżnień"
 
-#: girara/config.c:199
+#: girara/config.c:215
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr "Wyświetl paski przewijania"
 
-#: girara/config.c:200
+#: girara/config.c:216
 msgid "Show the horizontal scrollbar"
 msgstr "Wyświetl pasek poziomego przewijania"
 
-#: girara/config.c:201
+#: girara/config.c:217
 msgid "Show the vertical scrollbar"
 msgstr "Wyświetl pasek pionowego przewijania"
 
-#: girara/config.c:202
+#: girara/config.c:218
 msgid "Window icon"
 msgstr "Ikona okna"
 
-#: girara/config.c:203
+#: girara/config.c:219
 msgid "Command to execute in :exec"
 msgstr "Polecenie uruchomienia w :exec"
 
-#: girara/config.c:204
+#: girara/config.c:220
 msgid "Show or hide certain GUI elements"
 msgstr "Pokaż/ukryj niektóre elementy interfejsu."
 
-#: girara/config.c:205
+#: girara/config.c:221
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: girara/config.c:241
+#: girara/config.c:257
 msgid "Execute a command"
 msgstr "Wykonaj polecenie"
 
-#: girara/config.c:242
+#: girara/config.c:258
 msgid "Map a key sequence"
 msgstr "Dowiąż sekwencję klawiszy"
 
-#: girara/config.c:243
+#: girara/config.c:259
 msgid "Quit the program"
 msgstr "Zakończ program"
 
-#: girara/config.c:244
+#: girara/config.c:260
 msgid "Set an option"
 msgstr "Ustaw opcję"
 
-#: girara/config.c:245
+#: girara/config.c:261
 msgid "Unmap a key sequence"
 msgstr "Usuń sekwencję klawiszy"
 
-#: girara/config.c:247
+#: girara/config.c:263
 msgid "Dump settings to a file"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-25 17:52+0100\n"
+"POT-Creation-Date: 2018-10-06 10:44+0200\n"
 "PO-Revision-Date: 2015-12-14 21:35+0100\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/girara/language/"
@@ -88,160 +88,160 @@ msgid "Unknown value for option: %s"
 msgstr "Valor desconocido para la opción: %s"
 
 #. settings
-#: girara/config.c:172
+#: girara/config.c:188
 msgid "Font"
 msgstr "Fuente"
 
-#: girara/config.c:173
+#: girara/config.c:189
 msgid "Default foreground color"
 msgstr "Color por omisión"
 
-#: girara/config.c:174
+#: girara/config.c:190
 msgid "Default background color"
 msgstr "Color de fondo por omisión"
 
-#: girara/config.c:175
+#: girara/config.c:191
 msgid "Inputbar foreground color"
 msgstr "Color de la barra de entrada"
 
-#: girara/config.c:176
+#: girara/config.c:192
 msgid "Inputbar background color"
 msgstr "Color de fondo de la barra de entrada"
 
-#: girara/config.c:177
+#: girara/config.c:193
 msgid "Statusbar foreground color"
 msgstr "Color de la barra de estado"
 
-#: girara/config.c:178
+#: girara/config.c:194
 msgid "Statsubar background color"
 msgstr "Color de fondo de la barra de estado"
 
-#: girara/config.c:179
+#: girara/config.c:195
 msgid "Completion foreground color"
 msgstr "Color de completado"
 
-#: girara/config.c:180
+#: girara/config.c:196
 msgid "Completion background color"
 msgstr "Color de fondo de completado"
 
-#: girara/config.c:181
+#: girara/config.c:197
 msgid "Completion group foreground color"
 msgstr "Color de los grupos de completado"
 
-#: girara/config.c:182
+#: girara/config.c:198
 msgid "Completion group background color"
 msgstr "Color de fondo de los grupos de completado"
 
-#: girara/config.c:183
+#: girara/config.c:199
 msgid "Completion highlight foreground color"
 msgstr "Color de la entrada de completado destacada"
 
-#: girara/config.c:184
+#: girara/config.c:200
 msgid "Completion highlight background color"
 msgstr "Color de fondo de la entrada de completado destacada"
 
-#: girara/config.c:185
+#: girara/config.c:201
 msgid "Error notification foreground color"
 msgstr "Color de las notificaciones de error"
 
-#: girara/config.c:186
+#: girara/config.c:202
 msgid "Error notification background color"
 msgstr "Color de fondo de las notificaciones de error"
 
-#: girara/config.c:187
+#: girara/config.c:203
 msgid "Warning notification foreground color"
 msgstr "Color de las advertencias"
 
-#: girara/config.c:188
+#: girara/config.c:204
 msgid "Warning notifaction background color"
 msgstr "Color de fondo de las advertencias"
 
-#: girara/config.c:189
+#: girara/config.c:205
 msgid "Notification foreground color"
 msgstr "Color de las notificaciones"
 
-#: girara/config.c:190
+#: girara/config.c:206
 msgid "Notification background color"
 msgstr "Color de fondo de las notificaciones"
 
-#: girara/config.c:191
+#: girara/config.c:207
 msgid "Scrollbar foreground color"
 msgstr ""
 
-#: girara/config.c:192
+#: girara/config.c:208
 msgid "Scrollbar background color"
 msgstr ""
 
-#: girara/config.c:194
+#: girara/config.c:210
 msgid "Initial window width"
 msgstr "Anchura inicial de la ventana"
 
-#: girara/config.c:195
+#: girara/config.c:211
 msgid "Initial window height"
 msgstr "Altura inicial de la ventana"
 
-#: girara/config.c:196
-msgid "Horizontal padding for the status input and notification bars"
+#: girara/config.c:212
+msgid "Horizontal padding for the status, input, and notification bars"
 msgstr ""
 
-#: girara/config.c:197
-msgid "Vertical padding for the status input and notification bars"
+#: girara/config.c:213
+msgid "Vertical padding for the status, input, and notification bars"
 msgstr ""
 
-#: girara/config.c:198
+#: girara/config.c:214
 msgid "Number of completion items"
 msgstr "Número de elementos en el completado"
 
-#: girara/config.c:199
+#: girara/config.c:215
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: girara/config.c:200
+#: girara/config.c:216
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: girara/config.c:201
+#: girara/config.c:217
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: girara/config.c:202
+#: girara/config.c:218
 msgid "Window icon"
 msgstr "Icono de la ventana"
 
-#: girara/config.c:203
+#: girara/config.c:219
 msgid "Command to execute in :exec"
 msgstr "Comando a ejecutar en :exec"
 
-#: girara/config.c:204
+#: girara/config.c:220
 msgid "Show or hide certain GUI elements"
 msgstr "Mostrar u ocultar determinados elementos de la interfaz de usuario"
 
-#: girara/config.c:205
+#: girara/config.c:221
 msgid "Enable smooth scrolling and zooming"
 msgstr ""
 
 #. commands
-#: girara/config.c:241
+#: girara/config.c:257
 msgid "Execute a command"
 msgstr "Ejecutar un comando"
 
-#: girara/config.c:242
+#: girara/config.c:258
 msgid "Map a key sequence"
 msgstr "Mapear una secuéncia de teclas"
 
-#: girara/config.c:243
+#: girara/config.c:259
 msgid "Quit the program"
 msgstr "Salir del programa"
 
-#: girara/config.c:244
+#: girara/config.c:260
 msgid "Set an option"
 msgstr "Asignar un valor a una opción"
 
-#: girara/config.c:245
+#: girara/config.c:261
 msgid "Unmap a key sequence"
 msgstr "Quitar el mapeo de una secuencia de teclas"
 
-#: girara/config.c:247
+#: girara/config.c:263
 msgid "Dump settings to a file"
 msgstr ""
 
