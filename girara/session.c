@@ -475,6 +475,7 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   widget_add_class(GTK_WIDGET(session->gtk.inputbar_entry), "bottom_box");
   widget_add_class(session->gtk.notification_text, "bottom_box");
+  widget_add_class(GTK_WIDGET(session->gtk.statusbar_entries), "bottom_box");
 
   session->signals.inputbar_key_pressed = g_signal_connect(
       G_OBJECT(session->gtk.inputbar_entry),
