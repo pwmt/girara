@@ -30,7 +30,7 @@ prefix = get_option('prefix')
 localedir = get_option('localedir')
 
 # required dependencies
-libm = cc.find_library('libm', required: false)
+libm = cc.find_library('m', required: false)
 glib = dependency('glib-2.0', version: '>=2.50')
 gtk3 = dependency('gtk+-3.0', version: '>=3.20')
 pango = dependency('pango', version: '>=1.14')
