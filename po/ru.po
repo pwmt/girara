@@ -1,5 +1,5 @@
 # girara - language file (Russian)
-# See LICENSE file for license and copyright information
+# SPDX-License-Identifier: Zlib
 #
 # Translators:
 # Vladimir Lomov <irk.translator@yandex.ru>, 2013,2015

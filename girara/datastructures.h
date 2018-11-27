@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_DATASTRUCTURES_H
 #define GIRARA_DATASTRUCTURES_H

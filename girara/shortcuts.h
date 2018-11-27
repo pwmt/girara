@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_SHORTCUTS_H
 #define GIRARA_SHORTCUTS_H

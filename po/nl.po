@@ -1,5 +1,5 @@
 # girara - language file (Dutch)
-# See LICENSE file for license and copyright information
+# SPDX-License-Identifier: Zlib
 #
 # Translators:
 # Heimen Stoffels <vistausss@outlook.com>, 2018

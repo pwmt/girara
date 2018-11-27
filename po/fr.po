@@ -1,5 +1,5 @@
 # girara - language file (French)
-# See LICENSE file for license and copyright information
+# SPDX-License-Identifier: Zlib
 #
 # Translators:
 # Richard Gill <richard@houbathecat.fr>, 2012.

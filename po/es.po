@@ -1,5 +1,5 @@
 # girara - language file (Spanish)
-# See LICENSE file for license and copyright information
+# SPDX-License-Identifier: Zlib
 #
 # Translators:
 # joserc87 <joserc87@gmail.com>, 2014
