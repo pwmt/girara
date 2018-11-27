@@ -1,6 +1,6 @@
 project('girara', 'c',
   version: '0.3.1',
-  meson_version: '>=0.47',
+  meson_version: '>=0.48',
   default_options: 'c_std=c11',
 )
 
@@ -52,8 +52,7 @@ flags = [
   '-pedantic',
   '-Wmissing-declarations',
   '-Werror=implicit-function-declaration',
-  '-Werror=vla',
-  '-fvisibility=hidden', # replace with gnu_symbol_visibility: 'hidden' (meson >= 0.48)
+  '-Werror=vla'
 ]
 flags = cc.get_supported_arguments(flags)
 
@@ -137,7 +136,8 @@ girara = library(
   version: so_version,
   install: true,
   include_directories: include_directories,
-  c_args: defines + flags
+  c_args: defines + flags,
+  gnu_symbol_visibility: 'hidden'
 )
 install_headers(headers, subdir: 'girara')
 
