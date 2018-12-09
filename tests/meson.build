@@ -75,7 +75,7 @@ if check.found()
     timeout: 60*60
   )
 
-  env_bin = find_program('env', required: false)
+  env_bin = find_program('env', required: false, native: true)
   if env_bin.found()
     env = environment()
     env.set('XDG_TEST_HELPER_PATH', meson.current_build_dir())
