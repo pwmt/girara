@@ -162,7 +162,7 @@ girara_callback_view_key_press_event(GtkWidget* widget,
         /* buffer could match a command */
         if (!strncmp(session_private->buffer.command->str, shortcut->buffered_command, session_private->buffer.command->len)) {
           /* command matches buffer exactly */
-          if (!strcmp(session_private->buffer.command->str, shortcut->buffered_command)
+          if (!g_strcmp0(session_private->buffer.command->str, shortcut->buffered_command)
             && (session->modes.current_mode == shortcut->mode || shortcut->mode == 0)) {
             g_string_free(session_private->buffer.command, TRUE);
             g_string_free(session->global.buffer,  TRUE);

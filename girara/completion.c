@@ -199,8 +199,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
    *   there is only one completion entry
    */
   if ( (argument->n == GIRARA_HIDE) ||
-      (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
-      (current_command && previous_command && strcmp(current_command, previous_command)) ||
+      (current_parameter && previous_parameter && g_strcmp0(current_parameter, previous_parameter)) ||
+      (current_command && previous_command && g_strcmp0(current_command, previous_command)) ||
       (input_length != previous_length) ||
       is_single_entry
     )
