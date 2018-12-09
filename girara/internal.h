@@ -150,6 +150,8 @@ HIDDEN bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* arg
 
 HIDDEN void css_template_fill_font(GiraraTemplate* csstemplate, const char* font);
 
+HIDDEN int list_strcmp(const void* data1, const void* data2);
+
 /**
  * Structure of a command
  */

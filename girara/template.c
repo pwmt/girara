@@ -3,6 +3,7 @@
 #include "template.h"
 #include "utils.h"
 #include "datastructures.h"
+#include "internal.h"
 
 #include <glib.h>
 
@@ -302,7 +303,7 @@ base_changed(GiraraTemplate* object)
     while (g_match_info_matches(match_info) == true) {
       char* variable = g_match_info_fetch(match_info, 1);
       char* found = girara_list_find(priv->variables_in_base,
-          (girara_compare_function_t)g_strcmp0, variable);
+          list_strcmp, variable);
 
       if (priv->valid == true) {
         if (girara_list_find(priv->variables, compare_variable_name,

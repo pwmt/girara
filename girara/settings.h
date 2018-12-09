@@ -60,7 +60,7 @@ girara_setting_t* girara_setting_find(girara_session_t* session, const char* nam
  * @param setting The setting
  * @return the setting's name
  */
-const char* girara_setting_get_name(girara_setting_t* setting) GIRARA_VISIBLE;
+const char* girara_setting_get_name(const girara_setting_t* setting) GIRARA_VISIBLE;
 
 /**
  * Get the setting's value. If the setting is a string, the value stored

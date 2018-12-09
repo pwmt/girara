@@ -25,8 +25,11 @@
 
 
 static int
-cb_sort_settings(girara_setting_t* lhs, girara_setting_t* rhs)
+cb_sort_settings(const void* data1, const void* data2)
 {
+  const girara_setting_t* lhs = data1;
+  const girara_setting_t* rhs = data2;
+
   return g_strcmp0(girara_setting_get_name(lhs), girara_setting_get_name(rhs));
 }
 
@@ -314,7 +317,7 @@ girara_session_create(void)
 
   /* settings */
   session_private->settings = girara_sorted_list_new2(
-      (girara_compare_function_t) cb_sort_settings,
+      cb_sort_settings,
       (girara_free_function_t) girara_setting_free);
 
   /* CSS style provider */
