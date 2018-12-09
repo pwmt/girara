@@ -434,8 +434,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       /* hide other items */
       unsigned int n_completion_items = 15;
       girara_setting_get(session, "n-completion-items", &n_completion_items);
-      unsigned int uh = ceil( n_completion_items / 2);
-      unsigned int lh = floor(n_completion_items / 2);
+      unsigned int uh = ceil(n_completion_items / 2.0);
+      unsigned int lh = floor(n_completion_items / 2.0);
 
       unsigned int current_item = g_list_position(entries, entries_current);
 
