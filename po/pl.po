@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-06 10:44+0200\n"
-"PO-Revision-Date: 2018-10-06 10:54+0200\n"
+"POT-Creation-Date: 2018-12-09 22:58+0100\n"
+"PO-Revision-Date: 2018-02-04 10:06+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Polish (http://www.transifex.com/pwmt/girara/language/pl/)\n"
 "Language: pl\n"
@@ -19,7 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
 "%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
 "%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Poedit 2.0.6\n"
 
 #. unhandled command
 #: girara/callbacks.c:515
@@ -183,11 +182,11 @@ msgstr "Początkowa wysokość okna"
 
 #: girara/config.c:212
 msgid "Horizontal padding for the status, input, and notification bars"
-msgstr ""
+msgstr "Wyrównanie poziome paska powiadomień"
 
 #: girara/config.c:213
 msgid "Vertical padding for the status, input, and notification bars"
-msgstr ""
+msgstr "Wyrównanie pionowe paska powiadomień"
 
 #: girara/config.c:214
 msgid "Number of completion items"

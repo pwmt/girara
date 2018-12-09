@@ -9,17 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-06 10:44+0200\n"
-"PO-Revision-Date: 2018-10-06 10:51+0200\n"
+"POT-Creation-Date: 2018-12-09 22:58+0100\n"
+"PO-Revision-Date: 2018-02-04 10:06+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/girara/language/"
-"fr/)\n"
+"Language-Team: French (http://www.transifex.com/pwmt/girara/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
 
 #. unhandled command
 #: girara/callbacks.c:515
@@ -184,10 +182,12 @@ msgstr "Hauteur initiale de la fenêtre"
 #: girara/config.c:212
 msgid "Horizontal padding for the status, input, and notification bars"
 msgstr ""
+"Espacement horizontal pour le champ de statut et les barres de notification"
 
 #: girara/config.c:213
 msgid "Vertical padding for the status, input, and notification bars"
 msgstr ""
+"Espacement vertical pour le champ de statut et les barres de notification"
 
 #: girara/config.c:214
 msgid "Number of completion items"
