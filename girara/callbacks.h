@@ -1,8 +1,9 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_CALLBACKS_H
 #define GIRARA_CALLBACKS_H
 
+#include "macros.h"
 #include "types.h"
 #include <gtk/gtk.h>
 
@@ -37,7 +38,7 @@ typedef gboolean (*girara_callback_inputbar_activate_t)(GtkEntry* entry,
  * @return FALSE An error occurred
  */
 gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event,
-    girara_session_t* session);
+    girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Default callback when a button (typically a mouse button) has been pressed
@@ -49,7 +50,7 @@ gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* ev
  * @return false to propagate the event further.
  */
 gboolean girara_callback_view_button_press_event(GtkWidget* widget,
-    GdkEventButton* button, girara_session_t* session);
+    GdkEventButton* button, girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Default callback when a button (typically a mouse button) has been released
@@ -61,7 +62,7 @@ gboolean girara_callback_view_button_press_event(GtkWidget* widget,
  * @return false to propagate the event further.
  */
 gboolean girara_callback_view_button_release_event(GtkWidget* widget,
-    GdkEventButton* button, girara_session_t* session);
+    GdkEventButton* button, girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Default callback when the pointer moves over the widget
@@ -73,7 +74,7 @@ gboolean girara_callback_view_button_release_event(GtkWidget* widget,
  * @return false to propagate the event further.
  */
 gboolean girara_callback_view_button_motion_notify_event(GtkWidget* widget,
-    GdkEventMotion* button, girara_session_t* session);
+    GdkEventMotion* button, girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Default callback then a scroll event is triggered by the view
@@ -85,7 +86,7 @@ gboolean girara_callback_view_button_motion_notify_event(GtkWidget* widget,
  * @return false to propagate the event further.
  */
 gboolean girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* event,
-    girara_session_t* session);
+    girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Default callback if the inputbar gets activated
@@ -96,7 +97,7 @@ gboolean girara_callback_view_scroll_event(GtkWidget* widget, GdkEventScroll* ev
  * @return FALSE An error occurred
  */
 gboolean girara_callback_inputbar_activate(GtkEntry* entry,
-    girara_session_t* session);
+    girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Default callback if an key in the input bar gets pressed
@@ -108,7 +109,7 @@ gboolean girara_callback_inputbar_activate(GtkEntry* entry,
  * @return FALSE An error occurred
  */
 gboolean girara_callback_inputbar_key_press_event(GtkWidget* widget,
-    GdkEventKey* event, girara_session_t* session);
+    GdkEventKey* event, girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Default callback if the text of the input bar has changed
@@ -119,6 +120,6 @@ gboolean girara_callback_inputbar_key_press_event(GtkWidget* widget,
  * @return FALSE An error occurred
  */
 gboolean girara_callback_inputbar_changed_event(GtkEditable* widget,
-    girara_session_t* session);
+    girara_session_t* session) GIRARA_VISIBLE;
 
 #endif

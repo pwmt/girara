@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #include "config.h"
 
@@ -126,11 +126,11 @@ cb_scrollbars(girara_session_t* session, const char* name,
   bool show_hscrollbar = strchr(guioptions, 'h') != NULL;
   bool show_vscrollbar = strchr(guioptions, 'v') != NULL;
 
-  if (strcmp(name, "show-scrollbars") == 0) {
+  if (g_strcmp0(name, "show-scrollbars") == 0) {
     show_hscrollbar = show_vscrollbar = val;
-  } else if (strcmp(name, "show-h-scrollbar") == 0) {
+  } else if (g_strcmp0(name, "show-h-scrollbar") == 0) {
     show_hscrollbar = val;
-  } else if (strcmp(name, "show-v-scrollbar") == 0) {
+  } else if (g_strcmp0(name, "show-v-scrollbar") == 0) {
     show_vscrollbar = val;
   }
 
@@ -209,8 +209,8 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
-  girara_setting_add(session, "statusbar-h-padding",      &statusbar_h_padding, INT,     TRUE,  _("Horizontal padding for the status input and notification bars"), NULL, NULL);
-  girara_setting_add(session, "statusbar-v-padding",      &statusbar_v_padding, INT,     TRUE,  _("Vertical padding for the status input and notification bars"), NULL, NULL);
+  girara_setting_add(session, "statusbar-h-padding",      &statusbar_h_padding, INT,     TRUE,  _("Horizontal padding for the status, input, and notification bars"), NULL, NULL);
+  girara_setting_add(session, "statusbar-v-padding",      &statusbar_v_padding, INT,     TRUE,  _("Vertical padding for the status, input, and notification bars"), NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"), NULL, NULL);
   girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show both the horizontal and vertical scrollbars"), cb_scrollbars, NULL);
   girara_setting_add(session, "show-h-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the horizontal scrollbar"), cb_scrollbars, NULL);
@@ -289,7 +289,7 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
 
   /* search for existing config handle */
   GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, data,
-    if (strcmp(data->identifier, identifier) == 0) {
+    if (g_strcmp0(data->identifier, identifier) == 0) {
       data->handle = handle;
       found = true;
       break;
@@ -364,7 +364,7 @@ config_parse(girara_session_t* session, const char* path)
     }
 
     /* include gets a special treatment */
-    if (strcmp(argv[0], "include") == 0) {
+    if (g_strcmp0(argv[0], "include") == 0) {
       if (argc != 2) {
         girara_warning("Could not process line %d in '%s': usage: include path.", line_number, path);
       } else {
@@ -379,7 +379,7 @@ config_parse(girara_session_t* session, const char* path)
           g_free(basename);
         }
 
-        if (strcmp(newpath, path) == 0) {
+        if (g_strcmp0(newpath, path) == 0) {
           girara_warning("Could not process line %d in '%s': trying to include itself.", line_number, path);
         } else {
           girara_debug("Loading config file '%s'.", newpath);
@@ -395,7 +395,7 @@ config_parse(girara_session_t* session, const char* path)
       girara_config_handle_t* handle = NULL;
       GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, tmp,
         handle = tmp;
-        if (strcmp(handle->identifier, argv[0]) == 0) {
+        if (g_strcmp0(handle->identifier, argv[0]) == 0) {
           handle->handle(session, argument_list);
           break;
         } else {

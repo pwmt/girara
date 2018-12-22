@@ -1,8 +1,9 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #include "template.h"
 #include "utils.h"
 #include "datastructures.h"
+#include "internal.h"
 
 #include <glib.h>
 
@@ -35,7 +36,7 @@ new_variable(const char* name)
     return NULL;
   }
 
-  variable_t* variable = g_try_malloc0(sizeof(variable_t));
+  variable_t* variable = g_slice_new0(variable_t);
   if (variable == NULL) {
     return NULL;
   }
@@ -57,7 +58,7 @@ free_variable(void* data)
   variable->name  = NULL;
   variable->value = NULL;
 
-  g_free(variable);
+  g_slice_free(variable_t, data);
 }
 
 static int
@@ -302,7 +303,7 @@ base_changed(GiraraTemplate* object)
     while (g_match_info_matches(match_info) == true) {
       char* variable = g_match_info_fetch(match_info, 1);
       char* found = girara_list_find(priv->variables_in_base,
-          (girara_compare_function_t)g_strcmp0, variable);
+          list_strcmp, variable);
 
       if (priv->valid == true) {
         if (girara_list_find(priv->variables, compare_variable_name,

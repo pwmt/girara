@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #include <stdlib.h>
 #include <glib.h>
@@ -187,7 +187,7 @@ girara_setting_find(girara_session_t* session, const char* name)
 }
 
 const char*
-girara_setting_get_name(girara_setting_t* setting) {
+girara_setting_get_name(const girara_setting_t* setting) {
   g_return_val_if_fail(setting, NULL);
   return setting->name;
 }

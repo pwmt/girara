@@ -1,4 +1,4 @@
-check = dependency('check', required: false)
+check = dependency('check', required: get_option('tests'))
 if check.found()
   test_dependencies = [
     declare_dependency(link_with: girara),
@@ -74,16 +74,4 @@ if check.found()
     env: env,
     timeout: 60*60
   )
-
-  env_bin = find_program('env', required: false)
-  if env_bin.found()
-    env = environment()
-    env.set('XDG_TEST_HELPER_PATH', meson.current_build_dir())
-
-    test('utils-without-home', env_bin,
-      args: ['-u', 'HOME', utils],
-      env: env,
-      timeout: 60*60
-    )
-  endif
 endif

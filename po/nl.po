@@ -1,5 +1,5 @@
 # girara - language file (Dutch)
-# See LICENSE file for license and copyright information
+# SPDX-License-Identifier: Zlib
 #
 # Translators:
 # Heimen Stoffels <vistausss@outlook.com>, 2018
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 17:39+0100\n"
+"POT-Creation-Date: 2018-12-09 22:58+0100\n"
 "PO-Revision-Date: 2018-02-04 11:01+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/pwmt/girara/language/nl/)\n"
@@ -85,160 +85,160 @@ msgid "Unknown value for option: %s"
 msgstr "Onbekende waarde voor optie: %s"
 
 #. settings
-#: girara/config.c:172
+#: girara/config.c:188
 msgid "Font"
 msgstr "Lettertype"
 
-#: girara/config.c:173
+#: girara/config.c:189
 msgid "Default foreground color"
 msgstr "Standaard voorgrondkleur"
 
-#: girara/config.c:174
+#: girara/config.c:190
 msgid "Default background color"
 msgstr "Standaard achtergrondkleur"
 
-#: girara/config.c:175
+#: girara/config.c:191
 msgid "Inputbar foreground color"
 msgstr "Voorgrondkleur van invoerbalk"
 
-#: girara/config.c:176
+#: girara/config.c:192
 msgid "Inputbar background color"
 msgstr "Achtergrondkleur van invoerbal"
 
-#: girara/config.c:177
+#: girara/config.c:193
 msgid "Statusbar foreground color"
 msgstr "Voorgrondkleur van statusbalk"
 
-#: girara/config.c:178
+#: girara/config.c:194
 msgid "Statsubar background color"
 msgstr "Achtergrondkleur van statusbalk"
 
-#: girara/config.c:179
+#: girara/config.c:195
 msgid "Completion foreground color"
 msgstr "Voorgrondkleur van automatisch aanvullen"
 
-#: girara/config.c:180
+#: girara/config.c:196
 msgid "Completion background color"
 msgstr "Achtergrondkleur van automatisch aanvullen"
 
-#: girara/config.c:181
+#: girara/config.c:197
 msgid "Completion group foreground color"
 msgstr "Voorgrondkleur van automatisch aanvullen-groep"
 
-#: girara/config.c:182
+#: girara/config.c:198
 msgid "Completion group background color"
 msgstr "Achtergrondkleur van automatisch aanvullen-groep"
 
-#: girara/config.c:183
+#: girara/config.c:199
 msgid "Completion highlight foreground color"
 msgstr "Voorgrondkleur van automatisch aanvullen-markering"
 
-#: girara/config.c:184
+#: girara/config.c:200
 msgid "Completion highlight background color"
 msgstr "Achtergrondkleur van automatisch aanvullen-markering"
 
-#: girara/config.c:185
+#: girara/config.c:201
 msgid "Error notification foreground color"
 msgstr "Voorgrondkleur van foutmelding"
 
-#: girara/config.c:186
+#: girara/config.c:202
 msgid "Error notification background color"
 msgstr "Achtergrondkleur van foutmelding"
 
-#: girara/config.c:187
+#: girara/config.c:203
 msgid "Warning notification foreground color"
 msgstr "Voorgrondkleur van waarschuwingsmelding"
 
-#: girara/config.c:188
+#: girara/config.c:204
 msgid "Warning notifaction background color"
 msgstr "Achtergrondkleur van waarschuwingsmelding"
 
-#: girara/config.c:189
+#: girara/config.c:205
 msgid "Notification foreground color"
 msgstr "Voorgrondkleur van melding"
 
-#: girara/config.c:190
+#: girara/config.c:206
 msgid "Notification background color"
 msgstr "Achtergrondkleur van melding"
 
-#: girara/config.c:191
+#: girara/config.c:207
 msgid "Scrollbar foreground color"
 msgstr "Voorgrondkleur van schuifbalk"
 
-#: girara/config.c:192
+#: girara/config.c:208
 msgid "Scrollbar background color"
 msgstr "Achtergrondkleur van schuifbalk"
 
-#: girara/config.c:194
+#: girara/config.c:210
 msgid "Initial window width"
 msgstr "Initiële vensterbreedte"
 
-#: girara/config.c:195
+#: girara/config.c:211
 msgid "Initial window height"
 msgstr "Initiële vensterhoogte"
 
-#: girara/config.c:196
-msgid "Horizontal padding for the status input and notification bars"
+#: girara/config.c:212
+msgid "Horizontal padding for the status, input, and notification bars"
 msgstr "Horizontale opvulling voor de statusinvoer- en meldingbalken"
 
-#: girara/config.c:197
-msgid "Vertical padding for the status input and notification bars"
+#: girara/config.c:213
+msgid "Vertical padding for the status, input, and notification bars"
 msgstr "Verticale opvulling voor de statusinvoer- en meldingbalken"
 
-#: girara/config.c:198
+#: girara/config.c:214
 msgid "Number of completion items"
 msgstr "Aantal automatisch aanvullen-items"
 
-#: girara/config.c:199
+#: girara/config.c:215
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr "Zowel horizontale als verticale schuifbalken weergeven"
 
-#: girara/config.c:200
+#: girara/config.c:216
 msgid "Show the horizontal scrollbar"
 msgstr "Horizontale schuifbalk weergeven"
 
-#: girara/config.c:201
+#: girara/config.c:217
 msgid "Show the vertical scrollbar"
 msgstr "Verticale schuifbalk weergeven"
 
-#: girara/config.c:202
+#: girara/config.c:218
 msgid "Window icon"
 msgstr "Vensterpictogram"
 
-#: girara/config.c:203
+#: girara/config.c:219
 msgid "Command to execute in :exec"
 msgstr "Uit te voeren opdracht in :exec"
 
-#: girara/config.c:204
+#: girara/config.c:220
 msgid "Show or hide certain GUI elements"
 msgstr "Bepaalde app-elementen weergeven of verbergen"
 
-#: girara/config.c:205
+#: girara/config.c:221
 msgid "Enable smooth scrolling and zooming"
 msgstr "Vloeiend scrollen en zoomen inschakelen"
 
 #. commands
-#: girara/config.c:241
+#: girara/config.c:257
 msgid "Execute a command"
 msgstr "Opdracht uitvoeren"
 
-#: girara/config.c:242
+#: girara/config.c:258
 msgid "Map a key sequence"
 msgstr "Toetsaanslag toekennen"
 
-#: girara/config.c:243
+#: girara/config.c:259
 msgid "Quit the program"
 msgstr "Applicatie afsluiten"
 
-#: girara/config.c:244
+#: girara/config.c:260
 msgid "Set an option"
 msgstr "Optie instellen"
 
-#: girara/config.c:245
+#: girara/config.c:261
 msgid "Unmap a key sequence"
 msgstr "Toetsaanslag verwijderen"
 
-#: girara/config.c:247
+#: girara/config.c:263
 msgid "Dump settings to a file"
 msgstr "Instellingen opslaan naar een bestand"
 

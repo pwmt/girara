@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #include <math.h>
 #include <string.h>
@@ -199,8 +199,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
    *   there is only one completion entry
    */
   if ( (argument->n == GIRARA_HIDE) ||
-      (current_parameter && previous_parameter && strcmp(current_parameter, previous_parameter)) ||
-      (current_command && previous_command && strcmp(current_command, previous_command)) ||
+      (current_parameter && previous_parameter && g_strcmp0(current_parameter, previous_parameter)) ||
+      (current_command && previous_command && g_strcmp0(current_command, previous_command)) ||
       (input_length != previous_length) ||
       is_single_entry
     )
@@ -434,8 +434,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       /* hide other items */
       unsigned int n_completion_items = 15;
       girara_setting_get(session, "n-completion-items", &n_completion_items);
-      unsigned int uh = ceil( n_completion_items / 2);
-      unsigned int lh = floor(n_completion_items / 2);
+      unsigned int uh = ceil(n_completion_items / 2.0);
+      unsigned int lh = floor(n_completion_items / 2.0);
 
       unsigned int current_item = g_list_position(entries, entries_current);
 

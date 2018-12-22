@@ -1,6 +1,6 @@
 project('girara', 'c',
-  version: '0.3.1',
-  meson_version: '>=0.43',
+  version: '0.3.2',
+  meson_version: '>=0.48',
   default_options: 'c_std=c11',
 )
 
@@ -30,7 +30,7 @@ prefix = get_option('prefix')
 localedir = get_option('localedir')
 
 # required dependencies
-libm = cc.find_library('libm', required: false)
+libm = cc.find_library('m', required: false)
 glib = dependency('glib-2.0', version: '>=2.50')
 gtk3 = dependency('gtk+-3.0', version: '>=3.20')
 pango = dependency('pango', version: '>=1.14')
@@ -58,16 +58,16 @@ flags = cc.get_supported_arguments(flags)
 
 # optional dependencies
 pc_requires_private = ['pango']
-libnotify = dependency('libnotify', version: '>=0.7.0', required: false)
-jsonc = dependency('json-c', required: false)
+libnotify = dependency('libnotify', version: '>=0.7.0', required: get_option('notify'))
+jsonc = dependency('json-c', required: get_option('json'))
 
-if get_option('enable-notify') and libnotify.found()
+if libnotify.found()
   build_dependencies += libnotify
   defines += '-DWITH_LIBNOTIFY'
   pc_requires_private += 'libnotify'
 endif
 
-if get_option('enable-json') and jsonc.found()
+if jsonc.found()
   build_dependencies += jsonc
   defines += '-DWITH_JSON'
   pc_requires_private += 'json-c'
@@ -89,19 +89,19 @@ subdir('po')
 # source files
 sources = files(
   'girara/callbacks.c',
-  'girara/completion.c',
-  'girara/entry.c',
-  'girara/input-history-io.c',
-  'girara/session.c',
-  'girara/shortcuts.c',
-  'girara/template.c',
   'girara/commands.c',
+  'girara/completion.c',
   'girara/config.c',
   'girara/datastructures.c',
+  'girara/entry.c',
+  'girara/input-history-io.c',
   'girara/input-history.c',
   'girara/log.c',
+  'girara/session.c',
   'girara/settings.c',
+  'girara/shortcuts.c',
   'girara/statusbar.c',
+  'girara/template.c',
   'girara/utils.c'
 )
 sources += girara_css
@@ -136,7 +136,8 @@ girara = library(
   version: so_version,
   install: true,
   include_directories: include_directories,
-  c_args: defines + flags
+  c_args: defines + flags,
+  gnu_symbol_visibility: 'hidden'
 )
 install_headers(headers, subdir: 'girara')
 

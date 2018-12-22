@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_INTERNAL_H
 #define GIRARA_INTERNAL_H
@@ -149,6 +149,8 @@ HIDDEN bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* arg
     girara_event_t* event, unsigned int t);
 
 HIDDEN void css_template_fill_font(GiraraTemplate* csstemplate, const char* font);
+
+HIDDEN int list_strcmp(const void* data1, const void* data2);
 
 /**
  * Structure of a command

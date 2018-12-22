@@ -1,15 +1,20 @@
-option('enable-notify',
-  type: 'boolean',
-  value: false,
-  description: 'Enable libnotify support if available.'
+option('notify',
+  type: 'feature',
+  value: 'disabled',
+  description: 'notifications using libnotify'
 )
-option('enable-json',
-  type: 'boolean',
-  value: true,
-  description: 'Enable json-c support if available.'
+option('json',
+  type: 'feature',
+  value: 'auto',
+  description: 'dump configuration using JSON'
 )
-option('enable-docs',
-  type: 'boolean',
-  value: true,
-  description: 'Build Doxygen documentation if available.'
+option('docs',
+  type: 'feature',
+  value: 'auto',
+  description: 'doxygen API documentation'
+)
+option('tests',
+  type: 'feature',
+  value: 'auto',
+  description: 'run tests'
 )

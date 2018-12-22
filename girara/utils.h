@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_UTILS_H
 #define GIRARA_UTILS_H
@@ -28,7 +28,7 @@ typedef enum {
  * @return a string containing the path to the user's home directory (needs to
  * be freed with g_free) or NULL if the user doesn't exist.
  */
-char* girara_get_home_directory(const char* user);
+char* girara_get_home_directory(const char* user) GIRARA_VISIBLE;
 
 /**
  * Returns a specific path specified in the XDG specification. ~ in paths will
@@ -37,7 +37,7 @@ char* girara_get_home_directory(const char* user);
  * @return a string containing the requested patch (needs to be freed with
  * g_free) or NULL for invalid values.
  */
-char* girara_get_xdg_path(girara_xdg_path_t path);
+char* girara_get_xdg_path(girara_xdg_path_t path) GIRARA_VISIBLE;
 
 /**
  * Opens a URI with xdg-open.
@@ -45,7 +45,7 @@ char* girara_get_xdg_path(girara_xdg_path_t path);
  * @param uri the URI to be opened.
  * @return true on success, false otherwise
  */
-bool girara_xdg_open(const char* uri);
+bool girara_xdg_open(const char* uri) GIRARA_VISIBLE;
 
 /**
  * Splits paths separated by : (as in $PATH) into a list.
@@ -53,7 +53,7 @@ bool girara_xdg_open(const char* uri);
  * @param patharray String like $PATH to split
  * @return a list of paths and NULL on failure.
  */
-girara_list_t* girara_split_path_array(const char* patharray);
+girara_list_t* girara_split_path_array(const char* patharray) GIRARA_VISIBLE;
 
 /**
  * Returns a "fixed" version of path. Which means, it will be an absolute path
@@ -62,7 +62,7 @@ girara_list_t* girara_split_path_array(const char* patharray);
  * @param path the path to "fix".
  * @return the "fixed" path (needs to be freed with g_free).
  */
-char* girara_fix_path(const char* path);
+char* girara_fix_path(const char* path) GIRARA_VISIBLE;
 
 /**
  * Open a file in a safe way
@@ -71,7 +71,7 @@ char* girara_fix_path(const char* path);
  * @param mode Mode that the file should be opened
  * @return NULL if an error occurred
  */
-FILE* girara_file_open(const char* path, const char* mode);
+FILE* girara_file_open(const char* path, const char* mode) GIRARA_VISIBLE;
 
 /**
  * Reads a line from the file. The returned string has to be released with
@@ -80,7 +80,7 @@ FILE* girara_file_open(const char* path, const char* mode);
  * @param file The file stream
  * @return Read line or NULL if an error occurred
  */
-char* girara_file_read_line(FILE* file);
+char* girara_file_read_line(FILE* file) GIRARA_VISIBLE;
 
 /**
  * Reads the whole content from a file. Returned string has to be freed.
@@ -88,7 +88,7 @@ char* girara_file_read_line(FILE* file);
  * @param path Path to the file
  * @return Read file or NULL if an error occurred
  */
-char* girara_file_read(const char* path);
+char* girara_file_read(const char* path) GIRARA_VISIBLE;
 
 /**
  * Reads the whole content from a file. Returned string has to be freed.
@@ -96,14 +96,14 @@ char* girara_file_read(const char* path);
  * @param file file to read
  * @return Read file or NULL if an error occurred
  */
-char* girara_file_read2(FILE* file);
+char* girara_file_read2(FILE* file) GIRARA_VISIBLE;
 
 /**
  * Trims and cleans a line from multiple whitespaces
  *
  * @param line
  */
-void girara_clean_line(char* line);
+void girara_clean_line(char* line) GIRARA_VISIBLE;
 
 /**
  * Changes the size of the memory block by wrapping a realloc function call
@@ -113,14 +113,14 @@ void girara_clean_line(char* line);
  * @param size Number of bytes
  * @return Pointer to the allocated memory block or NULL
  */
-void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2);
+void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2) GIRARA_VISIBLE;
 
 /**
  * Escape \\, \\t, ", ' and spaces in strings.
  * @param value The string to be escaped.
  * @returns The escaped string. Needs to be freed with g_free.
  */
-char* girara_escape_string(const char* value);
+char* girara_escape_string(const char* value) GIRARA_VISIBLE;
 
 /**
  * Replaces all occurrences of old in string with new and returns
@@ -132,7 +132,7 @@ char* girara_escape_string(const char* value);
  *
  * @return new allocated string, needs to be freed with g_free
  */
-char* girara_replace_substring(const char* string, const char* old, const char* new);
+char* girara_replace_substring(const char* string, const char* old, const char* new) GIRARA_VISIBLE;
 
 /**
  * Execute command from argument list
@@ -141,13 +141,13 @@ char* girara_replace_substring(const char* string, const char* old, const char* 
  * @param argument_list The argument list
  * @return true if no error occurred
  */
-bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list);
+bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list) GIRARA_VISIBLE;
 
 /**
  * Return version of girara.
  *
  * @return version string
  */
-const char* girara_version(void);
+const char* girara_version(void) GIRARA_VISIBLE;
 
 #endif

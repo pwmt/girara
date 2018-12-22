@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #include "shortcuts.h"
 
@@ -28,7 +28,7 @@ girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const 
   bool found_existing_shortcut = false;
   GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.shortcuts, girara_shortcut_t*, iter, shortcuts_it,
     if (((shortcuts_it->mask == modifier && shortcuts_it->key == key && (modifier != 0 || key != 0)) ||
-       (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
+       (buffer && shortcuts_it->buffered_command && !g_strcmp0(shortcuts_it->buffered_command, buffer)))
         && ((shortcuts_it->mode == mode) || (mode == 0)))
     {
       if (shortcuts_it->argument.data != NULL) {
@@ -74,7 +74,7 @@ girara_shortcut_remove(girara_session_t* session, guint modifier, guint key, con
   /* search for existing binding */
   GIRARA_LIST_FOREACH_BODY(session->bindings.shortcuts, girara_shortcut_t*, shortcuts_it,
     if (((shortcuts_it->mask == modifier && shortcuts_it->key == key && (modifier != 0 || key != 0)) ||
-       (buffer && shortcuts_it->buffered_command && !strcmp(shortcuts_it->buffered_command, buffer)))
+       (buffer && shortcuts_it->buffered_command && !g_strcmp0(shortcuts_it->buffered_command, buffer)))
         && shortcuts_it->mode == mode) {
       girara_list_remove(session->bindings.shortcuts, shortcuts_it);
       handled = true;
@@ -594,7 +594,7 @@ girara_shortcut_mapping_add(girara_session_t* session, const char* identifier, g
   bool found = false;
 
   GIRARA_LIST_FOREACH_BODY(session_private->config.shortcut_mappings, girara_shortcut_mapping_t*, data,
-    if (strcmp(data->identifier, identifier) == 0) {
+    if (g_strcmp0(data->identifier, identifier) == 0) {
       data->function = function;
       found = true;
       break;

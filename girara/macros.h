@@ -1,10 +1,14 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_MACROS_H
 #define GIRARA_MACROS_H
 
 #ifndef __has_attribute
 #define __has_attribute(x) 0
+#endif
+
+#ifndef __has_builtin
+#define __has_builtin(x) 0
 #endif
 
 #ifndef GIRARA_PRINTF
@@ -27,7 +31,7 @@
 #endif
 
 #ifndef GIRARA_HIDDEN
-# if (defined(__GNUC__) && (__GNUC__ >= 4)) || defined(__clang__)
+# if (defined(__GNUC__) && (__GNUC__ >= 4)) || __has_attribute(visibility)
 #  define GIRARA_HIDDEN __attribute__((visibility("hidden")))
 # elif defined(__SUNPRO_C)
 #  define GIRARA_HIDDEN __hidden
@@ -37,7 +41,7 @@
 #endif
 
 #ifndef GIRARA_VISIBLE
-# if (defined(__GNUC__) && (__GNUC__ >= 4)) || defined(__clang__)
+# if (defined(__GNUC__) && (__GNUC__ >= 4)) || __has_attribute(visibility)
 #  define GIRARA_VISIBLE __attribute__((visibility("default")))
 # else
 #  define GIRARA_VISIBLE

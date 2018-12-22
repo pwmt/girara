@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #include <stdlib.h>
 #include <glib.h>
@@ -40,7 +40,7 @@ girara_list_new(void)
 girara_list_t*
 girara_list_new2(girara_free_function_t gfree)
 {
-  girara_list_t* list = g_try_malloc0(sizeof(girara_list_t));
+  girara_list_t* list = g_slice_new0(girara_list_t);
   if (list == NULL) {
     return NULL;
   }
@@ -103,7 +103,7 @@ girara_list_free(girara_list_t* list)
   }
 
   girara_list_clear(list);
-  g_free(list);
+  g_slice_free(girara_list_t, list);
 }
 
 void
@@ -203,7 +203,7 @@ girara_list_iterator(girara_list_t* list)
     return NULL;
   }
 
-  girara_list_iterator_t* iter = g_try_malloc0(sizeof(girara_list_iterator_t));
+  girara_list_iterator_t* iter = g_slice_new0(girara_list_iterator_t);
   if (iter == NULL) {
     return NULL;
   }
@@ -219,14 +219,7 @@ girara_list_iterator_copy(girara_list_iterator_t* iter)
 {
   g_return_val_if_fail(iter != NULL, NULL);
 
-  girara_list_iterator_t* iter2 = g_try_malloc0(sizeof(girara_list_iterator_t));
-  if (iter2 == NULL) {
-    return NULL;
-  }
-
-  iter2->list    = iter->list;
-  iter2->element = iter->element;
-  return iter2;
+  return g_slice_copy(sizeof(girara_list_iterator_t), iter);
 }
 
 girara_list_iterator_t*
@@ -328,7 +321,7 @@ girara_list_iterator_free(girara_list_iterator_t* iter)
     return;
   }
 
-  g_free(iter);
+  g_slice_free(girara_list_iterator_t, iter);
 }
 
 size_t

@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #include <ctype.h>
 #include <glib.h>
@@ -510,4 +510,13 @@ const char*
 girara_version(void)
 {
   return GIRARA_VERSION;
+}
+
+int
+list_strcmp(const void* data1, const void* data2)
+{
+  const char* str1 = data1;
+  const char* str2 = data2;
+
+  return g_strcmp0(str1, str2);
 }

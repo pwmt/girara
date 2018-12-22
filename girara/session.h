@@ -1,4 +1,4 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_SESSION_H
 #define GIRARA_SESSION_H
@@ -91,7 +91,7 @@ struct girara_session_s
  * @return A valid session object
  * @return NULL when an error occurred
  */
-girara_session_t* girara_session_create(void);
+girara_session_t* girara_session_create(void) GIRARA_VISIBLE;
 
 /**
  * Initializes an girara session
@@ -101,7 +101,7 @@ girara_session_t* girara_session_create(void);
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_session_init(girara_session_t* session, const char* appname);
+bool girara_session_init(girara_session_t* session, const char* appname) GIRARA_VISIBLE;
 
 /**
  * Destroys an girara session
@@ -110,7 +110,7 @@ bool girara_session_init(girara_session_t* session, const char* appname);
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_session_destroy(girara_session_t* session);
+bool girara_session_destroy(girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Sets the view widget of girara
@@ -120,7 +120,7 @@ bool girara_session_destroy(girara_session_t* session);
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_set_view(girara_session_t* session, GtkWidget* widget);
+bool girara_set_view(girara_session_t* session, GtkWidget* widget) GIRARA_VISIBLE;
 
 /**
  * Returns a copy of the buffer
@@ -128,7 +128,7 @@ bool girara_set_view(girara_session_t* session, GtkWidget* widget);
  * @param session The used girara session
  * @return Copy of the current buffer
  */
-char* girara_buffer_get(girara_session_t* session);
+char* girara_buffer_get(girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Displays a notification popup for the user using libnotify. Basic styling
@@ -140,7 +140,7 @@ char* girara_buffer_get(girara_session_t* session);
  * @param body The content
  */
 void girara_libnotify(girara_session_t* session, const char *summary,
-    const char *body);
+    const char *body) GIRARA_VISIBLE;
 
 /**
  * Displays a notification for the user. It is possible to pass GIRARA_INFO,
@@ -152,7 +152,7 @@ void girara_libnotify(girara_session_t* session, const char *summary,
  * @param ...
  */
 void girara_notify(girara_session_t* session, int level,
-    const char* format, ...) GIRARA_PRINTF(3, 4);
+    const char* format, ...) GIRARA_PRINTF(3, 4) GIRARA_VISIBLE;
 
 /**
  * Creates a girara dialog
@@ -166,7 +166,7 @@ void girara_notify(girara_session_t* session, int level,
  */
 void girara_dialog(girara_session_t* session, const char* dialog, bool
     invisible, girara_callback_inputbar_key_press_event_t key_press_event,
-    girara_callback_inputbar_activate_t activate_event, void* data);
+    girara_callback_inputbar_activate_t activate_event, void* data) GIRARA_VISIBLE;
 
 /**
  * Adds a new mode by its string identifier
@@ -175,7 +175,7 @@ void girara_dialog(girara_session_t* session, const char* dialog, bool
  * @param name The string identifier used in configs/inputbar etc to refer by
  * @return A newly defined girara_mode_t associated with name
  */
-girara_mode_t girara_mode_add(girara_session_t* session, const char* name);
+girara_mode_t girara_mode_add(girara_session_t* session, const char* name) GIRARA_VISIBLE;
 
 /**
  * Sets the current mode
@@ -183,7 +183,7 @@ girara_mode_t girara_mode_add(girara_session_t* session, const char* name);
  * @param session The used girara session
  * @param mode The new mode
  */
-void girara_mode_set(girara_session_t* session, girara_mode_t mode);
+void girara_mode_set(girara_session_t* session, girara_mode_t mode) GIRARA_VISIBLE;
 
 /**
  * Returns the current mode
@@ -191,7 +191,7 @@ void girara_mode_set(girara_session_t* session, girara_mode_t mode);
  * @param session The used girara session
  * @return The current mode
  */
-girara_mode_t girara_mode_get(girara_session_t* session);
+girara_mode_t girara_mode_get(girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Set name of the window title
@@ -201,7 +201,7 @@ girara_mode_t girara_mode_get(girara_session_t* session);
  * @return true if no error occurred
  * @return false if an error occurred
  */
-bool girara_set_window_title(girara_session_t* session, const char* name);
+bool girara_set_window_title(girara_session_t* session, const char* name) GIRARA_VISIBLE;
 
 /**
  * Set icon of the window
@@ -211,7 +211,7 @@ bool girara_set_window_title(girara_session_t* session, const char* name);
  * @return true if no error occurred
  * @return false if an error occurred
  */
-bool girara_set_window_icon(girara_session_t* session, const char* name);
+bool girara_set_window_icon(girara_session_t* session, const char* name) GIRARA_VISIBLE;
 
 /**
  * Returns the command history
@@ -219,7 +219,7 @@ bool girara_set_window_icon(girara_session_t* session, const char* name);
  * @param session The used girara session
  * @return The command history (list of strings) or NULL
  */
-girara_list_t* girara_get_command_history(girara_session_t* session);
+girara_list_t* girara_get_command_history(girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Returns the internal template object to apply custom theming options
@@ -227,7 +227,7 @@ girara_list_t* girara_get_command_history(girara_session_t* session);
  * @param session The girara session
  * @returns GiraraTemplate object
  */
-GiraraTemplate* girara_session_get_template(girara_session_t* session);
+GiraraTemplate* girara_session_get_template(girara_session_t* session) GIRARA_VISIBLE;
 
 /**
  * Replaces the internal template object, thus provides entirely user-defined styling.
@@ -240,6 +240,6 @@ GiraraTemplate* girara_session_get_template(girara_session_t* session);
  * @note Using the template @c girara_template_new("") will use the default gtk style
  *
  */
-void girara_session_set_template(girara_session_t* session, GiraraTemplate* template, bool init_variables);
+void girara_session_set_template(girara_session_t* session, GiraraTemplate* template, bool init_variables) GIRARA_VISIBLE;
 
 #endif

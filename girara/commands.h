@@ -1,8 +1,9 @@
-/* See LICENSE file for license and copyright information */
+/* SPDX-License-Identifier: Zlib */
 
 #ifndef GIRARA_COMMANDS_H
 #define GIRARA_COMMANDS_H
 
+#include "macros.h"
 #include "types.h"
 
 /**
@@ -20,7 +21,7 @@
 bool girara_inputbar_command_add(girara_session_t* session,
     const char* command, const char* abbreviation,
     girara_command_function_t function, girara_completion_function_t completion,
-    const char* description);
+    const char* description) GIRARA_VISIBLE;
 
 /**
  * Adds a special command
@@ -37,6 +38,6 @@ bool girara_inputbar_command_add(girara_session_t* session,
  */
 bool girara_special_command_add(girara_session_t* session, char identifier,
     girara_inputbar_special_function_t function, bool always, int argument_n,
-    void* argument_data);
+    void* argument_data) GIRARA_VISIBLE;
 
 #endif
