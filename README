@@ -11,12 +11,25 @@ enhance the user interface that is used by zathura.
 Requirements
 ------------
 
-meson (>= 0.47)
-glib (>= 2.50)
-gtk3 (>= 3.20)
-intltool
-libnotify (optional, for notification support)
-json-c (optional, for configuration dumping support)
+The following dependencies are required:
+
+* gtk3 (>= 3.20)
+* glib (>= 2.50)
+
+The following dependencies are optional:
+
+* libnotify: notification support
+* json-c: configuration dumping support
+
+For building girara, the following dependencies are also required:
+
+* meson (>= 0.48)
+* gettext
+
+The following dependencies are optional build-time only dependencies:
+
+* check: for tests
+* doxygen: HTML documentation
 
 To disable the optional support for libnotify and json-c, configure the build
 system with -Dnotify=disabled or -Djson=disabled.
