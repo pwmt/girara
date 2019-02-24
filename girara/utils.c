@@ -80,8 +80,8 @@ girara_xdg_open(const char* uri)
     g_error_free(error);
   }
 
-  g_free(argv[0]);
   g_free(argv[1]);
+  g_free(argv[0]);
 
   return res;
 }
