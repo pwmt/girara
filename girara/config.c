@@ -179,7 +179,7 @@ girara_config_load_default(girara_session_t* session)
   int n_completion_items    = 15;
   bool show_scrollbars      = false;
   girara_mode_t normal_mode = session->modes.normal;
-  bool use_smooth_scroll    = false;
+  bool use_smooth_scroll    = true;
 
   /* other values */
   session->global.autohide_inputbar = true;
