@@ -179,7 +179,6 @@ girara_config_load_default(girara_session_t* session)
   int n_completion_items    = 15;
   bool show_scrollbars      = false;
   girara_mode_t normal_mode = session->modes.normal;
-  bool use_smooth_scroll    = true;
 
   /* other values */
   session->global.autohide_inputbar = true;
@@ -218,7 +217,6 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
   girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);
-  girara_setting_add(session, "smooth-scroll",            &use_smooth_scroll,   BOOLEAN, TRUE,  _("Enable smooth scrolling and zooming"), NULL, NULL);
 
   /* shortcuts */
   girara_shortcut_add(session, 0,                GDK_KEY_Escape,      NULL, girara_sc_abort,           normal_mode, 0, NULL);
