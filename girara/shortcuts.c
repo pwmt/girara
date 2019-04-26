@@ -498,6 +498,22 @@ simulate_key_press(girara_session_t* session, int state, int key)
   return true;
 }
 
+static void
+update_state_by_keyval(int *state, int keyval)
+{
+  if (state == NULL) {
+    return;
+  }
+
+  if ((keyval >= '!' && keyval <= '/')
+      || (keyval >= ':' && keyval <= '@')
+      || (keyval >= '[' && keyval <= '`')
+      || (keyval >= '{' && keyval <= '~')
+      ) {
+    *state |= GDK_SHIFT_MASK;
+  }
+}
+
 bool
 girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* UNUSED(event), unsigned int t)

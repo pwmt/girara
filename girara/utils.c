@@ -363,22 +363,6 @@ error_free:
   return NULL;
 }
 
-void
-update_state_by_keyval(int *state, int keyval)
-{
-  if (state == NULL) {
-    return;
-  }
-
-  if ((keyval >= '!' && keyval <= '/')
-      || (keyval >= ':' && keyval <= '@')
-      || (keyval >= '[' && keyval <= '`')
-      || (keyval >= '{' && keyval <= '~')
-      ) {
-    *state |= GDK_SHIFT_MASK;
-  }
-}
-
 char*
 girara_escape_string(const char* value)
 {
