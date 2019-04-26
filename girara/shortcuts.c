@@ -545,7 +545,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
   char* input               = (char*) argument->data;
   unsigned int input_length = strlen(input);
 
-  t = (t == 0) ? 1 : t;
+  t = MAX(1, t);
   for (unsigned int c = 0; c < t; c++) {
     for (unsigned i = 0; i < input_length; i++) {
       int state  = 0;
