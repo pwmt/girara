@@ -505,6 +505,7 @@ update_state_by_keyval(int *state, int keyval)
     return;
   }
 
+  /* The following is probably not true for some keyboard layouts. */
   if ((keyval >= '!' && keyval <= '/')
       || (keyval >= ':' && keyval <= '@')
       || (keyval >= '[' && keyval <= '`')
