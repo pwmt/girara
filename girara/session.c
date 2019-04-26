@@ -314,6 +314,7 @@ girara_session_create(void)
 
   session_private->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
+  g_mutex_init(&session_private->feedkeys_mutex);
 
   /* settings */
   session_private->settings = girara_sorted_list_new2(
@@ -611,6 +612,9 @@ girara_session_private_free(girara_session_private_t* session)
   /* clean up settings */
   girara_list_free(session->settings);
   session->settings = NULL;
+
+  /* clean up mutex */
+  g_mutex_clear(&session->feedkeys_mutex);
 
   g_slice_free(girara_session_private_t, session);
 }

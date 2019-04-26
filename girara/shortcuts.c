@@ -5,6 +5,7 @@
 #include "datastructures.h"
 #include "input-history.h"
 #include "internal.h"
+#include "log.h"
 #include "session.h"
 #include "settings.h"
 
@@ -523,6 +524,11 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     return false;
   }
 
+  if (g_mutex_trylock(&session->private_data->feedkeys_mutex) == FALSE) {
+    girara_error("Recursive use of feedkeys detected. Aborting evaluation.");
+    return false;
+  }
+
   typedef struct gdk_keyboard_button_s {
     char* identifier;
     int keyval;
@@ -575,7 +581,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
           goto single_key;
         }
 
-        int length = end - (input + i) - 1;
+        const int length = end - (input + i) - 1;
         char* tmp  = g_strndup(input + i + 1, length);
         bool found = false;
 
@@ -633,6 +639,7 @@ single_key:
     }
   }
 
+  g_mutex_unlock(&session->private_data->feedkeys_mutex);
   return true;
 }
 

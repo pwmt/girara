@@ -296,6 +296,8 @@ struct girara_session_private_s
     girara_list_t* shortcut_mappings;
     girara_list_t* argument_mappings;
   } config;
+
+  GMutex feedkeys_mutex;
 };
 
 #endif
