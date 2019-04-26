@@ -499,21 +499,19 @@ simulate_key_press(girara_session_t* session, int state, int key)
   return true;
 }
 
-static void
-update_state_by_keyval(int *state, int keyval)
+static int
+update_state_by_keyval(int state, int keyval)
 {
-  if (state == NULL) {
-    return;
-  }
-
   /* The following is probably not true for some keyboard layouts. */
   if ((keyval >= '!' && keyval <= '/')
       || (keyval >= ':' && keyval <= '@')
       || (keyval >= '[' && keyval <= '`')
       || (keyval >= '{' && keyval <= '~')
       ) {
-    *state |= GDK_SHIFT_MASK;
+    state |= GDK_SHIFT_MASK;
   }
+
+  return state;
 }
 
 bool
@@ -633,8 +631,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
       }
 
 single_key:
-
-      update_state_by_keyval(&state, keyval);
+      state = update_state_by_keyval(state, keyval);
       simulate_key_press(session, state, keyval);
     }
   }
