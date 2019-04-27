@@ -172,7 +172,7 @@ fill_template_with_values(girara_session_t* session)
   };
 
   /* parse color values */
-  const char* color_settings[] = {
+  static const char* const color_settings[] = {
     "default-fg",
     "default-bg",
     "inputbar-fg",
