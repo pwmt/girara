@@ -337,22 +337,21 @@ config_parse(girara_session_t* session, const char* path)
       continue;
     }
 
-    girara_list_t* argument_list = girara_list_new();
+    girara_list_t* argument_list = girara_list_new2(g_free);
     if (argument_list == NULL) {
       g_free(line);
       fclose(file);
       return false;
     }
 
-    girara_list_set_free_function(argument_list, g_free);
-
     gchar** argv = NULL;
     gint    argc = 0;
 
+    /* parse current line */
     if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
       for (int i = 1; i < argc; i++) {
         char* argument = g_strdup(argv[i]);
-        girara_list_append(argument_list, (void*) argument);
+        girara_list_append(argument_list, argument);
       }
     } else {
       girara_list_free(argument_list);
@@ -390,18 +389,16 @@ config_parse(girara_session_t* session, const char* path)
     } else {
       /* search for config handle */
       girara_session_private_t* session_private = session->private_data;
-      girara_config_handle_t* handle = NULL;
-      GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, tmp,
-        handle = tmp;
+      bool found = false;
+      GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, handle,
         if (g_strcmp0(handle->identifier, argv[0]) == 0) {
+          found = true;
           handle->handle(session, argument_list);
           break;
-        } else {
-          handle = NULL;
         }
       );
 
-      if (handle == NULL) {
+      if (found == false) {
         girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);
       }
     }
