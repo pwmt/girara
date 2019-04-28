@@ -19,7 +19,7 @@
 
 static void
 cb_window_icon(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
@@ -32,7 +32,7 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name),
 
 static void
 cb_font(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
@@ -41,7 +41,7 @@ cb_font(girara_session_t* session, const char* UNUSED(name),
 
 static void
 cb_color(girara_session_t* session, const char* name,
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
@@ -57,7 +57,7 @@ cb_color(girara_session_t* session, const char* name,
 
 static void
 cb_guioptions(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
@@ -68,7 +68,7 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
   bool show_vscrollbar  = false;
 
   /* evaluate input */
-  char* input               = (char*) value;
+  const char* input         = value;
   const size_t input_length = strlen(input);
 
   for (size_t i = 0; i < input_length; i++) {
@@ -113,11 +113,11 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
 
 static void
 cb_scrollbars(girara_session_t* session, const char* name,
-    girara_setting_type_t UNUSED(type), void* value, void* UNUSED(data))
+    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
 {
   g_return_if_fail(session != NULL && value != NULL);
 
-  const bool val = *(bool*) value;
+  const bool val = *(const bool*) value;
 
   char* guioptions = NULL;
   girara_setting_get(session, "guioptions", &guioptions);

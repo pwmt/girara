@@ -36,19 +36,19 @@ struct girara_setting_s
 };
 
 void
-girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, void* value)
+girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, const void* value)
 {
   g_return_if_fail(setting && (value || setting->type == STRING));
 
   switch(setting->type) {
     case BOOLEAN:
-      setting->value.b = *((bool *) value);
+      setting->value.b = *((const bool *) value);
       break;
     case FLOAT:
-      setting->value.f = *((float *) value);
+      setting->value.f = *((const float *) value);
       break;
     case INT:
-      setting->value.i = *((int *) value);
+      setting->value.i = *((const int *) value);
       break;
     case STRING:
       if (setting->value.s != NULL) {
@@ -97,7 +97,7 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
 }
 
 bool
-girara_setting_set(girara_session_t* session, const char* name, void* value)
+girara_setting_set(girara_session_t* session, const char* name, const void* value)
 {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
