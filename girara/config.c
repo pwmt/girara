@@ -172,12 +172,12 @@ girara_config_load_default(girara_session_t* session)
   }
 
   /* values */
-  int statusbar_h_padding   = 8;
-  int statusbar_v_padding   = 2;
-  int window_width          = 800;
-  int window_height         = 600;
-  int n_completion_items    = 15;
-  bool show_scrollbars      = false;
+  const int statusbar_h_padding   = 8;
+  const int statusbar_v_padding   = 2;
+  const int window_width          = 800;
+  const int window_height         = 600;
+  const int n_completion_items    = 15;
+  const bool show_scrollbars      = false;
   girara_mode_t normal_mode = session->modes.normal;
 
   /* other values */

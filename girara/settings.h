@@ -21,7 +21,7 @@
  * @return FALSE An error occurred
  */
 bool girara_setting_add(girara_session_t* session, const char* name,
-    void* value, girara_setting_type_t type, bool init_only,
+    const void* value, girara_setting_type_t type, bool init_only,
     const char* description, girara_setting_callback_t callback, void* data) GIRARA_VISIBLE;
 
 /**

@@ -66,7 +66,7 @@ girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, c
 }
 
 bool
-girara_setting_add(girara_session_t* session, const char* name, void* value, girara_setting_type_t type, bool init_only, const char* description, girara_setting_callback_t callback, void* data)
+girara_setting_add(girara_session_t* session, const char* name, const void* value, girara_setting_type_t type, bool init_only, const char* description, girara_setting_callback_t callback, void* data)
 {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
