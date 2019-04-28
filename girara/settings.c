@@ -116,24 +116,31 @@ girara_setting_get_value(girara_setting_t* setting, void* dest)
 {
   g_return_val_if_fail(setting != NULL && dest != NULL, false);
 
-  bool  *bvalue = (bool*) dest;
-  float *fvalue = (float*) dest;
-  int   *ivalue = (int*) dest;
-  char **svalue = (char**) dest;
-
   switch(setting->type) {
     case BOOLEAN:
+    {
+      bool *bvalue = (bool *)dest;
       *bvalue = setting->value.b;
       break;
+    }
     case FLOAT:
+    {
+      float *fvalue = (float *)dest;
       *fvalue = setting->value.f;
       break;
+    }
     case INT:
+    {
+      int   *ivalue = (int*) dest;
       *ivalue = setting->value.i;
       break;
+    }
     case STRING:
+    {
+      char **svalue = (char**) dest;
       *svalue = setting->value.s ? g_strdup(setting->value.s) : NULL;
       break;
+    }
     default:
       g_assert(false);
   }
