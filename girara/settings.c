@@ -251,8 +251,6 @@ girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
         _("Invalid number of arguments passed: %zu instead of 1"),
         number_of_arguments);
     return false;
-
-    return false;
   }
 
   json_object* json_config = json_object_new_object();
