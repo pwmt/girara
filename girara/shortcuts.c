@@ -768,7 +768,7 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button,
 bool
 girara_mouse_event_remove(girara_session_t* session, guint mask, guint button, girara_mode_t mode)
 {
-  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(session != NULL, false);
 
   bool found = false;
   /* search for existing binding */

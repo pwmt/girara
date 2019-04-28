@@ -12,7 +12,7 @@
 #endif
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__)
-#  define GIRARA_GNUC_CHECK(maj, min)                                            \
+#  define GIRARA_GNUC_CHECK(maj, min) \
     (((__GNUC__ << 20) + (__GNUC_MINOR__ << 10)) >= (((maj) << 20) + ((min) << 10)))
 #else
 #  define GIRARA_GNUC_CHECK(maj, min) 0
