@@ -11,8 +11,15 @@
 #define __has_builtin(x) 0
 #endif
 
+#if defined(__GNUC__) && defined(__GNUC_MINOR__)
+#  define GIRARA_GNUC_CHECK(maj, min)                                            \
+    (((__GNUC__ << 20) + (__GNUC_MINOR__ << 10)) >= (((maj) << 20) + ((min) << 10)))
+#else
+#  define GIRARA_GNUC_CHECK(maj, min) 0
+#endif
+
 #ifndef GIRARA_PRINTF
-# if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4) || defined(__clang__)
+# if GIRARA_GNUC_CHECK(2, 5) || defined(__clang__)
 #  define GIRARA_PRINTF(format_idx, arg_idx) \
     __attribute__((__format__ (__printf__, format_idx, arg_idx)))
 # else
@@ -31,7 +38,7 @@
 #endif
 
 #ifndef GIRARA_HIDDEN
-# if (defined(__GNUC__) && (__GNUC__ >= 4)) || __has_attribute(visibility)
+# if GIRARA_GNUC_CHECK(4, 0) || __has_attribute(visibility)
 #  define GIRARA_HIDDEN __attribute__((visibility("hidden")))
 # elif defined(__SUNPRO_C)
 #  define GIRARA_HIDDEN __hidden
@@ -41,7 +48,7 @@
 #endif
 
 #ifndef GIRARA_VISIBLE
-# if (defined(__GNUC__) && (__GNUC__ >= 4)) || __has_attribute(visibility)
+# if GIRARA_GNUC_CHECK(4, 0) || __has_attribute(visibility)
 #  define GIRARA_VISIBLE __attribute__((visibility("default")))
 # else
 #  define GIRARA_VISIBLE
@@ -49,7 +56,7 @@
 #endif
 
 #ifndef GIRARA_DEPRECATED
-# if defined(__GNUC__)
+# if defined(__GNUC__) || __has_attribute(deprecated)
 #  define GIRARA_DEPRECATED(x) x __attribute__((deprecated))
 #  define GIRARA_DEPRECATED_ __attribute__((deprecated))
 # else
@@ -59,7 +66,7 @@
 #endif
 
 #ifndef GIRARA_ALLOC_SIZE
-# if (!defined(__clang__) && ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))) || \
+# if (!defined(__clang__) && GIRARA_GNUC_CHECK(4, 3)) || \
       (defined(__clang__) && __has_attribute(__alloc_size__))
 #  define GIRARA_ALLOC_SIZE(...) __attribute__((alloc_size(__VA_ARGS__)))
 # else
