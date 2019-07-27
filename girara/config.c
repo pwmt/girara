@@ -416,5 +416,6 @@ config_parse(girara_session_t* session, const char* path)
 void
 girara_config_parse(girara_session_t* session, const char* path)
 {
+  girara_debug("reading configuration file '%s'", path);
   config_parse(session, path);
 }
