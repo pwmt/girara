@@ -416,7 +416,7 @@ girara_replace_substring(const char* string, const char* old, const char* new)
   char* iter = ret;
   while (*string != '\0') {
     if (strstr(string, old) == string) {
-      strncpy(iter, new, new_len);
+      strncpy(iter, new, new_len + 1);
       iter += new_len;
       string += old_len;
     } else {
