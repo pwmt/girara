@@ -19,8 +19,6 @@
 #include "settings.h"
 #include "internal.h"
 
-#define BLOCK_SIZE 64
-
 char*
 girara_fix_path(const char* path)
 {
@@ -193,7 +191,7 @@ girara_file_open(const char* path, const char* mode)
   FILE* fp = fopen(fixed_path, mode);
   g_free(fixed_path);
   if (fp  == NULL) {
-        return NULL;
+    return NULL;
   }
 
   return fp;
@@ -293,7 +291,7 @@ girara_file_read2(FILE* file)
     return NULL;
   }
 
-  char* buffer    = malloc(size + 1);
+  char* buffer = malloc(size + 1);
   if (buffer == NULL) {
     return NULL;
   }
