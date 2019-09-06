@@ -389,40 +389,13 @@ girara_replace_substring(const char* string, const char* old, const char* new)
     return NULL;
   }
 
-  size_t old_len = strlen(old);
-  size_t new_len = strlen(new);
-
-  /* count occurrences */
-  size_t count = 0;
-  size_t i = 0;
-
-  for (i = 0; string[i] != '\0'; i++) {
-    if (strstr(&string[i], old) == &string[i]) {
-      i += (old_len - 1);
-      count++;
-    }
-  }
-
-  if (count == 0) {
+  if (*string == '\0' || *old == '\0' || strstr(string, old) == NULL) {
     return g_strdup(string);
   }
 
-  char* ret = g_try_malloc0(sizeof(char) * (i - count * old_len + count * new_len + 1));
-  if (ret == NULL) {
-    return NULL;
-  }
-
-  /* replace */
-  char* iter = ret;
-  while (*string != '\0') {
-    if (strstr(string, old) == string) {
-      strncpy(iter, new, new_len + 1);
-      iter += new_len;
-      string += old_len;
-    } else {
-      *iter++ = *string++;
-    }
-  }
+  gchar** split = g_strsplit(string, old, -1);
+  char* ret = g_strjoinv(new, split);
+  g_strfreev(split);
 
   return ret;
 }
