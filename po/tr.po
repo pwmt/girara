@@ -8,17 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-06 10:44+0200\n"
-"PO-Revision-Date: 2015-12-14 21:36+0100\n"
+"POT-Creation-Date: 2019-09-06 22:51+0200\n"
+"PO-Revision-Date: 2019-06-01 09:25+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"Language-Team: Turkish (http://www.transifex.net/projects/p/girara/language/"
-"tr/)\n"
+"Language-Team: Turkish (http://www.transifex.com/pwmt/girara/language/tr/)\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.6.10\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. unhandled command
 #: girara/callbacks.c:515
@@ -90,169 +88,165 @@ msgid "Unknown value for option: %s"
 msgstr "Seçenek için bilinmeyen değer: %s"
 
 #. settings
-#: girara/config.c:188
+#: girara/config.c:187
 msgid "Font"
 msgstr "Yazı tipi"
 
-#: girara/config.c:189
+#: girara/config.c:188
 msgid "Default foreground color"
 msgstr "Varsayılan yazı tipi rengi"
 
-#: girara/config.c:190
+#: girara/config.c:189
 msgid "Default background color"
 msgstr "Varsayılan arka plan rengi"
 
-#: girara/config.c:191
+#: girara/config.c:190
 msgid "Inputbar foreground color"
 msgstr "Giriş çubuğu yazı tipi rengi"
 
-#: girara/config.c:192
+#: girara/config.c:191
 msgid "Inputbar background color"
 msgstr "Giriş çubuğu arka plan rengi"
 
-#: girara/config.c:193
+#: girara/config.c:192
 msgid "Statusbar foreground color"
 msgstr "Durum çubuğu yazı tipi rengi"
 
-#: girara/config.c:194
+#: girara/config.c:193
 msgid "Statsubar background color"
 msgstr "Durum çubuğu arka plan rengi"
 
-#: girara/config.c:195
+#: girara/config.c:194
 msgid "Completion foreground color"
 msgstr "Tamamlama yazı tipi rengi"
 
-#: girara/config.c:196
+#: girara/config.c:195
 msgid "Completion background color"
 msgstr "Tamamlama arka plan rengi"
 
-#: girara/config.c:197
+#: girara/config.c:196
 msgid "Completion group foreground color"
 msgstr "Tamamlama grubu yazı tipi rengi"
 
-#: girara/config.c:198
+#: girara/config.c:197
 msgid "Completion group background color"
 msgstr "Tamamlama grubu arka plan rengi"
 
-#: girara/config.c:199
+#: girara/config.c:198
 msgid "Completion highlight foreground color"
 msgstr "Tamamlama vurgulama yazı tipi rengi"
 
-#: girara/config.c:200
+#: girara/config.c:199
 msgid "Completion highlight background color"
 msgstr "Tamamlama vurgulama arka plan rengi"
 
-#: girara/config.c:201
+#: girara/config.c:200
 msgid "Error notification foreground color"
 msgstr "Hata bildirimi yazı tipi rengi"
 
-#: girara/config.c:202
+#: girara/config.c:201
 msgid "Error notification background color"
 msgstr "Hata bildirimi arka plan rengi"
 
-#: girara/config.c:203
+#: girara/config.c:202
 msgid "Warning notification foreground color"
 msgstr "Uyarı bildirimi yazı tipi rengi"
 
-#: girara/config.c:204
+#: girara/config.c:203
 msgid "Warning notifaction background color"
 msgstr "Uyarı bildirimi arka plan rengi"
 
-#: girara/config.c:205
+#: girara/config.c:204
 msgid "Notification foreground color"
 msgstr "Bildirim yazı tipi rengi"
 
-#: girara/config.c:206
+#: girara/config.c:205
 msgid "Notification background color"
 msgstr "Bildirim arka plan rengi"
 
-#: girara/config.c:207
+#: girara/config.c:206
 msgid "Scrollbar foreground color"
 msgstr ""
 
-#: girara/config.c:208
+#: girara/config.c:207
 msgid "Scrollbar background color"
 msgstr ""
 
-#: girara/config.c:210
+#: girara/config.c:209
 msgid "Initial window width"
 msgstr "Başlangıçtaki pencere genişliği"
 
-#: girara/config.c:211
+#: girara/config.c:210
 msgid "Initial window height"
 msgstr "Başlangıçtaki pencere yüksekliği"
 
-#: girara/config.c:212
+#: girara/config.c:211
 msgid "Horizontal padding for the status, input, and notification bars"
 msgstr ""
 
-#: girara/config.c:213
+#: girara/config.c:212
 msgid "Vertical padding for the status, input, and notification bars"
 msgstr ""
 
-#: girara/config.c:214
+#: girara/config.c:213
 msgid "Number of completion items"
 msgstr "Tamamlama öğelerinin sayısı"
 
-#: girara/config.c:215
+#: girara/config.c:214
 msgid "Show both the horizontal and vertical scrollbars"
 msgstr ""
 
-#: girara/config.c:216
+#: girara/config.c:215
 msgid "Show the horizontal scrollbar"
 msgstr ""
 
-#: girara/config.c:217
+#: girara/config.c:216
 msgid "Show the vertical scrollbar"
 msgstr ""
 
-#: girara/config.c:218
+#: girara/config.c:217
 msgid "Window icon"
 msgstr "Pencere ikonu"
 
-#: girara/config.c:219
+#: girara/config.c:218
 msgid "Command to execute in :exec"
 msgstr ":exec için yürütülecek komut"
 
-#: girara/config.c:220
+#: girara/config.c:219
 msgid "Show or hide certain GUI elements"
 msgstr "Belirlenmiş GUI bileşenlerini göster ya da gizle"
 
-#: girara/config.c:221
-msgid "Enable smooth scrolling and zooming"
-msgstr ""
-
 #. commands
-#: girara/config.c:257
+#: girara/config.c:255
 msgid "Execute a command"
 msgstr "Komut yürüt"
 
-#: girara/config.c:258
+#: girara/config.c:256
 msgid "Map a key sequence"
 msgstr "Tuş kombinasyonu eşleştir"
 
-#: girara/config.c:259
+#: girara/config.c:257
 msgid "Quit the program"
 msgstr "Programdan çık"
 
-#: girara/config.c:260
+#: girara/config.c:258
 msgid "Set an option"
 msgstr "Seçenekleri değiştir"
 
-#: girara/config.c:261
+#: girara/config.c:259
 msgid "Unmap a key sequence"
 msgstr "Tuş kombinasyonu eşleşimini kaldır"
 
-#: girara/config.c:263
+#: girara/config.c:261
 msgid "Dump settings to a file"
 msgstr ""
 
-#: girara/settings.c:244
+#: girara/settings.c:251
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr ""
 
-#: girara/utils.c:474
+#: girara/utils.c:464
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Komut yürütülemedi: %s"

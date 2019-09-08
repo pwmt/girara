@@ -48,8 +48,6 @@ HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
 
 HIDDEN void girara_config_load_default(girara_session_t* session);
 
-HIDDEN void update_state_by_keyval(int *state, int keyval);
-
 HIDDEN void widget_add_class(GtkWidget* widget, const char* styleclass);
 
 HIDDEN void widget_remove_class(GtkWidget* widget, const char* styleclass);
@@ -298,6 +296,8 @@ struct girara_session_private_s
     girara_list_t* shortcut_mappings;
     girara_list_t* argument_mappings;
   } config;
+
+  GMutex feedkeys_mutex;
 };
 
 #endif

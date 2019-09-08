@@ -45,7 +45,7 @@ START_TEST(test_settings_basic) {
 static int callback_called = 0;
 
 static void
-setting_callback(girara_session_t* session, const char* name, girara_setting_type_t type, void* value, void* data)
+setting_callback(girara_session_t* session, const char* name, girara_setting_type_t type, const void* value, void* data)
 {
   fail_unless(callback_called == 0, NULL);
   fail_unless(session != NULL, NULL);

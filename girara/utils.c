@@ -19,8 +19,6 @@
 #include "settings.h"
 #include "internal.h"
 
-#define BLOCK_SIZE 64
-
 char*
 girara_fix_path(const char* path)
 {
@@ -63,7 +61,7 @@ girara_fix_path(const char* path)
 }
 
 bool
-girara_xdg_open(const char* uri)
+girara_xdg_open_with_working_directory(const char* uri, const char* working_directory)
 {
   if (uri == NULL || strlen(uri) == 0) {
     return false;
@@ -73,18 +71,66 @@ girara_xdg_open(const char* uri)
   char* argv[] = { g_strdup("xdg-open"), g_strdup(uri), NULL };
 
   GError* error = NULL;
-  const bool res = g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
+  const bool res = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
       NULL, NULL, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
     g_error_free(error);
   }
 
-  g_free(argv[0]);
   g_free(argv[1]);
+  g_free(argv[0]);
 
   return res;
 }
+
+bool
+girara_xdg_open(const char* uri)
+{
+  return girara_xdg_open_with_working_directory(uri, NULL);
+}
+
+#if defined(HAVE_GETPWNAM_R)
+static char*
+get_home_directory_getpwnam(const char* user)
+{
+#ifdef _SC_GETPW_R_SIZE_MAX
+  int bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
+  if (bufsize < 0) {
+    bufsize = 4096;
+  }
+#else
+  const int bufsize = 4096;
+#endif
+
+  char* buffer = g_try_malloc0(sizeof(char) * bufsize);
+  if (buffer == NULL) {
+    return NULL;
+  }
+
+  struct passwd pwd;
+  struct passwd* result = NULL;
+  if (getpwnam_r(user, &pwd, buffer, bufsize, &result) != 0) {
+    g_free(buffer);
+    return NULL;
+  }
+
+  char* dir = g_strdup(pwd.pw_dir);
+  g_free(buffer);
+  return dir;
+}
+#else
+static char*
+get_home_directory_getpwnam(const char* user)
+{
+  const struct passwd* pwd = getpwnam(user);
+  if (pwd != NULL) {
+    return g_strdup(pwd->pw_dir);
+  }
+
+  return NULL;
+}
+#endif
 
 char*
 girara_get_home_directory(const char* user)
@@ -93,32 +139,7 @@ girara_get_home_directory(const char* user)
     return g_strdup(g_get_home_dir());
   }
 
-  // XXX: The following code is very unportable.
-  struct passwd pwd;
-  struct passwd* result = NULL;
-#ifdef _SC_GETPW_R_SIZE_MAX
-  int bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
-  if (bufsize < 0) {
-    bufsize = 4096;
-  }
-#else
-  int bufsize = 4096;
-#endif
-
-  char* buffer = g_try_malloc0(sizeof(char) * bufsize);
-  if (buffer == NULL) {
-    return NULL;
-  }
-
-  getpwnam_r(user, &pwd, buffer, bufsize, &result);
-  if (result == NULL) {
-    g_free(buffer);
-    return NULL;
-  }
-
-  char* dir = g_strdup(pwd.pw_dir);
-  g_free(buffer);
-  return dir;
+  return get_home_directory_getpwnam(user);
 }
 
 char*
@@ -187,7 +208,7 @@ girara_file_open(const char* path, const char* mode)
   FILE* fp = fopen(fixed_path, mode);
   g_free(fixed_path);
   if (fp  == NULL) {
-        return NULL;
+    return NULL;
   }
 
   return fp;
@@ -287,7 +308,7 @@ girara_file_read2(FILE* file)
     return NULL;
   }
 
-  char* buffer    = malloc(size + 1);
+  char* buffer = malloc(size + 1);
   if (buffer == NULL) {
     return NULL;
   }
@@ -357,22 +378,6 @@ error_free:
   return NULL;
 }
 
-void
-update_state_by_keyval(int *state, int keyval)
-{
-  if (state == NULL) {
-    return;
-  }
-
-  if ((keyval >= '!' && keyval <= '/')
-      || (keyval >= ':' && keyval <= '@')
-      || (keyval >= '[' && keyval <= '`')
-      || (keyval >= '{' && keyval <= '~')
-      ) {
-    *state |= GDK_SHIFT_MASK;
-  }
-}
-
 char*
 girara_escape_string(const char* value)
 {
@@ -399,40 +404,13 @@ girara_replace_substring(const char* string, const char* old, const char* new)
     return NULL;
   }
 
-  size_t old_len = strlen(old);
-  size_t new_len = strlen(new);
-
-  /* count occurrences */
-  size_t count = 0;
-  size_t i = 0;
-
-  for (i = 0; string[i] != '\0'; i++) {
-    if (strstr(&string[i], old) == &string[i]) {
-      i += (old_len - 1);
-      count++;
-    }
-  }
-
-  if (count == 0) {
+  if (*string == '\0' || *old == '\0' || strstr(string, old) == NULL) {
     return g_strdup(string);
   }
 
-  char* ret = g_try_malloc0(sizeof(char) * (i - count * old_len + count * new_len + 1));
-  if (ret == NULL) {
-    return NULL;
-  }
-
-  /* replace */
-  char* iter = ret;
-  while (*string != '\0') {
-    if (strstr(string, old) == string) {
-      strncpy(iter, new, new_len);
-      iter += new_len;
-      string += old_len;
-    } else {
-      *iter++ = *string++;
-    }
-  }
+  gchar** split = g_strsplit(string, old, -1);
+  char* ret = g_strjoinv(new, split);
+  g_strfreev(split);
 
   return ret;
 }

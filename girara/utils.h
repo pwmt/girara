@@ -48,6 +48,15 @@ char* girara_get_xdg_path(girara_xdg_path_t path) GIRARA_VISIBLE;
 bool girara_xdg_open(const char* uri) GIRARA_VISIBLE;
 
 /**
+ * Opens a URI with xdg-open in a different working directory.
+ *
+ * @param uri the URI to be opened.
+ * @param working_directory working directory
+ * @return true on success, false otherwise
+ */
+bool girara_xdg_open_with_working_directory(const char* uri, const char* working_directory) GIRARA_VISIBLE;
+
+/**
  * Splits paths separated by : (as in $PATH) into a list.
  *
  * @param patharray String like $PATH to split

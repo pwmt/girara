@@ -144,7 +144,7 @@ typedef enum girara_setting_type_e
  * @param data User data
  */
 typedef void (*girara_setting_callback_t)(girara_session_t* session,
-    const char* name, girara_setting_type_t type, void* value, void* data);
+    const char* name, girara_setting_type_t type, const void* value, void* data);
 
 /**
  * Definition of an argument of a shortcut or buffered command

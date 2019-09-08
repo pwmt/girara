@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.3.2',
+  version: '0.3.3',
   meson_version: '>=0.48',
   default_options: 'c_std=c11',
 )
@@ -38,12 +38,19 @@ pango = dependency('pango', version: '>=1.14')
 build_dependencies = [libm, glib, gtk3, pango]
 pc_requires = ['glib-2.0', 'gtk+-3.0']
 
+# supported functions
+has_getpwnam_r = cc.has_function('getpwnam_r', prefix: '#define _DEFAULT_SOURCE\n#include <sys/types.h>\n#include <pwd.h>')
+
 # defines
 defines = [
   '-DGETTEXT_PACKAGE="libgirara-gtk3-@0@"'.format(so_major),
   '-DLOCALEDIR="@0@"'.format(join_paths(prefix, localedir)),
   '-D_DEFAULT_SOURCE',
 ]
+
+if has_getpwnam_r
+  defines += ['-DHAVE_GETPWNAM_R']
+endif
 
 # compile flags
 flags = [

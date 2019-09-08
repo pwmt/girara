@@ -172,7 +172,7 @@ fill_template_with_values(girara_session_t* session)
   };
 
   /* parse color values */
-  const char* color_settings[] = {
+  static const char* const color_settings[] = {
     "default-fg",
     "default-bg",
     "inputbar-fg",
@@ -314,6 +314,7 @@ girara_session_create(void)
 
   session_private->elements.statusbar_items = girara_list_new2(
       (girara_free_function_t) girara_statusbar_item_free);
+  g_mutex_init(&session_private->feedkeys_mutex);
 
   /* settings */
   session_private->settings = girara_sorted_list_new2(
@@ -355,11 +356,11 @@ girara_session_create(void)
   girara_config_load_default(session);
 
   /* create widgets */
-  session->gtk.box                      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
+  session->gtk.box                = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   session_private->gtk.overlay    = gtk_overlay_new();
   session_private->gtk.bottom_box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-  session->gtk.statusbar_entries        = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-  session->gtk.inputbar_box             = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+  session->gtk.statusbar_entries  = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+  session->gtk.inputbar_box       = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
   session->gtk.view              = gtk_scrolled_window_new(NULL, NULL);
   session->gtk.viewport          = gtk_viewport_new(NULL, NULL);
@@ -388,11 +389,8 @@ girara_session_init(girara_session_t* session, const char* sessionname)
   session->private_data->session_name = g_strdup(
       (sessionname == NULL) ? "girara" : sessionname);
 
-  bool smooth_scroll = false;
-  girara_setting_get(session, "smooth-scroll", &smooth_scroll);
-  if (smooth_scroll == true) {
-    gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
-  }
+  /* enable smooth scroll events */
+  gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
 
   /* load CSS style */
   fill_template_with_values(session);
@@ -614,6 +612,9 @@ girara_session_private_free(girara_session_private_t* session)
   /* clean up settings */
   girara_list_free(session->settings);
   session->settings = NULL;
+
+  /* clean up mutex */
+  g_mutex_clear(&session->feedkeys_mutex);
 
   g_slice_free(girara_session_private_t, session);
 }

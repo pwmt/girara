@@ -5,6 +5,7 @@
 #include "datastructures.h"
 #include "input-history.h"
 #include "internal.h"
+#include "log.h"
 #include "session.h"
 #include "settings.h"
 
@@ -12,7 +13,6 @@
 #include <string.h>
 
 static void girara_toggle_widget_visibility(GtkWidget* widget);
-static bool simulate_key_press(girara_session_t* session, int state, int key);
 
 bool
 girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer, girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data)
@@ -460,11 +460,70 @@ girara_sc_exec(girara_session_t* session, girara_argument_t* argument, girara_ev
   return false;
 }
 
+static bool
+simulate_key_press(girara_session_t* session, int state, int key)
+{
+  if (session == NULL || session->gtk.box == NULL) {
+    return false;
+  }
+
+  GdkEvent* event = gdk_event_new(GDK_KEY_PRESS);
+
+  event->any.type       = GDK_KEY_PRESS;
+  event->key.window     = g_object_ref(gtk_widget_get_parent_window(GTK_WIDGET(session->gtk.box)));
+  event->key.send_event = false;
+  event->key.time       = GDK_CURRENT_TIME;
+  event->key.state      = state;
+  event->key.keyval     = key;
+
+  GdkDisplay* display = gtk_widget_get_display(GTK_WIDGET(session->gtk.box));
+  GdkKeymapKey* keys  = NULL;
+  gint number_of_keys = 0;
+
+  if (gdk_keymap_get_entries_for_keyval(gdk_keymap_get_for_display(display),
+        event->key.keyval, &keys, &number_of_keys) == FALSE) {
+    gdk_event_free(event);
+    return false;
+  }
+
+  event->key.hardware_keycode = keys[0].keycode;
+  event->key.group            = keys[0].group;
+
+  g_free(keys);
+
+  gdk_event_put(event);
+  gdk_event_free(event);
+
+  gtk_main_iteration_do(FALSE);
+
+  return true;
+}
+
+static int
+update_state_by_keyval(int state, int keyval)
+{
+  /* The following is probably not true for some keyboard layouts. */
+  if ((keyval >= '!' && keyval <= '/')
+      || (keyval >= ':' && keyval <= '@')
+      || (keyval >= '[' && keyval <= '`')
+      || (keyval >= '{' && keyval <= '~')
+      ) {
+    state |= GDK_SHIFT_MASK;
+  }
+
+  return state;
+}
+
 bool
 girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     girara_event_t* UNUSED(event), unsigned int t)
 {
   if (session == NULL || argument == NULL) {
+    return false;
+  }
+
+  if (g_mutex_trylock(&session->private_data->feedkeys_mutex) == FALSE) {
+    girara_error("Recursive use of feedkeys detected. Aborting evaluation.");
     return false;
   }
 
@@ -507,7 +566,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
   char* input               = (char*) argument->data;
   unsigned int input_length = strlen(input);
 
-  t = (t == 0) ? 1 : t;
+  t = MAX(1, t);
   for (unsigned int c = 0; c < t; c++) {
     for (unsigned i = 0; i < input_length; i++) {
       int state  = 0;
@@ -520,7 +579,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
           goto single_key;
         }
 
-        int length = end - (input + i) - 1;
+        const int length = end - (input + i) - 1;
         char* tmp  = g_strndup(input + i + 1, length);
         bool found = false;
 
@@ -572,12 +631,12 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
       }
 
 single_key:
-
-      update_state_by_keyval(&state, keyval);
+      state = update_state_by_keyval(state, keyval);
       simulate_key_press(session, state, keyval);
     }
   }
 
+  g_mutex_unlock(&session->private_data->feedkeys_mutex);
   return true;
 }
 
@@ -709,7 +768,7 @@ girara_mouse_event_add(girara_session_t* session, guint mask, guint button,
 bool
 girara_mouse_event_remove(girara_session_t* session, guint mask, guint button, girara_mode_t mode)
 {
-  g_return_val_if_fail(session  != NULL, false);
+  g_return_val_if_fail(session != NULL, false);
 
   bool found = false;
   /* search for existing binding */
@@ -732,43 +791,4 @@ girara_mouse_event_free(girara_mouse_event_t* mouse_event)
     return;
   }
   g_slice_free(girara_mouse_event_t, mouse_event);
-}
-
-static bool
-simulate_key_press(girara_session_t* session, int state, int key)
-{
-  if (session == NULL || session->gtk.box == NULL) {
-    return false;
-  }
-
-  GdkEvent* event = gdk_event_new(GDK_KEY_PRESS);
-
-  event->any.type       = GDK_KEY_PRESS;
-  event->key.window     = g_object_ref(gtk_widget_get_parent_window(GTK_WIDGET(session->gtk.box)));
-  event->key.send_event = false;
-  event->key.time       = GDK_CURRENT_TIME;
-  event->key.state      = state;
-  event->key.keyval     = key;
-
-  GdkDisplay* display = gtk_widget_get_display(GTK_WIDGET(session->gtk.box));
-  GdkKeymapKey* keys  = NULL;
-  gint number_of_keys = 0;
-
-  if (gdk_keymap_get_entries_for_keyval(gdk_keymap_get_for_display(display),
-        event->key.keyval, &keys, &number_of_keys) == FALSE) {
-    gdk_event_free(event);
-    return false;
-  }
-
-  event->key.hardware_keycode = keys[0].keycode;
-  event->key.group            = keys[0].group;
-
-  g_free(keys);
-
-  gdk_event_put(event);
-  gdk_event_free(event);
-
-  gtk_main_iteration_do(FALSE);
-
-  return true;
 }

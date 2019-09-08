@@ -36,19 +36,19 @@ struct girara_setting_s
 };
 
 void
-girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, void* value)
+girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, const void* value)
 {
   g_return_if_fail(setting && (value || setting->type == STRING));
 
   switch(setting->type) {
     case BOOLEAN:
-      setting->value.b = *((bool *) value);
+      setting->value.b = *((const bool *) value);
       break;
     case FLOAT:
-      setting->value.f = *((float *) value);
+      setting->value.f = *((const float *) value);
       break;
     case INT:
-      setting->value.i = *((int *) value);
+      setting->value.i = *((const int *) value);
       break;
     case STRING:
       if (setting->value.s != NULL) {
@@ -66,7 +66,7 @@ girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, v
 }
 
 bool
-girara_setting_add(girara_session_t* session, const char* name, void* value, girara_setting_type_t type, bool init_only, const char* description, girara_setting_callback_t callback, void* data)
+girara_setting_add(girara_session_t* session, const char* name, const void* value, girara_setting_type_t type, bool init_only, const char* description, girara_setting_callback_t callback, void* data)
 {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
@@ -97,7 +97,7 @@ girara_setting_add(girara_session_t* session, const char* name, void* value, gir
 }
 
 bool
-girara_setting_set(girara_session_t* session, const char* name, void* value)
+girara_setting_set(girara_session_t* session, const char* name, const void* value)
 {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
@@ -116,24 +116,31 @@ girara_setting_get_value(girara_setting_t* setting, void* dest)
 {
   g_return_val_if_fail(setting != NULL && dest != NULL, false);
 
-  bool  *bvalue = (bool*) dest;
-  float *fvalue = (float*) dest;
-  int   *ivalue = (int*) dest;
-  char **svalue = (char**) dest;
-
   switch(setting->type) {
     case BOOLEAN:
+    {
+      bool *bvalue = (bool *)dest;
       *bvalue = setting->value.b;
       break;
+    }
     case FLOAT:
+    {
+      float *fvalue = (float *)dest;
       *fvalue = setting->value.f;
       break;
+    }
     case INT:
+    {
+      int   *ivalue = (int*) dest;
       *ivalue = setting->value.i;
       break;
+    }
     case STRING:
+    {
+      char **svalue = (char**) dest;
       *svalue = setting->value.s ? g_strdup(setting->value.s) : NULL;
       break;
+    }
     default:
       g_assert(false);
   }
@@ -243,8 +250,6 @@ girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
     girara_notify(session, GIRARA_ERROR,
         _("Invalid number of arguments passed: %zu instead of 1"),
         number_of_arguments);
-    return false;
-
     return false;
   }
 
