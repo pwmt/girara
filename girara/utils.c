@@ -90,23 +90,17 @@ girara_xdg_open(const char* uri)
   return girara_xdg_open_with_working_directory(uri, NULL);
 }
 
-char*
-girara_get_home_directory(const char* user)
+#if defined(HAVE_GETPWNAM_R)
+static char*
+get_home_directory_getpwnam(const char* user)
 {
-  if (user == NULL || g_strcmp0(user, g_get_user_name()) == 0) {
-    return g_strdup(g_get_home_dir());
-  }
-
-  // XXX: The following code is very unportable.
-  struct passwd pwd;
-  struct passwd* result = NULL;
 #ifdef _SC_GETPW_R_SIZE_MAX
   int bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
   if (bufsize < 0) {
     bufsize = 4096;
   }
 #else
-  int bufsize = 4096;
+  const int bufsize = 4096;
 #endif
 
   char* buffer = g_try_malloc0(sizeof(char) * bufsize);
@@ -114,8 +108,9 @@ girara_get_home_directory(const char* user)
     return NULL;
   }
 
-  getpwnam_r(user, &pwd, buffer, bufsize, &result);
-  if (result == NULL) {
+  struct passwd pwd;
+  struct passwd* result = NULL;
+  if (getpwnam_r(user, &pwd, buffer, bufsize, &result) != 0) {
     g_free(buffer);
     return NULL;
   }
@@ -123,6 +118,28 @@ girara_get_home_directory(const char* user)
   char* dir = g_strdup(pwd.pw_dir);
   g_free(buffer);
   return dir;
+}
+#else
+static char*
+get_home_directory_getpwnam(const char* user)
+{
+  const struct passwd* pwd = getpwnam(user);
+  if (pwd != NULL) {
+    return g_strdup(pwd->pw_dir);
+  }
+
+  return NULL;
+}
+#endif
+
+char*
+girara_get_home_directory(const char* user)
+{
+  if (user == NULL || g_strcmp0(user, g_get_user_name()) == 0) {
+    return g_strdup(g_get_home_dir());
+  }
+
+  return get_home_directory_getpwnam(user);
 }
 
 char*
