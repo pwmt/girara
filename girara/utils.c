@@ -2,6 +2,7 @@
 
 #include <ctype.h>
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <glib/gi18n-lib.h>
 #include <limits.h>
 #include <pwd.h>
@@ -72,11 +73,31 @@ girara_xdg_open_with_working_directory(const char* uri, const char* working_dire
   char* argv[] = { xdg_open, g_strdup(uri), NULL };
 
   GError* error = NULL;
-  const bool res = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
+  bool res = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
       NULL, NULL, &error);
   if (error != NULL) {
-    girara_warning("Failed to execute xdg-open: %s", error->message);
+    girara_warning("Failed to execute 'xdg-open %s': %s", uri, error->message);
     g_error_free(error);
+    error = NULL;
+  }
+
+  if (res == false) {
+    /* fall back to `gio open` */
+    char* current_dir = working_directory != NULL ? g_get_current_dir() : NULL;
+    if (working_directory != NULL) {
+      g_chdir(working_directory);
+    }
+
+    res = g_app_info_launch_default_for_uri(uri, NULL, &error);
+    if (error != NULL) {
+      girara_warning("Failed to open '%s': %s", uri, error->message);
+      g_error_free(error);
+    }
+
+    if (working_directory != NULL) {
+      g_chdir(current_dir);
+      g_free(current_dir);
+    }
   }
 
   g_free(argv[1]);
