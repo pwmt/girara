@@ -68,18 +68,18 @@ girara_xdg_open_with_working_directory(const char* uri, const char* working_dire
   }
 
   /* g_spawn_async expects char** */
-  char* argv[] = { g_strdup("xdg-open"), g_strdup(uri), NULL };
+  static char xdg_open[] = "xdg-open";
+  char* argv[] = { xdg_open, g_strdup(uri), NULL };
 
   GError* error = NULL;
   const bool res = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
       NULL, NULL, &error);
   if (error != NULL) {
-    girara_warning("Failed to execute command: %s", error->message);
+    girara_warning("Failed to execute xdg-open: %s", error->message);
     g_error_free(error);
   }
 
   g_free(argv[1]);
-  g_free(argv[0]);
 
   return res;
 }
