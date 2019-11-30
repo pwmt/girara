@@ -124,7 +124,7 @@ void girara_clean_line(char* line) GIRARA_VISIBLE;
  * @param size Number of bytes
  * @return Pointer to the allocated memory block or NULL
  */
-void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2) GIRARA_VISIBLE;
+void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2) GIRARA_VISIBLE GIRARA_DEPRECATED_;
 
 /**
  * Escape \\, \\t, ", ' and spaces in strings.

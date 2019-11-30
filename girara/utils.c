@@ -389,7 +389,7 @@ girara_safe_realloc(void** ptr, size_t size)
   }
 
   *ptr = tmp;
-  return *ptr;
+  return tmp;
 
 error_free:
 

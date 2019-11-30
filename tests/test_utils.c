@@ -192,18 +192,6 @@ START_TEST(test_file_read) {
   g_free(path);
 } END_TEST
 
-START_TEST(test_safe_realloc) {
-  ck_assert_ptr_null(girara_safe_realloc(NULL, 0u));
-
-  void* ptr = NULL;
-  ck_assert_ptr_nonnull(girara_safe_realloc(&ptr, sizeof(int)));
-  ck_assert_ptr_nonnull(ptr);
-  ck_assert_ptr_nonnull(girara_safe_realloc(&ptr, 1024*sizeof(int)));
-  ck_assert_ptr_nonnull(ptr);
-  ck_assert_ptr_null(girara_safe_realloc(&ptr, 0u));
-  ck_assert_ptr_null(ptr);
-} END_TEST
-
 START_TEST(test_split_path) {
   ck_assert_ptr_null(girara_split_path_array(NULL));
   ck_assert_ptr_null(girara_split_path_array(""));
@@ -286,11 +274,6 @@ static Suite* suite_utils(void)
   /* read file */
   tcase = tcase_create("file_read");
   tcase_add_test(tcase, test_file_read);
-  suite_add_tcase(suite, tcase);
-
-  /* safe realloc */
-  tcase = tcase_create("safe_realloc");
-  tcase_add_test(tcase, test_safe_realloc);
   suite_add_tcase(suite, tcase);
 
   /* split path */
