@@ -160,5 +160,7 @@ pkg.generate(
   requires_private: pc_requires_private,
 )
 
+girara_dependency = declare_dependency(link_with: girara, include_directories: include_directories)
+
 subdir('doc')
 subdir('tests')
