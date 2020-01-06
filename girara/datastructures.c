@@ -178,7 +178,7 @@ girara_list_contains(girara_list_t* list, void* data)
 }
 
 void*
-girara_list_find(girara_list_t* list, girara_compare_function_t compare, const void* data)
+girara_list_find(const girara_list_t* list, girara_compare_function_t compare, const void* data)
 {
   g_return_val_if_fail(list != NULL && compare != NULL, NULL);
   if (list->start == NULL) {

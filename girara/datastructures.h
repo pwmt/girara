@@ -141,7 +141,7 @@ void girara_list_sort(girara_list_t* list, girara_compare_function_t compare) GI
  * @param data data passed as the second argument to the compare function
  * @return the element if found or NULL
  */
-void* girara_list_find(girara_list_t* list, girara_compare_function_t compare,
+void* girara_list_find(const girara_list_t* list, girara_compare_function_t compare,
     const void* data) GIRARA_VISIBLE;
 
 /**

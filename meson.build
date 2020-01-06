@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.3.3',
+  version: '0.3.4',
   meson_version: '>=0.48',
   default_options: 'c_std=c11',
 )
@@ -159,6 +159,8 @@ pkg.generate(
   requires: pc_requires,
   requires_private: pc_requires_private,
 )
+
+girara_dependency = declare_dependency(link_with: girara, include_directories: include_directories)
 
 subdir('doc')
 subdir('tests')

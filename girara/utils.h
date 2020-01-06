@@ -40,7 +40,8 @@ char* girara_get_home_directory(const char* user) GIRARA_VISIBLE;
 char* girara_get_xdg_path(girara_xdg_path_t path) GIRARA_VISIBLE;
 
 /**
- * Opens a URI with xdg-open.
+ * Opens a URI with xdg-open. If xdg-open is not available, it falls back to the equivalent of gio
+ * open.
  *
  * @param uri the URI to be opened.
  * @return true on success, false otherwise
@@ -48,7 +49,8 @@ char* girara_get_xdg_path(girara_xdg_path_t path) GIRARA_VISIBLE;
 bool girara_xdg_open(const char* uri) GIRARA_VISIBLE;
 
 /**
- * Opens a URI with xdg-open in a different working directory.
+ * Opens a URI with xdg-open in a different working directory. If xdg-open is not available, it
+ * falls back to the equivalent of gio open.
  *
  * @param uri the URI to be opened.
  * @param working_directory working directory
