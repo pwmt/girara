@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-06 22:51+0200\n"
+"POT-Creation-Date: 2020-03-22 21:59+0100\n"
 "PO-Revision-Date: 2019-06-01 09:25+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Russian (http://www.transifex.com/pwmt/girara/language/ru/)\n"
@@ -245,7 +245,7 @@ msgstr ""
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Передано неверное количество аргументов: %zu вместо как минимум 1"
 
-#: girara/utils.c:464
+#: girara/utils.c:473
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Не удалось выполнить команду: %s"
