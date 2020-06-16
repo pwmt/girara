@@ -2,14 +2,15 @@
 # SPDX-License-Identifier: Zlib
 #
 # Translators:
+# crt0r citrus, 2020
 # Vladimir Lomov <irk.translator@yandex.ru>, 2013,2015
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-22 21:59+0100\n"
-"PO-Revision-Date: 2019-06-01 09:25+0000\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"POT-Creation-Date: 2020-06-17 00:04+0200\n"
+"PO-Revision-Date: 2020-04-28 19:51+0000\n"
+"Last-Translator: crt0r citrus\n"
 "Language-Team: Russian (http://www.transifex.com/pwmt/girara/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -165,11 +166,11 @@ msgstr "Цвет фона в уведомлениях"
 
 #: girara/config.c:206
 msgid "Scrollbar foreground color"
-msgstr ""
+msgstr "Цвет полосы прокрутки"
 
 #: girara/config.c:207
 msgid "Scrollbar background color"
-msgstr ""
+msgstr "Фон полосы прокрутки"
 
 #: girara/config.c:209
 msgid "Initial window width"
@@ -238,7 +239,7 @@ msgstr "Убрать определение с клавиатурной комб
 
 #: girara/config.c:261
 msgid "Dump settings to a file"
-msgstr ""
+msgstr "Скопировать настройки в файл"
 
 #: girara/settings.c:251
 #, c-format
