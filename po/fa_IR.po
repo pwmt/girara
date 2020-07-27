@@ -1,249 +1,250 @@
-# girara - language file (Dutch)
+# girara - language file (Persian)
 # SPDX-License-Identifier: Zlib
 #
 # Translators:
-# Heimen Stoffels <vistausss@outlook.com>, 2018
+# Goudarz Jafari <goudarz.jafari@gmail.com>, 2020
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-17 00:04+0200\n"
-"PO-Revision-Date: 2019-06-01 09:25+0000\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"Language-Team: Dutch (http://www.transifex.com/pwmt/girara/language/nl/)\n"
-"Language: nl\n"
+"PO-Revision-Date: 2020-03-12 21:19+0000\n"
+"Last-Translator: Goudarz Jafari <goudarz.jafari@gmail.com>\n"
+"Language-Team: Persian (Iran) (http://www.transifex.com/pwmt/girara/language/"
+"fa_IR/)\n"
+"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. unhandled command
 #: girara/callbacks.c:515
 #, c-format
 msgid "Not a valid command: %s"
-msgstr "Ongeldige opdracht: %s"
+msgstr "دستور معتبر نیست: %s"
 
 #: girara/commands.c:111 girara/commands.c:311
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr "Ongeldig aantal argumenten: %zu i.p.v. minimaal %u"
+msgstr ""
 
 #: girara/commands.c:145
 #, c-format
 msgid "Unregistered mode specified: %s"
-msgstr "Niet-geregistreerde modus opgegeven: %s"
+msgstr ""
 
 #: girara/commands.c:177
 #, c-format
 msgid "Invalid modifier in %s"
-msgstr "Ongeldige toets in %s"
+msgstr ""
 
 #: girara/commands.c:216
 #, c-format
 msgid "Invalid special key value for %s"
-msgstr "Ongeldige speciale toets-waarde voor %s"
+msgstr ""
 
 #: girara/commands.c:252
 #, c-format
 msgid "Invalid special key value or mode %s"
-msgstr "Ongeldige speciale toets-waarde of modus %s"
+msgstr ""
 
 #: girara/commands.c:335
 #, c-format
 msgid "Not a valid shortcut function: %s"
-msgstr "Ongeldige sneltoetsfunctie: %s"
+msgstr ""
 
 #: girara/commands.c:423
 msgid "Not enough arguments."
-msgstr "Onvoldoende argumenten."
+msgstr ""
 
 #: girara/commands.c:428
 msgid "Too many arguments."
-msgstr "Teveel argumenten."
+msgstr ""
 
 #: girara/commands.c:441
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Onbekende optie: %s"
+msgstr ""
 
 #: girara/commands.c:455
 msgid "true"
-msgstr "waar"
+msgstr ""
 
 #: girara/commands.c:455
 msgid "false"
-msgstr "onwaar"
+msgstr ""
 
 #: girara/commands.c:487
 #, c-format
 msgid "No value defined for option: %s"
-msgstr "Geen waarde opgegeven voor optie: %s"
+msgstr ""
 
 #: girara/commands.c:502
 #, c-format
 msgid "Unknown value for option: %s"
-msgstr "Onbekende waarde voor optie: %s"
+msgstr ""
 
 #. settings
 #: girara/config.c:187
 msgid "Font"
-msgstr "Lettertype"
+msgstr ""
 
 #: girara/config.c:188
 msgid "Default foreground color"
-msgstr "Standaard voorgrondkleur"
+msgstr ""
 
 #: girara/config.c:189
 msgid "Default background color"
-msgstr "Standaard achtergrondkleur"
+msgstr ""
 
 #: girara/config.c:190
 msgid "Inputbar foreground color"
-msgstr "Voorgrondkleur van invoerbalk"
+msgstr ""
 
 #: girara/config.c:191
 msgid "Inputbar background color"
-msgstr "Achtergrondkleur van invoerbal"
+msgstr ""
 
 #: girara/config.c:192
 msgid "Statusbar foreground color"
-msgstr "Voorgrondkleur van statusbalk"
+msgstr ""
 
 #: girara/config.c:193
 msgid "Statsubar background color"
-msgstr "Achtergrondkleur van statusbalk"
+msgstr ""
 
 #: girara/config.c:194
 msgid "Completion foreground color"
-msgstr "Voorgrondkleur van automatisch aanvullen"
+msgstr ""
 
 #: girara/config.c:195
 msgid "Completion background color"
-msgstr "Achtergrondkleur van automatisch aanvullen"
+msgstr ""
 
 #: girara/config.c:196
 msgid "Completion group foreground color"
-msgstr "Voorgrondkleur van automatisch aanvullen-groep"
+msgstr ""
 
 #: girara/config.c:197
 msgid "Completion group background color"
-msgstr "Achtergrondkleur van automatisch aanvullen-groep"
+msgstr ""
 
 #: girara/config.c:198
 msgid "Completion highlight foreground color"
-msgstr "Voorgrondkleur van automatisch aanvullen-markering"
+msgstr ""
 
 #: girara/config.c:199
 msgid "Completion highlight background color"
-msgstr "Achtergrondkleur van automatisch aanvullen-markering"
+msgstr ""
 
 #: girara/config.c:200
 msgid "Error notification foreground color"
-msgstr "Voorgrondkleur van foutmelding"
+msgstr ""
 
 #: girara/config.c:201
 msgid "Error notification background color"
-msgstr "Achtergrondkleur van foutmelding"
+msgstr ""
 
 #: girara/config.c:202
 msgid "Warning notification foreground color"
-msgstr "Voorgrondkleur van waarschuwingsmelding"
+msgstr ""
 
 #: girara/config.c:203
 msgid "Warning notifaction background color"
-msgstr "Achtergrondkleur van waarschuwingsmelding"
+msgstr ""
 
 #: girara/config.c:204
 msgid "Notification foreground color"
-msgstr "Voorgrondkleur van melding"
+msgstr ""
 
 #: girara/config.c:205
 msgid "Notification background color"
-msgstr "Achtergrondkleur van melding"
+msgstr ""
 
 #: girara/config.c:206
 msgid "Scrollbar foreground color"
-msgstr "Voorgrondkleur van schuifbalk"
+msgstr ""
 
 #: girara/config.c:207
 msgid "Scrollbar background color"
-msgstr "Achtergrondkleur van schuifbalk"
+msgstr ""
 
 #: girara/config.c:209
 msgid "Initial window width"
-msgstr "Initiële vensterbreedte"
+msgstr ""
 
 #: girara/config.c:210
 msgid "Initial window height"
-msgstr "Initiële vensterhoogte"
+msgstr ""
 
 #: girara/config.c:211
 msgid "Horizontal padding for the status, input, and notification bars"
-msgstr "Horizontale opvulling voor de statusinvoer- en meldingbalken"
+msgstr ""
 
 #: girara/config.c:212
 msgid "Vertical padding for the status, input, and notification bars"
-msgstr "Verticale opvulling voor de statusinvoer- en meldingsbalken"
+msgstr ""
 
 #: girara/config.c:213
 msgid "Number of completion items"
-msgstr "Aantal automatisch aanvullen-items"
+msgstr ""
 
 #: girara/config.c:214
 msgid "Show both the horizontal and vertical scrollbars"
-msgstr "Zowel horizontale als verticale schuifbalken weergeven"
+msgstr ""
 
 #: girara/config.c:215
 msgid "Show the horizontal scrollbar"
-msgstr "Horizontale schuifbalk weergeven"
+msgstr ""
 
 #: girara/config.c:216
 msgid "Show the vertical scrollbar"
-msgstr "Verticale schuifbalk weergeven"
+msgstr ""
 
 #: girara/config.c:217
 msgid "Window icon"
-msgstr "Vensterpictogram"
+msgstr ""
 
 #: girara/config.c:218
 msgid "Command to execute in :exec"
-msgstr "Uit te voeren opdracht in :exec"
+msgstr ""
 
 #: girara/config.c:219
 msgid "Show or hide certain GUI elements"
-msgstr "Bepaalde app-elementen weergeven of verbergen"
+msgstr ""
 
 #. commands
 #: girara/config.c:255
 msgid "Execute a command"
-msgstr "Opdracht uitvoeren"
+msgstr ""
 
 #: girara/config.c:256
 msgid "Map a key sequence"
-msgstr "Toetsaanslag toekennen"
+msgstr ""
 
 #: girara/config.c:257
 msgid "Quit the program"
-msgstr "Applicatie afsluiten"
+msgstr ""
 
 #: girara/config.c:258
 msgid "Set an option"
-msgstr "Optie instellen"
+msgstr ""
 
 #: girara/config.c:259
 msgid "Unmap a key sequence"
-msgstr "Toetsaanslag verwijderen"
+msgstr ""
 
 #: girara/config.c:261
 msgid "Dump settings to a file"
-msgstr "Instellingen opslaan naar een bestand"
+msgstr ""
 
 #: girara/settings.c:251
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
-msgstr "Ongeldig aantal argumenten: %zu i.p.v. 1"
+msgstr ""
 
 #: girara/utils.c:473
 #, c-format
 msgid "Failed to execute command: %s"
-msgstr "Het uitvoeren van de opdracht is mislukt: %s"
+msgstr ""

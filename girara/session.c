@@ -378,6 +378,16 @@ girara_session_create(void)
   return session;
 }
 
+static void
+screen_changed(GtkWidget* widget, GdkScreen* GIRARA_UNUSED(old_screen), gpointer GIRARA_UNUSED(userdata)) {
+  GdkScreen* screen = gtk_widget_get_screen(widget);
+  GdkVisual* visual = gdk_screen_get_rgba_visual(screen);
+  if (!visual) {
+    visual = gdk_screen_get_system_visual(screen);
+  }
+  gtk_widget_set_visual(widget, visual);
+}
+
 bool
 girara_session_init(girara_session_t* session, const char* sessionname)
 {
@@ -409,6 +419,9 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 #endif
 
   gtk_widget_set_name(session->gtk.window, session->private_data->session_name);
+
+  g_signal_connect(G_OBJECT(session->gtk.window), "screen-changed", G_CALLBACK(screen_changed), NULL);
+  screen_changed(GTK_WIDGET(session->gtk.window), NULL, NULL);
 
   /* apply CSS style */
   css_template_changed(session->private_data->csstemplate, session);

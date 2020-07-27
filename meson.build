@@ -1,7 +1,7 @@
 project('girara', 'c',
-  version: '0.3.4',
+  version: '0.3.5',
   meson_version: '>=0.48',
-  default_options: 'c_std=c11',
+  default_options: ['c_std=c11', 'warning_level=3'],
 )
 
 version = meson.project_version()
@@ -54,9 +54,6 @@ endif
 
 # compile flags
 flags = [
-  '-Wall',
-  '-Wextra',
-  '-pedantic',
   '-Wmissing-declarations',
   '-Werror=implicit-function-declaration',
   '-Werror=vla'
