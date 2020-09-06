@@ -248,7 +248,7 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
         && mouse_event->event_type == event.type
         && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
-      mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
+      mouse_event->function(session, &mouse_event->argument, &event, session_private->buffer.n);
       handled = true;
       break;
     }
