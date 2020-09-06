@@ -40,4 +40,14 @@ bool girara_special_command_add(girara_session_t* session, char identifier,
     girara_inputbar_special_function_t function, bool always, int argument_n,
     void* argument_data) GIRARA_VISIBLE;
 
+/**
+ * Parse input and execute the command
+ *
+ * @param session The used girara session
+ * @param input User input
+ * @return TRUE No error occurred
+ * @return FALSE An error occured */
+bool girara_command_run(girara_session_t* session, const char* input) GIRARA_VISIBLE;
+
+
 #endif
