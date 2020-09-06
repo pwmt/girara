@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-17 00:04+0200\n"
-"PO-Revision-Date: 2020-06-17 00:06+0200\n"
+"POT-Creation-Date: 2020-09-06 19:26+0200\n"
+"PO-Revision-Date: 2020-05-09 09:43+0000\n"
 "Last-Translator: Юрій Яновський <lytvyn349@ukr.net>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/pwmt/girara/"
 "language/uk_UA/)\n"
@@ -19,12 +19,6 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#. unhandled command
-#: girara/callbacks.c:515
-#, c-format
-msgid "Not a valid command: %s"
-msgstr "Неправильна команда: %s"
 
 #: girara/commands.c:111 girara/commands.c:311
 #, c-format
@@ -86,6 +80,12 @@ msgstr "Не визначено значення для параметра: %s"
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Невідоме значення для параметра: %s"
+
+#. unhandled command
+#: girara/commands.c:700
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Неправильна команда: %s"
 
 #. settings
 #: girara/config.c:187

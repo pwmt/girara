@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-17 00:04+0200\n"
+"POT-Creation-Date: 2020-09-06 19:26+0200\n"
 "PO-Revision-Date: 2019-06-01 09:25+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: French (http://www.transifex.com/pwmt/girara/language/fr/)\n"
@@ -18,12 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. unhandled command
-#: girara/callbacks.c:515
-#, c-format
-msgid "Not a valid command: %s"
-msgstr "Pas une commande valide : %s"
 
 #: girara/commands.c:111 girara/commands.c:311
 #, c-format
@@ -85,6 +79,12 @@ msgstr "Aucune valeur définie pour l'option : %s"
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Valeur inconnue pour l'option : %s"
+
+#. unhandled command
+#: girara/commands.c:700
+#, c-format
+msgid "Not a valid command: %s"
+msgstr "Pas une commande valide : %s"
 
 #. settings
 #: girara/config.c:187
