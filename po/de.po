@@ -62,7 +62,7 @@ msgstr "Zu viele Argumente."
 #: girara/commands.c:441
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Unbekannte Otion: %s"
+msgstr "Unbekannte Option: %s"
 
 #: girara/commands.c:455
 msgid "true"
