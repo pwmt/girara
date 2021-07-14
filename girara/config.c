@@ -111,59 +111,6 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
     GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
 }
 
-static void
-cb_scrollbars(girara_session_t* session, const char* name,
-    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
-{
-  g_return_if_fail(session != NULL && value != NULL);
-
-  const bool val = *(const bool*) value;
-
-  char* guioptions = NULL;
-  girara_setting_get(session, "guioptions", &guioptions);
-  g_return_if_fail(guioptions != NULL);
-
-  bool show_hscrollbar = strchr(guioptions, 'h') != NULL;
-  bool show_vscrollbar = strchr(guioptions, 'v') != NULL;
-
-  if (g_strcmp0(name, "show-scrollbars") == 0) {
-    show_hscrollbar = show_vscrollbar = val;
-  } else if (g_strcmp0(name, "show-h-scrollbar") == 0) {
-    show_hscrollbar = val;
-  } else if (g_strcmp0(name, "show-v-scrollbar") == 0) {
-    show_vscrollbar = val;
-  }
-
-  const size_t guioptions_len = strlen(guioptions);
-  char* new_guioptions        = g_try_malloc0(sizeof(char) * (guioptions_len + 3));
-  char* iterator              = new_guioptions;
-  if (new_guioptions == NULL) {
-    g_free(guioptions);
-    return;
-  }
-
-  /* copy everything apart from h and v */
-  for (size_t i = 0; i != guioptions_len; ++i) {
-    if (guioptions[i] != 'h' && guioptions[i] != 'v') {
-      *iterator = guioptions[i];
-      ++iterator;
-    }
-  }
-  g_free(guioptions);
-
-  if (show_hscrollbar == true) {
-    *iterator = 'h';
-    ++iterator;
-  }
-  if (show_vscrollbar == true) {
-    *iterator = 'v';
-    ++iterator;
-  }
-
-  girara_setting_set(session, "guioptions", new_guioptions);
-  g_free(new_guioptions);
-}
-
 void
 girara_config_load_default(girara_session_t* session)
 {
@@ -177,7 +124,6 @@ girara_config_load_default(girara_session_t* session)
   const int window_width          = 800;
   const int window_height         = 600;
   const int n_completion_items    = 15;
-  const bool show_scrollbars      = false;
   girara_mode_t normal_mode = session->modes.normal;
 
   /* other values */
@@ -211,9 +157,6 @@ girara_config_load_default(girara_session_t* session)
   girara_setting_add(session, "statusbar-h-padding",      &statusbar_h_padding, INT,     TRUE,  _("Horizontal padding for the status, input, and notification bars"), NULL, NULL);
   girara_setting_add(session, "statusbar-v-padding",      &statusbar_v_padding, INT,     TRUE,  _("Vertical padding for the status, input, and notification bars"), NULL, NULL);
   girara_setting_add(session, "n-completion-items",       &n_completion_items,  INT,     TRUE,  _("Number of completion items"), NULL, NULL);
-  girara_setting_add(session, "show-scrollbars",          &show_scrollbars,     BOOLEAN, FALSE, _("Show both the horizontal and vertical scrollbars"), cb_scrollbars, NULL);
-  girara_setting_add(session, "show-h-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the horizontal scrollbar"), cb_scrollbars, NULL);
-  girara_setting_add(session, "show-v-scrollbar",         &show_scrollbars,     BOOLEAN, FALSE, _("Show the vertical scrollbar"), cb_scrollbars, NULL);
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
   girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);

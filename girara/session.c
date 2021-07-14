@@ -94,10 +94,16 @@ css_template_fill_font(GiraraTemplate* csstemplate, const char* font)
   girara_template_set_variable_value(csstemplate, "font-family",
       pango_font_description_get_family(descr));
 
-  char* size = g_strdup_printf("%d%s", pango_font_description_get_size(descr) / PANGO_SCALE,
-      pango_font_description_get_size_is_absolute(descr) == FALSE ? "pt" : "");
-  girara_template_set_variable_value(csstemplate, "font-size", size);
-  g_free(size);
+  const int font_size = pango_font_description_get_size(descr);
+  if (!font_size) {
+    girara_debug("no font size given, defaulting to 9");
+    girara_template_set_variable_value(csstemplate, "font-size", "9pt");
+  } else {
+    char* size = g_strdup_printf("%d%s", pango_font_description_get_size(descr) / PANGO_SCALE,
+        pango_font_description_get_size_is_absolute(descr) == FALSE ? "pt" : "");
+    girara_template_set_variable_value(csstemplate, "font-size", size);
+    g_free(size);
+  }
 
   switch (pango_font_description_get_weight(descr)) {
     case PANGO_WEIGHT_THIN:

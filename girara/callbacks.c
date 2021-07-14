@@ -2,6 +2,7 @@
 
 #include "callbacks.h"
 
+#include "commands.h"
 #include "datastructures.h"
 #include "input-history.h"
 #include "internal.h"
@@ -248,7 +249,7 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
         && mouse_event->event_type == event.type
         && (session->modes.current_mode == mouse_event->mode || mouse_event->mode == 0)
        ) {
-      mouse_event->function(session, &(mouse_event->argument), &event, session_private->buffer.n);
+      mouse_event->function(session, &mouse_event->argument, &event, session_private->buffer.n);
       handled = true;
       break;
     }
@@ -447,76 +448,9 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     }
   );
 
-  /* parse input */
-  gchar** argv = NULL;
-  gint    argc = 0;
-
-  if (g_shell_parse_argv(input, &argc, &argv, NULL) == FALSE) {
-    girara_debug("Failed to parse argument.");
-    g_free(input);
-    return false;
-  }
-
-  gchar *cmd = argv[0];
-
-  /* search commands */
-  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.commands, girara_command_t*, iter, binding_command,
-    if ((g_strcmp0(cmd, binding_command->command) == 0) ||
-        (g_strcmp0(cmd, binding_command->abbr)    == 0)) {
-      girara_list_t* argument_list = girara_list_new();
-      if (argument_list == NULL) {
-        g_free(input);
-        g_strfreev(argv);
-        girara_list_iterator_free(iter);
-        return false;
-      }
-
-      girara_list_set_free_function(argument_list, g_free);
-
-      for(int i = 1; i < argc; i++) {
-        char* argument = g_strdup(argv[i]);
-        girara_list_append(argument_list, (void*) argument);
-      }
-
-      binding_command->function(session, argument_list);
-
-      girara_list_free(argument_list);
-      g_free(input);
-      g_strfreev(argv);
-
-      girara_isc_abort(session, NULL, NULL, 0);
-
-      if (session->global.autohide_inputbar == true) {
-        gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
-      }
-      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
-      girara_list_iterator_free(iter);
-      return true;
-    }
-  );
-
-  /* check for unknown command event handler */
-  if (session->events.unknown_command != NULL) {
-    if (session->events.unknown_command(session, input) == true) {
-      g_strfreev(argv);
-      g_free(input);
-      girara_isc_abort(session, NULL, NULL, 0);
-
-      if (session->global.autohide_inputbar == true) {
-        gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
-      }
-      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
-
-      return true;
-    }
-  }
-
-  /* unhandled command */
-  girara_notify(session, GIRARA_ERROR, _("Not a valid command: %s"), cmd);
-  g_strfreev(argv);
-  girara_isc_abort(session, NULL, NULL, 0);
-
-  return false;
+  bool ret = girara_command_run(session, input);
+  g_free(input);
+  return ret;
 }
 
 gboolean

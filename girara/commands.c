@@ -54,7 +54,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
     {"Up",        GDK_KEY_Up},
     {"Print",     GDK_KEY_Print},
-    {"Home",     GDK_KEY_Home}
+    {"Home",      GDK_KEY_Home}
   };
 
   typedef struct gdk_mouse_button_s
@@ -631,4 +631,75 @@ girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list)
   }
 
   return girara_exec_with_argument_list(session, argument_list);
+}
+
+bool
+girara_command_run(girara_session_t* session, const char* input)
+{
+  /* parse input */
+  gchar** argv = NULL;
+  gint    argc = 0;
+
+  if (g_shell_parse_argv(input, &argc, &argv, NULL) == FALSE) {
+    girara_debug("Failed to parse argument.");
+    return false;
+  }
+
+  gchar *cmd = argv[0];
+
+  /* search commands */
+  GIRARA_LIST_FOREACH_BODY_WITH_ITER(session->bindings.commands, girara_command_t*, iter, binding_command,
+    if ((g_strcmp0(cmd, binding_command->command) == 0) ||
+        (g_strcmp0(cmd, binding_command->abbr)    == 0)) {
+      girara_list_t* argument_list = girara_list_new();
+      if (argument_list == NULL) {
+        g_strfreev(argv);
+        girara_list_iterator_free(iter);
+        return false;
+      }
+
+      girara_list_set_free_function(argument_list, g_free);
+
+      for(int i = 1; i < argc; i++) {
+        char* argument = g_strdup(argv[i]);
+        girara_list_append(argument_list, (void*) argument);
+      }
+
+      binding_command->function(session, argument_list);
+
+      girara_list_free(argument_list);
+      g_strfreev(argv);
+
+      girara_isc_abort(session, NULL, NULL, 0);
+
+      if (session->global.autohide_inputbar == true) {
+        gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+      }
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
+      girara_list_iterator_free(iter);
+      return true;
+    }
+  );
+
+  /* check for unknown command event handler */
+  if (session->events.unknown_command != NULL) {
+    if (session->events.unknown_command(session, input) == true) {
+      g_strfreev(argv);
+      girara_isc_abort(session, NULL, NULL, 0);
+
+      if (session->global.autohide_inputbar == true) {
+        gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
+      }
+      gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar_dialog));
+
+      return true;
+    }
+  }
+
+  /* unhandled command */
+  girara_notify(session, GIRARA_ERROR, _("Not a valid command: %s"), cmd);
+  g_strfreev(argv);
+  girara_isc_abort(session, NULL, NULL, 0);
+
+  return false;
 }
