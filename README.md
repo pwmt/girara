@@ -24,7 +24,7 @@ The following dependencies are optional:
 For building girara, the following dependencies are also required:
 
 * `meson` (>= 0.56)
-* gettext
+* `gettext`
 
 The following dependencies are optional build-time only dependencies:
 
