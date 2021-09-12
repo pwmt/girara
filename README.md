@@ -13,26 +13,26 @@ Requirements
 
 The following dependencies are required:
 
-* gtk3 (>= 3.20)
-* glib (>= 2.50)
+* `gtk3` (>= 3.20)
+* `glib` (>= 2.50)
 
 The following dependencies are optional:
 
-* libnotify: notification support
-* json-c: configuration dumping support
+* `libnotify`: notification support
+* `json-c`: configuration dumping support
 
 For building girara, the following dependencies are also required:
 
-* meson (>= 0.56)
+* `meson` (>= 0.56)
 * gettext
 
 The following dependencies are optional build-time only dependencies:
 
-* check: for tests
-* doxygen: HTML documentation
+* `check`: for tests
+* `doxygen`: HTML documentation
 
-To disable the optional support for libnotify and json-c, configure the build
-system with -Dnotify=disabled or -Djson=disabled.
+To disable the optional support for `libnotify` and `json-c`, configure the build
+system with `-Dnotify=disabled` or `-Djson=disabled`.
 
 Installation
 ------------
@@ -40,10 +40,10 @@ Installation
 Run the following command to build and install girara to your system using
 meson's ninja backend:
 
-  meson build
-  cd build
-  ninja
-  ninja install
+    meson build
+    cd build
+    ninja
+    ninja install
 
 Note that the default backend for meson might vary based on the platform. Please
 refer to the meson documentation for platform specific dependencies.
