@@ -28,7 +28,7 @@ For building girara, the following dependencies are also required:
 
 The following dependencies are optional build-time only dependencies:
 
-* `check`: for tests
+* `check` (>= 0.11): for tests
 * `doxygen`: HTML documentation
 
 To disable the optional support for `libnotify` and `json-c`, configure the build
