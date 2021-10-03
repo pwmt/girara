@@ -140,6 +140,18 @@ gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* ev
     if (session->events.buffer_changed != NULL) {
       session->events.buffer_changed(session);
     }
+  } else if (keyval == GDK_KEY_Escape) {
+    if (session_private->buffer.command != NULL) {
+      g_string_free(session_private->buffer.command, TRUE);
+      session_private->buffer.command = NULL;
+    }
+    if (session->global.buffer != NULL) {
+      g_string_free(session->global.buffer, TRUE);
+      session->global.buffer = NULL;
+    }
+    if (session->events.buffer_changed != NULL) {
+      session->events.buffer_changed(session);
+    }
   }
 
   /* check for buffer command */
