@@ -229,7 +229,7 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       if (length != 1 && pos == 1 && (input[0] == ':' || input[0] == '/')) {
         break;
       }
-      if (length == 1 && pos == 1) {
+      if (length == 0 && pos == 0) {
         girara_isc_abort(session, argument, NULL, 0);
       }
       gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos - 1, pos);
