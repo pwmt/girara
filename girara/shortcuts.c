@@ -226,8 +226,9 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
       gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), i + 1);
       break;
     case GIRARA_DELETE_LAST_CHAR:
-      if (length == 1 && pos == 1 && (input[0] == ':' || input[0] == '/')) {
-        break;
+      if (pos == 1 && (input[0] == ':' || input[0] == '/')) {
+        if (length != 1) break;
+        else girara_isc_abort(session, argument, NULL, 0);
       }
       if (length == 0 && pos == 0) {
         girara_isc_abort(session, argument, NULL, 0);
