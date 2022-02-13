@@ -290,18 +290,28 @@ config_parse(girara_session_t* session, const char* path)
 
     gchar** argv = NULL;
     gint    argc = 0;
+    GError* error = NULL;
 
     /* parse current line */
-    if (g_shell_parse_argv(line, &argc, &argv, NULL) != FALSE) {
+    if (g_shell_parse_argv(line, &argc, &argv, &error) != FALSE) {
       for (int i = 1; i < argc; i++) {
         char* argument = g_strdup(argv[i]);
         girara_list_append(argument_list, argument);
       }
     } else {
       girara_list_free(argument_list);
-      fclose(file);
-      g_free(line);
-      return false;
+      if (error->code != G_SHELL_ERROR_EMPTY_STRING) {
+        girara_error("Could not parse line %d in '%s': %s", line_number, path, error->message);
+
+        g_error_free(error);
+        fclose(file);
+        g_free(line);
+        return false;
+      } else {
+        g_error_free(error);
+        g_free(line);
+        continue;
+      }
     }
 
     /* include gets a special treatment */

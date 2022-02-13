@@ -27,7 +27,7 @@ read_pwd_info(void)
     girara_list_append(list, g_strdup(pw->pw_name));
     errno = 0;
   }
-  fail_unless(errno == 0, "Non-zero errno :%d", errno, NULL);
+  ck_assert_msg(errno == 0, "Non-zero errno :%d", errno);
   endpwent();
 
   return list;
@@ -39,13 +39,13 @@ START_TEST(test_home_directory) {
 
   girara_list_t* list = read_pwd_info();
   girara_list_iterator_t* iter = girara_list_iterator(list);
-  fail_unless(iter != NULL, "Could not create iterator", NULL);
+  ck_assert_ptr_nonnull(iter);
   while (girara_list_iterator_is_valid(iter))
   {
     const char* username = (const char*) girara_list_iterator_data(iter);
     gchar* result = girara_get_home_directory(username);
     if (!home || g_strcmp0(user, username) != 0) {
-      fail_unless(result != NULL && strlen(result) != 0, "Home directory is empty", NULL);
+      ck_assert_msg(result != NULL && strlen(result) != 0, "Home directory is empty");
     }
     g_free(result);
     girara_list_iterator_next(iter);
@@ -59,25 +59,25 @@ START_TEST(test_home_directory_get_HOME) {
 
   if (home) {
     gchar* result = girara_get_home_directory(NULL);
-    fail_unless(g_strcmp0(result, home) == 0, "Home directory is not the same", NULL);
+    ck_assert_str_eq(result, home);
     g_free(result);
   }
 } END_TEST
 
 START_TEST(test_fix_path_basic) {
   gchar* result = girara_fix_path("/test");
-  fail_unless(g_strcmp0(result, "/test") == 0,
-      "Fix path result does not match (got: %s, expected: %s)", result, "test", NULL);
+  ck_assert_msg(g_strcmp0(result, "/test") == 0,
+      "Fix path result does not match (got: %s, expected: %s)", result, "test");
   g_free(result);
 
   result = girara_fix_path("/test/test");
-  fail_unless(g_strcmp0(result, "/test/test") == 0,
-      "Fix path result does not match (got: %s, expected: %s)", result, "test/test", NULL);
+  ck_assert_msg(g_strcmp0(result, "/test/test") == 0,
+      "Fix path result does not match (got: %s, expected: %s)", result, "test/test");
   g_free(result);
 
   result = girara_fix_path("test");
-  fail_unless(g_str_has_suffix(result, "/test") == TRUE,
-      "Fix path result does not match (got: %s, expected: %s)", result, ".../test", NULL);
+  ck_assert_msg(g_str_has_suffix(result, "/test") == TRUE,
+      "Fix path result does not match (got: %s, expected: %s)", result, ".../test");
   g_free(result);
 } END_TEST
 
@@ -90,7 +90,7 @@ START_TEST(test_fix_path_extended) {
     gchar* path = g_strdup_printf("~%s/test", username);
     gchar* result = girara_fix_path(path);
     if (!home || g_strcmp0(user, username) != 0) {
-      fail_unless(result != NULL && strlen(result) != 0,
+      ck_assert_msg(result != NULL && strlen(result) != 0,
           "Fix path result is empty");
     }
     g_free(result);
@@ -104,7 +104,7 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
     const gchar* expected)
 {
   const char* xdg_test_helper_path = g_getenv("XDG_TEST_HELPER_PATH");
-  fail_unless(xdg_test_helper_path != NULL, "XDG_TEST_HELPER_PATH is not set", NULL);
+  ck_assert_msg(xdg_test_helper_path != NULL, "XDG_TEST_HELPER_PATH is not set");
 
   gchar** envp = g_get_environ();
 
@@ -115,8 +115,8 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   bool result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
   g_assert(output);
-  fail_unless(g_strcmp0(output, expected) == 0, "Output is not the same (got: %s, expected: %s)",
-      output, expected, NULL);
+  ck_assert_msg(g_strcmp0(output, expected) == 0, "Output is not the same (got: %s, expected: %s)",
+      output, expected);
   g_free(output);
 
   envp = g_environ_setenv(envp, envvar, "~/xdg", TRUE);
@@ -124,16 +124,16 @@ xdg_path_impl(girara_xdg_path_t path, const gchar* envvar,
   result = g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
   g_assert(output);
-  fail_unless(g_strcmp0(output, "~/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
-      output, "~/xdg", NULL);
+  ck_assert_msg(g_strcmp0(output, "~/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
+      output, "~/xdg");
 
   envp = g_environ_setenv(envp, envvar, "/home/test/xdg", TRUE);
 
   result= g_spawn_sync(NULL, argv, envp, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &output, NULL, NULL, NULL);
   g_assert(result);
   g_assert(output);
-  fail_unless(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
-      output, "/home/test/xdg", NULL);
+  ck_assert_msg(g_strcmp0(output, "/home/test/xdg") == 0, "Output is not the same (got: %s, expected: %s)",
+      output, "/home/test/xdg");
 
   g_free(argv[0]);
   g_free(argv[1]);
@@ -149,12 +149,12 @@ START_TEST(test_xdg_path) {
 } END_TEST
 
 START_TEST(test_file_invariants) {
-  fail_unless(girara_file_open(NULL, NULL) == NULL, NULL);
-  fail_unless(girara_file_open("somefile", NULL) == NULL, NULL);
-  fail_unless(girara_file_open(NULL, "r") == NULL, NULL);
+  ck_assert_ptr_null(girara_file_open(NULL, NULL));
+  ck_assert_ptr_null(girara_file_open("somefile", NULL));
+  ck_assert_ptr_null(girara_file_open(NULL, "r"));
 
-  fail_unless(girara_file_read_line(NULL) == NULL, NULL);
-  fail_unless(girara_file_read(NULL) == NULL, NULL);
+  ck_assert_ptr_null(girara_file_read_line(NULL));
+  ck_assert_ptr_null(girara_file_read(NULL));
 } END_TEST
 
 START_TEST(test_file_read) {
@@ -164,95 +164,83 @@ START_TEST(test_file_read) {
 
   gchar* path = NULL;
   int fd = g_file_open_tmp("girara.test.XXXXXX", &path, NULL);
-  fail_unless(fd != -1, "Failed to open temporary file.", NULL);
-  fail_unless(g_strcmp0(path, "") != 0, "Failed to open temporary file.", NULL);
+  ck_assert_msg(fd != -1, "Failed to open temporary file.");
+  ck_assert_msg(g_strcmp0(path, "") != 0, "Failed to open temporary file.");
 
   GError* error = NULL;
   if (g_file_set_contents(path, CONTENT, -1, &error) == FALSE) {
-    fail_unless(false, "Couldn't set content: %s", error->message, NULL);
+    ck_abort_msg("Couldn't set content: %s", error->message);
     g_error_free(error);
   }
 
   char* content = girara_file_read(path);
-  fail_unless(g_strcmp0(content, CONTENT) == 0, "Reading file failed", NULL);
+  ck_assert_msg(g_strcmp0(content, CONTENT) == 0, "Reading file failed");
   free(content);
 
   FILE* file = girara_file_open(path, "r");
-  fail_unless(file != NULL, NULL);
+  ck_assert_ptr_nonnull(file);
   for (size_t i = 0; i != NUMLINES; ++i) {
     char* line = girara_file_read_line(file);
-    fail_unless(g_strcmp0(line, LINES[i]) == 0, "Line doesn't match (got: %s, expected: %s)",
-        line, LINES[i], NULL);
+    ck_assert_msg(g_strcmp0(line, LINES[i]) == 0, "Line doesn't match (got: %s, expected: %s)",
+        line, LINES[i]);
     g_free(line);
   }
   fclose(file);
 
   close(fd);
-  fail_unless(g_remove(path) == 0, "Failed to remove temporary file.", NULL);
+  ck_assert_msg(g_remove(path) == 0, "Failed to remove temporary file.");
   g_free(path);
 } END_TEST
 
-START_TEST(test_safe_realloc) {
-  fail_unless(girara_safe_realloc(NULL, 0u) == NULL, NULL);
-
-  void* ptr = NULL;
-  fail_unless(girara_safe_realloc(&ptr, sizeof(int)) != NULL, NULL);
-  fail_unless(ptr != NULL, NULL);
-  fail_unless(girara_safe_realloc(&ptr, 1024*sizeof(int)) != NULL, NULL);
-  fail_unless(ptr != NULL, NULL);
-  fail_unless(girara_safe_realloc(&ptr, 0u) == NULL, NULL);
-  fail_unless(ptr == NULL, NULL);
-} END_TEST
-
 START_TEST(test_split_path) {
-  fail_unless(girara_split_path_array(NULL) == NULL, NULL);
-  fail_unless(girara_split_path_array("") == NULL, NULL);
+  ck_assert_ptr_null(girara_split_path_array(NULL));
+  ck_assert_ptr_null(girara_split_path_array(""));
 
   girara_list_t* res = girara_split_path_array("one/path");
-  fail_unless(res != NULL, NULL);
-  fail_unless(girara_list_size(res) == 1, NULL);
-  fail_unless(g_strcmp0(girara_list_nth(res, 0), "one/path") == 0, NULL);
+  ck_assert_ptr_nonnull(res);
+  ck_assert_uint_eq(girara_list_size(res), 1);
+  ck_assert_str_eq(girara_list_nth(res, 0), "one/path");
   girara_list_free(res);
 
   res = girara_split_path_array("first/path:second/path");
-  fail_unless(res != NULL, NULL);
-  fail_unless(girara_list_size(res) == 2, NULL);
-  fail_unless(g_strcmp0(girara_list_nth(res, 0), "first/path") == 0, NULL);
-  fail_unless(g_strcmp0(girara_list_nth(res, 1), "second/path") == 0, NULL);
+  ck_assert_ptr_nonnull(res);
+  ck_assert_uint_eq(girara_list_size(res), 2);
+  ck_assert_str_eq(girara_list_nth(res, 0), "first/path");
+  ck_assert_str_eq(girara_list_nth(res, 1), "second/path");
   girara_list_free(res);
 } END_TEST
 
 START_TEST(test_strings_replace_substrings_invalid) {
-  fail_unless(girara_replace_substring(NULL, NULL, NULL) == NULL);
-  fail_unless(girara_replace_substring("", NULL, NULL) == NULL);
-  fail_unless(girara_replace_substring("", "", NULL) == NULL);
+  ck_assert_ptr_null(girara_replace_substring(NULL, NULL, NULL));
+  ck_assert_ptr_null(girara_replace_substring("", NULL, NULL));
+  ck_assert_ptr_null(girara_replace_substring("", "", NULL));
 } END_TEST
 
 START_TEST(test_strings_replace_substrings_nothing_to_replace) {
   char* result = girara_replace_substring("test", "n", "y");
-  fail_unless(result != NULL);
-  fail_unless(strncmp(result, "test", 5) == 0);
+  ck_assert_ptr_nonnull(result);
+  ck_assert_int_eq(strncmp(result, "test", 5), 0);
   g_free(result);
 } END_TEST
 
 START_TEST(test_strings_replace_substrings_1) {
   char* result = girara_replace_substring("test", "e", "f");
-  fail_unless(result != NULL);
-  fail_unless(strncmp(result, "tfst", 5) == 0);
+  ck_assert_ptr_nonnull(result);
+  ck_assert_int_eq(strncmp(result, "tfst", 5), 0);
   g_free(result);
 } END_TEST
 
 START_TEST(test_strings_replace_substrings_2) {
   char* result = girara_replace_substring("test", "es", "f");
-  fail_unless(result != NULL);
-  fail_unless(strncmp(result, "tft", 4) == 0);
+  ck_assert_ptr_nonnull(result);
+  ck_assert_int_eq(strncmp(result, "tft", 4), 0);
   g_free(result);
 } END_TEST
 
 START_TEST(test_strings_replace_substrings_3) {
   char* result = girara_replace_substring("test", "e", "fg");
-  fail_unless(result != NULL);
-  fail_unless(strncmp(result, "tfgst", 6) == 0);
+  ck_assert_ptr_nonnull(result);
+  ck_assert_int_eq(strncmp(result, "tfgst", 6), 0);
   g_free(result);
 } END_TEST
 
@@ -286,11 +274,6 @@ static Suite* suite_utils(void)
   /* read file */
   tcase = tcase_create("file_read");
   tcase_add_test(tcase, test_file_read);
-  suite_add_tcase(suite, tcase);
-
-  /* safe realloc */
-  tcase = tcase_create("safe_realloc");
-  tcase_add_test(tcase, test_safe_realloc);
   suite_add_tcase(suite, tcase);
 
   /* split path */

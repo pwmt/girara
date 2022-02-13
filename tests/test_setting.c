@@ -8,36 +8,36 @@
 
 START_TEST(test_settings_basic) {
   girara_session_t* session = girara_session_create();
-  fail_unless(session != NULL, "Couldn't create session.", NULL);
+  ck_assert_msg(session != NULL, "Couldn't create session.");
 
-  fail_unless(girara_setting_add(session, "test", NULL, STRING, false, NULL, NULL, NULL), NULL);
+  ck_assert(girara_setting_add(session, "test", NULL, STRING, false, NULL, NULL, NULL));
   char* ptr = NULL;
-  fail_unless(girara_setting_get(session, "test", &ptr), NULL);
-  fail_unless(ptr == NULL, NULL);
+  ck_assert(girara_setting_get(session, "test", &ptr));
+  ck_assert_ptr_null(ptr);
 
-  fail_unless(girara_setting_set(session, "test", "value"), NULL);
-  fail_unless(girara_setting_get(session, "test", &ptr), NULL);
-  fail_unless(g_strcmp0(ptr, "value") == 0, NULL);
+  ck_assert(girara_setting_set(session, "test", "value"));
+  ck_assert(girara_setting_get(session, "test", &ptr));
+  ck_assert_str_eq(ptr, "value");
   g_free(ptr);
 
   ptr = NULL;
-  fail_unless(!girara_setting_get(session, "does-not-exist", &ptr), NULL);
-  fail_unless(ptr == NULL, NULL);
+  ck_assert(!girara_setting_get(session, "does-not-exist", &ptr));
+  ck_assert_ptr_null(ptr);
 
-  fail_unless(girara_setting_add(session, "test2", "value", STRING, false, NULL, NULL, NULL), NULL);
-  fail_unless(girara_setting_get(session, "test2", &ptr), NULL);
-  fail_unless(g_strcmp0(ptr, "value") == 0, NULL);
+  ck_assert(girara_setting_add(session, "test2", "value", STRING, false, NULL, NULL, NULL));
+  ck_assert(girara_setting_get(session, "test2", &ptr));
+  ck_assert_str_eq(ptr, "value");
   g_free(ptr);
 
   ptr = NULL;
-  fail_unless(!girara_setting_add(session, "test3", NULL, INT, false, NULL, NULL, NULL), NULL);
-  fail_unless(!girara_setting_get(session, "test3", &ptr), NULL);
-  fail_unless(ptr == NULL, NULL);
+  ck_assert(!girara_setting_add(session, "test3", NULL, INT, false, NULL, NULL, NULL));
+  ck_assert(!girara_setting_get(session, "test3", &ptr));
+  ck_assert_ptr_null(ptr);
 
   float val = 0.0, rval = 0.0;
-  fail_unless(girara_setting_add(session, "test4", &val, FLOAT, false, NULL, NULL, NULL), NULL);
-  fail_unless(girara_setting_get(session, "test4", &rval), NULL);
-  fail_unless(val == rval, NULL);
+  ck_assert(girara_setting_add(session, "test4", &val, FLOAT, false, NULL, NULL, NULL));
+  ck_assert(girara_setting_get(session, "test4", &rval));
+  ck_assert_float_eq(val, rval);
 
   girara_session_destroy(session);
 } END_TEST
@@ -47,22 +47,22 @@ static int callback_called = 0;
 static void
 setting_callback(girara_session_t* session, const char* name, girara_setting_type_t type, const void* value, void* data)
 {
-  fail_unless(callback_called == 0, NULL);
-  fail_unless(session != NULL, NULL);
-  fail_unless(g_strcmp0(name, "test") == 0, NULL);
-  fail_unless(type == STRING, NULL);
-  fail_unless(g_strcmp0(value, "value") == 0, NULL);
-  fail_unless(g_strcmp0(data, "data") == 0, NULL);
+  ck_assert_uint_eq(callback_called, 0);
+  ck_assert_ptr_nonnull(session);
+  ck_assert_str_eq(name, "test");
+  ck_assert_uint_eq(type, STRING);
+  ck_assert_str_eq(value, "value");
+  ck_assert_str_eq(data, "data");
   callback_called++;
 }
 
 START_TEST(test_settings_callback) {
   girara_session_t* session = girara_session_create();
-  fail_unless(session != NULL, NULL);
+  ck_assert_ptr_nonnull(session);
 
-  fail_unless(girara_setting_add(session, "test", "oldvalue", STRING, false, NULL, setting_callback, "data"), NULL);
-  fail_unless(girara_setting_set(session, "test", "value"), NULL);
-  fail_unless(callback_called == 1, NULL);
+  ck_assert(girara_setting_add(session, "test", "oldvalue", STRING, false, NULL, setting_callback, "data"));
+  ck_assert(girara_setting_set(session, "test", "value"));
+  ck_assert_uint_eq(callback_called, 1);
 
   girara_session_destroy(session);
 } END_TEST

@@ -2,14 +2,15 @@
 # SPDX-License-Identifier: Zlib
 #
 # Translators:
+# Heimen Stoffels <vistausss@fastmail.com>, 2021
 # Heimen Stoffels <vistausss@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 09:01+0200\n"
-"PO-Revision-Date: 2019-06-01 09:25+0000\n"
-"Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"POT-Creation-Date: 2022-01-06 14:42+0100\n"
+"PO-Revision-Date: 2021-07-14 17:37+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/pwmt/girara/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +21,7 @@ msgstr ""
 #: girara/commands.c:111 girara/commands.c:311
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
-msgstr "Ongeldig aantal argumenten: %zu i.p.v. minimaal %u"
+msgstr "Ongeldig aantal aanvullende opties: %zu i.p.v. minimaal %u"
 
 #: girara/commands.c:145
 #, c-format
@@ -49,11 +50,11 @@ msgstr "Ongeldige sneltoetsfunctie: %s"
 
 #: girara/commands.c:423
 msgid "Not enough arguments."
-msgstr "Onvoldoende argumenten."
+msgstr "Onvoldoende aanvullende opties."
 
 #: girara/commands.c:428
 msgid "Too many arguments."
-msgstr "Teveel argumenten."
+msgstr "Teveel aanvullende opties."
 
 #: girara/commands.c:441
 #, c-format
@@ -199,7 +200,7 @@ msgstr "Uit te voeren opdracht in :exec"
 
 #: girara/config.c:162
 msgid "Show or hide certain GUI elements"
-msgstr "Bepaalde app-elementen weergeven of verbergen"
+msgstr "Bepaalde toepassingselementen tonen of verbergen"
 
 #. commands
 #: girara/config.c:198
@@ -212,7 +213,7 @@ msgstr "Toetsaanslag toekennen"
 
 #: girara/config.c:200
 msgid "Quit the program"
-msgstr "Applicatie afsluiten"
+msgstr "Toepassing afsluiten"
 
 #: girara/config.c:201
 msgid "Set an option"
@@ -220,7 +221,7 @@ msgstr "Optie instellen"
 
 #: girara/config.c:202
 msgid "Unmap a key sequence"
-msgstr "Toetsaanslag verwijderen"
+msgstr "Toetsaanslag wissen"
 
 #: girara/config.c:204
 msgid "Dump settings to a file"
