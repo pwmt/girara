@@ -62,6 +62,36 @@ test:debian-bullseye:
   except:
     - tags
 
+# Debian 12 (bookworm)
+build:debian-bookworm:
+  tags:
+    - pwmt
+  stage: build
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/debian:bookworm
+  script:
+    - mkdir -p build && cd build
+    - meson ..
+    - ninja
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - build
+  except:
+    - tags
+
+test:debian-bookworm:
+  tags:
+    - pwmt
+  stage: test
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/debian:bookworm
+  script:
+    - cd build
+    - ninja test
+  dependencies:
+    - build:debian-bookworm
+  except:
+    - tags
+
 # Ubuntu 20.04 LTS (focal)
 build:ubuntu-focal:
   tags:
@@ -89,6 +119,36 @@ test:ubuntu-focal:
     - ninja test
   dependencies:
     - build:ubuntu-focal
+  except:
+    - tags
+
+# Ubuntu 22.04 LTS (jammy)
+build:ubuntu-jammy:
+  tags:
+    - pwmt
+  stage: build
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:jammy
+  script:
+    - mkdir -p build && cd build
+    - meson ..
+    - ninja
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - build
+  except:
+    - tags
+
+test:ubuntu-jammy:
+  tags:
+    - pwmt
+  stage: test
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:jammy
+  script:
+    - cd build
+    - ninja test
+  dependencies:
+    - build:ubuntu-jammy
   except:
     - tags
 
