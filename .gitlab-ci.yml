@@ -32,12 +32,12 @@ test:archlinux:
   except:
     - tags
 
-# Debian 10 (Buster)
-build:debian-buster:
+# Debian 11 (bullseye)
+build:debian-bullseye:
   tags:
     - pwmt
   stage: build
-  image: registry.pwmt.org/pwmt/gitlab-runner-images/debian:buster
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/debian:bullseye
   script:
     - mkdir -p build && cd build
     - meson ..
@@ -49,25 +49,25 @@ build:debian-buster:
   except:
     - tags
 
-test:debian-buster:
+test:debian-bullseye:
   tags:
     - pwmt
   stage: test
-  image: registry.pwmt.org/pwmt/gitlab-runner-images/debian:buster
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/debian:bullseye
   script:
     - cd build
     - ninja test
   dependencies:
-    - build:debian-buster
+    - build:debian-bullseye
   except:
     - tags
 
-# Ubuntu 18.04 LTS (Bionic Beaver)
-build:ubuntu-bionic:
+# Ubuntu 20.04 LTS (focal)
+build:ubuntu-focal:
   tags:
     - pwmt
   stage: build
-  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:bionic
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:focal
   script:
     - mkdir -p build && cd build
     - meson ..
@@ -79,45 +79,16 @@ build:ubuntu-bionic:
   except:
     - tags
 
-test:ubuntu-bionic:
+test:ubuntu-focal:
   tags:
     - pwmt
   stage: test
-  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:bionic
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:focal
   script:
     - cd build
     - ninja test
   dependencies:
-    - build:ubuntu-bionic
+    - build:ubuntu-focal
   except:
     - tags
 
-# Ubuntu 19.10 (Eoan Ermine)
-build:ubuntu-eoan:
-  tags:
-    - pwmt
-  stage: build
-  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:eoan
-  script:
-    - mkdir -p build && cd build
-    - meson ..
-    - ninja
-  artifacts:
-    expire_in: 1 day
-    paths:
-      - build
-  except:
-    - tags
-
-test:ubuntu-eoan:
-  tags:
-    - pwmt
-  stage: test
-  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:eoan
-  script:
-    - cd build
-    - ninja test
-  dependencies:
-    - build:ubuntu-eoan
-  except:
-    - tags
