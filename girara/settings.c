@@ -5,7 +5,7 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #ifdef WITH_JSON
-#include <json.h>
+#include <json-glib/json-glib.h>
 #endif
 
 #include "settings.h"
@@ -236,6 +236,47 @@ girara_cc_set(girara_session_t* session, const char* input)
 }
 
 #ifdef WITH_JSON
+static void dump_setting(JsonBuilder* builder, const girara_setting_t* setting) {
+  json_builder_set_member_name(builder, setting->name);
+  json_builder_begin_object(builder);
+  json_builder_set_member_name(builder, "value");
+  const char* type = NULL;
+  switch (setting->type) {
+    case BOOLEAN:
+      json_builder_add_boolean_value(builder, setting->value.b);
+      type = "boolean";
+      break;
+    case FLOAT:
+      json_builder_add_double_value(builder, setting->value.f);
+      type = "float";
+      break;
+    case INT:
+      json_builder_add_int_value(builder, setting->value.i);
+      type = "int";
+      break;
+    case STRING:
+      json_builder_add_string_value(builder,
+                                    setting->value.s ? setting->value.s : "");
+      type = "string";
+      break;
+    default:
+      girara_debug("Invalid setting: %s", setting->name);
+  }
+
+  if (type != NULL) {
+    json_builder_set_member_name(builder, "type");
+    json_builder_add_string_value(builder, type);
+  }
+
+  if (setting->description != NULL) {
+    json_builder_set_member_name(builder, "description");
+    json_builder_add_string_value(builder, setting->description);
+  }
+  json_builder_set_member_name(builder, "init-only");
+  json_builder_add_boolean_value(builder, setting->init_only);
+  json_builder_end_object(builder);
+}
+
 bool
 girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
 {
@@ -253,52 +294,31 @@ girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
     return false;
   }
 
-  json_object* json_config = json_object_new_object();
-
+  JsonBuilder* builder = json_builder_new();
+  json_builder_begin_object(builder);
   GIRARA_LIST_FOREACH_BODY(session->private_data->settings, girara_setting_t*, setting,
-    json_object* json_setting = json_object_new_object();
-
-    json_object* json_value = NULL;
-    json_object* json_type = NULL;
-    switch(setting->type) {
-      case BOOLEAN:
-        json_value = json_object_new_boolean(setting->value.b);
-        json_type = json_object_new_string("boolean");
-        break;
-      case FLOAT:
-        json_value = json_object_new_double(setting->value.f);
-        json_type = json_object_new_string("float");
-        break;
-      case INT:
-        json_value = json_object_new_int(setting->value.i);
-        json_type = json_object_new_string("int");
-        break;
-      case STRING:
-        json_value = json_object_new_string(setting->value.s ? setting->value.s : "");
-        json_type = json_object_new_string("string");
-        break;
-      default:
-        girara_debug("Invalid setting: %s", setting->name);
-    }
-    if (json_value != NULL) {
-      json_object_object_add(json_setting, "value", json_value);
-      json_object_object_add(json_setting, "type", json_type);
-    }
-
-    if (setting->description != NULL) {
-      json_object_object_add(json_setting, "description",
-          json_object_new_string(setting->description));
-    }
-    json_object_object_add(json_setting, "init-only",
-        json_object_new_boolean(setting->init_only));
-
-    json_object_object_add(json_config, setting->name, json_setting);
+    dump_setting(builder, setting);
   );
+  json_builder_end_object(builder);
 
-  json_object_to_file_ext(girara_list_nth(argument_list, 0), json_config,
-      JSON_C_TO_STRING_PRETTY);
-  json_object_put(json_config);
+  JsonGenerator* gen = json_generator_new();
+  json_generator_set_pretty(gen, true);
+  JsonNode* root = json_builder_get_root(builder);
+  json_generator_set_root(gen, root);
 
-  return true;
+  bool ret = true;
+  GError* error = NULL;
+  if (!json_generator_to_file(gen, girara_list_nth(argument_list, 0), &error)) {
+    girara_warning("Failed to write JSON: %s", error->message);
+    girara_notify(session, GIRARA_ERROR, _("Failed to write JSON: %s"), error->message);
+    g_error_free(error);
+    ret = false;
+  }
+
+  json_node_free(root);
+  g_object_unref(gen);
+  g_object_unref(builder);
+
+  return ret;
 }
 #endif

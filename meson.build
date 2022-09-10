@@ -63,7 +63,7 @@ flags = cc.get_supported_arguments(flags)
 # optional dependencies
 pc_requires_private = ['pango']
 libnotify = dependency('libnotify', version: '>=0.7.0', required: get_option('notify'))
-jsonc = dependency('json-c', required: get_option('json'))
+jsonc = dependency('json-glib-1.0', required: get_option('json'))
 
 if libnotify.found()
   build_dependencies += libnotify
@@ -74,7 +74,7 @@ endif
 if jsonc.found()
   build_dependencies += jsonc
   defines += '-DWITH_JSON'
-  pc_requires_private += 'json-c'
+  pc_requires_private += 'json-glib-1.0'
 endif
 
 # generate version header file
