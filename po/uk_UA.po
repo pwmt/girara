@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-06 14:42+0100\n"
-"PO-Revision-Date: 2021-07-14 15:12+0000\n"
+"POT-Creation-Date: 2022-09-10 11:35+0200\n"
+"PO-Revision-Date: 2022-09-10 11:40+0200\n"
 "Last-Translator: Юрій Яновський <lytvyn349@ukr.net>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/pwmt/girara/"
 "language/uk_UA/)\n"
@@ -229,10 +229,15 @@ msgstr "Вилучити комбінацію клавіш"
 msgid "Dump settings to a file"
 msgstr "Зберегти налаштування у файл"
 
-#: girara/settings.c:251
+#: girara/settings.c:292
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Неправильна кількість переданих аргументів: %zu замість 1"
+
+#: girara/settings.c:313
+#, c-format
+msgid "Failed to write JSON: %s"
+msgstr ""
 
 #: girara/utils.c:473
 #, c-format
