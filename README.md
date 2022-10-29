@@ -25,6 +25,7 @@ For building girara, the following dependencies are also required:
 
 * `meson` (>= 0.56)
 * `gettext`
+* `pkgconf`
 
 The following dependencies are optional build-time only dependencies:
 
