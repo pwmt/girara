@@ -18,21 +18,22 @@ The following dependencies are required:
 
 The following dependencies are optional:
 
-* `libnotify`: notification support
-* `json-c`: configuration dumping support
+* `libnotify`: notification support (deprecated, disabled by default)
+* `json-glib-1.0`: configuration dumping support
 
 For building girara, the following dependencies are also required:
 
 * `meson` (>= 0.56)
 * `gettext`
+* `pkgconf`
 
 The following dependencies are optional build-time only dependencies:
 
 * `check` (>= 0.11): for tests
 * `doxygen`: HTML documentation
 
-To disable the optional support for `libnotify` and `json-c`, configure the build
-system with `-Dnotify=disabled` or `-Djson=disabled`.
+To disable the optional support for `json-glib-1.0`, configure the build system
+with `-Djson=disabled`.
 
 Installation
 ------------

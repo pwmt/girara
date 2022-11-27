@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-06 14:42+0100\n"
-"PO-Revision-Date: 2021-07-14 17:37+0000\n"
+"POT-Creation-Date: 2022-09-10 11:35+0200\n"
+"PO-Revision-Date: 2012-03-26 16:41+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/pwmt/girara/language/nl/)\n"
 "Language: nl\n"
@@ -227,10 +227,15 @@ msgstr "Toetsaanslag wissen"
 msgid "Dump settings to a file"
 msgstr "Instellingen opslaan naar een bestand"
 
-#: girara/settings.c:251
+#: girara/settings.c:292
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Ongeldig aantal argumenten: %zu i.p.v. 1"
+
+#: girara/settings.c:313
+#, c-format
+msgid "Failed to write JSON: %s"
+msgstr "De json kan niet worden weggeschreven: %s"
 
 #: girara/utils.c:473
 #, c-format

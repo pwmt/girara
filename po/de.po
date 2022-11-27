@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-06 14:42+0100\n"
-"PO-Revision-Date: 2021-07-14 15:12+0000\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
+"POT-Creation-Date: 2022-11-27 16:25+0100\n"
+"PO-Revision-Date: 2022-09-10 11:36+0200\n"
 "Language-Team: German (http://www.transifex.com/pwmt/girara/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -234,10 +234,15 @@ msgstr "Tastenfolge entbinden"
 msgid "Dump settings to a file"
 msgstr "Speichere Einstellungen in einer Datei"
 
-#: girara/settings.c:251
+#: girara/settings.c:292
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Ungültige Anzahl an Argumente übergeben: %zu anstatt von 1"
+
+#: girara/settings.c:313
+#, c-format
+msgid "Failed to write JSON: %s"
+msgstr "Konnte JSON-Datei nicht schreiben: %s"
 
 #: girara/utils.c:473
 #, c-format

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 09:01+0200\n"
-"PO-Revision-Date: 2019-06-01 09:25+0000\n"
+"POT-Creation-Date: 2022-09-10 11:35+0200\n"
+"PO-Revision-Date: 2022-09-10 11:37+0200\n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
 "Language-Team: Esperanto (http://www.transifex.com/pwmt/girara/language/"
 "eo/)\n"
@@ -226,9 +226,14 @@ msgstr "Malmapu klavan sinsekvon"
 msgid "Dump settings to a file"
 msgstr ""
 
-#: girara/settings.c:251
+#: girara/settings.c:292
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
+msgstr ""
+
+#: girara/settings.c:313
+#, c-format
+msgid "Failed to write JSON: %s"
 msgstr ""
 
 #: girara/utils.c:473

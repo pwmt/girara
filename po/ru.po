@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-06 14:42+0100\n"
-"PO-Revision-Date: 2021-07-14 15:12+0000\n"
-"Last-Translator: crt0r citrus\n"
+"POT-Creation-Date: 2022-09-10 11:35+0200\n"
+"PO-Revision-Date: 2022-09-10 11:40+0200\n"
+"Last-Translator: Vladimir Lomov <irk.translator@yandex.ru>, 2013,2015\n"
 "Language-Team: Russian (http://www.transifex.com/pwmt/girara/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: girara/commands.c:111 girara/commands.c:311
 #, c-format
@@ -229,10 +229,15 @@ msgstr "Убрать определение с клавиатурной комб
 msgid "Dump settings to a file"
 msgstr "Скопировать настройки в файл"
 
-#: girara/settings.c:251
+#: girara/settings.c:292
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Передано неверное количество аргументов: %zu вместо как минимум 1"
+
+#: girara/settings.c:313
+#, c-format
+msgid "Failed to write JSON: %s"
+msgstr ""
 
 #: girara/utils.c:473
 #, c-format

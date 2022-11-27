@@ -140,7 +140,7 @@ char* girara_buffer_get(girara_session_t* session) GIRARA_VISIBLE;
  * @param body The content
  */
 void girara_libnotify(girara_session_t* session, const char *summary,
-    const char *body) GIRARA_VISIBLE;
+    const char *body) GIRARA_VISIBLE GIRARA_DEPRECATED_;
 
 /**
  * Displays a notification for the user. It is possible to pass GIRARA_INFO,
