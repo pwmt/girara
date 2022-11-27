@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-10 11:35+0200\n"
-"PO-Revision-Date: 2022-09-10 11:39+0200\n"
+"PO-Revision-Date: 2012-03-26 16:41+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/pwmt/girara/language/nl/)\n"
 "Language: nl\n"
@@ -235,7 +235,7 @@ msgstr "Ongeldig aantal argumenten: %zu i.p.v. 1"
 #: girara/settings.c:313
 #, c-format
 msgid "Failed to write JSON: %s"
-msgstr ""
+msgstr "De json kan niet worden weggeschreven: %s"
 
 #: girara/utils.c:473
 #, c-format

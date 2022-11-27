@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: Sebastian Ramacher <sebastian+dev@ramacher.at>\n"
-"POT-Creation-Date: 2022-09-10 11:35+0200\n"
+"POT-Creation-Date: 2022-11-27 16:25+0100\n"
 "PO-Revision-Date: 2022-09-10 11:36+0200\n"
 "Language-Team: German (http://www.transifex.com/pwmt/girara/language/de/)\n"
 "Language: de\n"
@@ -240,7 +240,7 @@ msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Ungültige Anzahl an Argumente übergeben: %zu anstatt von 1"
 
 #: girara/settings.c:313
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write JSON: %s"
 msgstr "Konnte JSON-Datei nicht schreiben: %s"
 
