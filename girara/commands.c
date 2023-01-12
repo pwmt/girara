@@ -125,12 +125,13 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
   size_t current_command = 0;
   char* tmp              = girara_list_nth(argument_list, current_command);
-  size_t tmp_length      = strlen(tmp);
+  size_t tmp_length      = g_utf8_strlen(tmp, -1);
+  size_t tmp_size        = strlen(tmp);
 
   /* Check first argument for mode */
   bool is_mode = false;
-  if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_length - 1] == ']') {
-    char* tmp_inner = g_strndup(tmp + 1, tmp_length - 2);
+  if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_size - 1] == ']') {
+    char* tmp_inner = g_strndup(tmp + 1, tmp_size - 2);
 
     GIRARA_LIST_FOREACH_BODY(session->modes.identifiers, girara_mode_string_t*, mode,
       if (!g_strcmp0(tmp_inner, mode->name)) {
@@ -151,17 +152,19 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
   if (is_mode == true) {
     tmp = girara_list_nth(argument_list, ++current_command);
-    tmp_length = strlen(tmp);
+    tmp_length = g_utf8_strlen(tmp, -1);
+    tmp_size   = strlen(tmp);
   }
 
   /* Check for multi key shortcut */
-  if (tmp_length >= 3 && tmp[0] == '<' && tmp[tmp_length - 1] == '>') {
-    tmp        = g_strndup(tmp + 1, tmp_length - 2);
-    tmp_length = strlen(tmp);
+  if (tmp_length >= 3 && tmp[0] == '<' && tmp[tmp_size - 1] == '>') {
+    tmp        = g_strndup(tmp + 1, tmp_size - 2);
+    tmp_length = g_utf8_strlen(tmp, -1);
+    tmp_size   = strlen(tmp);
 
     /* Multi key shortcut */
-    if (strchr(tmp, '-') != NULL && tmp[1] == '-' && tmp_length > 2) {
-      switch (tmp[0]) {
+    if (strchr(tmp, '-') != NULL && g_utf8_get_char(g_utf8_offset_to_pointer(tmp, 1)) == '-' && tmp_length > 2) {
+      switch (g_utf8_get_char(tmp)) {
         case 'S':
           shortcut_mask = GDK_SHIFT_MASK;
           break;
@@ -181,7 +184,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
 
       /* Single key */
       if (tmp_length == 3) {
-        shortcut_key = tmp[2];
+        shortcut_key = gdk_unicode_to_keyval(g_utf8_get_char(g_utf8_offset_to_pointer(tmp, 2)));
       /* Possible special key */
       } else {
         bool found = false;
@@ -258,7 +261,7 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     g_free(tmp);
   /* Single key shortcut */
   } else if (tmp_length == 1) {
-    shortcut_key = tmp[0];
+    shortcut_key = gdk_unicode_to_keyval(g_utf8_get_char(tmp));
   /* Buffer command */
   } else {
     shortcut_buffer_command = g_strdup(tmp);
@@ -269,16 +272,17 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
   if (unmap == false) {
     if (++current_command < number_of_arguments) {
       tmp = girara_list_nth(argument_list, current_command);
-      tmp_length = strlen(tmp);
+      tmp_length = g_utf8_strlen(tmp, -1);
+      tmp_size   = strlen(tmp);
 
-      if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_length - 1] == ']') {
+      if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_size - 1] == ']') {
         mouse_mode = true;
         if (mouse_event == false) {
           girara_warning("Mode passed on non-mouse event: %s", tmp);
           return false;
         }
 
-        char* tmp_inner = g_strndup(tmp + 1, tmp_length - 2);
+        char* tmp_inner = g_strndup(tmp + 1, tmp_size - 2);
 
         bool found = false;
         for (unsigned int i = 0; i < LENGTH(mouse_events); i++) {
