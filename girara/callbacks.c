@@ -128,14 +128,17 @@ girara_callback_view_key_press_event(GtkWidget* widget,
     }
   );
 
+  gunichar codepoint = gdk_keyval_to_unicode(keyval);
+
   /* update buffer */
-  if (keyval >= 0x21 && keyval <= 0x7E) {
+  /* 0xff00 was chosen because every "special" keyval seems to be above it */
+  if (keyval >= 0x21 && keyval < 0xff00 && codepoint) {
     /* overall buffer */
     if (session->global.buffer == NULL) {
       session->global.buffer = g_string_new("");
     }
 
-    session->global.buffer = g_string_append_c(session->global.buffer, keyval);
+    session->global.buffer = g_string_append_unichar(session->global.buffer, codepoint);
 
     if (session_private->buffer.command == NULL && keyval >= 0x30 && keyval <= 0x39) {
       if (((session_private->buffer.n * 10) + (keyval - '0')) < INT_MAX) {
@@ -146,7 +149,7 @@ girara_callback_view_key_press_event(GtkWidget* widget,
         session_private->buffer.command = g_string_new("");
       }
 
-      session_private->buffer.command = g_string_append_c(session_private->buffer.command, keyval);
+      session_private->buffer.command = g_string_append_unichar(session_private->buffer.command, codepoint);
     }
 
     if (session->events.buffer_changed != NULL) {
