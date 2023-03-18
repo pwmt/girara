@@ -457,9 +457,10 @@ girara_node_free(girara_tree_node_t* node)
 
   GNode* childnode = node->node->children;
   while (childnode != NULL) {
+    GNode* nextnode = childnode->next;
     girara_tree_node_data_t* childnodedata = childnode->data;
     girara_node_free(childnodedata->node);
-    childnode = childnode->next;
+    childnode = nextnode;
   }
 
   g_node_destroy(node->node);
