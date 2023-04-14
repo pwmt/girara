@@ -491,6 +491,10 @@ simulate_key_press(girara_session_t* session, int state, int key)
 
   g_free(keys);
 
+  GdkSeat* seat = gdk_display_get_default_seat(display);
+  GdkDevice* keyboard = gdk_seat_get_keyboard(seat);
+  gdk_event_set_device(event, keyboard);
+
   gdk_event_put(event);
   gdk_event_free(event);
 
