@@ -1,5 +1,6 @@
 check = dependency('check', required: get_option('tests'), version: '>=0.11')
-if check.found()
+xvfb = find_program('xvfb-run', required: get_option('tests'))
+if check.found() and xvfb.found()
   test_dependencies = [
     declare_dependency(link_with: girara),
     check
@@ -18,7 +19,8 @@ if check.found()
     include_directories: include_directories,
     c_args: defines + flags
   )
-  test('config', config,
+  test('config', xvfb,
+    args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', config],
     timeout: 60*60,
     is_parallel: false
   )
@@ -28,7 +30,8 @@ if check.found()
     include_directories: include_directories,
     c_args: defines + flags
   )
-  test('datastructures', datastructures,
+  test('datastructures', xvfb,
+    args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', datastructures],
     timeout: 60*60
   )
 
@@ -37,7 +40,8 @@ if check.found()
     include_directories: include_directories,
     c_args: defines + flags
   )
-  test('session', session,
+  test('session', xvfb,
+    args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', session],
     timeout: 60*60,
     is_parallel: false
   )
@@ -47,7 +51,8 @@ if check.found()
     include_directories: include_directories,
     c_args: defines + flags
   )
-  test('setting', setting,
+  test('setting', xvfb,
+    args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', setting],
     timeout: 60*60,
     is_parallel: false
   )
@@ -57,7 +62,8 @@ if check.found()
     include_directories: include_directories,
     c_args: defines + flags
   )
-  test('template', template,
+  test('template', xvfb,
+    args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', template],
     timeout: 60*60
   )
 
@@ -70,7 +76,8 @@ if check.found()
   env = environment()
   env.set('XDG_TEST_HELPER_PATH', meson.current_build_dir())
   env.set('HOME', '/home/test')
-  test('utils-with-home', utils,
+  test('utils-with-home', xvfb,
+    args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', utils],
     env: env,
     timeout: 60*60
   )
