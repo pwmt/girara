@@ -139,6 +139,18 @@ void* girara_list_nth(girara_list_t* list, size_t n) {
   return list->start[n];
 }
 
+void girara_list_set_nth(girara_list_t* list, size_t n, void* data) {
+  g_return_if_fail(list != NULL);
+  g_return_if_fail(n < list->size);
+  g_return_if_fail(list->cmp == NULL);
+
+  if (list->free != NULL) {
+    (*list->free)(list->start[n]);
+  }
+
+  list->start[n] = data;
+}
+
 bool girara_list_contains(girara_list_t* list, void* data) {
   g_return_val_if_fail(list != NULL, false);
   for (size_t idx = 0; idx != list->size; ++idx) {
@@ -250,11 +262,7 @@ void girara_list_iterator_set(girara_list_iterator_t* iter, void* data) {
   g_return_if_fail(girara_list_iterator_is_valid(iter));
   g_return_if_fail(iter->list->cmp == NULL);
 
-  if (iter->list->free != NULL) {
-    (*iter->list->free)(iter->list->start[iter->index]);
-  }
-
-  iter->list->start[iter->index] = data;
+  girara_list_set_nth(iter->list, iter->index, data);
 }
 
 void girara_list_iterator_free(girara_list_iterator_t* iter) {

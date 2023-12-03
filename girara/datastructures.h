@@ -100,6 +100,15 @@ void girara_list_remove(girara_list_t* list, void* data) GIRARA_VISIBLE;
 void* girara_list_nth(girara_list_t* list, size_t n) GIRARA_VISIBLE;
 
 /**
+ * Replaces the nth entry
+ *
+ * @param list The girara list object
+ * @param n Index of the entry
+ * @param data The new entry
+ */
+void girara_list_set_nth(girara_list_t* list, size_t n, void* data) GIRARA_VISIBLE;
+
+/**
  * Checks if the list contains the given element
  *
  * @param list The girara list object
