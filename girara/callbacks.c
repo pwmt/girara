@@ -122,6 +122,7 @@ girara_callback_view_key_press_event(GtkWidget* widget,
 
       return TRUE;
     }
+  }
 
   gunichar codepoint = gdk_keyval_to_unicode(keyval);
 
