@@ -35,16 +35,19 @@ START_TEST(test_datastructures_list) {
   ck_assert_uint_eq(girara_list_size(list), 10);
 
   // iterator tests
-  girara_list_iterator_t* iter = girara_list_iterator(list);
+  girara_list_iterator_t* iter      = girara_list_iterator(list);
+  girara_list_iterator_t* prev_iter = girara_list_iterator(list);
   ck_assert_ptr_nonnull(iter);
+  ck_assert_ptr_nonnull(prev_iter);
 
   for (intptr_t i = 0; i != 10; ++i) {
-    ck_assert_uint_eq((intptr_t) girara_list_iterator_data(iter), i);
+    ck_assert_uint_eq((intptr_t)girara_list_iterator_data(iter), i);
     if (i < 9) {
       ck_assert(girara_list_iterator_is_valid(iter));
       ck_assert(girara_list_iterator_has_next(iter));
       ck_assert_ptr_nonnull(girara_list_iterator_next(iter));
       ck_assert(girara_list_iterator_is_valid(iter));
+      ck_assert_ptr_nonnull(girara_list_iterator_next(prev_iter));
     } else {
       ck_assert(girara_list_iterator_is_valid(iter));
       ck_assert(!girara_list_iterator_has_next(iter));
@@ -53,6 +56,22 @@ START_TEST(test_datastructures_list) {
     }
   }
 
+  for (intptr_t i = 0; i != 10; ++i) {
+    ck_assert_uint_eq((intptr_t)girara_list_iterator_data(prev_iter), 9 - i);
+    if (i < 9) {
+      ck_assert(girara_list_iterator_is_valid(prev_iter));
+      ck_assert(girara_list_iterator_has_previous(prev_iter));
+      ck_assert_ptr_nonnull(girara_list_iterator_previous(prev_iter));
+      ck_assert(girara_list_iterator_is_valid(prev_iter));
+    } else {
+      ck_assert(girara_list_iterator_is_valid(prev_iter));
+      ck_assert(!girara_list_iterator_has_previous(prev_iter));
+      ck_assert_ptr_null(girara_list_iterator_previous(prev_iter));
+      ck_assert(!girara_list_iterator_is_valid(prev_iter));
+    }
+  }
+
+  girara_list_iterator_free(prev_iter);
   girara_list_iterator_free(iter);
   girara_list_free(list);
 
