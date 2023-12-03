@@ -6,41 +6,34 @@
 #include "datastructures.h"
 #include "utils.h"
 
-struct girara_tree_node_s
-{
-  GNode* node; /* The node object */
+struct girara_tree_node_s {
+  GNode* node;                 /**> The node object */
   girara_free_function_t free; /**> The free function */
 };
 
-typedef struct girara_tree_node_data_s
-{
+typedef struct girara_tree_node_data_s {
   girara_tree_node_t* node; /**> The node */
-  void* data; /**> The data */
+  void* data;               /**> The data */
 } girara_tree_node_data_t;
 
-struct girara_list_s
-{
-  GList* start; /**> List start */
-  girara_free_function_t free; /**> The free function */
+struct girara_list_s {
+  void** start;                  /**> List start */
+  size_t size;                   /**> The list size */
+  girara_free_function_t free;   /**> The free function **/
   girara_compare_function_t cmp; /**> The sort function */
 };
 
-struct girara_list_iterator_s
-{
+struct girara_list_iterator_s {
   girara_list_t* list; /**> The list */
-  GList* element; /**> The list object */
+  size_t index;        /**> The list index */
 };
 
-girara_list_t*
-girara_list_new(void)
-{
+girara_list_t* girara_list_new(void) {
   return girara_list_new2(NULL);
 }
 
-girara_list_t*
-girara_list_new2(girara_free_function_t gfree)
-{
-  girara_list_t* list = g_slice_new0(girara_list_t);
+girara_list_t* girara_list_new2(girara_free_function_t gfree) {
+  girara_list_t* list = g_malloc0(sizeof(girara_list_t));
   if (list == NULL) {
     return NULL;
   }
@@ -49,9 +42,7 @@ girara_list_new2(girara_free_function_t gfree)
   return list;
 }
 
-girara_list_t*
-girara_sorted_list_new(girara_compare_function_t cmp)
-{
+girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp) {
   girara_list_t* list = girara_list_new();
   if (list == NULL) {
     return NULL;
@@ -61,9 +52,7 @@ girara_sorted_list_new(girara_compare_function_t cmp)
   return list;
 }
 
-girara_list_t*
-girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gfree)
-{
+girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gfree) {
   girara_list_t* list = girara_list_new2(gfree);
   if (list == NULL) {
     return NULL;
@@ -73,323 +62,257 @@ girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gf
   return list;
 }
 
-void
-girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree)
-{
+void girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree) {
   g_return_if_fail(list != NULL);
   list->free = gfree;
 }
 
-void
-girara_list_clear(girara_list_t* list)
-{
-  if (list == NULL || list->start == NULL) {
+void girara_list_clear(girara_list_t* list) {
+  if (list == NULL) {
     return;
   }
 
-  if (list->free != NULL) {
-    g_list_free_full(list->start, list->free);
-  } else {
-    g_list_free(list->start);
+  if (list->free) {
+    for (size_t idx = 0; idx != list->size; ++idx) {
+      list->free(list->start[idx]);
+    }
   }
+  g_free(list->start);
   list->start = NULL;
+  list->size  = 0;
 }
 
-void
-girara_list_free(girara_list_t* list)
-{
+void girara_list_free(girara_list_t* list) {
   if (list == NULL) {
     return;
   }
 
   girara_list_clear(list);
-  g_slice_free(girara_list_t, list);
+  g_free(list);
 }
 
-void
-girara_list_append(girara_list_t* list, void* data)
-{
+void girara_list_append(girara_list_t* list, void* data) {
   g_return_if_fail(list != NULL);
 
+  void** new_start = g_realloc_n(list->start, list->size + 1, sizeof(void*));
+  g_return_if_fail(new_start != NULL);
+
+  list->start               = new_start;
+  list->start[list->size++] = data;
   if (list->cmp != NULL) {
-    list->start = g_list_insert_sorted(list->start, data, list->cmp);
-  } else {
-    list->start = g_list_append(list->start, data);
+    girara_list_sort(list, list->cmp);
   }
 }
 
-void
-girara_list_prepend(girara_list_t* list, void* data)
-{
+void girara_list_prepend(girara_list_t* list, void* data) {
   g_return_if_fail(list != NULL);
 
   if (list->cmp != NULL) {
     girara_list_append(list, data);
   } else {
-    list->start = g_list_prepend(list->start, data);
+    list->start = g_realloc_n(list->start, list->size + 1, sizeof(void*));
+    memmove(list->start + 1, list->start, list->size * sizeof(void*));
+    list->start[0] = data;
+    ++list->size;
   }
 }
 
-void
-girara_list_remove(girara_list_t* list, void* data)
-{
+void girara_list_remove(girara_list_t* list, void* data) {
   g_return_if_fail(list != NULL);
-  if (list->start == NULL) {
+
+  ssize_t pos = girara_list_position(list, data);
+  if (pos == -1) {
     return;
   }
 
-  GList* tmp = g_list_find(list->start, data);
-  if (tmp == NULL) {
-    return;
+  if (list->free) {
+    list->free(list->start[pos]);
   }
-
-  if (list->free != NULL) {
-    (list->free)(tmp->data);
-  }
-  list->start = g_list_delete_link(list->start, tmp);
+  memmove(list->start + pos, list->start + pos + 1, (list->size - pos - 1) * sizeof(void*));
+  --list->size;
 }
 
-void*
-girara_list_nth(girara_list_t* list, size_t n)
-{
+void* girara_list_nth(girara_list_t* list, size_t n) {
   g_return_val_if_fail(list != NULL, NULL);
-  g_return_val_if_fail(list->start != NULL && (n < g_list_length(list->start)), NULL);
+  g_return_val_if_fail(n < list->size, NULL);
 
-  GList* tmp = g_list_nth(list->start, n);
-  g_return_val_if_fail(tmp != NULL, NULL);
-
-  return tmp->data;
+  return list->start[n];
 }
 
-bool
-girara_list_contains(girara_list_t* list, void* data)
-{
+bool girara_list_contains(girara_list_t* list, void* data) {
   g_return_val_if_fail(list != NULL, false);
-  if (!list->start) {
+  for (size_t idx = 0; idx != list->size; ++idx) {
+    if (list->start[idx] == data) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void* girara_list_find(const girara_list_t* list, girara_compare_function_t compare, const void* data) {
+  g_return_val_if_fail(list != NULL && compare != NULL, NULL);
+
+  for (size_t idx = 0; idx != list->size; ++idx) {
+    if (compare(list->start[idx], data) == 0) {
+      return list->start[idx];
+    }
+  }
+
+  return NULL;
+}
+
+girara_list_iterator_t* girara_list_iterator(girara_list_t* list) {
+  g_return_val_if_fail(list != NULL, NULL);
+
+  if (list->size == 0) {
+    return NULL;
+  }
+
+  girara_list_iterator_t* iter = g_malloc0(sizeof(girara_list_iterator_t));
+  if (iter == NULL) {
+    return NULL;
+  }
+
+  iter->list = list;
+  return iter;
+}
+
+girara_list_iterator_t* girara_list_iterator_copy(girara_list_iterator_t* iter) {
+  g_return_val_if_fail(iter != NULL, NULL);
+
+  return g_memdup2(iter, sizeof(girara_list_iterator_t));
+}
+
+girara_list_iterator_t* girara_list_iterator_next(girara_list_iterator_t* iter) {
+  if (girara_list_iterator_is_valid(iter) == false) {
+    return NULL;
+  }
+
+  ++iter->index;
+  if (iter->index < iter->list->size) {
+    return iter;
+  }
+  return NULL;
+}
+
+bool girara_list_iterator_has_next(girara_list_iterator_t* iter) {
+  if (girara_list_iterator_is_valid(iter) == false) {
     return false;
   }
 
-  GList* tmp = g_list_find(list->start, data);
-  if (tmp == NULL) {
+  return iter->index + 1 < iter->list->size;
+}
+
+girara_list_iterator_t* girara_list_iterator_previous(girara_list_iterator_t* iter) {
+  if (girara_list_iterator_is_valid(iter) == false) {
+    return NULL;
+  }
+
+  if (iter->index == 0) {
+    iter->index = iter->list->size;
+    return NULL;
+  }
+  --iter->index;
+  return iter;
+}
+
+bool girara_list_iterator_has_previous(girara_list_iterator_t* iter) {
+  if (girara_list_iterator_is_valid(iter) == false || iter->index == 0) {
     return false;
   }
 
   return true;
 }
 
-void*
-girara_list_find(const girara_list_t* list, girara_compare_function_t compare, const void* data)
-{
-  g_return_val_if_fail(list != NULL && compare != NULL, NULL);
-  if (list->start == NULL) {
-    return NULL;
-  }
-
-  GList* element = g_list_find_custom(list->start, data, compare);
-  if (element == NULL) {
-    return NULL;
-  }
-
-  return element->data;
-}
-
-
-girara_list_iterator_t*
-girara_list_iterator(girara_list_t* list)
-{
-  g_return_val_if_fail(list != NULL, NULL);
-
-  if (list->start == NULL) {
-    return NULL;
-  }
-
-  girara_list_iterator_t* iter = g_slice_new0(girara_list_iterator_t);
-  if (iter == NULL) {
-    return NULL;
-  }
-
-  iter->list    = list;
-  iter->element = list->start;
-
-  return iter;
-}
-
-girara_list_iterator_t*
-girara_list_iterator_copy(girara_list_iterator_t* iter)
-{
-  g_return_val_if_fail(iter != NULL, NULL);
-
-  return g_slice_copy(sizeof(girara_list_iterator_t), iter);
-}
-
-girara_list_iterator_t*
-girara_list_iterator_next(girara_list_iterator_t* iter)
-{
-  if (girara_list_iterator_is_valid(iter) == false) {
-    return NULL;
-  }
-
-  iter->element = g_list_next(iter->element);
-  if (iter->element == NULL) {
-    return NULL;
-  }
-
-  return iter;
-}
-
-bool
-girara_list_iterator_has_next(girara_list_iterator_t* iter)
-{
-  if (girara_list_iterator_is_valid(iter) == false) {
-    return false;
-  }
-
-  return g_list_next(iter->element);
-}
-
-girara_list_iterator_t*
-girara_list_iterator_previous(girara_list_iterator_t* iter)
-{
-  if (girara_list_iterator_is_valid(iter) == false) {
-    return NULL;
-  }
-
-  iter->element = g_list_previous(iter->element);
-  if (iter->element == NULL) {
-    return NULL;
-  }
-
-  return iter;
-}
-
-bool
-girara_list_iterator_has_previous(girara_list_iterator_t* iter)
-{
-  if (girara_list_iterator_is_valid(iter) == false) {
-    return false;
-  }
-
-  return g_list_previous(iter->element);
-}
-
-void
-girara_list_iterator_remove(girara_list_iterator_t* iter) {
+void girara_list_iterator_remove(girara_list_iterator_t* iter) {
   if (girara_list_iterator_is_valid(iter) == false) {
     return;
   }
 
-  GList* el = iter->element;
-  if (iter->list->free != NULL) {
-    (iter->list->free)(iter->element->data);
+  if (iter->list->free) {
+    iter->list->free(iter->list->start[iter->index]);
   }
-
-  iter->element     = el->next;
-  iter->list->start = g_list_delete_link(iter->list->start, el);
+  memmove(iter->list->start + iter->index, iter->list->start + iter->index + 1,
+          (iter->list->size - iter->index - 1) * sizeof(void*));
+  --iter->list->size;
 }
 
-bool
-girara_list_iterator_is_valid(girara_list_iterator_t* iter)
-{
-  return iter != NULL && iter->element != NULL;
+bool girara_list_iterator_is_valid(girara_list_iterator_t* iter) {
+  return iter != NULL && iter->list != NULL && iter->index < iter->list->size;
 }
 
-void*
-girara_list_iterator_data(girara_list_iterator_t* iter)
-{
+void* girara_list_iterator_data(girara_list_iterator_t* iter) {
   g_return_val_if_fail(girara_list_iterator_is_valid(iter), NULL);
-
-  return iter->element->data;
+  return girara_list_nth(iter->list, iter->index);
 }
 
-void
-girara_list_iterator_set(girara_list_iterator_t* iter, void *data)
-{
+void girara_list_iterator_set(girara_list_iterator_t* iter, void* data) {
   g_return_if_fail(girara_list_iterator_is_valid(iter));
   g_return_if_fail(iter->list->cmp == NULL);
 
   if (iter->list->free != NULL) {
-    (*iter->list->free)(iter->element->data);
+    (*iter->list->free)(iter->list->start[iter->index]);
   }
 
-  iter->element->data = data;
+  iter->list->start[iter->index] = data;
 }
 
-void
-girara_list_iterator_free(girara_list_iterator_t* iter)
-{
-  if (iter == NULL) {
-    return;
-  }
-
-  g_slice_free(girara_list_iterator_t, iter);
+void girara_list_iterator_free(girara_list_iterator_t* iter) {
+  g_free(iter);
 }
 
-size_t
-girara_list_size(girara_list_t* list)
-{
+size_t girara_list_size(girara_list_t* list) {
   g_return_val_if_fail(list != NULL, 0);
-
-  if (list->start == NULL) {
-    return 0;
-  }
-
-  return g_list_length(list->start);
+  return list->size;
 }
 
-ssize_t
-girara_list_position(girara_list_t* list, void* data)
-{
+ssize_t girara_list_position(girara_list_t* list, void* data) {
   g_return_val_if_fail(list != NULL, -1);
 
-  if (list->start == NULL) {
-    return -1;
-  }
-
-  bool found = false;
-  ssize_t pos = 0;
-  GIRARA_LIST_FOREACH_BODY(list, void*, tmp,
-    if (tmp == data) {
-      found = true;
-      break;
+  for (size_t idx = 0; idx != list->size; ++idx) {
+    if (list->start[idx] == data) {
+      return idx;
     }
-    ++pos;
-  );
-
-  return found ? pos : -1;
+  }
+  return -1;
 }
 
-void
-girara_list_sort(girara_list_t* list, girara_compare_function_t compare)
-{
+typedef struct {
+  girara_compare_function_t compare;
+} comparer_t;
+
+static int comparer(const void* p1, const void* p2, void* data) {
+  comparer_t* compare = data;
+  return compare->compare(*(const void**)p1, *(const void**)p2);
+}
+
+void girara_list_sort(girara_list_t* list, girara_compare_function_t compare) {
   g_return_if_fail(list != NULL);
   if (list->start == NULL || compare == NULL) {
     return;
   }
 
-  list->start = g_list_sort(list->start, compare);
+  comparer_t comp = {compare};
+  g_qsort_with_data(list->start, list->size, sizeof(void*), comparer, &comp);
 }
 
-void
-girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data)
-{
+void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data) {
   g_return_if_fail(list != NULL && callback != NULL);
   if (list->start == NULL) {
     return;
   }
 
-  g_list_foreach(list->start, callback, data);
+  for (size_t idx = 0; idx != list->size; ++idx) {
+    callback(list->start[idx], data);
+  }
 }
 
-static void
-list_append(void* data, void* userdata)
-{
+static void list_append(void* data, void* userdata) {
   girara_list_t* list = userdata;
   girara_list_append(list, data);
 }
 
-girara_list_t*
-girara_list_merge(girara_list_t* list, girara_list_t* other)
-{
+girara_list_t* girara_list_merge(girara_list_t* list, girara_list_t* other) {
   g_return_val_if_fail(list != NULL, NULL);
   if (other == NULL) {
     return list;
