@@ -229,13 +229,14 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
   bool found = false;
 
   /* search for existing config handle */
-  GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, data,
+  for (size_t idx = 0; idx != girara_list_size(session_private->config.handles); ++idx) {
+    girara_config_handle_t* data = girara_list_nth(session_private->config.handles, idx);
     if (g_strcmp0(data->identifier, identifier) == 0) {
       data->handle = handle;
-      found = true;
+      found        = true;
       break;
     }
-  );
+  }
 
   if (found == false) {
     /* add new config handle */
@@ -343,14 +344,15 @@ config_parse(girara_session_t* session, const char* path)
     } else {
       /* search for config handle */
       girara_session_private_t* session_private = session->private_data;
-      bool found = false;
-      GIRARA_LIST_FOREACH_BODY(session_private->config.handles, girara_config_handle_t*, handle,
+      bool found                                = false;
+      for (size_t idx = 0; idx != girara_list_size(session_private->config.handles); ++idx) {
+        girara_config_handle_t* handle = girara_list_nth(session_private->config.handles, idx);
         if (g_strcmp0(handle->identifier, argv[0]) == 0) {
           found = true;
           handle->handle(session, argument_list);
           break;
         }
-      );
+      }
 
       if (found == false) {
         girara_warning("Could not process line %d in '%s': Unknown handle '%s'", line_number, path, argv[0]);

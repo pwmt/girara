@@ -325,19 +325,16 @@ base_changed(GiraraTemplate* object)
   g_match_info_free(match_info);
 }
 
-static void
-variable_changed(GiraraTemplate* object, const char* GIRARA_UNUSED(name))
-{
+static void variable_changed(GiraraTemplate* object, const char* GIRARA_UNUSED(name)) {
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
-  priv->valid = true;
+  priv->valid                 = true;
 
-  GIRARA_LIST_FOREACH_BODY(priv->variables_in_base, char*, variable,
-    if (priv->valid == true &&
-        girara_list_find(priv->variables, compare_variable_name,
-                         variable) == NULL) {
+  for (size_t idx = 0; idx != girara_list_size(priv->variables_in_base) && priv->valid == true; ++idx) {
+    if (girara_list_find(priv->variables, compare_variable_name, girara_list_nth(priv->variables_in_base, idx)) ==
+        NULL) {
       priv->valid = false;
     }
-  );
+  }
 }
 
 static void

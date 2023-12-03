@@ -860,11 +860,12 @@ girara_mode_add(girara_session_t* session, const char* name)
   g_return_val_if_fail(name != NULL && name[0] != '\0', FALSE);
 
   girara_mode_t last_index = 0;
-  GIRARA_LIST_FOREACH_BODY(session->modes.identifiers, girara_mode_string_t*, mode,
+  for (size_t idx = 0; idx != girara_list_size(session->modes.identifiers); ++idx) {
+    girara_mode_string_t* mode = girara_list_nth(session->modes.identifiers, idx);
     if (mode->index > last_index) {
       last_index = mode->index;
     }
-  );
+  }
 
   /* create new mode identifier */
   girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);
