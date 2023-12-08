@@ -38,19 +38,14 @@ START_TEST(test_home_directory) {
   const gchar* home = g_getenv("HOME");
 
   girara_list_t* list = read_pwd_info();
-  girara_list_iterator_t* iter = girara_list_iterator(list);
-  ck_assert_ptr_nonnull(iter);
-  while (girara_list_iterator_is_valid(iter))
-  {
-    const char* username = (const char*) girara_list_iterator_data(iter);
-    gchar* result = girara_get_home_directory(username);
+  for (size_t idx = 0; idx != girara_list_size(list); ++idx) {
+    const char* username = girara_list_nth(list, idx);
+    gchar* result        = girara_get_home_directory(username);
     if (!home || g_strcmp0(user, username) != 0) {
       ck_assert_msg(result != NULL && strlen(result) != 0, "Home directory is empty");
     }
     g_free(result);
-    girara_list_iterator_next(iter);
   }
-  girara_list_iterator_free(iter);
   girara_list_free(list);
 } END_TEST
 
