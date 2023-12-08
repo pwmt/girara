@@ -539,11 +539,12 @@ girara_session_init(girara_session_t* session, const char* sessionname)
 
   /* box */
   gtk_container_add(GTK_CONTAINER(session->private_data->gtk.overlay), GTK_WIDGET(session->gtk.box));
-  /* overlay */
+  /* bottom_box */
   g_object_set(session->private_data->gtk.bottom_box, "halign", GTK_ALIGN_FILL, NULL);
   g_object_set(session->private_data->gtk.bottom_box, "valign", GTK_ALIGN_END, NULL);
 
-  gtk_overlay_add_overlay(GTK_OVERLAY(session->private_data->gtk.overlay), GTK_WIDGET(session->private_data->gtk.bottom_box));
+  gtk_container_add(GTK_CONTAINER(session->gtk.box), GTK_WIDGET(session->private_data->gtk.bottom_box));
+
   gtk_container_add(GTK_CONTAINER(session->gtk.window), GTK_WIDGET(session->private_data->gtk.overlay));
 
   /* statusbar */
@@ -859,11 +860,12 @@ girara_mode_add(girara_session_t* session, const char* name)
   g_return_val_if_fail(name != NULL && name[0] != '\0', FALSE);
 
   girara_mode_t last_index = 0;
-  GIRARA_LIST_FOREACH_BODY(session->modes.identifiers, girara_mode_string_t*, mode,
+  for (size_t idx = 0; idx != girara_list_size(session->modes.identifiers); ++idx) {
+    girara_mode_string_t* mode = girara_list_nth(session->modes.identifiers, idx);
     if (mode->index > last_index) {
       last_index = mode->index;
     }
-  );
+  }
 
   /* create new mode identifier */
   girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);

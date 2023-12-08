@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-10 11:35+0200\n"
+"POT-Creation-Date: 2023-12-08 15:10+0100\n"
 "PO-Revision-Date: 2012-03-26 16:41+0000\n"
 "Last-Translator: Goudarz Jafari <goudarz.jafari@gmail.com>\n"
-"Language-Team: Persian (Iran) (http://www.transifex.com/pwmt/girara/language/"
+"Language-Team: Persian (Iran) (http://app.transifex.com/pwmt/girara/language/"
 "fa_IR/)\n"
 "Language: fa_IR\n"
 "MIME-Version: 1.0\n"
@@ -18,69 +18,69 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: girara/commands.c:111 girara/commands.c:311
+#: girara/commands.c:111 girara/commands.c:316
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr ""
 
-#: girara/commands.c:145
+#: girara/commands.c:147
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr ""
 
-#: girara/commands.c:177
+#: girara/commands.c:181
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr ""
 
-#: girara/commands.c:216
+#: girara/commands.c:220
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr ""
 
-#: girara/commands.c:252
+#: girara/commands.c:256
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr ""
 
-#: girara/commands.c:335
+#: girara/commands.c:341
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr ""
 
-#: girara/commands.c:423
+#: girara/commands.c:430
 msgid "Not enough arguments."
 msgstr ""
 
-#: girara/commands.c:428
+#: girara/commands.c:435
 msgid "Too many arguments."
 msgstr ""
 
-#: girara/commands.c:441
+#: girara/commands.c:448
 #, c-format
 msgid "Unknown option: %s"
 msgstr ""
 
-#: girara/commands.c:455
+#: girara/commands.c:462
 msgid "true"
 msgstr ""
 
-#: girara/commands.c:455
+#: girara/commands.c:462
 msgid "false"
 msgstr ""
 
-#: girara/commands.c:487
+#: girara/commands.c:494
 #, c-format
 msgid "No value defined for option: %s"
 msgstr ""
 
-#: girara/commands.c:502
+#: girara/commands.c:509
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr ""
 
 #. unhandled command
-#: girara/commands.c:700
+#: girara/commands.c:696
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "دستور معتبر نیست: %s"
@@ -227,12 +227,12 @@ msgstr ""
 msgid "Dump settings to a file"
 msgstr ""
 
-#: girara/settings.c:292
+#: girara/settings.c:284
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr ""
 
-#: girara/settings.c:313
+#: girara/settings.c:306
 #, c-format
 msgid "Failed to write JSON: %s"
 msgstr ""

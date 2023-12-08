@@ -1,7 +1,7 @@
 project('girara', 'c',
-  version: '0.4.0',
-  meson_version: '>=0.56',
-  default_options: ['c_std=c11', 'warning_level=3'],
+  version: '0.4.1',
+  meson_version: '>=0.61',
+  default_options: ['c_std=c17', 'warning_level=3'],
 )
 
 version = meson.project_version()

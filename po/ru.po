@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-10 11:35+0200\n"
-"PO-Revision-Date: 2022-09-10 11:40+0200\n"
+"POT-Creation-Date: 2023-12-08 15:10+0100\n"
+"PO-Revision-Date: 2012-03-26 16:41+0000\n"
 "Last-Translator: Vladimir Lomov <irk.translator@yandex.ru>, 2013,2015\n"
-"Language-Team: Russian (http://www.transifex.com/pwmt/girara/language/ru/)\n"
+"Language-Team: Russian (http://app.transifex.com/pwmt/girara/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,69 +20,69 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: girara/commands.c:111 girara/commands.c:311
+#: girara/commands.c:111 girara/commands.c:316
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Передано неверное количество аргументов: %zu вместо как минимум %u"
 
-#: girara/commands.c:145
+#: girara/commands.c:147
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Указан незарегистрированный режим: %s"
 
-#: girara/commands.c:177
+#: girara/commands.c:181
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Неправильный модификатор в %s"
 
-#: girara/commands.c:216
+#: girara/commands.c:220
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Неправильное значение для специальной клавиши %s"
 
-#: girara/commands.c:252
+#: girara/commands.c:256
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Неправильное значения для специальной клавиши или режим %s"
 
-#: girara/commands.c:335
+#: girara/commands.c:341
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Неправильная функция комбинации: %s"
 
-#: girara/commands.c:423
+#: girara/commands.c:430
 msgid "Not enough arguments."
 msgstr "Недостаточно аргументов."
 
-#: girara/commands.c:428
+#: girara/commands.c:435
 msgid "Too many arguments."
 msgstr "Слишком много аргументов."
 
-#: girara/commands.c:441
+#: girara/commands.c:448
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Неизвестный параметр: %s"
 
-#: girara/commands.c:455
+#: girara/commands.c:462
 msgid "true"
 msgstr "правда"
 
-#: girara/commands.c:455
+#: girara/commands.c:462
 msgid "false"
 msgstr "ложь"
 
-#: girara/commands.c:487
+#: girara/commands.c:494
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Для параметра: %s не задано значение"
 
-#: girara/commands.c:502
+#: girara/commands.c:509
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Неизвестное значение для параметра: %s"
 
 #. unhandled command
-#: girara/commands.c:700
+#: girara/commands.c:696
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Неправильная команда: %s"
@@ -229,12 +229,12 @@ msgstr "Убрать определение с клавиатурной комб
 msgid "Dump settings to a file"
 msgstr "Скопировать настройки в файл"
 
-#: girara/settings.c:292
+#: girara/settings.c:284
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Передано неверное количество аргументов: %zu вместо как минимум 1"
 
-#: girara/settings.c:313
+#: girara/settings.c:306
 #, c-format
 msgid "Failed to write JSON: %s"
 msgstr ""

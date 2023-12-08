@@ -176,21 +176,18 @@ girara_setting_free(girara_setting_t* setting)
   g_slice_free(girara_setting_t, setting);
 }
 
-girara_setting_t*
-girara_setting_find(girara_session_t* session, const char* name)
-{
+girara_setting_t* girara_setting_find(girara_session_t* session, const char* name) {
   g_return_val_if_fail(session != NULL, NULL);
   g_return_val_if_fail(name != NULL, NULL);
 
-  girara_setting_t* result = NULL;
-  GIRARA_LIST_FOREACH_BODY(session->private_data->settings, girara_setting_t*, setting,
+  for (size_t idx = 0; idx != girara_list_size(session->private_data->settings); ++idx) {
+    girara_setting_t* setting = girara_list_nth(session->private_data->settings, idx);
     if (g_strcmp0(setting->name, name) == 0) {
-      result = setting;
-      break;
+      return setting;
     }
-  );
+  }
 
-  return result;
+  return NULL;
 }
 
 const char*
@@ -205,14 +202,12 @@ girara_setting_get_type(girara_setting_t* setting) {
   return setting->type;
 }
 
-girara_completion_t*
-girara_cc_set(girara_session_t* session, const char* input)
-{
+girara_completion_t* girara_cc_set(girara_session_t* session, const char* input) {
   if (input == NULL) {
     return NULL;
   }
 
-  girara_completion_t* completion  = girara_completion_init();
+  girara_completion_t* completion = girara_completion_init();
   if (completion == NULL) {
     return NULL;
   }
@@ -225,12 +220,13 @@ girara_cc_set(girara_session_t* session, const char* input)
 
   unsigned int input_length = strlen(input);
 
-  GIRARA_LIST_FOREACH_BODY(session->private_data->settings, girara_setting_t*, setting,
+  for (size_t idx = 0; idx != girara_list_size(session->private_data->settings); ++idx) {
+    girara_setting_t* setting = girara_list_nth(session->private_data->settings, idx);
     if ((setting->init_only == false) && (input_length <= strlen(setting->name)) &&
         !strncmp(input, setting->name, input_length)) {
       girara_completion_group_add_element(group, setting->name, setting->description);
     }
-  );
+  }
 
   return completion;
 }
@@ -277,28 +273,25 @@ static void dump_setting(JsonBuilder* builder, const girara_setting_t* setting) 
   json_builder_end_object(builder);
 }
 
-bool
-girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
-{
+bool girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list) {
   if (session == NULL || argument_list == NULL) {
     return false;
   }
 
   const size_t number_of_arguments = girara_list_size(argument_list);
   if (number_of_arguments != 1) {
-    girara_warning("Invalid number of arguments passed: %zu instead of 1",
-        number_of_arguments);
-    girara_notify(session, GIRARA_ERROR,
-        _("Invalid number of arguments passed: %zu instead of 1"),
-        number_of_arguments);
+    girara_warning("Invalid number of arguments passed: %zu instead of 1", number_of_arguments);
+    girara_notify(session, GIRARA_ERROR, _("Invalid number of arguments passed: %zu instead of 1"),
+                  number_of_arguments);
     return false;
   }
 
   JsonBuilder* builder = json_builder_new();
   json_builder_begin_object(builder);
-  GIRARA_LIST_FOREACH_BODY(session->private_data->settings, girara_setting_t*, setting,
+  for (size_t idx = 0; idx != girara_list_size(session->private_data->settings); ++idx) {
+    girara_setting_t* setting = girara_list_nth(session->private_data->settings, idx);
     dump_setting(builder, setting);
-  );
+  }
   json_builder_end_object(builder);
 
   JsonGenerator* gen = json_generator_new();
@@ -306,7 +299,7 @@ girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_list)
   JsonNode* root = json_builder_get_root(builder);
   json_generator_set_root(gen, root);
 
-  bool ret = true;
+  bool ret      = true;
   GError* error = NULL;
   if (!json_generator_to_file(gen, girara_list_nth(argument_list, 0), &error)) {
     girara_warning("Failed to write JSON: %s", error->message);

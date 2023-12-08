@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-10 11:35+0200\n"
-"PO-Revision-Date: 2022-09-10 11:39+0200\n"
+"POT-Creation-Date: 2023-12-08 15:10+0100\n"
+"PO-Revision-Date: 2012-03-26 16:41+0000\n"
 "Last-Translator: p  <poczciwiec@gmail.com>, 2012\n"
-"Language-Team: Polish (http://www.transifex.com/pwmt/girara/language/pl/)\n"
+"Language-Team: Polish (http://app.transifex.com/pwmt/girara/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,69 +20,69 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: girara/commands.c:111 girara/commands.c:311
+#: girara/commands.c:111 girara/commands.c:316
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Nieprawidłowa liczba parametrów polecenia: %zu zamiast co najmniej %u"
 
-#: girara/commands.c:145
+#: girara/commands.c:147
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Wybrano nieistniejący tryb: %s"
 
-#: girara/commands.c:177
+#: girara/commands.c:181
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Nieprawidłowy klawisz modyfikujący: %s"
 
-#: girara/commands.c:216
+#: girara/commands.c:220
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Nieprawidłowa wartość klawisza: %s"
 
-#: girara/commands.c:252
+#: girara/commands.c:256
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Nieprawidłowa wartość klawisza lub trybu: %s"
 
-#: girara/commands.c:335
+#: girara/commands.c:341
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Nieprawidłowa funkcja skrótu: %s"
 
-#: girara/commands.c:423
+#: girara/commands.c:430
 msgid "Not enough arguments."
 msgstr "Za mało parametrów polecenia"
 
-#: girara/commands.c:428
+#: girara/commands.c:435
 msgid "Too many arguments."
 msgstr "Za dużo parametrów polecenia"
 
-#: girara/commands.c:441
+#: girara/commands.c:448
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Nieznana opcja: %s"
 
-#: girara/commands.c:455
+#: girara/commands.c:462
 msgid "true"
 msgstr "prawda"
 
-#: girara/commands.c:455
+#: girara/commands.c:462
 msgid "false"
 msgstr "fałsz"
 
-#: girara/commands.c:487
+#: girara/commands.c:494
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Niezdefiniowana wartość opcji: %s"
 
-#: girara/commands.c:502
+#: girara/commands.c:509
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Nieznana wartość opcji: %s"
 
 #. unhandled command
-#: girara/commands.c:700
+#: girara/commands.c:696
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Nieprawidłowa funkcja skrótu: %s"
@@ -229,12 +229,12 @@ msgstr "Usuń sekwencję klawiszy"
 msgid "Dump settings to a file"
 msgstr ""
 
-#: girara/settings.c:292
+#: girara/settings.c:284
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr ""
 
-#: girara/settings.c:313
+#: girara/settings.c:306
 #, c-format
 msgid "Failed to write JSON: %s"
 msgstr ""

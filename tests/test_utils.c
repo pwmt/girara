@@ -38,19 +38,14 @@ START_TEST(test_home_directory) {
   const gchar* home = g_getenv("HOME");
 
   girara_list_t* list = read_pwd_info();
-  girara_list_iterator_t* iter = girara_list_iterator(list);
-  ck_assert_ptr_nonnull(iter);
-  while (girara_list_iterator_is_valid(iter))
-  {
-    const char* username = (const char*) girara_list_iterator_data(iter);
-    gchar* result = girara_get_home_directory(username);
+  for (size_t idx = 0; idx != girara_list_size(list); ++idx) {
+    const char* username = girara_list_nth(list, idx);
+    gchar* result        = girara_get_home_directory(username);
     if (!home || g_strcmp0(user, username) != 0) {
       ck_assert_msg(result != NULL && strlen(result) != 0, "Home directory is empty");
     }
     g_free(result);
-    girara_list_iterator_next(iter);
   }
-  girara_list_iterator_free(iter);
   girara_list_free(list);
 } END_TEST
 
@@ -86,16 +81,16 @@ START_TEST(test_fix_path_extended) {
   const gchar* home = g_getenv("HOME");
 
   girara_list_t* list = read_pwd_info();
-  GIRARA_LIST_FOREACH(list, const char*, iter, username)
-    gchar* path = g_strdup_printf("~%s/test", username);
-    gchar* result = girara_fix_path(path);
+  for (size_t idx = 0; idx != girara_list_size(list); ++idx) {
+    const char* username = girara_list_nth(list, idx);
+    gchar* path          = g_strdup_printf("~%s/test", username);
+    gchar* result        = girara_fix_path(path);
     if (!home || g_strcmp0(user, username) != 0) {
-      ck_assert_msg(result != NULL && strlen(result) != 0,
-          "Fix path result is empty");
+      ck_assert_msg(result != NULL && strlen(result) != 0, "Fix path result is empty");
     }
     g_free(result);
     g_free(path);
-  GIRARA_LIST_FOREACH_END(list, const char*, iter, pwdinfo);
+  }
   girara_list_free(list);
 } END_TEST
 

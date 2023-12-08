@@ -452,18 +452,18 @@ girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argumen
   }
 
   bool dont_append_first_space = cmd == NULL;
-  GString* command = g_string_new(cmd ? cmd : "");
+  GString* command             = g_string_new(cmd ? cmd : "");
   g_free(cmd);
 
-  GIRARA_LIST_FOREACH_BODY(argument_list, char*, value, {
+  for (size_t idx = 0; idx != girara_list_size(argument_list); ++idx) {
     if (dont_append_first_space == false) {
       g_string_append_c(command, ' ');
     }
     dont_append_first_space = false;
-    char* tmp = g_shell_quote(value);
+    char* tmp               = g_shell_quote(girara_list_nth(argument_list, idx));
     g_string_append(command, tmp);
     g_free(tmp);
-  });
+  };
 
   GError* error = NULL;
   girara_info("executing: %s", command->str);

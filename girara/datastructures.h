@@ -100,6 +100,15 @@ void girara_list_remove(girara_list_t* list, void* data) GIRARA_VISIBLE;
 void* girara_list_nth(girara_list_t* list, size_t n) GIRARA_VISIBLE;
 
 /**
+ * Replaces the nth entry
+ *
+ * @param list The girara list object
+ * @param n Index of the entry
+ * @param data The new entry
+ */
+void girara_list_set_nth(girara_list_t* list, size_t n, void* data) GIRARA_VISIBLE;
+
+/**
  * Checks if the list contains the given element
  *
  * @param list The girara list object
@@ -258,10 +267,14 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback,
   __VA_ARGS__ \
   GIRARA_LIST_FOREACH_END(list, type, iter, data)
 
-#define GIRARA_LIST_FOREACH_BODY(list, type, data, ...) \
-  GIRARA_LIST_FOREACH(list, type, girara_list_foreach_iterator, data) \
-  __VA_ARGS__ \
-  GIRARA_LIST_FOREACH_END(list, type, girara_list_foreach_iterator, data)
+#define GIRARA_LIST_FOREACH_BODY(list, type, data, ...)                                                                \
+  do {                                                                                                                 \
+    for (size_t GIRARA_LIST_FOREACH_BODY_IDX = 0; GIRARA_LIST_FOREACH_BODY_IDX < girara_list_size(list);               \
+         ++GIRARA_LIST_FOREACH_BODY_IDX) {                                                                             \
+      type data = (type)girara_list_nth(list, GIRARA_LIST_FOREACH_BODY_IDX);                                           \
+      __VA_ARGS__                                                                                                      \
+    }                                                                                                                  \
+  } while (0)
 
 /**
  * Merge a list into another one. Both lists need to have the same free

@@ -264,16 +264,15 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
       command_mode = true;
 
       /* create command rows */
-      GIRARA_LIST_FOREACH_BODY(session->bindings.commands, girara_command_t*, command,
+      for (size_t idx = 0; idx != girara_list_size(session->bindings.commands); ++idx) {
+        girara_command_t* command = girara_list_nth(session->bindings.commands, idx);
         if (current_command == NULL ||
             (command->command != NULL && !strncmp(current_command, command->command, current_command_length)) ||
-            (command->abbr != NULL && !strncmp(current_command, command->abbr,    current_command_length))
-          )
-        {
+            (command->abbr != NULL && !strncmp(current_command, command->abbr, current_command_length))) {
           /* create entry */
           girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
-          entry->group  = FALSE;
-          entry->value  = g_strdup(command->command);
+          entry->group                              = FALSE;
+          entry->value                              = g_strdup(command->command);
           entry->widget = girara_completion_row_create(command->command, command->description, FALSE);
 
           entries = g_list_append(entries, entry);
@@ -281,7 +280,7 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
           /* show entry row */
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
         }
-      );
+      }
     }
 
     /* based on parameters */
@@ -304,17 +303,18 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 
       /* search matching command */
       girara_command_t* command = NULL;
-      GIRARA_LIST_FOREACH_BODY(session->bindings.commands, girara_command_t*, command_it,
-        if ( (current_command != NULL && command_it->command != NULL && !strncmp(current_command, command_it->command, current_command_length)) ||
-             (current_command != NULL && command_it->abbr != NULL    && !strncmp(current_command, command_it->abbr,    current_command_length))
-          )
-        {
+      for (size_t idx = 0; idx != girara_list_size(session->bindings.commands); ++idx) {
+        girara_command_t* command_it = girara_list_nth(session->bindings.commands, idx);
+        if ((current_command != NULL && command_it->command != NULL &&
+             !strncmp(current_command, command_it->command, current_command_length)) ||
+            (current_command != NULL && command_it->abbr != NULL &&
+             !strncmp(current_command, command_it->abbr, current_command_length))) {
           g_free(previous_command);
           previous_command = g_strdup(command_it->command);
-          command = command_it;
+          command          = command_it;
           break;
         }
-      );
+      }
 
       if (command == NULL) {
         g_free(current_command);
@@ -349,35 +349,37 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
           return false;
         }
 
-        GIRARA_LIST_FOREACH_BODY_WITH_ITER(result->groups, girara_completion_group_t*, iter, group,
+        for (size_t idx = 0; idx != girara_list_size(result->groups); ++idx) {
+          girara_completion_group_t* group = girara_list_nth(result->groups, idx);
           if (group->elements == NULL || girara_list_size(group->elements) == 0) {
-            girara_list_iterator_next(iter);
             continue;
           }
 
           /* create group entry */
           if (group->value != NULL) {
             girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
-            entry->group  = TRUE;
-            entry->value  = g_strdup(group->value);
-            entry->widget = girara_completion_row_create(group->value, NULL, TRUE);
+            entry->group                              = TRUE;
+            entry->value                              = g_strdup(group->value);
+            entry->widget                             = girara_completion_row_create(group->value, NULL, TRUE);
 
             entries = g_list_append(entries, entry);
 
             gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
           }
 
-          GIRARA_LIST_FOREACH_BODY_WITH_ITER(group->elements, girara_completion_element_t*, iter2, element,
+          for (size_t inner_idx = 0; inner_idx != girara_list_size(group->elements); ++inner_idx) {
+            girara_completion_element_t* element = girara_list_nth(group->elements, inner_idx);
+
             girara_internal_completion_entry_t* entry = g_slice_new(girara_internal_completion_entry_t);
-            entry->group  = FALSE;
-            entry->value  = g_strdup(element->value);
+            entry->group                              = FALSE;
+            entry->value                              = g_strdup(element->value);
             entry->widget = girara_completion_row_create(element->value, element->description, FALSE);
 
             entries = g_list_append(entries, entry);
 
             gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
-          );
-        );
+          }
+        }
         girara_completion_free(result);
 
         command_mode = false;
