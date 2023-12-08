@@ -232,17 +232,15 @@ START_TEST(test_datastructures_sorted_list) {
 
   // check sorting
   const char** p = test_strings_sorted;
-  GIRARA_LIST_FOREACH(list, const char*, iter, value)
-    ck_assert_str_eq(value, *p);
-    ++p;
-  GIRARA_LIST_FOREACH_END(list, const char*, iter, value);
+  for (size_t idx = 0; idx != girara_list_size(list); ++idx, ++p) {
+    ck_assert_str_eq(girara_list_nth(list, idx), *p);
+  }
 
-  girara_list_sort(unsorted_list, (girara_compare_function_t) g_strcmp0);
+  girara_list_sort(unsorted_list, (girara_compare_function_t)g_strcmp0);
   p = test_strings_sorted;
-  GIRARA_LIST_FOREACH(unsorted_list, const char*, iter, value)
-    ck_assert_str_eq(value, *p);
-    ++p;
-  GIRARA_LIST_FOREACH_END(unsorted_list, const char*, iter, value);
+  for (size_t idx = 0; idx != girara_list_size(unsorted_list); ++idx, ++p) {
+    ck_assert_str_eq(girara_list_nth(unsorted_list, idx), *p);
+  }
 
   girara_list_free(list);
   girara_list_free(unsorted_list);
