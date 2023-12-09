@@ -122,3 +122,33 @@ test:ubuntu-jammy:
   except:
     - tags
 
+# Ubuntu 24.04 LTS (noble)
+build:ubuntu-noble:
+  tags:
+    - pwmt
+  stage: build
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:noble
+  script:
+    - mkdir -p build && cd build
+    - meson ..
+    - ninja
+  artifacts:
+    expire_in: 6 hours
+    paths:
+      - build
+  except:
+    - tags
+
+test:ubuntu-noble:
+  tags:
+    - pwmt
+  stage: test
+  image: registry.pwmt.org/pwmt/gitlab-runner-images/ubuntu:noble
+  script:
+    - cd build
+    - ninja test
+  dependencies:
+    - build:ubuntu-noble
+  except:
+    - tags
+
