@@ -47,13 +47,22 @@ if check.found()
 
   xvfb = find_program('xvfb-run', required: get_option('tests'))
   if xvfb.found()
+    xvfb_args = ['-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset']
+    xvfb_h_output = run_command(xvfb, '-h', capture: true, check: false)
+    if xvfb_h_output.stdout().contains('--auto-display')
+      # becasue Arch
+      xvfb_args += ['-d']
+    else
+      xvfb_args += ['-a']
+    endif
+
     config = executable('test_config', ['test_config.c', 'tests.c'],
       dependencies: build_dependencies + test_dependencies,
       include_directories: include_directories,
       c_args: defines + flags
     )
     test('config', xvfb,
-      args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', config],
+      args: xvfb_args + [config],
       timeout: 60*60,
       is_parallel: false
     )
@@ -64,7 +73,7 @@ if check.found()
       c_args: defines + flags
     )
     test('session', xvfb,
-      args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', session],
+      args: xvfb_args + [session],
       timeout: 60*60,
       is_parallel: false
     )
@@ -75,7 +84,7 @@ if check.found()
       c_args: defines + flags
     )
     test('setting', xvfb,
-      args: ['-a', '-s', '-screen 0 1400x900x24 -ac +extension GLX +render -noreset', setting],
+      args: xvfb_args + [setting],
       timeout: 60*60,
       is_parallel: false
     )
