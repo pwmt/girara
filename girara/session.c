@@ -381,7 +381,7 @@ girara_session_create(void)
   /* make notification text selectable */
   gtk_label_set_selectable(GTK_LABEL(session->gtk.notification_text), TRUE);
   /* ellipsize notification text */
-  gtk_label_set_ellipsize(session->gtk.notification_text, PANGO_ELLIPSIZE_END);
+  gtk_label_set_ellipsize(GTK_LABEL(session->gtk.notification_text), PANGO_ELLIPSIZE_END);
 
   return session;
 }
