@@ -39,7 +39,7 @@ bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, c
   }
 
   /* add new shortcut */
-  girara_shortcut_t* shortcut = g_slice_new(girara_shortcut_t);
+  girara_shortcut_t* shortcut = g_malloc(sizeof(girara_shortcut_t));
 
   shortcut->mask             = modifier;
   shortcut->key              = key;
@@ -71,13 +71,11 @@ bool girara_shortcut_remove(girara_session_t* session, guint modifier, guint key
   return false;
 }
 
-void
-girara_shortcut_free(girara_shortcut_t* shortcut)
-{
+void girara_shortcut_free(girara_shortcut_t* shortcut) {
   g_return_if_fail(shortcut != NULL);
   g_free(shortcut->buffered_command);
   g_free(shortcut->argument.data);
-  g_slice_free(girara_shortcut_t, shortcut);
+  g_free(shortcut);
 }
 
 bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key,
@@ -99,7 +97,7 @@ bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, gui
   }
 
   /* create new inputbar shortcut */
-  girara_inputbar_shortcut_t* inputbar_shortcut = g_slice_new(girara_inputbar_shortcut_t);
+  girara_inputbar_shortcut_t* inputbar_shortcut = g_malloc(sizeof(girara_inputbar_shortcut_t));
 
   inputbar_shortcut->mask     = modifier;
   inputbar_shortcut->key      = key;
@@ -126,10 +124,8 @@ bool girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, 
   return true;
 }
 
-void
-girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut)
-{
-  g_slice_free(girara_inputbar_shortcut_t, inputbar_shortcut);
+void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut) {
+  g_free(inputbar_shortcut);
 }
 
 bool
@@ -643,7 +639,7 @@ bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifi
   }
 
   /* add new config handle */
-  girara_shortcut_mapping_t* mapping = g_slice_new(girara_shortcut_mapping_t);
+  girara_shortcut_mapping_t* mapping = g_malloc(sizeof(girara_shortcut_mapping_t));
 
   mapping->identifier = g_strdup(identifier);
   mapping->function   = function;
@@ -652,15 +648,13 @@ bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifi
   return true;
 }
 
-void
-girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping)
-{
+void girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping) {
   if (mapping == NULL) {
     return;
   }
 
   g_free(mapping->identifier);
-  g_slice_free(girara_shortcut_mapping_t, mapping);
+  g_free(mapping);
 }
 
 bool girara_argument_mapping_add(girara_session_t* session, const char* identifier, int value) {
@@ -680,7 +674,7 @@ bool girara_argument_mapping_add(girara_session_t* session, const char* identifi
   }
 
   /* add new config handle */
-  girara_argument_mapping_t* mapping = g_slice_new(girara_argument_mapping_t);
+  girara_argument_mapping_t* mapping = g_malloc(sizeof(girara_argument_mapping_t));
 
   mapping->identifier = g_strdup(identifier);
   mapping->value      = value;
@@ -689,15 +683,13 @@ bool girara_argument_mapping_add(girara_session_t* session, const char* identifi
   return true;
 }
 
-void
-girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping)
-{
+void girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping) {
   if (argument_mapping == NULL) {
     return;
   }
 
   g_free(argument_mapping->identifier);
-  g_slice_free(girara_argument_mapping_t, argument_mapping);
+  g_free(argument_mapping);
 }
 
 bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function,
@@ -718,7 +710,7 @@ bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button,
   }
 
   /* add new mouse event */
-  girara_mouse_event_t* mouse_event = g_slice_new(girara_mouse_event_t);
+  girara_mouse_event_t* mouse_event = g_malloc(sizeof(girara_mouse_event_t));
 
   mouse_event->mask       = mask;
   mouse_event->button     = button;
@@ -746,11 +738,6 @@ bool girara_mouse_event_remove(girara_session_t* session, guint mask, guint butt
   return false;
 }
 
-void
-girara_mouse_event_free(girara_mouse_event_t* mouse_event)
-{
-  if (mouse_event == NULL) {
-    return;
-  }
-  g_slice_free(girara_mouse_event_t, mouse_event);
+void girara_mouse_event_free(girara_mouse_event_t* mouse_event) {
+  g_free(mouse_event);
 }
