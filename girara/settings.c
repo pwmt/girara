@@ -168,11 +168,11 @@ girara_setting_free(girara_setting_t* setting)
     return;
   }
 
-  g_free(setting->name);
-  g_free(setting->description);
   if (setting->type == STRING) {
     g_free(setting->value.s);
   }
+  g_free(setting->description);
+  g_free(setting->name);
   g_free(setting);
 }
 
