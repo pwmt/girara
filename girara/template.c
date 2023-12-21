@@ -52,8 +52,8 @@ free_variable(void* data)
 {
   variable_t* variable = data;
 
-  g_free(variable->name);
   g_free(variable->value);
+  g_free(variable->name);
 
   variable->name  = NULL;
   variable->value = NULL;
@@ -190,13 +190,13 @@ girara_template_init(GiraraTemplate* history)
 static void
 dispose(GObject* object)
 {
-  GiraraTemplate* obj = GIRARA_TEMPLATE(object);
+  GiraraTemplate* obj         = GIRARA_TEMPLATE(object);
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(obj);
 
-  g_regex_unref(priv->variable_regex);
   g_regex_unref(priv->variable_check_regex);
+  g_regex_unref(priv->variable_regex);
 
-  priv->variable_regex = NULL;
+  priv->variable_regex       = NULL;
   priv->variable_check_regex = NULL;
 
   G_OBJECT_CLASS(girara_template_parent_class)->dispose(object);
