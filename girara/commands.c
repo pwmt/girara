@@ -603,16 +603,14 @@ void girara_special_command_free(girara_special_command_t* special_command) {
   g_free(special_command);
 }
 
-void
-girara_command_free(girara_command_t* command)
-{
+void girara_command_free(girara_command_t* command) {
   if (command == NULL) {
     return;
   }
 
-  g_free(command->command);
-  g_free(command->abbr);
   g_free(command->description);
+  g_free(command->abbr);
+  g_free(command->command);
   g_free(command);
 }
 
