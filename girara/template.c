@@ -36,7 +36,7 @@ new_variable(const char* name)
     return NULL;
   }
 
-  variable_t* variable = g_slice_new0(variable_t);
+  variable_t* variable = g_malloc0(sizeof(variable_t));
   if (variable == NULL) {
     return NULL;
   }
@@ -60,7 +60,7 @@ static void free_variable(void* data) {
   variable->name  = NULL;
   variable->value = NULL;
 
-  g_slice_free(variable_t, data);
+  g_free(variable);
 }
 
 static int
