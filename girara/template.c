@@ -47,9 +47,11 @@ new_variable(const char* name)
   return variable;
 }
 
-static void
-free_variable(void* data)
-{
+static void free_variable(void* data) {
+  if (data == NULL) {
+    return;
+  }
+
   variable_t* variable = data;
 
   g_free(variable->value);
