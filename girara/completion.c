@@ -57,8 +57,8 @@ static void completion_element_free(girara_completion_element_t* element) {
   }
 
   /* free element */
-  g_free(element->value);
   g_free(element->description);
+  g_free(element->value);
   g_free(element);
 }
 
@@ -97,8 +97,8 @@ void girara_completion_group_free(girara_completion_group_t* group) {
     return;
   }
 
-  g_free(group->value);
   girara_list_free(group->elements);
+  g_free(group->value);
   g_free(group);
 }
 
@@ -223,8 +223,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
 
       g_strfreev(elements);
 
-      g_free(current_command);
       g_free(current_parameter);
+      g_free(current_command);
 
       return false;
     }
@@ -238,8 +238,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
     widget_add_class(GTK_WIDGET(session->gtk.results), "completion-box");
 
     if (session->gtk.results == NULL) {
-      g_free(current_command);
       g_free(current_parameter);
+      g_free(current_command);
 
       g_strfreev(elements);
       return false;
@@ -328,8 +328,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
         girara_completion_t *result = command->completion(session, current_parameter ? current_parameter : "");
 
         if (result == NULL || result->groups == NULL) {
-          g_free(current_command);
           g_free(current_parameter);
+          g_free(current_command);
 
           g_strfreev(elements);
           return false;
@@ -461,16 +461,19 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
     g_free(escaped_value);
 
     /* update previous */
-    g_free(previous_command);
     g_free(previous_parameter);
-    previous_command   = g_strdup((command_mode) ? ((girara_internal_completion_entry_t*) entries_current->data)->value : current_command);
-    previous_parameter = g_strdup((command_mode) ? current_parameter : ((girara_internal_completion_entry_t*) entries_current->data)->value);
+    g_free(previous_command);
+
+    previous_command   = g_strdup((command_mode) ? ((girara_internal_completion_entry_t*)entries_current->data)->value
+                                                 : current_command);
+    previous_parameter = g_strdup((command_mode) ? current_parameter
+                                                 : ((girara_internal_completion_entry_t*)entries_current->data)->value);
     previous_length    = strlen(temp);
     g_free(temp);
   }
 
-  g_free(current_command);
   g_free(current_parameter);
+  g_free(current_command);
 
   g_strfreev(elements);
 
