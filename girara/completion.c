@@ -501,10 +501,10 @@ static GtkEventBox* girara_completion_row_create(const char* command, const char
   gtk_label_set_ellipsize(show_command, PANGO_ELLIPSIZE_END);
   gtk_label_set_ellipsize(show_description, PANGO_ELLIPSIZE_END);
 
-  gchar* c = g_markup_printf_escaped(FORMAT_COMMAND,     command ? command : "");
-  gchar* d = g_markup_printf_escaped(FORMAT_DESCRIPTION, description ? description : "");
-  gtk_label_set_markup(show_command,     c);
-  gtk_label_set_markup(show_description, d);
+  gchar* c = command ? g_markup_printf_escaped(FORMAT_COMMAND, command) : NULL;
+  gchar* d = description ? g_markup_printf_escaped(FORMAT_DESCRIPTION, description) : NULL;
+  gtk_label_set_markup(show_command, command ? c : "");
+  gtk_label_set_markup(show_description, description ? d : "");
   g_free(c);
   g_free(d);
 
