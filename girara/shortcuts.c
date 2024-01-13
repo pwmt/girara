@@ -541,7 +541,12 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
     {"Super",     GDK_KEY_Super_L},
     {"Tab",       GDK_KEY_Tab},
     {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
-    {"Up",        GDK_KEY_Up}
+    {"Up",        GDK_KEY_Up},
+    {"Print",     GDK_KEY_Print},
+    {"KPLeft",    GDK_KEY_KP_Left},
+    {"KPRight",   GDK_KEY_KP_Right},
+    {"KPUp",      GDK_KEY_KP_Up},
+    {"KPDown",    GDK_KEY_KP_Down}
   };
 
   char* input               = (char*) argument->data;
