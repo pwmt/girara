@@ -103,7 +103,9 @@ void girara_completion_group_free(girara_completion_group_t* group) {
 }
 
 void girara_completion_free(girara_completion_t* completion) {
-  g_return_if_fail(completion != NULL);
+  if (completion == NULL) {
+    return;
+  }
 
   girara_list_free(completion->groups);
   /* free completion */
