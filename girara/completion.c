@@ -525,11 +525,8 @@ static GtkEventBox* girara_completion_row_create(const char* command, const char
   return row;
 }
 
-static void
-girara_completion_row_set_color(girara_session_t* session, GtkEventBox* row, int mode)
-{
-  g_return_if_fail(session != NULL);
-  g_return_if_fail(row     != NULL);
+static void girara_completion_row_set_color(GtkEventBox* row, int mode) {
+  g_return_if_fail(row != NULL);
 
   GtkBox* col     = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
   GList* items    = gtk_container_get_children(GTK_CONTAINER(col));
