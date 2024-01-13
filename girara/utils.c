@@ -372,36 +372,7 @@ girara_clean_line(char* line)
   line[j] = '\0';
 }
 
-void*
-girara_safe_realloc(void** ptr, size_t size)
-{
-  if (ptr == NULL) {
-    return NULL;
-  }
-
-  if (size == 0) {
-    goto error_free;
-  }
-
-  void* tmp = realloc(*ptr, size);
-  if (tmp == NULL) {
-    goto error_free;
-  }
-
-  *ptr = tmp;
-  return tmp;
-
-error_free:
-
-  free(*ptr);
-  *ptr = NULL;
-
-  return NULL;
-}
-
-char*
-girara_escape_string(const char* value)
-{
+char* girara_escape_string(const char* value) {
   if (value == NULL) {
     return NULL;
   }

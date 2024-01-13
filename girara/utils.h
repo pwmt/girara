@@ -117,16 +117,6 @@ char* girara_file_read2(FILE* file) GIRARA_VISIBLE;
 void girara_clean_line(char* line) GIRARA_VISIBLE;
 
 /**
- * Changes the size of the memory block by wrapping a realloc function call
- * In addition it frees the old memory block if realloc fails.
- *
- * @param ptr Memory space
- * @param size Number of bytes
- * @return Pointer to the allocated memory block or NULL
- */
-void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2) GIRARA_VISIBLE GIRARA_DEPRECATED_;
-
-/**
  * Escape \\, \\t, ", ' and spaces in strings.
  * @param value The string to be escaped.
  * @returns The escaped string. Needs to be freed with g_free.
