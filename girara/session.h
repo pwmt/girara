@@ -131,18 +131,6 @@ bool girara_set_view(girara_session_t* session, GtkWidget* widget) GIRARA_VISIBL
 char* girara_buffer_get(girara_session_t* session) GIRARA_VISIBLE;
 
 /**
- * Displays a notification popup for the user using libnotify. Basic styling
- * is allowed using Pango's markup format:
- * <https://developer.gnome.org/pango/stable/PangoMarkupFormat.html>
- *
- * @param session The girara session
- * @param summary The title
- * @param body The content
- */
-void girara_libnotify(girara_session_t* session, const char *summary,
-    const char *body) GIRARA_VISIBLE GIRARA_DEPRECATED_;
-
-/**
  * Displays a notification for the user. It is possible to pass GIRARA_INFO,
  * GIRARA_WARNING or GIRARA_ERROR as a notification level.
  *

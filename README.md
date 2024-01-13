@@ -18,7 +18,6 @@ The following dependencies are required:
 
 The following dependencies are optional:
 
-* `libnotify`: notification support (deprecated, disabled by default)
 * `json-glib-1.0`: configuration dumping support
 
 For building girara, the following dependencies are also required:

@@ -19,11 +19,6 @@
 #include <pango/pango-font.h>
 #include <stdlib.h>
 
-#ifdef WITH_LIBNOTIFY
-#include <libnotify/notify.h>
-#endif
-
-
 static int
 cb_sort_settings(const void* data1, const void* data2)
 {
@@ -697,69 +692,9 @@ girara_buffer_get(girara_session_t* session)
   return (session->global.buffer) ? g_strdup(session->global.buffer->str) : NULL;
 }
 
-void
-girara_libnotify(girara_session_t* session, const char *summary,
-    const char *body)
-{
-  if (session == NULL
-      || summary == NULL
-      || body == NULL) {
-    return;
-  }
-
-#ifdef WITH_LIBNOTIFY
-  const bool was_initialized = notify_is_initted();
-
-  if (was_initialized == false) {
-    notify_init(session->private_data->session_name);
-  }
-
-  NotifyNotification* libnotify_notification = NULL;
-  char* icon_name = NULL;
-
-  /* We use the NotifyNotification constructor at many branches because
-   * libnotify does not have a notify_notification_set_image_from_name()
-   * function, and accessing private fields is frowned upon and subject to API
-   * changes.
-   */
-  icon_name = g_strdup(gtk_window_get_icon_name(GTK_WINDOW(session->gtk.window)));
-  if (icon_name != NULL) {
-    /* Icon can be loaded from theme with adequate quality for notification */
-    libnotify_notification = notify_notification_new(summary, body, icon_name);
-    g_free(icon_name);
-  } else {
-    /* Or extracted from the current window */
-    GdkPixbuf* icon_pix = gtk_window_get_icon(GTK_WINDOW(session->gtk.window));
-    if (icon_pix != NULL) {
-      libnotify_notification = notify_notification_new(summary, body, NULL);
-      notify_notification_set_image_from_pixbuf(libnotify_notification, icon_pix);
-      g_object_unref(G_OBJECT(icon_pix));
-    } else {
-      /* Or from a default image as a last resort */
-      libnotify_notification = notify_notification_new(summary, body, "info");
-    }
-  }
-
-  g_return_if_fail(libnotify_notification != NULL);
-  notify_notification_show(libnotify_notification, NULL);
-  g_object_unref(G_OBJECT(libnotify_notification));
-
-  if (was_initialized == false) {
-    notify_uninit();
-  }
-#else
-  girara_notify(session, GIRARA_WARNING, "Girara was compiled without libnotify support.");
-#endif
-}
-
-void
-girara_notify(girara_session_t* session, int level, const char* format, ...)
-{
-  if (session == NULL
-      || session->gtk.notification_text == NULL
-      || session->gtk.notification_area == NULL
-      || session->gtk.inputbar == NULL
-      || session->gtk.view == NULL) {
+void girara_notify(girara_session_t* session, int level, const char* format, ...) {
+  if (session == NULL || session->gtk.notification_text == NULL || session->gtk.notification_area == NULL ||
+      session->gtk.inputbar == NULL || session->gtk.view == NULL) {
     return;
   }
 
