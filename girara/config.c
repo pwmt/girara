@@ -240,7 +240,7 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
 
   if (found == false) {
     /* add new config handle */
-    girara_config_handle_t* config_handle = g_slice_new(girara_config_handle_t);
+    girara_config_handle_t* config_handle = g_malloc0(sizeof(girara_config_handle_t));
 
     config_handle->identifier = g_strdup(identifier);
     config_handle->handle     = handle;
@@ -258,7 +258,7 @@ girara_config_handle_free(girara_config_handle_t* handle)
   }
 
   g_free(handle->identifier);
-  g_slice_free(girara_config_handle_t, handle);
+  g_free(handle);
 }
 
 static bool

@@ -81,7 +81,7 @@ girara_setting_add(girara_session_t* session, const char* name, const void* valu
   }
 
   /* add new setting */
-  girara_setting_t* setting = g_slice_new0(girara_setting_t);
+  girara_setting_t* setting = g_malloc0(sizeof(girara_setting_t));
 
   setting->name        = g_strdup(name);
   setting->type        = type;
@@ -168,12 +168,12 @@ girara_setting_free(girara_setting_t* setting)
     return;
   }
 
-  g_free(setting->name);
-  g_free(setting->description);
   if (setting->type == STRING) {
     g_free(setting->value.s);
   }
-  g_slice_free(girara_setting_t, setting);
+  g_free(setting->description);
+  g_free(setting->name);
+  g_free(setting);
 }
 
 girara_setting_t* girara_setting_find(girara_session_t* session, const char* name) {

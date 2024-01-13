@@ -301,8 +301,8 @@ girara_session_create(void)
 {
   ensure_gettext_initialized();
 
-  girara_session_t* session = g_slice_alloc0(sizeof(girara_session_t));
-  session->private_data     = g_slice_alloc0(sizeof(girara_session_private_t));
+  girara_session_t* session = g_malloc0(sizeof(girara_session_t));
+  session->private_data     = g_malloc0(sizeof(girara_session_private_t));
 
   girara_session_private_t* session_private = session->private_data;
 
@@ -380,6 +380,8 @@ girara_session_create(void)
 
   /* make notification text selectable */
   gtk_label_set_selectable(GTK_LABEL(session->gtk.notification_text), TRUE);
+  /* ellipsize notification text */
+  gtk_label_set_ellipsize(GTK_LABEL(session->gtk.notification_text), PANGO_ELLIPSIZE_END);
 
   return session;
 }
@@ -636,7 +638,7 @@ girara_session_private_free(girara_session_private_t* session)
   /* clean up mutex */
   g_mutex_clear(&session->feedkeys_mutex);
 
-  g_slice_free(girara_session_private_t, session);
+  g_free(session);
 }
 
 bool
@@ -682,7 +684,7 @@ girara_session_destroy(girara_session_t* session)
   session->private_data = NULL;
 
   /* clean up session */
-  g_slice_free(girara_session_t, session);
+  g_free(session);
 
   return TRUE;
 }
@@ -868,9 +870,9 @@ girara_mode_add(girara_session_t* session, const char* name)
   }
 
   /* create new mode identifier */
-  girara_mode_string_t* mode = g_slice_new(girara_mode_string_t);
-  mode->index = last_index + 1;
-  mode->name = g_strdup(name);
+  girara_mode_string_t* mode = g_malloc(sizeof(girara_mode_string_t));
+  mode->index                = last_index + 1;
+  mode->name                 = g_strdup(name);
   girara_list_append(session->modes.identifiers, mode);
 
   return mode->index;
@@ -884,7 +886,7 @@ girara_mode_string_free(girara_mode_string_t* mode)
   }
 
   g_free(mode->name);
-  g_slice_free(girara_mode_string_t, mode);
+  g_free(mode);
 }
 
 girara_mode_t

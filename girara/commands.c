@@ -54,7 +54,10 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
     {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
     {"Up",        GDK_KEY_Up},
     {"Print",     GDK_KEY_Print},
-    {"Home",      GDK_KEY_Home}
+    {"KPLeft",    GDK_KEY_KP_Left},
+    {"KPRight",   GDK_KEY_KP_Right},
+    {"KPUp",      GDK_KEY_KP_Up},
+    {"KPDown",    GDK_KEY_KP_Down}
   };
 
   typedef struct gdk_mouse_button_s
@@ -556,7 +559,7 @@ bool girara_inputbar_command_add(girara_session_t* session, const char* command,
   };
 
   /* add new inputbar command */
-  girara_command_t* new_command = g_slice_new(girara_command_t);
+  girara_command_t* new_command = g_malloc0(sizeof(girara_command_t));
 
   new_command->command     = g_strdup(command);
   new_command->abbr        = abbreviation ? g_strdup(abbreviation) : NULL;
@@ -588,7 +591,7 @@ bool girara_special_command_add(girara_session_t* session, char identifier, gira
   };
 
   /* create new special command */
-  girara_special_command_t* special_command = g_slice_new(girara_special_command_t);
+  girara_special_command_t* special_command = g_malloc0(sizeof(girara_special_command_t));
 
   special_command->identifier = identifier;
   special_command->function   = function;
@@ -599,26 +602,19 @@ bool girara_special_command_add(girara_session_t* session, char identifier, gira
   return true;
 }
 
-void
-girara_special_command_free(girara_special_command_t* special_command)
-{
-  if (special_command == NULL) {
-    return;
-  }
-  g_slice_free(girara_special_command_t, special_command);
+void girara_special_command_free(girara_special_command_t* special_command) {
+  g_free(special_command);
 }
 
-void
-girara_command_free(girara_command_t* command)
-{
+void girara_command_free(girara_command_t* command) {
   if (command == NULL) {
     return;
   }
 
-  g_free(command->command);
-  g_free(command->abbr);
   g_free(command->description);
-  g_slice_free(girara_command_t, command);
+  g_free(command->abbr);
+  g_free(command->command);
+  g_free(command);
 }
 
 bool
