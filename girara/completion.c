@@ -13,7 +13,7 @@
 #include "shortcuts.h"
 
 static GtkEventBox* girara_completion_row_create(const char*, const char*, bool);
-static void girara_completion_row_set_color(girara_session_t*, GtkEventBox*, int);
+static void girara_completion_row_set_color(GtkEventBox*, int);
 
 /* completion */
 struct girara_internal_completion_entry_s
@@ -383,7 +383,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
   unsigned int n_elements = g_list_length(entries);
   if (entries != NULL && n_elements > 0) {
     if (n_elements > 1) {
-      girara_completion_row_set_color(session, ((girara_internal_completion_entry_t *) entries_current->data)->widget, GIRARA_NORMAL);
+      girara_completion_row_set_color(((girara_internal_completion_entry_t*)entries_current->data)->widget,
+                                      GIRARA_NORMAL);
 
       bool next_group = FALSE;
 
@@ -417,7 +418,8 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
         }
       }
 
-      girara_completion_row_set_color(session, ((girara_internal_completion_entry_t *) entries_current->data)->widget, GIRARA_HIGHLIGHT);
+      girara_completion_row_set_color(((girara_internal_completion_entry_t*)entries_current->data)->widget,
+                                      GIRARA_HIGHLIGHT);
 
       /* hide other items */
       unsigned int n_completion_items = 15;
@@ -480,22 +482,20 @@ girara_isc_completion(girara_session_t* session, girara_argument_t* argument, gi
   return false;
 }
 
-static GtkEventBox*
-girara_completion_row_create(const char* command, const char* description, bool group)
-{
-  GtkBox *col = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+static GtkEventBox* girara_completion_row_create(const char* command, const char* description, bool group) {
+  GtkBox* col = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
 
-  GtkEventBox *row = GTK_EVENT_BOX(gtk_event_box_new());
+  GtkEventBox* row = GTK_EVENT_BOX(gtk_event_box_new());
 
-  GtkLabel *show_command     = GTK_LABEL(gtk_label_new(NULL));
-  GtkLabel *show_description = GTK_LABEL(gtk_label_new(NULL));
+  GtkLabel* show_command     = GTK_LABEL(gtk_label_new(NULL));
+  GtkLabel* show_description = GTK_LABEL(gtk_label_new(NULL));
 
   gtk_widget_set_halign(GTK_WIDGET(show_command), GTK_ALIGN_START);
   gtk_widget_set_valign(GTK_WIDGET(show_command), GTK_ALIGN_START);
   gtk_widget_set_halign(GTK_WIDGET(show_description), GTK_ALIGN_END);
   gtk_widget_set_valign(GTK_WIDGET(show_description), GTK_ALIGN_START);
 
-  gtk_label_set_use_markup(show_command,     TRUE);
+  gtk_label_set_use_markup(show_command, TRUE);
   gtk_label_set_use_markup(show_description, TRUE);
 
   gtk_label_set_ellipsize(show_command, PANGO_ELLIPSIZE_END);
@@ -514,7 +514,7 @@ girara_completion_row_create(const char* command, const char* description, bool 
   widget_add_class(GTK_WIDGET(row), class);
   widget_add_class(GTK_WIDGET(col), class);
 
-  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command),     TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_command), TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(col), GTK_WIDGET(show_description), TRUE, TRUE, 0);
 
   gtk_container_add(GTK_CONTAINER(row), GTK_WIDGET(col));
