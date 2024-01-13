@@ -14,8 +14,8 @@ version_array = version.split('.')
 # * If any of the exported datastructures have changed in a incompatible way
 #   bump SOMAJOR and set SOMINOR to 0.
 # * If a function has been added bump SOMINOR.
-so_major = '3'
-so_minor = '1'
+so_major = '4'
+so_minor = '0'
 so_version = '@0@.@1@'.format(so_major, so_minor)
 
 conf_data = configuration_data()
