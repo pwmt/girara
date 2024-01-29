@@ -15,7 +15,7 @@
 #define UNUSED(x) GIRARA_UNUSED(x)
 #define HIDDEN GIRARA_HIDDEN
 
-#define LENGTH(x) (sizeof(x)/sizeof((x)[0]))
+#define LENGTH(x) (sizeof(x) / sizeof((x)[0]))
 
 /**
  * Free girara_setting_t struct

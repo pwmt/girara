@@ -32,24 +32,23 @@ typedef struct girara_event_s girara_event_t;
 /**
  * This structure defines the possible argument identifiers
  */
-enum
-{
-  GIRARA_HIDE = 1, /**< Hide the completion list */
-  GIRARA_NEXT, /**< Next entry */
-  GIRARA_PREVIOUS, /**< Previous entry */
-  GIRARA_NEXT_GROUP, /**< Next group in the completion list */
-  GIRARA_PREVIOUS_GROUP, /**< Previous group in the completion list */
-  GIRARA_HIGHLIGHT, /**< Highlight the entry */
-  GIRARA_NORMAL, /**< Set to the normal state */
-  GIRARA_DELETE_LAST_WORD, /**< Delete the last word */
-  GIRARA_DELETE_LAST_CHAR, /**< Delete the last character */
-  GIRARA_NEXT_CHAR, /**< Go to the next character */
-  GIRARA_PREVIOUS_CHAR, /**< Go to the previous character */
+enum {
+  GIRARA_HIDE = 1,             /**< Hide the completion list */
+  GIRARA_NEXT,                 /**< Next entry */
+  GIRARA_PREVIOUS,             /**< Previous entry */
+  GIRARA_NEXT_GROUP,           /**< Next group in the completion list */
+  GIRARA_PREVIOUS_GROUP,       /**< Previous group in the completion list */
+  GIRARA_HIGHLIGHT,            /**< Highlight the entry */
+  GIRARA_NORMAL,               /**< Set to the normal state */
+  GIRARA_DELETE_LAST_WORD,     /**< Delete the last word */
+  GIRARA_DELETE_LAST_CHAR,     /**< Delete the last character */
+  GIRARA_NEXT_CHAR,            /**< Go to the next character */
+  GIRARA_PREVIOUS_CHAR,        /**< Go to the previous character */
   GIRARA_DELETE_TO_LINE_START, /**< Delete the line to the start */
-  GIRARA_DELETE_TO_LINE_END, /**< Delete the line to the end */
-  GIRARA_DELETE_CURR_CHAR, /**< Delete current char */
-  GIRARA_GOTO_START, /**< Go to start of the line */
-  GIRARA_GOTO_END /**< Go to end of the line */
+  GIRARA_DELETE_TO_LINE_END,   /**< Delete the line to the end */
+  GIRARA_DELETE_CURR_CHAR,     /**< Delete current char */
+  GIRARA_GOTO_START,           /**< Go to start of the line */
+  GIRARA_GOTO_END              /**< Go to end of the line */
 };
 
 /**
@@ -125,12 +124,11 @@ typedef int (*girara_compare_function_t)(const void* data1, const void* data2);
 /**
  * This structure defines the possible types that a setting value can have
  */
-typedef enum girara_setting_type_e
-{
-  BOOLEAN, /**< Boolean type */
-  FLOAT, /**< Floating number */
-  INT, /**< Integer */
-  STRING, /**< String */
+typedef enum girara_setting_type_e {
+  BOOLEAN,         /**< Boolean type */
+  FLOAT,           /**< Floating number */
+  INT,             /**< Integer */
+  STRING,          /**< String */
   UNKNOWN = 0xFFFF /**< Unknown type */
 } girara_setting_type_t;
 
@@ -158,8 +156,7 @@ struct girara_argument_s
 /**
  * Define mouse buttons
  */
-typedef enum girara_mouse_button_e
-{
+typedef enum girara_mouse_button_e {
   GIRARA_MOUSE_BUTTON1 = 1, /**< Button 1 */
   GIRARA_MOUSE_BUTTON2 = 2, /**< Button 2 */
   GIRARA_MOUSE_BUTTON3 = 3, /**< Button 3 */
@@ -174,18 +171,17 @@ typedef enum girara_mouse_button_e
 /**
  * Describes the types of a girara
  */
-typedef enum girara_event_type_e
-{
-  GIRARA_EVENT_BUTTON_PRESS, /**< Single click */
-  GIRARA_EVENT_2BUTTON_PRESS, /**< Double click */
-  GIRARA_EVENT_3BUTTON_PRESS, /**< Triple click */
-  GIRARA_EVENT_BUTTON_RELEASE, /**< Button released */
-  GIRARA_EVENT_MOTION_NOTIFY, /**< Cursor moved */
-  GIRARA_EVENT_SCROLL_UP, /**< Scroll event */
-  GIRARA_EVENT_SCROLL_DOWN, /**< Scroll event */
-  GIRARA_EVENT_SCROLL_LEFT, /**< Scroll event */
-  GIRARA_EVENT_SCROLL_RIGHT, /**< Scroll event */
-  GIRARA_EVENT_OTHER, /**< Unknown event */
+typedef enum girara_event_type_e {
+  GIRARA_EVENT_BUTTON_PRESS,        /**< Single click */
+  GIRARA_EVENT_2BUTTON_PRESS,       /**< Double click */
+  GIRARA_EVENT_3BUTTON_PRESS,       /**< Triple click */
+  GIRARA_EVENT_BUTTON_RELEASE,      /**< Button released */
+  GIRARA_EVENT_MOTION_NOTIFY,       /**< Cursor moved */
+  GIRARA_EVENT_SCROLL_UP,           /**< Scroll event */
+  GIRARA_EVENT_SCROLL_DOWN,         /**< Scroll event */
+  GIRARA_EVENT_SCROLL_LEFT,         /**< Scroll event */
+  GIRARA_EVENT_SCROLL_RIGHT,        /**< Scroll event */
+  GIRARA_EVENT_OTHER,               /**< Unknown event */
   GIRARA_EVENT_SCROLL_BIDIRECTIONAL /**< Scroll event that carries extra data
                                      *   in girara_argument_t with motion
                                      *   information as double[2].

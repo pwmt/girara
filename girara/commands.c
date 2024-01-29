@@ -14,95 +14,80 @@
 #include <string.h>
 
 /* default commands implementation */
-static bool
-girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
-    bool unmap)
-{
-  typedef struct gdk_keyboard_button_s
-  {
+static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list, bool unmap) {
+  typedef struct gdk_keyboard_button_s {
     char* identifier;
     int keyval;
   } gdk_keyboard_button_t;
 
   static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
-    {"BackSpace", GDK_KEY_BackSpace},
-    {"CapsLock",  GDK_KEY_Caps_Lock},
-    {"Down",      GDK_KEY_Down},
-    {"Esc",       GDK_KEY_Escape},
-    {"F10",       GDK_KEY_F10},
-    {"F11",       GDK_KEY_F11},
-    {"F12",       GDK_KEY_F12},
-    {"F1",        GDK_KEY_F1},
-    {"F2",        GDK_KEY_F2},
-    {"F3",        GDK_KEY_F3},
-    {"F4",        GDK_KEY_F4},
-    {"F5",        GDK_KEY_F5},
-    {"F6",        GDK_KEY_F6},
-    {"F7",        GDK_KEY_F7},
-    {"F8",        GDK_KEY_F8},
-    {"F9",        GDK_KEY_F9},
-    {"Left",      GDK_KEY_Left},
-    {"PageDown",  GDK_KEY_Page_Down},
-    {"PageUp",    GDK_KEY_Page_Up},
-    {"Home",      GDK_KEY_Home},
-    {"End",       GDK_KEY_End},
-    {"Return",    GDK_KEY_Return},
-    {"Right",     GDK_KEY_Right},
-    {"Space",     GDK_KEY_space},
-    {"Super",     GDK_KEY_Super_L},
-    {"Tab",       GDK_KEY_Tab},
-    {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
-    {"Up",        GDK_KEY_Up},
-    {"Print",     GDK_KEY_Print},
-    {"KPLeft",    GDK_KEY_KP_Left},
-    {"KPRight",   GDK_KEY_KP_Right},
-    {"KPUp",      GDK_KEY_KP_Up},
-    {"KPDown",    GDK_KEY_KP_Down}
+      {"BackSpace", GDK_KEY_BackSpace},
+      {"CapsLock", GDK_KEY_Caps_Lock},
+      {"Down", GDK_KEY_Down},
+      {"Esc", GDK_KEY_Escape},
+      {"F10", GDK_KEY_F10},
+      {"F11", GDK_KEY_F11},
+      {"F12", GDK_KEY_F12},
+      {"F1", GDK_KEY_F1},
+      {"F2", GDK_KEY_F2},
+      {"F3", GDK_KEY_F3},
+      {"F4", GDK_KEY_F4},
+      {"F5", GDK_KEY_F5},
+      {"F6", GDK_KEY_F6},
+      {"F7", GDK_KEY_F7},
+      {"F8", GDK_KEY_F8},
+      {"F9", GDK_KEY_F9},
+      {"Left", GDK_KEY_Left},
+      {"PageDown", GDK_KEY_Page_Down},
+      {"PageUp", GDK_KEY_Page_Up},
+      {"Home", GDK_KEY_Home},
+      {"End", GDK_KEY_End},
+      {"Return", GDK_KEY_Return},
+      {"Right", GDK_KEY_Right},
+      {"Space", GDK_KEY_space},
+      {"Super", GDK_KEY_Super_L},
+      {"Tab", GDK_KEY_Tab},
+      {"ShiftTab", GDK_KEY_ISO_Left_Tab},
+      {"Up", GDK_KEY_Up},
+      {"Print", GDK_KEY_Print},
+      {"KPLeft", GDK_KEY_KP_Left},
+      {"KPRight", GDK_KEY_KP_Right},
+      {"KPUp", GDK_KEY_KP_Up},
+      {"KPDown", GDK_KEY_KP_Down},
   };
 
-  typedef struct gdk_mouse_button_s
-  {
+  typedef struct gdk_mouse_button_s {
     char* identifier;
     int button;
   } gdk_mouse_button_t;
 
   static const gdk_mouse_button_t gdk_mouse_buttons[] = {
-    {"Button1", GIRARA_MOUSE_BUTTON1},
-    {"Button2", GIRARA_MOUSE_BUTTON2},
-    {"Button3", GIRARA_MOUSE_BUTTON3},
-    {"Button4", GIRARA_MOUSE_BUTTON4},
-    {"Button5", GIRARA_MOUSE_BUTTON5},
-    {"Button6", GIRARA_MOUSE_BUTTON6},
-    {"Button7", GIRARA_MOUSE_BUTTON7},
-    {"Button8", GIRARA_MOUSE_BUTTON8},
-    {"Button9", GIRARA_MOUSE_BUTTON9}
+      {"Button1", GIRARA_MOUSE_BUTTON1}, {"Button2", GIRARA_MOUSE_BUTTON2}, {"Button3", GIRARA_MOUSE_BUTTON3},
+      {"Button4", GIRARA_MOUSE_BUTTON4}, {"Button5", GIRARA_MOUSE_BUTTON5}, {"Button6", GIRARA_MOUSE_BUTTON6},
+      {"Button7", GIRARA_MOUSE_BUTTON7}, {"Button8", GIRARA_MOUSE_BUTTON8}, {"Button9", GIRARA_MOUSE_BUTTON9},
   };
 
-  typedef struct event_type_s
-  {
+  typedef struct event_type_s {
     char* identifier;
     int event;
   } event_type_t;
 
   static const event_type_t event_types[] = {
-    {"motion",       GIRARA_EVENT_MOTION_NOTIFY},
-    {"scroll_up",    GIRARA_EVENT_SCROLL_UP},
-    {"scroll_down",  GIRARA_EVENT_SCROLL_DOWN},
-    {"scroll_left",  GIRARA_EVENT_SCROLL_LEFT},
-    {"scroll_right", GIRARA_EVENT_SCROLL_RIGHT}
+      {"motion", GIRARA_EVENT_MOTION_NOTIFY},      {"scroll_up", GIRARA_EVENT_SCROLL_UP},
+      {"scroll_down", GIRARA_EVENT_SCROLL_DOWN},   {"scroll_left", GIRARA_EVENT_SCROLL_LEFT},
+      {"scroll_right", GIRARA_EVENT_SCROLL_RIGHT},
   };
 
-  typedef struct mouse_event_s
-  {
+  typedef struct mouse_event_s {
     char* identifier;
     int event;
   } mouse_event_t;
 
   static const mouse_event_t mouse_events[] = {
-    {"button-pressed",   GIRARA_EVENT_BUTTON_PRESS},
-    {"2-button-pressed", GIRARA_EVENT_2BUTTON_PRESS},
-    {"3-button-pressed", GIRARA_EVENT_2BUTTON_PRESS},
-    {"button-released",  GIRARA_EVENT_BUTTON_RELEASE}
+      {"button-pressed", GIRARA_EVENT_BUTTON_PRESS},
+      {"2-button-pressed", GIRARA_EVENT_2BUTTON_PRESS},
+      {"3-button-pressed", GIRARA_EVENT_2BUTTON_PRESS},
+      {"button-released", GIRARA_EVENT_BUTTON_RELEASE},
   };
 
   const size_t number_of_arguments = girara_list_size(argument_list);
@@ -110,8 +95,8 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
   unsigned int limit = (unmap == true) ? 1 : 2;
   if (number_of_arguments < limit) {
     girara_warning("Invalid number of arguments passed: %zu instead of at least %u", number_of_arguments, limit);
-    girara_notify(session, GIRARA_ERROR,
-        _("Invalid number of arguments passed: %zu instead of at least %u"), number_of_arguments, limit);
+    girara_notify(session, GIRARA_ERROR, _("Invalid number of arguments passed: %zu instead of at least %u"),
+                  number_of_arguments, limit);
     return false;
   }
 

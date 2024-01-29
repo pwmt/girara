@@ -26,27 +26,24 @@ struct girara_internal_completion_entry_s
 /**
  * Structure of a completion element
  */
-struct girara_completion_element_s
-{
-  char *value; /**> Name of the completion element */
-  char *description; /**> Description of the completion element */
+struct girara_completion_element_s {
+  char* value;       /**> Name of the completion element */
+  char* description; /**> Description of the completion element */
 };
 
 /**
  * Structure of a completion group
  */
-struct girara_completion_group_s
-{
-  char *value; /**> Name of the completion element */
-  girara_list_t *elements; /**> Elements of the completion group */
+struct girara_completion_group_s {
+  char* value;             /**> Name of the completion element */
+  girara_list_t* elements; /**> Elements of the completion group */
 };
 
 /**
  * Structure of a completion object
  */
-struct girara_completion_s
-{
-  girara_list_t *groups; /**> Containing completion groups */
+struct girara_completion_s {
+  girara_list_t* groups; /**> Containing completion groups */
 };
 
 typedef struct girara_internal_completion_entry_s girara_internal_completion_entry_t;
