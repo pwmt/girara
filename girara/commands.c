@@ -399,23 +399,16 @@ girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argument_list,
   return true;
 }
 
-bool
-girara_cmd_map(girara_session_t* session, girara_list_t* argument_list)
-{
+bool girara_cmd_map(girara_session_t* session, girara_list_t* argument_list) {
   return girara_cmd_map_unmap(session, argument_list, false);
 }
 
-bool
-girara_cmd_unmap(girara_session_t* session, girara_list_t* argument_list)
-{
+bool girara_cmd_unmap(girara_session_t* session, girara_list_t* argument_list) {
   return girara_cmd_map_unmap(session, argument_list, true);
 }
 
-
-bool
-girara_cmd_quit(girara_session_t* session, girara_list_t* UNUSED(argument_list))
-{
-  girara_argument_t arg = { GIRARA_HIDE, NULL };
+bool girara_cmd_quit(girara_session_t* session, girara_list_t* UNUSED(argument_list)) {
+  girara_argument_t arg = {.n = GIRARA_HIDE, .data = NULL};
   girara_isc_completion(session, &arg, NULL, 0);
 
   gtk_main_quit();
@@ -423,9 +416,7 @@ girara_cmd_quit(girara_session_t* session, girara_list_t* UNUSED(argument_list))
   return true;
 }
 
-bool
-girara_cmd_set(girara_session_t* session, girara_list_t* argument_list)
-{
+bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list) {
   const size_t number_of_arguments = girara_list_size(argument_list);
 
   if (number_of_arguments == 0) {
@@ -576,7 +567,7 @@ bool girara_special_command_add(girara_session_t* session, char identifier, gira
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(function != NULL, false);
 
-  girara_argument_t argument = {argument_n, argument_data};
+  girara_argument_t argument = {.n = argument_n, .data = argument_data};
 
   /* search for existing special command */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.special_commands); ++idx) {

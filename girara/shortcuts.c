@@ -20,7 +20,7 @@ bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, c
   g_return_val_if_fail(buffer || key || modifier, false);
   g_return_val_if_fail(function != NULL, false);
 
-  girara_argument_t argument = {argument_n, (argument_data != NULL) ? g_strdup(argument_data) : NULL};
+  girara_argument_t argument = {.n = argument_n, .data = (argument_data != NULL) ? g_strdup(argument_data) : NULL};
 
   /* search for existing binding */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.shortcuts); ++idx) {
@@ -83,7 +83,7 @@ bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, gui
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(function != NULL, false);
 
-  girara_argument_t argument = {argument_n, argument_data};
+  girara_argument_t argument = {.n = argument_n, .data = argument_data};
 
   /* search for existing special command */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.inputbar_shortcuts); ++idx) {
@@ -128,20 +128,18 @@ void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut
   g_free(inputbar_shortcut);
 }
 
-bool
-girara_isc_activate(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-    girara_callback_inputbar_activate(session->gtk.inputbar_entry, session);
-    return true;
+bool girara_isc_activate(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                         unsigned int UNUSED(t)) {
+  girara_callback_inputbar_activate(session->gtk.inputbar_entry, session);
+  return true;
 }
 
-bool
-girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                      unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   /* hide completion */
-  girara_argument_t arg = { GIRARA_HIDE, NULL };
+  girara_argument_t arg = {.n = GIRARA_HIDE, .data = NULL};
   girara_isc_completion(session, &arg, NULL, 0);
 
   /* clear inputbar */
@@ -302,9 +300,8 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
   return true;
 }
 
-bool
-girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                     unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   girara_isc_abort(session, NULL, NULL, 0);
@@ -318,12 +315,11 @@ girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), 
   return false;
 }
 
-bool
-girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                    unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
-  girara_argument_t arg = { GIRARA_HIDE, NULL };
+  girara_argument_t arg = {.n = GIRARA_HIDE, .data = NULL};
   girara_isc_completion(session, &arg, NULL, 0);
 
   gtk_main_quit();
@@ -331,9 +327,7 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), g
   return false;
 }
 
-static void
-girara_toggle_widget_visibility(GtkWidget* widget)
-{
+static void girara_toggle_widget_visibility(GtkWidget* widget) {
   if (widget == NULL) {
     return;
   }
@@ -702,7 +696,7 @@ bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button,
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(function != NULL, false);
 
-  girara_argument_t argument = {argument_n, argument_data};
+  girara_argument_t argument = {.n = argument_n, .data = argument_data};
 
   /* search for existing binding */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.mouse_events); ++idx) {
