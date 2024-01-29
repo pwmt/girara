@@ -147,10 +147,9 @@ typedef void (*girara_setting_callback_t)(girara_session_t* session,
 /**
  * Definition of an argument of a shortcut or buffered command
  */
-struct girara_argument_s
-{
-  int   n; /**< Identifier */
-  void *data; /**< Data */
+struct girara_argument_s {
+  void* data; /**< Data */
+  int n;      /**< Identifier */
 };
 
 /**
@@ -193,12 +192,11 @@ typedef enum girara_event_type_e {
 /**
  * Describes a girara event
  */
-struct girara_event_s
-{
-  girara_event_type_t type; /**< The event type */
-
+struct girara_event_s {
   double x; /**< X coordinates where the event occurred */
   double y; /**< Y coordinates where the event occurred */
+
+  girara_event_type_t type; /**< The event type */
 };
 
 typedef struct girara_input_history_io_s GiraraInputHistoryIO;

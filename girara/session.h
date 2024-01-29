@@ -15,74 +15,67 @@
 typedef int Window;
 #endif
 
-struct girara_session_s
-{
-  struct
-  {
-    GtkWidget       *window; /**< The main window of the application */
-    GtkBox          *box; /**< A box that contains all widgets */
-    GtkWidget       *view; /**< The view area of the applications widgets */
-    GtkWidget       *viewport; /**< The viewport of view */
-    GtkWidget       *statusbar; /**< The statusbar */
-    GtkBox          *statusbar_entries; /**< Statusbar entry box */
-    GtkWidget       *notification_area; /**< The notification area */
-    GtkWidget       *notification_text; /**< The notification entry */
-    GtkBox          *inputbar_box; /**< Inputbar box */
-    GtkWidget       *inputbar; /**< Inputbar event box */
-    GtkLabel        *inputbar_dialog; /**< Inputbar dialog */
-    GtkEntry        *inputbar_entry; /**< Inputbar entry */
-    GtkBox          *results; /**< Completion results */
-    Window          embed; /**< Embedded window */
+struct girara_session_s {
+  girara_session_private_t* private_data; /**< Private data of a girara session */
+  GiraraInputHistory* command_history;    /**< Command history */
+
+  struct {
+    GtkWidget* window;            /**< The main window of the application */
+    GtkBox* box;                  /**< A box that contains all widgets */
+    GtkWidget* view;              /**< The view area of the applications widgets */
+    GtkWidget* viewport;          /**< The viewport of view */
+    GtkWidget* statusbar;         /**< The statusbar */
+    GtkBox* statusbar_entries;    /**< Statusbar entry box */
+    GtkWidget* notification_area; /**< The notification area */
+    GtkWidget* notification_text; /**< The notification entry */
+    GtkBox* inputbar_box;         /**< Inputbar box */
+    GtkWidget* inputbar;          /**< Inputbar event box */
+    GtkLabel* inputbar_dialog;    /**< Inputbar dialog */
+    GtkEntry* inputbar_entry;     /**< Inputbar entry */
+    GtkBox* results;              /**< Completion results */
+    Window embed;                 /**< Embedded window */
   } gtk;
 
-  struct
-  {
-    girara_list_t* mouse_events; /**< List of mouse events */
-    girara_list_t* commands; /**< List of commands */
-    girara_list_t* shortcuts; /**< List of shortcuts */
-    girara_list_t* special_commands; /**< List of special commands */
+  struct {
+    girara_list_t* mouse_events;       /**< List of mouse events */
+    girara_list_t* commands;           /**< List of commands */
+    girara_list_t* shortcuts;          /**< List of shortcuts */
+    girara_list_t* special_commands;   /**< List of special commands */
     girara_list_t* inputbar_shortcuts; /**< List of inputbar shortcuts */
   } bindings;
 
-  struct
-  {
-    int inputbar_activate; /**< Inputbar activation */
-    int inputbar_key_pressed; /**< Pressed key in inputbar */
-    int inputbar_changed; /**< Inputbar text changed */
-    int view_key_pressed; /**< Pressed key in view */
-    int view_button_press_event; /**< Pressed button */
-    int view_button_release_event; /**< Released button */
-    int view_motion_notify_event; /**< Cursor movement event */
-    int view_scroll_event; /**< Scroll event */
-    girara_callback_inputbar_activate_t inputbar_custom_activate; /**< Custom handler */
-    girara_callback_inputbar_key_press_event_t inputbar_custom_key_press_event; /**< Custom handler */
-    void* inputbar_custom_data; /**< Data for custom handler */
-  } signals;
-
-  struct
-  {
-    void (*buffer_changed)(girara_session_t* session); /**< Buffer changed */
+  struct {
+    void (*buffer_changed)(girara_session_t* session);                     /**< Buffer changed */
     bool (*unknown_command)(girara_session_t* session, const char* input); /**< Unknown command */
   } events;
 
-  struct
-  {
-    GString *buffer; /**< Buffer */
-    void* data; /**< User data */
+  struct {
+    GString* buffer;        /**< Buffer */
+    void* data;             /**< User data */
     bool autohide_inputbar; /**< Auto-hide inputbar */
-    bool hide_statusbar; /**< Hide statusbar */
+    bool hide_statusbar;    /**< Hide statusbar */
   } global;
 
-  struct
-  {
-    girara_mode_t current_mode; /**< Current mode */
-    girara_list_t *identifiers; /**< List of modes with its string identifiers */
-    girara_mode_t normal; /**< The normal mode */
-    girara_mode_t inputbar; /**< The inputbar mode */
-  } modes;
+  struct {
+    girara_callback_inputbar_activate_t inputbar_custom_activate;               /**< Custom handler */
+    girara_callback_inputbar_key_press_event_t inputbar_custom_key_press_event; /**< Custom handler */
+    void* inputbar_custom_data;                                                 /**< Data for custom handler */
+    int inputbar_activate;                                                      /**< Inputbar activation */
+    int inputbar_key_pressed;                                                   /**< Pressed key in inputbar */
+    int inputbar_changed;                                                       /**< Inputbar text changed */
+    int view_key_pressed;                                                       /**< Pressed key in view */
+    int view_button_press_event;                                                /**< Pressed button */
+    int view_button_release_event;                                              /**< Released button */
+    int view_motion_notify_event;                                               /**< Cursor movement event */
+    int view_scroll_event;                                                      /**< Scroll event */
+  } signals;
 
-  GiraraInputHistory* command_history; /**< Command history */
-  girara_session_private_t* private_data; /**< Private data of a girara session */
+  struct {
+    girara_list_t* identifiers; /**< List of modes with its string identifiers */
+    girara_mode_t current_mode; /**< Current mode */
+    girara_mode_t normal;       /**< The normal mode */
+    girara_mode_t inputbar;     /**< The inputbar mode */
+  } modes;
 };
 
 /**
