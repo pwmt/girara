@@ -197,15 +197,13 @@ girara_get_xdg_path(girara_xdg_path_t path)
   return NULL;
 }
 
-girara_list_t*
-girara_split_path_array(const char* patharray)
-{
+girara_list_t* girara_split_path_array(const char* patharray) {
   if (patharray == NULL || !g_strcmp0(patharray, "")) {
     return NULL;
   }
 
-  girara_list_t* res = girara_list_new2(g_free);
-  char** paths = g_strsplit(patharray, ":", 0);
+  girara_list_t* res = girara_list_new_with_free(g_free);
+  char** paths       = g_strsplit(patharray, ":", 0);
   for (size_t i = 0; paths[i] != NULL; ++i) {
     girara_list_append(res, g_strdup(paths[i]));
   }

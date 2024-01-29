@@ -282,7 +282,7 @@ config_parse(girara_session_t* session, const char* path)
       continue;
     }
 
-    girara_list_t* argument_list = girara_list_new2(g_free);
+    girara_list_t* argument_list = girara_list_new_with_free(g_free);
     if (argument_list == NULL) {
       g_free(line);
       fclose(file);

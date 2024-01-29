@@ -29,10 +29,10 @@ struct girara_list_iterator_s {
 };
 
 girara_list_t* girara_list_new(void) {
-  return girara_list_new2(NULL);
+  return g_malloc0(sizeof(girara_list_t));
 }
 
-girara_list_t* girara_list_new2(girara_free_function_t gfree) {
+girara_list_t* girara_list_new_with_free(girara_free_function_t gfree) {
   girara_list_t* list = g_malloc0(sizeof(girara_list_t));
   if (list == NULL) {
     return NULL;
@@ -43,7 +43,7 @@ girara_list_t* girara_list_new2(girara_free_function_t gfree) {
 }
 
 girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp) {
-  girara_list_t* list = girara_list_new();
+  girara_list_t* list = g_malloc0(sizeof(girara_list_t));
   if (list == NULL) {
     return NULL;
   }
@@ -52,13 +52,14 @@ girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp) {
   return list;
 }
 
-girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp, girara_free_function_t gfree) {
-  girara_list_t* list = girara_list_new2(gfree);
+girara_list_t* girara_sorted_list_new_with_free(girara_compare_function_t cmp, girara_free_function_t gfree) {
+  girara_list_t* list = g_malloc0(sizeof(girara_list_t));
   if (list == NULL) {
     return NULL;
   }
 
-  list->cmp = cmp;
+  list->free = gfree;
+  list->cmp  = cmp;
   return list;
 }
 
@@ -335,9 +336,7 @@ girara_list_t* girara_list_merge(girara_list_t* list, girara_list_t* other) {
   return list;
 }
 
-girara_tree_node_t*
-girara_node_new(void* data)
-{
+girara_tree_node_t* girara_node_new(void* data) {
   girara_tree_node_t* node = g_try_malloc0(sizeof(girara_tree_node_t));
   if (node == NULL) {
     return NULL;

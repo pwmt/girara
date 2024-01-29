@@ -290,10 +290,7 @@ scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window,
   gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
 }
 
-
-girara_session_t*
-girara_session_create(void)
-{
+girara_session_t* girara_session_create(void) {
   ensure_gettext_initialized();
 
   girara_session_t* session = g_malloc0(sizeof(girara_session_t));
@@ -302,25 +299,20 @@ girara_session_create(void)
   girara_session_private_t* session_private = session->private_data;
 
   /* init values */
-  session->bindings.mouse_events       = girara_list_new2(
-      (girara_free_function_t) girara_mouse_event_free);
-  session->bindings.commands           = girara_list_new2(
-      (girara_free_function_t) girara_command_free);
-  session->bindings.special_commands   = girara_list_new2(
-      (girara_free_function_t) girara_special_command_free);
-  session->bindings.shortcuts          = girara_list_new2(
-      (girara_free_function_t) girara_shortcut_free);
-  session->bindings.inputbar_shortcuts = girara_list_new2(
-      (girara_free_function_t) girara_inputbar_shortcut_free);
+  session->bindings.mouse_events     = girara_list_new_with_free((girara_free_function_t)girara_mouse_event_free);
+  session->bindings.commands         = girara_list_new_with_free((girara_free_function_t)girara_command_free);
+  session->bindings.special_commands = girara_list_new_with_free((girara_free_function_t)girara_special_command_free);
+  session->bindings.shortcuts        = girara_list_new_with_free((girara_free_function_t)girara_shortcut_free);
+  session->bindings.inputbar_shortcuts =
+      girara_list_new_with_free((girara_free_function_t)girara_inputbar_shortcut_free);
 
-  session_private->elements.statusbar_items = girara_list_new2(
-      (girara_free_function_t) girara_statusbar_item_free);
+  session_private->elements.statusbar_items =
+      girara_list_new_with_free((girara_free_function_t)girara_statusbar_item_free);
   g_mutex_init(&session_private->feedkeys_mutex);
 
   /* settings */
-  session_private->settings = girara_sorted_list_new2(
-      cb_sort_settings,
-      (girara_free_function_t) girara_setting_free);
+  session_private->settings =
+      girara_sorted_list_new_with_free(cb_sort_settings, (girara_free_function_t)girara_setting_free);
 
   /* CSS style provider */
   GResource* css_resource = girara_css_get_resource();
@@ -334,8 +326,7 @@ girara_session_create(void)
   init_template_engine(session_private->csstemplate);
 
   /* init modes */
-  session->modes.identifiers  = girara_list_new2(
-      (girara_free_function_t) girara_mode_string_free);
+  session->modes.identifiers  = girara_list_new_with_free((girara_free_function_t)girara_mode_string_free);
   girara_mode_t normal_mode   = girara_mode_add(session, "normal");
   girara_mode_t inputbar_mode = girara_mode_add(session, "inputbar");
   session->modes.normal       = normal_mode;
@@ -343,12 +334,11 @@ girara_session_create(void)
   session->modes.inputbar     = inputbar_mode;
 
   /* config handles */
-  session_private->config.handles           = girara_list_new2(
-      (girara_free_function_t) girara_config_handle_free);
-  session_private->config.shortcut_mappings = girara_list_new2(
-      (girara_free_function_t) girara_shortcut_mapping_free);
-  session_private->config.argument_mappings = girara_list_new2(
-      (girara_free_function_t) girara_argument_mapping_free);
+  session_private->config.handles = girara_list_new_with_free((girara_free_function_t)girara_config_handle_free);
+  session_private->config.shortcut_mappings =
+      girara_list_new_with_free((girara_free_function_t)girara_shortcut_mapping_free);
+  session_private->config.argument_mappings =
+      girara_list_new_with_free((girara_free_function_t)girara_argument_mapping_free);
 
   /* command history */
   session->command_history = girara_input_history_new(NULL);

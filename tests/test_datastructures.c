@@ -146,11 +146,11 @@ START_TEST(test_datastructures_list_free_empty) {
   ck_assert_ptr_nonnull(list);
   girara_list_free(list);
 
-  list = girara_list_new2(NULL);
+  list = girara_list_new_with_free(NULL);
   ck_assert_ptr_nonnull(list);
   girara_list_free(list);
 
-  list = girara_list_new2(g_free);
+  list = girara_list_new_with_free(g_free);
   ck_assert_ptr_nonnull(list);
   girara_list_free(list);
 } END_TEST
@@ -179,8 +179,8 @@ START_TEST(test_datastructures_list_free_free_function) {
 
 START_TEST(test_datastructures_list_free_free_function_remove) {
   // remove with free function
-  list_free_called = 0;
-  girara_list_t* list = girara_list_new2(list_free);
+  list_free_called    = 0;
+  girara_list_t* list = girara_list_new_with_free(list_free);
   ck_assert_ptr_nonnull(list);
   girara_list_append(list, (void*)0xDEAD);
   girara_list_remove(list, (void*)0xDEAD);
@@ -196,30 +196,14 @@ START_TEST(test_datastructures_sorted_list_basic) {
 } END_TEST
 
 START_TEST(test_datastructures_sorted_list) {
-  girara_list_t* list = girara_sorted_list_new2((girara_compare_function_t) g_strcmp0,
-      (girara_free_function_t) g_free);
+  girara_list_t* list =
+      girara_sorted_list_new_with_free((girara_compare_function_t)g_strcmp0, (girara_free_function_t)g_free);
   ck_assert_ptr_nonnull(list);
-  girara_list_t* unsorted_list = girara_list_new2((girara_free_function_t) g_free);
+  girara_list_t* unsorted_list = girara_list_new_with_free((girara_free_function_t)g_free);
   ck_assert_ptr_nonnull(unsorted_list);
 
-  static const char* test_strings[] = {
-    "A",
-    "C",
-    "Baa",
-    "Za",
-    "Bba",
-    "Bab",
-    NULL
-  };
-  static const char* test_strings_sorted[] = {
-    "A",
-    "Baa",
-    "Bab",
-    "Bba",
-    "C",
-    "Za",
-    NULL
-  };
+  static const char* test_strings[]        = {"A", "C", "Baa", "Za", "Bba", "Bab", NULL};
+  static const char* test_strings_sorted[] = {"A", "Baa", "Bab", "Bba", "C", "Za", NULL};
 
   // append
   for (const char** p = test_strings; *p != NULL; ++p) {

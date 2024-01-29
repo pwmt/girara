@@ -60,7 +60,7 @@ static void completion_element_free(girara_completion_element_t* element) {
 
 girara_completion_t* girara_completion_init(void) {
   girara_completion_t* completion = g_malloc(sizeof(girara_completion_t));
-  completion->groups              = girara_list_new2((girara_free_function_t)girara_completion_group_free);
+  completion->groups              = girara_list_new_with_free((girara_free_function_t)girara_completion_group_free);
 
   return completion;
 }
@@ -69,7 +69,7 @@ girara_completion_group_t* girara_completion_group_create(girara_session_t* UNUS
   girara_completion_group_t* group = g_malloc(sizeof(girara_completion_group_t));
 
   group->value    = name ? g_strdup(name) : NULL;
-  group->elements = girara_list_new2((girara_free_function_t)completion_element_free);
+  group->elements = girara_list_new_with_free((girara_free_function_t)completion_element_free);
 
   if (group->elements == NULL) {
     g_free(group);
