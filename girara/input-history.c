@@ -9,11 +9,11 @@
  */
 typedef struct ih_private_s {
   girara_list_t* history; /**< List of stored inputs */
-  bool reset; /**< Show history starting from the most recent command */
   size_t current;
   size_t current_match;
   GiraraInputHistoryIO* io;
   char* command_line;
+  bool reset; /**< Show history starting from the most recent command */
 } GiraraInputHistoryPrivate;
 
 G_DEFINE_TYPE_WITH_CODE(GiraraInputHistory, girara_input_history, G_TYPE_OBJECT, G_ADD_PRIVATE(GiraraInputHistory))

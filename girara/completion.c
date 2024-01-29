@@ -16,11 +16,10 @@ static GtkEventBox* girara_completion_row_create(const char*, const char*, bool)
 static void girara_completion_row_set_color(GtkEventBox*, int);
 
 /* completion */
-struct girara_internal_completion_entry_s
-{
-  bool group; /**< The entry is a group */
-  char* value; /**< Name of the entry */
+struct girara_internal_completion_entry_s {
   GtkEventBox* widget; /**< Eventbox widget */
+  char* value;         /**< Name of the entry */
+  bool group;          /**< The entry is a group */
 };
 
 /**

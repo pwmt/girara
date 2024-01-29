@@ -153,92 +153,83 @@ HIDDEN int list_strcmp(const void* data1, const void* data2);
 /**
  * Structure of a command
  */
-struct girara_command_s
-{
-  char* command; /**< Name of the command */
-  char* abbr; /**< Abbreviation of the command */
-  girara_command_function_t function; /**< Function */
+struct girara_command_s {
+  char* command;                           /**< Name of the command */
+  char* abbr;                              /**< Abbreviation of the command */
+  girara_command_function_t function;      /**< Function */
   girara_completion_function_t completion; /**< Completion function */
-  char* description; /**< Description of the command */
+  char* description;                       /**< Description of the command */
 };
 
-struct girara_mode_string_s
-{
+struct girara_mode_string_s {
+  char* name;          /**< Name of the mode object */
   girara_mode_t index; /**< Index */
-  char* name; /**< Name of the mode object */
 };
 
 /**
  * Shortcut mapping
  */
-struct girara_shortcut_mapping_s
-{
-  char* identifier; /**> Identifier string */
+struct girara_shortcut_mapping_s {
+  char* identifier;                    /**> Identifier string */
   girara_shortcut_function_t function; /** Shortcut function */
 };
 
 /**
  * Argument mapping
  */
-struct girara_argument_mapping_s
-{
+struct girara_argument_mapping_s {
   char* identifier; /**> Identifier string */
-  int value; /**> Value */
+  int value;        /**> Value */
 };
 
 /**
  * Structure of a shortcut
  */
-struct girara_shortcut_s
-{
-  guint mask; /**< Mask */
-  guint key; /**< Key */
-  char* buffered_command; /**< Buffer command */
+struct girara_shortcut_s {
+  guint mask;                          /**< Mask */
+  guint key;                           /**< Key */
+  char* buffered_command;              /**< Buffer command */
+  girara_argument_t argument;          /**< Given argument */
   girara_shortcut_function_t function; /**< The correspondending function */
-  girara_mode_t mode; /**< Mode identifier */
-  girara_argument_t argument; /**< Given argument */
+  girara_mode_t mode;                  /**< Mode identifier */
 };
 
 /**
  * Structure of a inputbar shortcut
  */
-struct girara_inputbar_shortcut_s
-{
-  guint mask; /**< Mask */
-  guint key; /**< Key */
+struct girara_inputbar_shortcut_s {
+  guint mask;                          /**< Mask */
+  guint key;                           /**< Key */
   girara_shortcut_function_t function; /**< Function */
-  girara_argument_t argument; /**< Given argument */
+  girara_argument_t argument;          /**< Given argument */
 };
 
 /**
  * Structure of a special command
  */
-struct girara_special_command_s
-{
-  char identifier; /**< Identifier */
+struct girara_special_command_s {
   girara_inputbar_special_function_t function; /**< Function */
-  bool always; /**< Evalute on every change of the input */
-  girara_argument_t argument; /**< Argument */
+  girara_argument_t argument;                  /**< Argument */
+  char identifier;                             /**< Identifier */
+  bool always;                                 /**< Evalute on every change of the input */
 };
 
 /**
  * Structure of a mouse event
  */
-struct girara_mouse_event_s
-{
-  guint mask; /**< Mask */
-  guint button; /**< Button */
+struct girara_mouse_event_s {
+  guint mask;                          /**< Mask */
+  guint button;                        /**< Button */
   girara_shortcut_function_t function; /**< Function */
-  girara_mode_t mode; /**< Allowed modes */
-  girara_event_type_t event_type; /**< Event type */
-  girara_argument_t argument; /**< Given argument */
+  girara_mode_t mode;                  /**< Allowed modes */
+  girara_event_type_t event_type;      /**< Event type */
+  girara_argument_t argument;          /**< Given argument */
 };
 
 /**
  * Config handle
  */
-struct girara_config_handle_s
-{
+struct girara_config_handle_s {
   char* identifier;
   girara_command_function_t handle;
 };
@@ -246,17 +237,17 @@ struct girara_config_handle_s
 /**
  * Structure of a statusbar item
  */
-struct girara_statusbar_item_s
-{
+struct girara_statusbar_item_s {
   GtkWidget* box; /**< Event box */
-  GtkLabel*  text; /**< Text label */
+  GtkLabel* text; /**< Text label */
 };
 
 /**
  * Private data of the girara session
  */
-struct girara_session_private_s
-{
+struct girara_session_private_s {
+  GMutex feedkeys_mutex;
+
   /**
    * Used in session-specific paths
    */
@@ -272,32 +263,26 @@ struct girara_session_private_s
    */
   GiraraTemplate* csstemplate;
 
-  struct
-  {
+  struct {
     GtkWidget* overlay; /**< So we can overlay bottom_box on top of view */
-    GtkBox*    bottom_box; /**< Box grouping input, status and notification */
+    GtkBox* bottom_box; /**< Box grouping input, status and notification */
     GtkCssProvider* cssprovider;
   } gtk;
 
-  struct
-  {
+  struct {
     girara_list_t* statusbar_items; /**< List of statusbar items */
   } elements;
 
-  struct
-  {
-    int n; /**< Numeric buffer */
-    GString *command; /**< Command in buffer */
+  struct {
+    GString* command; /**< Command in buffer */
+    int n;            /**< Numeric buffer */
   } buffer;
 
-  struct
-  {
+  struct {
     girara_list_t* handles;
     girara_list_t* shortcut_mappings;
     girara_list_t* argument_mappings;
   } config;
-
-  GMutex feedkeys_mutex;
 };
 
 #endif
