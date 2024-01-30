@@ -54,10 +54,6 @@ static void free_variable(void* data) {
 
   g_free(variable->value);
   g_free(variable->name);
-
-  variable->name  = NULL;
-  variable->value = NULL;
-
   g_free(variable);
 }
 
