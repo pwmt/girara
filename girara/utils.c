@@ -317,17 +317,16 @@ girara_file_read2(FILE* file)
   fseeko(file, curpos, SEEK_SET);
 
   if (size == 0) {
-    char* content = malloc(1);
-    content[0] = '\0';
-    return content;
+    return g_try_malloc0(1);
   }
+
   /* this can happen on 32 bit systems */
   if ((uintmax_t)size >= (uintmax_t)SIZE_MAX) {
     girara_error("file is too large");
     return NULL;
   }
 
-  char* buffer = malloc(size + 1);
+  char* buffer = g_try_malloc(size + 1);
   if (buffer == NULL) {
     return NULL;
   }
