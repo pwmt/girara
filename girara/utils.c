@@ -341,28 +341,26 @@ girara_file_read2(FILE* file)
   return buffer;
 }
 
-void
-girara_clean_line(char* line)
-{
+void girara_clean_line(char* line) {
   if (line == NULL) {
     return;
   }
 
-  unsigned int i = 0;
-  unsigned int j = 0;
-  bool ws_mode   = true;
+  size_t i     = 0;
+  size_t j     = 0;
+  bool ws_mode = true;
 
-  for(i = 0; i < strlen(line); i++) {
+  for (i = 0; i < strlen(line); ++i) {
     if (isspace(line[i]) != 0) {
       if (ws_mode == true) {
         continue;
       }
 
       line[j++] = ' ';
-      ws_mode = true;
+      ws_mode   = true;
     } else {
       line[j++] = line[i];
-      ws_mode = false;
+      ws_mode   = false;
     }
   }
 
