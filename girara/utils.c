@@ -112,9 +112,7 @@ girara_xdg_open(const char* uri)
 }
 
 #if defined(HAVE_GETPWNAM_R)
-static char*
-get_home_directory_getpwnam(const char* user)
-{
+static char* get_home_directory_getpwnam(const char* user) {
 #ifdef _SC_GETPW_R_SIZE_MAX
   int bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
   if (bufsize < 0) {
@@ -131,19 +129,16 @@ get_home_directory_getpwnam(const char* user)
 
   struct passwd pwd;
   struct passwd* result = NULL;
-  if (getpwnam_r(user, &pwd, buffer, bufsize, &result) != 0) {
-    g_free(buffer);
-    return NULL;
+  char* dir             = NULL;
+  if (getpwnam_r(user, &pwd, buffer, bufsize, &result) == 0 && result != NULL) {
+    dir = g_strdup(pwd.pw_dir);
   }
 
-  char* dir = g_strdup(pwd.pw_dir);
   g_free(buffer);
   return dir;
 }
 #else
-static char*
-get_home_directory_getpwnam(const char* user)
-{
+static char* get_home_directory_getpwnam(const char* user) {
   const struct passwd* pwd = getpwnam(user);
   if (pwd != NULL) {
     return g_strdup(pwd->pw_dir);
