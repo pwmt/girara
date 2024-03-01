@@ -13,8 +13,8 @@ Requirements
 
 The following dependencies are required:
 
-* `gtk3` (>= 3.20)
-* `glib` (>= 2.50)
+* `gtk3` (>= 3.24)
+* `glib` (>= 2.74)
 
 The following dependencies are optional:
 

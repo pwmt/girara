@@ -31,9 +31,9 @@ localedir = get_option('localedir')
 
 # required dependencies
 libm = cc.find_library('m', required: false)
-glib = dependency('glib-2.0', version: '>=2.50')
-gtk3 = dependency('gtk+-3.0', version: '>=3.20')
-pango = dependency('pango', version: '>=1.14')
+glib = dependency('glib-2.0', version: '>=2.74')
+gtk3 = dependency('gtk+-3.0', version: '>=3.24')
+pango = dependency('pango', version: '>=1.50')
 
 build_dependencies = [libm, glib, gtk3, pango]
 pc_requires = ['glib-2.0', 'gtk+-3.0']
