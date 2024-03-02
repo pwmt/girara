@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.4.2',
+  version: '0.4.3',
   meson_version: '>=0.61',
   default_options: ['c_std=c17', 'warning_level=3'],
 )
@@ -14,8 +14,8 @@ version_array = version.split('.')
 # * If any of the exported datastructures have changed in a incompatible way
 #   bump SOMAJOR and set SOMINOR to 0.
 # * If a function has been added bump SOMINOR.
-so_major = '3'
-so_minor = '1'
+so_major = '4'
+so_minor = '0'
 so_version = '@0@.@1@'.format(so_major, so_minor)
 
 conf_data = configuration_data()
@@ -31,9 +31,9 @@ localedir = get_option('localedir')
 
 # required dependencies
 libm = cc.find_library('m', required: false)
-glib = dependency('glib-2.0', version: '>=2.50')
-gtk3 = dependency('gtk+-3.0', version: '>=3.20')
-pango = dependency('pango', version: '>=1.14')
+glib = dependency('glib-2.0', version: '>=2.74')
+gtk3 = dependency('gtk+-3.0', version: '>=3.24')
+pango = dependency('pango', version: '>=1.50')
 
 build_dependencies = [libm, glib, gtk3, pango]
 pc_requires = ['glib-2.0', 'gtk+-3.0']
@@ -56,20 +56,14 @@ endif
 flags = [
   '-Wmissing-declarations',
   '-Werror=implicit-function-declaration',
-  '-Werror=vla'
+  '-Werror=vla',
+  '-Werror=int-conversion'
 ]
 flags = cc.get_supported_arguments(flags)
 
 # optional dependencies
 pc_requires_private = ['pango']
-libnotify = dependency('libnotify', version: '>=0.7.0', required: get_option('notify'))
 jsonc = dependency('json-glib-1.0', required: get_option('json'))
-
-if libnotify.found()
-  build_dependencies += libnotify
-  defines += '-DWITH_LIBNOTIFY'
-  pc_requires_private += 'libnotify'
-endif
 
 if jsonc.found()
   build_dependencies += jsonc

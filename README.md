@@ -13,12 +13,11 @@ Requirements
 
 The following dependencies are required:
 
-* `gtk3` (>= 3.20)
-* `glib` (>= 2.50)
+* `gtk3` (>= 3.24)
+* `glib` (>= 2.74)
 
 The following dependencies are optional:
 
-* `libnotify`: notification support (deprecated, disabled by default)
 * `json-glib-1.0`: configuration dumping support
 
 For building girara, the following dependencies are also required:

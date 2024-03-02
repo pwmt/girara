@@ -32,24 +32,23 @@ typedef struct girara_event_s girara_event_t;
 /**
  * This structure defines the possible argument identifiers
  */
-enum
-{
-  GIRARA_HIDE = 1, /**< Hide the completion list */
-  GIRARA_NEXT, /**< Next entry */
-  GIRARA_PREVIOUS, /**< Previous entry */
-  GIRARA_NEXT_GROUP, /**< Next group in the completion list */
-  GIRARA_PREVIOUS_GROUP, /**< Previous group in the completion list */
-  GIRARA_HIGHLIGHT, /**< Highlight the entry */
-  GIRARA_NORMAL, /**< Set to the normal state */
-  GIRARA_DELETE_LAST_WORD, /**< Delete the last word */
-  GIRARA_DELETE_LAST_CHAR, /**< Delete the last character */
-  GIRARA_NEXT_CHAR, /**< Go to the next character */
-  GIRARA_PREVIOUS_CHAR, /**< Go to the previous character */
+enum {
+  GIRARA_HIDE = 1,             /**< Hide the completion list */
+  GIRARA_NEXT,                 /**< Next entry */
+  GIRARA_PREVIOUS,             /**< Previous entry */
+  GIRARA_NEXT_GROUP,           /**< Next group in the completion list */
+  GIRARA_PREVIOUS_GROUP,       /**< Previous group in the completion list */
+  GIRARA_HIGHLIGHT,            /**< Highlight the entry */
+  GIRARA_NORMAL,               /**< Set to the normal state */
+  GIRARA_DELETE_LAST_WORD,     /**< Delete the last word */
+  GIRARA_DELETE_LAST_CHAR,     /**< Delete the last character */
+  GIRARA_NEXT_CHAR,            /**< Go to the next character */
+  GIRARA_PREVIOUS_CHAR,        /**< Go to the previous character */
   GIRARA_DELETE_TO_LINE_START, /**< Delete the line to the start */
-  GIRARA_DELETE_TO_LINE_END, /**< Delete the line to the end */
-  GIRARA_DELETE_CURR_CHAR, /**< Delete current char */
-  GIRARA_GOTO_START, /**< Go to start of the line */
-  GIRARA_GOTO_END /**< Go to end of the line */
+  GIRARA_DELETE_TO_LINE_END,   /**< Delete the line to the end */
+  GIRARA_DELETE_CURR_CHAR,     /**< Delete current char */
+  GIRARA_GOTO_START,           /**< Go to start of the line */
+  GIRARA_GOTO_END              /**< Go to end of the line */
 };
 
 /**
@@ -64,8 +63,7 @@ typedef int girara_mode_t;
  * @param input The current input
  * @return The completion group
  */
-typedef girara_completion_t* (*girara_completion_function_t)(
-    girara_session_t* session, const char* input);
+typedef girara_completion_t* (*girara_completion_function_t)(girara_session_t* session, const char* input);
 
 /**
  * Function declaration of a inputbar special function
@@ -76,8 +74,8 @@ typedef girara_completion_t* (*girara_completion_function_t)(
  * @return TRUE No error occurred
  * @return FALSE Error occurred
  */
-typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session,
-    const char* input, girara_argument_t* argument);
+typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session, const char* input,
+                                                   girara_argument_t* argument);
 
 /**
  * Function declaration of a command function
@@ -86,8 +84,7 @@ typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session,
  * @param argc Number of arguments
  * @param argv Arguments
  */
-typedef bool (*girara_command_function_t)(girara_session_t* session,
-    girara_list_t* argument_list);
+typedef bool (*girara_command_function_t)(girara_session_t* session, girara_list_t* argument_list);
 
 /**
  * Function declaration of a shortcut function
@@ -96,8 +93,7 @@ typedef bool (*girara_command_function_t)(girara_session_t* session,
  * often executed as the value defines or until the function returns false the
  * first time.
  */
-typedef bool (*girara_shortcut_function_t)(girara_session_t*,
-    girara_argument_t*, girara_event_t*, unsigned int);
+typedef bool (*girara_shortcut_function_t)(girara_session_t*, girara_argument_t*, girara_event_t*, unsigned int);
 
 /**
  * Function declaration of a function that frees something.
@@ -125,12 +121,11 @@ typedef int (*girara_compare_function_t)(const void* data1, const void* data2);
 /**
  * This structure defines the possible types that a setting value can have
  */
-typedef enum girara_setting_type_e
-{
-  BOOLEAN, /**< Boolean type */
-  FLOAT, /**< Floating number */
-  INT, /**< Integer */
-  STRING, /**< String */
+typedef enum girara_setting_type_e {
+  BOOLEAN,         /**< Boolean type */
+  FLOAT,           /**< Floating number */
+  INT,             /**< Integer */
+  STRING,          /**< String */
   UNKNOWN = 0xFFFF /**< Unknown type */
 } girara_setting_type_t;
 
@@ -143,23 +138,21 @@ typedef enum girara_setting_type_e
  * @param value Pointer to the new value
  * @param data User data
  */
-typedef void (*girara_setting_callback_t)(girara_session_t* session,
-    const char* name, girara_setting_type_t type, const void* value, void* data);
+typedef void (*girara_setting_callback_t)(girara_session_t* session, const char* name, girara_setting_type_t type,
+                                          const void* value, void* data);
 
 /**
  * Definition of an argument of a shortcut or buffered command
  */
-struct girara_argument_s
-{
-  int   n; /**< Identifier */
-  void *data; /**< Data */
+struct girara_argument_s {
+  void* data; /**< Data */
+  int n;      /**< Identifier */
 };
 
 /**
  * Define mouse buttons
  */
-typedef enum girara_mouse_button_e
-{
+typedef enum girara_mouse_button_e {
   GIRARA_MOUSE_BUTTON1 = 1, /**< Button 1 */
   GIRARA_MOUSE_BUTTON2 = 2, /**< Button 2 */
   GIRARA_MOUSE_BUTTON3 = 3, /**< Button 3 */
@@ -174,18 +167,17 @@ typedef enum girara_mouse_button_e
 /**
  * Describes the types of a girara
  */
-typedef enum girara_event_type_e
-{
-  GIRARA_EVENT_BUTTON_PRESS, /**< Single click */
-  GIRARA_EVENT_2BUTTON_PRESS, /**< Double click */
-  GIRARA_EVENT_3BUTTON_PRESS, /**< Triple click */
-  GIRARA_EVENT_BUTTON_RELEASE, /**< Button released */
-  GIRARA_EVENT_MOTION_NOTIFY, /**< Cursor moved */
-  GIRARA_EVENT_SCROLL_UP, /**< Scroll event */
-  GIRARA_EVENT_SCROLL_DOWN, /**< Scroll event */
-  GIRARA_EVENT_SCROLL_LEFT, /**< Scroll event */
-  GIRARA_EVENT_SCROLL_RIGHT, /**< Scroll event */
-  GIRARA_EVENT_OTHER, /**< Unknown event */
+typedef enum girara_event_type_e {
+  GIRARA_EVENT_BUTTON_PRESS,        /**< Single click */
+  GIRARA_EVENT_2BUTTON_PRESS,       /**< Double click */
+  GIRARA_EVENT_3BUTTON_PRESS,       /**< Triple click */
+  GIRARA_EVENT_BUTTON_RELEASE,      /**< Button released */
+  GIRARA_EVENT_MOTION_NOTIFY,       /**< Cursor moved */
+  GIRARA_EVENT_SCROLL_UP,           /**< Scroll event */
+  GIRARA_EVENT_SCROLL_DOWN,         /**< Scroll event */
+  GIRARA_EVENT_SCROLL_LEFT,         /**< Scroll event */
+  GIRARA_EVENT_SCROLL_RIGHT,        /**< Scroll event */
+  GIRARA_EVENT_OTHER,               /**< Unknown event */
   GIRARA_EVENT_SCROLL_BIDIRECTIONAL /**< Scroll event that carries extra data
                                      *   in girara_argument_t with motion
                                      *   information as double[2].
@@ -197,12 +189,11 @@ typedef enum girara_event_type_e
 /**
  * Describes a girara event
  */
-struct girara_event_s
-{
-  girara_event_type_t type; /**< The event type */
-
+struct girara_event_s {
   double x; /**< X coordinates where the event occurred */
   double y; /**< Y coordinates where the event occurred */
+
+  girara_event_type_t type; /**< The event type */
 };
 
 typedef struct girara_input_history_io_s GiraraInputHistoryIO;

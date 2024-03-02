@@ -20,7 +20,7 @@ bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, c
   g_return_val_if_fail(buffer || key || modifier, false);
   g_return_val_if_fail(function != NULL, false);
 
-  girara_argument_t argument = {argument_n, (argument_data != NULL) ? g_strdup(argument_data) : NULL};
+  girara_argument_t argument = {.n = argument_n, .data = (argument_data != NULL) ? g_strdup(argument_data) : NULL};
 
   /* search for existing binding */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.shortcuts); ++idx) {
@@ -83,7 +83,7 @@ bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, gui
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(function != NULL, false);
 
-  girara_argument_t argument = {argument_n, argument_data};
+  girara_argument_t argument = {.n = argument_n, .data = argument_data};
 
   /* search for existing special command */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.inputbar_shortcuts); ++idx) {
@@ -128,20 +128,18 @@ void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut
   g_free(inputbar_shortcut);
 }
 
-bool
-girara_isc_activate(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
-    girara_callback_inputbar_activate(session->gtk.inputbar_entry, session);
-    return true;
+bool girara_isc_activate(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                         unsigned int UNUSED(t)) {
+  girara_callback_inputbar_activate(session->gtk.inputbar_entry, session);
+  return true;
 }
 
-bool
-girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                      unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   /* hide completion */
-  girara_argument_t arg = { GIRARA_HIDE, NULL };
+  girara_argument_t arg = {.n = GIRARA_HIDE, .data = NULL};
   girara_isc_completion(session, &arg, NULL, 0);
 
   /* clear inputbar */
@@ -167,77 +165,76 @@ girara_isc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument),
   return true;
 }
 
-bool
-girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* argument,
+                                    girara_event_t* UNUSED(event), unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
-  gchar *separator = NULL;
+  gchar* separator = NULL;
   girara_setting_get(session, "word-separator", &separator);
-  gchar *input  = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
-  int    length = strlen(input);
-  int pos       = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar_entry));
+  gchar* input = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
+  int length   = strlen(input);
+  int pos      = gtk_editable_get_position(GTK_EDITABLE(session->gtk.inputbar_entry));
   int i;
 
   switch (argument->n) {
-    case GIRARA_DELETE_LAST_WORD:
-      if (pos == 1 && (input[0] == ':' || input[0] == '/')) {
-        break;
-      }
-      if (pos == 0) {
-        break;
-      }
+  case GIRARA_DELETE_LAST_WORD:
+    if (pos == 1 && (input[0] == ':' || input[0] == '/')) {
+      break;
+    }
+    if (pos == 0) {
+      break;
+    }
 
-      i = pos - 1;
+    i = pos - 1;
 
-      /* remove trailing spaces */
-      for (; i >= 0 && input[i] == ' '; i--) {
-      }
+    /* remove trailing spaces */
+    for (; i >= 0 && input[i] == ' '; i--) {
+    }
 
-      /* find the beginning of the word */
-      while ((i == (pos - 1)) || ((i > 0) && separator != NULL && !strchr(separator, input[i]))) {
-        i--;
-      }
+    /* find the beginning of the word */
+    while ((i == (pos - 1)) || ((i > 0) && separator != NULL && !strchr(separator, input[i]))) {
+      i--;
+    }
 
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry),  i + 1, pos);
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), i + 1);
+    gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), i + 1, pos);
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), i + 1);
+    break;
+  case GIRARA_DELETE_LAST_CHAR:
+    if (length != 1 && pos == 1 && (input[0] == ':' || input[0] == '/')) {
       break;
-    case GIRARA_DELETE_LAST_CHAR:
-      if (length != 1 && pos == 1 && (input[0] == ':' || input[0] == '/')) {
-        break;
-      }
-      if (length == 1 && pos == 1) {
-        girara_isc_abort(session, argument, NULL, 0);
-      }
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos - 1, pos);
+    }
+    if (length == 1 && pos == 1) {
+      girara_isc_abort(session, argument, NULL, 0);
+    }
+    gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos - 1, pos);
+    break;
+  case GIRARA_DELETE_TO_LINE_START:
+    gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), 1, pos);
+    break;
+  case GIRARA_NEXT_CHAR:
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), pos + 1);
+    break;
+  case GIRARA_PREVIOUS_CHAR:
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 1) ? 1 : pos - 1);
+    break;
+  case GIRARA_DELETE_CURR_CHAR:
+    if (length != 1 && pos == 0 && (input[0] == ':' || input[0] == '/')) {
       break;
-    case GIRARA_DELETE_TO_LINE_START:
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), 1, pos);
-      break;
-    case GIRARA_NEXT_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), pos + 1);
-      break;
-    case GIRARA_PREVIOUS_CHAR:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), (pos == 1) ? 1 : pos - 1);
-      break;
-    case GIRARA_DELETE_CURR_CHAR:
-      if (length != 1 && pos == 0 && (input[0] == ':' || input[0] == '/')){
-        break;
-      }
-      if(length == 1 && pos == 0) {
-        girara_isc_abort(session, argument, NULL, 0);
-      }
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos, pos + 1);
-      break;
-    case GIRARA_DELETE_TO_LINE_END:
-      gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos, length);
-      break;
-    case GIRARA_GOTO_START:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), 1);
-      break;
-    case GIRARA_GOTO_END:
-      gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
-      break;
+    }
+    if (length == 1 && pos == 0) {
+      girara_isc_abort(session, argument, NULL, 0);
+    }
+    gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos, pos + 1);
+    break;
+  case GIRARA_DELETE_TO_LINE_END:
+    gtk_editable_delete_text(GTK_EDITABLE(session->gtk.inputbar_entry), pos, length);
+    break;
+  case GIRARA_GOTO_START:
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), 1);
+    break;
+  case GIRARA_GOTO_END:
+    gtk_editable_set_position(GTK_EDITABLE(session->gtk.inputbar_entry), -1);
+    break;
   }
 
   g_free(separator);
@@ -246,16 +243,13 @@ girara_isc_string_manipulation(girara_session_t* session, girara_argument_t* arg
   return false;
 }
 
-bool
-girara_isc_command_history(girara_session_t* session, girara_argument_t*
-    argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_isc_command_history(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event),
+                                unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
-  char* temp = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
-  const char* command = argument->n == GIRARA_NEXT ?
-    girara_input_history_next(session->command_history, temp) :
-    girara_input_history_previous(session->command_history, temp);
+  char* temp          = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
+  const char* command = argument->n == GIRARA_NEXT ? girara_input_history_next(session->command_history, temp)
+                                                   : girara_input_history_previous(session->command_history, temp);
   g_free(temp);
 
   if (command != NULL) {
@@ -268,9 +262,8 @@ girara_isc_command_history(girara_session_t* session, girara_argument_t*
 }
 
 /* default shortcut implementation */
-bool
-girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event),
+                              unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(session->gtk.inputbar_entry != NULL, false);
 
@@ -285,7 +278,7 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.inputbar_entry));
 
   if (argument != NULL && argument->data != NULL) {
-    gtk_entry_set_text(session->gtk.inputbar_entry, (char*) argument->data);
+    gtk_entry_set_text(session->gtk.inputbar_entry, (char*)argument->data);
 
     /* we save the X clipboard that will be clear by "grab_focus" */
     gchar* x_clipboard_text = gtk_clipboard_wait_for_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY));
@@ -302,9 +295,8 @@ girara_sc_focus_inputbar(girara_session_t* session, girara_argument_t* argument,
   return true;
 }
 
-bool
-girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                     unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   girara_isc_abort(session, NULL, NULL, 0);
@@ -318,12 +310,11 @@ girara_sc_abort(girara_session_t* session, girara_argument_t* UNUSED(argument), 
   return false;
 }
 
-bool
-girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
+                    unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
-  girara_argument_t arg = { GIRARA_HIDE, NULL };
+  girara_argument_t arg = {.n = GIRARA_HIDE, .data = NULL};
   girara_isc_completion(session, &arg, NULL, 0);
 
   gtk_main_quit();
@@ -331,9 +322,7 @@ girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argument), g
   return false;
 }
 
-static void
-girara_toggle_widget_visibility(GtkWidget* widget)
-{
+static void girara_toggle_widget_visibility(GtkWidget* widget) {
   if (widget == NULL) {
     return;
   }
@@ -345,9 +334,8 @@ girara_toggle_widget_visibility(GtkWidget* widget)
   }
 }
 
-bool
-girara_sc_toggle_inputbar(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_toggle_inputbar(girara_session_t* session, girara_argument_t* UNUSED(argument),
+                               girara_event_t* UNUSED(event), unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.inputbar));
@@ -355,9 +343,8 @@ girara_sc_toggle_inputbar(girara_session_t* session, girara_argument_t* UNUSED(a
   return true;
 }
 
-bool
-girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* UNUSED(argument),
+                                girara_event_t* UNUSED(event), unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   girara_toggle_widget_visibility(GTK_WIDGET(session->gtk.statusbar));
@@ -365,8 +352,7 @@ girara_sc_toggle_statusbar(girara_session_t* session, girara_argument_t* UNUSED(
   return true;
 }
 
-static girara_list_t*
-argument_to_argument_list(girara_argument_t* argument) {
+static girara_list_t* argument_to_argument_list(girara_argument_t* argument) {
   girara_list_t* argument_list = girara_list_new();
   if (argument_list == NULL) {
     return NULL;
@@ -376,7 +362,7 @@ argument_to_argument_list(girara_argument_t* argument) {
   gint argc    = 0;
 
   girara_list_set_free_function(argument_list, g_free);
-  if (g_shell_parse_argv((const gchar*) argument->data, &argc, &argv, NULL) != FALSE) {
+  if (g_shell_parse_argv((const gchar*)argument->data, &argc, &argv, NULL) != FALSE) {
     for (int i = 0; i < argc; i++) {
       char* arg = g_strdup(argv[i]);
       girara_list_append(argument_list, arg);
@@ -389,9 +375,8 @@ argument_to_argument_list(girara_argument_t* argument) {
   return NULL;
 }
 
-bool
-girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event),
+                   unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   if (argument == NULL || argument->data == NULL) {
@@ -413,9 +398,8 @@ girara_sc_set(girara_session_t* session, girara_argument_t* argument, girara_eve
   return false;
 }
 
-bool
-girara_sc_exec(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event), unsigned int UNUSED(t))
-{
+bool girara_sc_exec(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event),
+                    unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
 
   if (argument == NULL || argument->data == NULL) {
@@ -437,9 +421,7 @@ girara_sc_exec(girara_session_t* session, girara_argument_t* argument, girara_ev
   return false;
 }
 
-static bool
-simulate_key_press(girara_session_t* session, int state, int key)
-{
+static bool simulate_key_press(girara_session_t* session, int state, int key) {
   if (session == NULL || session->gtk.box == NULL) {
     return false;
   }
@@ -457,8 +439,8 @@ simulate_key_press(girara_session_t* session, int state, int key)
   GdkKeymapKey* keys  = NULL;
   gint number_of_keys = 0;
 
-  if (gdk_keymap_get_entries_for_keyval(gdk_keymap_get_for_display(display),
-        event->key.keyval, &keys, &number_of_keys) == FALSE) {
+  if (gdk_keymap_get_entries_for_keyval(gdk_keymap_get_for_display(display), event->key.keyval, &keys,
+                                        &number_of_keys) == FALSE) {
     gdk_event_free(event);
     return false;
   }
@@ -468,7 +450,7 @@ simulate_key_press(girara_session_t* session, int state, int key)
 
   g_free(keys);
 
-  GdkSeat* seat = gdk_display_get_default_seat(display);
+  GdkSeat* seat       = gdk_display_get_default_seat(display);
   GdkDevice* keyboard = gdk_seat_get_keyboard(seat);
   gdk_event_set_device(event, keyboard);
 
@@ -480,25 +462,18 @@ simulate_key_press(girara_session_t* session, int state, int key)
   return true;
 }
 
-static int
-update_state_by_keyval(int state, int keyval)
-{
+static int update_state_by_keyval(int state, int keyval) {
   /* The following is probably not true for some keyboard layouts. */
-  if ((keyval >= '!' && keyval <= '/')
-      || (keyval >= ':' && keyval <= '@')
-      || (keyval >= '[' && keyval <= '`')
-      || (keyval >= '{' && keyval <= '~')
-      ) {
+  if ((keyval >= '!' && keyval <= '/') || (keyval >= ':' && keyval <= '@') || (keyval >= '[' && keyval <= '`') ||
+      (keyval >= '{' && keyval <= '~')) {
     state |= GDK_SHIFT_MASK;
   }
 
   return state;
 }
 
-bool
-girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
-    girara_event_t* UNUSED(event), unsigned int t)
-{
+bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event),
+                        unsigned int t) {
   if (session == NULL || argument == NULL) {
     return false;
   }
@@ -514,42 +489,42 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
   } gdk_keyboard_button_t;
 
   static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
-    {"BackSpace", GDK_KEY_BackSpace},
-    {"CapsLock",  GDK_KEY_Caps_Lock},
-    {"Down",      GDK_KEY_Down},
-    {"Esc",       GDK_KEY_Escape},
-    {"F10",       GDK_KEY_F10},
-    {"F11",       GDK_KEY_F11},
-    {"F12",       GDK_KEY_F12},
-    {"F1",        GDK_KEY_F1},
-    {"F2",        GDK_KEY_F2},
-    {"F3",        GDK_KEY_F3},
-    {"F4",        GDK_KEY_F4},
-    {"F5",        GDK_KEY_F5},
-    {"F6",        GDK_KEY_F6},
-    {"F7",        GDK_KEY_F7},
-    {"F8",        GDK_KEY_F8},
-    {"F9",        GDK_KEY_F9},
-    {"Left",      GDK_KEY_Left},
-    {"PageDown",  GDK_KEY_Page_Down},
-    {"PageUp",    GDK_KEY_Page_Up},
-    {"Home",      GDK_KEY_Home},
-    {"End",       GDK_KEY_End},
-    {"Return",    GDK_KEY_Return},
-    {"Right",     GDK_KEY_Right},
-    {"Space",     GDK_KEY_space},
-    {"Super",     GDK_KEY_Super_L},
-    {"Tab",       GDK_KEY_Tab},
-    {"ShiftTab",  GDK_KEY_ISO_Left_Tab},
-    {"Up",        GDK_KEY_Up},
-    {"Print",     GDK_KEY_Print},
-    {"KPLeft",    GDK_KEY_KP_Left},
-    {"KPRight",   GDK_KEY_KP_Right},
-    {"KPUp",      GDK_KEY_KP_Up},
-    {"KPDown",    GDK_KEY_KP_Down}
+      {"BackSpace", GDK_KEY_BackSpace},
+      {"CapsLock", GDK_KEY_Caps_Lock},
+      {"Down", GDK_KEY_Down},
+      {"Esc", GDK_KEY_Escape},
+      {"F10", GDK_KEY_F10},
+      {"F11", GDK_KEY_F11},
+      {"F12", GDK_KEY_F12},
+      {"F1", GDK_KEY_F1},
+      {"F2", GDK_KEY_F2},
+      {"F3", GDK_KEY_F3},
+      {"F4", GDK_KEY_F4},
+      {"F5", GDK_KEY_F5},
+      {"F6", GDK_KEY_F6},
+      {"F7", GDK_KEY_F7},
+      {"F8", GDK_KEY_F8},
+      {"F9", GDK_KEY_F9},
+      {"Left", GDK_KEY_Left},
+      {"PageDown", GDK_KEY_Page_Down},
+      {"PageUp", GDK_KEY_Page_Up},
+      {"Home", GDK_KEY_Home},
+      {"End", GDK_KEY_End},
+      {"Return", GDK_KEY_Return},
+      {"Right", GDK_KEY_Right},
+      {"Space", GDK_KEY_space},
+      {"Super", GDK_KEY_Super_L},
+      {"Tab", GDK_KEY_Tab},
+      {"ShiftTab", GDK_KEY_ISO_Left_Tab},
+      {"Up", GDK_KEY_Up},
+      {"Print", GDK_KEY_Print},
+      {"KPLeft", GDK_KEY_KP_Left},
+      {"KPRight", GDK_KEY_KP_Right},
+      {"KPUp", GDK_KEY_KP_Up},
+      {"KPDown", GDK_KEY_KP_Down},
   };
 
-  char* input               = (char*) argument->data;
+  char* input               = (char*)argument->data;
   unsigned int input_length = strlen(input);
 
   t = MAX(1, t);
@@ -566,23 +541,23 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
         }
 
         const int length = end - (input + i) - 1;
-        char* tmp  = g_strndup(input + i + 1, length);
-        bool found = false;
+        char* tmp        = g_strndup(input + i + 1, length);
+        bool found       = false;
 
         /* Multi key shortcut */
         if (length > 2 && tmp[1] == '-') {
           switch (tmp[0]) {
-            case 'S':
-              state = GDK_SHIFT_MASK;
-              break;
-            case 'A':
-              state = GDK_MOD1_MASK;
-              break;
-            case 'C':
-              state = GDK_CONTROL_MASK;
-              break;
-            default:
-              break;
+          case 'S':
+            state = GDK_SHIFT_MASK;
+            break;
+          case 'A':
+            state = GDK_MOD1_MASK;
+            break;
+          case 'C':
+            state = GDK_CONTROL_MASK;
+            break;
+          default:
+            break;
           }
 
           if (length == 3) {
@@ -592,17 +567,17 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
             for (unsigned int j = 0; j < LENGTH(gdk_keyboard_buttons); ++j) {
               if (g_strcmp0(tmp + 2, gdk_keyboard_buttons[j].identifier) == 0) {
                 keyval = gdk_keyboard_buttons[j].keyval;
-                found = true;
+                found  = true;
                 break;
               }
             }
           }
-        /* Possible special key */
+          /* Possible special key */
         } else {
           for (unsigned int j = 0; j < LENGTH(gdk_keyboard_buttons); ++j) {
             if (g_strcmp0(tmp, gdk_keyboard_buttons[j].identifier) == 0) {
               keyval = gdk_keyboard_buttons[j].keyval;
-              found = true;
+              found  = true;
               break;
             }
           }
@@ -616,7 +591,7 @@ girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument,
         }
       }
 
-single_key:
+    single_key:
       state = update_state_by_keyval(state, keyval);
       simulate_key_press(session, state, keyval);
     }
@@ -702,7 +677,7 @@ bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button,
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(function != NULL, false);
 
-  girara_argument_t argument = {argument_n, argument_data};
+  girara_argument_t argument = {.n = argument_n, .data = argument_data};
 
   /* search for existing binding */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.mouse_events); ++idx) {

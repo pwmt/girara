@@ -13,11 +13,11 @@
  * Enum for directories specified in the XDG specification.
  */
 typedef enum {
-  XDG_CONFIG, /**< XDG_CONFIG_HOME */
-  XDG_DATA, /**< XDG_DATA_HOME */
+  XDG_CONFIG,      /**< XDG_CONFIG_HOME */
+  XDG_DATA,        /**< XDG_DATA_HOME */
   XDG_CONFIG_DIRS, /**< XDG_CONFIG_DIRS */
-  XDG_DATA_DIRS, /**< XDG_DATA_DIRS */
-  XDG_CACHE, /**< XDG_CACHE_HOME */
+  XDG_DATA_DIRS,   /**< XDG_DATA_DIRS */
+  XDG_CACHE,       /**< XDG_CACHE_HOME */
 } girara_xdg_path_t;
 
 /**
@@ -94,7 +94,7 @@ FILE* girara_file_open(const char* path, const char* mode) GIRARA_VISIBLE;
 char* girara_file_read_line(FILE* file) GIRARA_VISIBLE;
 
 /**
- * Reads the whole content from a file. Returned string has to be freed.
+ * Reads the whole content from a file. Returned string has to be released with g_free.
  *
  * @param path Path to the file
  * @return Read file or NULL if an error occurred
@@ -102,7 +102,7 @@ char* girara_file_read_line(FILE* file) GIRARA_VISIBLE;
 char* girara_file_read(const char* path) GIRARA_VISIBLE;
 
 /**
- * Reads the whole content from a file. Returned string has to be freed.
+ * Reads the whole content from a file. Returned string has to be released with g_free.
  *
  * @param file file to read
  * @return Read file or NULL if an error occurred
@@ -115,16 +115,6 @@ char* girara_file_read2(FILE* file) GIRARA_VISIBLE;
  * @param line
  */
 void girara_clean_line(char* line) GIRARA_VISIBLE;
-
-/**
- * Changes the size of the memory block by wrapping a realloc function call
- * In addition it frees the old memory block if realloc fails.
- *
- * @param ptr Memory space
- * @param size Number of bytes
- * @return Pointer to the allocated memory block or NULL
- */
-void* girara_safe_realloc(void** ptr, size_t size) GIRARA_ALLOC_SIZE(2) GIRARA_VISIBLE GIRARA_DEPRECATED_;
 
 /**
  * Escape \\, \\t, ", ' and spaces in strings.

@@ -20,9 +20,9 @@
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_setting_add(girara_session_t* session, const char* name,
-    const void* value, girara_setting_type_t type, bool init_only,
-    const char* description, girara_setting_callback_t callback, void* data) GIRARA_VISIBLE;
+bool girara_setting_add(girara_session_t* session, const char* name, const void* value, girara_setting_type_t type,
+                        bool init_only, const char* description, girara_setting_callback_t callback,
+                        void* data) GIRARA_VISIBLE;
 
 /**
  * Sets the value of a setting
@@ -88,7 +88,6 @@ girara_setting_type_t girara_setting_get_type(girara_setting_t* setting) GIRARA_
  * @param setting The setting
  * @param value The new value
  */
-void girara_setting_set_value(girara_session_t* session,
-    girara_setting_t* setting, const void* value) GIRARA_VISIBLE;
+void girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, const void* value) GIRARA_VISIBLE;
 
 #endif

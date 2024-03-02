@@ -16,8 +16,7 @@
  * @return TRUE No error occurred
  * @return FALSE Error occurred (and forward event)
  */
-typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event,
-    girara_session_t* session);
+typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event, girara_session_t* session);
 
 /**
  * Creates an statusbar item
@@ -30,8 +29,8 @@ typedef bool (*girara_statusbar_event_t)(GtkWidget* widget, GdkEvent* event,
  * @return The created statusbar item
  * @return NULL An error occurred
  */
-girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session,
-    bool expand, bool fill, bool left, girara_statusbar_event_t callback) GIRARA_VISIBLE;
+girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left,
+                                                   girara_statusbar_event_t callback) GIRARA_VISIBLE;
 
 /**
  * Sets the shown text of an statusbar item
@@ -42,7 +41,7 @@ girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session,
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_statusbar_item_set_text(girara_session_t* session,
-    girara_statusbar_item_t* item, const char* text) GIRARA_VISIBLE;
+bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item,
+                                    const char* text) GIRARA_VISIBLE;
 
 #endif

@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <sys/types.h>
+
 #include "macros.h"
 #include "types.h"
 
@@ -17,12 +18,14 @@
 girara_list_t* girara_list_new(void) GIRARA_VISIBLE;
 
 /**
- * Create a new list.
+ * Create a new list with a free function.
  *
  * @param gfree Pointer to the free function
  * @return The girara list object or NULL if an error occurred.
  */
-girara_list_t* girara_list_new2(girara_free_function_t gfree) GIRARA_VISIBLE;
+girara_list_t* girara_list_new_with_free(girara_free_function_t gfree) GIRARA_VISIBLE;
+
+#define girara_list_new2 girara_list_new_with_free
 
 /**
  * Create a new (sorted) list.
@@ -33,15 +36,17 @@ girara_list_t* girara_list_new2(girara_free_function_t gfree) GIRARA_VISIBLE;
 girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp) GIRARA_VISIBLE;
 
 /**
- * Create a new (sorted) list.
+ * Create a new (sorted) list with a free function.
  *
  * @param cmp Pointer to the compare function.
  * @param gfree Pointer to the free function
  * @return The girara list object or NULL if an error occurred.
  */
 
-girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp,
-    girara_free_function_t gfree) GIRARA_VISIBLE;
+girara_list_t* girara_sorted_list_new_with_free(girara_compare_function_t cmp,
+                                                girara_free_function_t gfree) GIRARA_VISIBLE;
+
+#define girara_sorted_list_new2 girara_sorted_list_new_with_free
 
 /**
  * Set the function which should be called if the stored data should be freed.
@@ -49,8 +54,7 @@ girara_list_t* girara_sorted_list_new2(girara_compare_function_t cmp,
  * @param list The girara list object
  * @param gfree Pointer to the free function
  */
-void girara_list_set_free_function(girara_list_t* list,
-    girara_free_function_t gfree) GIRARA_VISIBLE;
+void girara_list_set_free_function(girara_list_t* list, girara_free_function_t gfree) GIRARA_VISIBLE;
 
 /**
  * Remove all elements from a list.
@@ -150,8 +154,7 @@ void girara_list_sort(girara_list_t* list, girara_compare_function_t compare) GI
  * @param data data passed as the second argument to the compare function
  * @return the element if found or NULL
  */
-void* girara_list_find(const girara_list_t* list, girara_compare_function_t compare,
-    const void* data) GIRARA_VISIBLE;
+void* girara_list_find(const girara_list_t* list, girara_compare_function_t compare, const void* data) GIRARA_VISIBLE;
 
 /**
  * Create an iterator pointing at the start of list.
@@ -231,7 +234,7 @@ void* girara_list_iterator_data(girara_list_iterator_t* iter) GIRARA_VISIBLE;
  * @param iter The list iterator
  * @param data Sets the list iterator to a specific element
  */
-void girara_list_iterator_set(girara_list_iterator_t* iter, void *data) GIRARA_VISIBLE;
+void girara_list_iterator_set(girara_list_iterator_t* iter, void* data) GIRARA_VISIBLE;
 
 /**
  * Destroy the iterator.
@@ -247,24 +250,24 @@ void girara_list_iterator_free(girara_list_iterator_t* iter) GIRARA_VISIBLE;
  * @param callback The function to call.
  * @param data Passed to the callback as second argument.
  */
-void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback,
-    void* data) GIRARA_VISIBLE;
+void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data) GIRARA_VISIBLE;
 
-#define GIRARA_LIST_FOREACH(list, type, iter, data) \
-  do { \
-    girara_list_iterator_t* iter = girara_list_iterator(list); \
-    while (girara_list_iterator_is_valid(iter)) { \
+#define GIRARA_LIST_FOREACH(list, type, iter, data)                                                                    \
+  do {                                                                                                                 \
+    girara_list_iterator_t* iter = girara_list_iterator(list);                                                         \
+    while (girara_list_iterator_is_valid(iter)) {                                                                      \
       type data = (type)girara_list_iterator_data(iter);
 
-#define GIRARA_LIST_FOREACH_END(list, type, iter, data) \
-      girara_list_iterator_next(iter); \
-    } \
-    girara_list_iterator_free(iter); \
-  } while(0)
+#define GIRARA_LIST_FOREACH_END(list, type, iter, data)                                                                \
+  girara_list_iterator_next(iter);                                                                                     \
+  }                                                                                                                    \
+  girara_list_iterator_free(iter);                                                                                     \
+  }                                                                                                                    \
+  while (0)
 
-#define GIRARA_LIST_FOREACH_BODY_WITH_ITER(list, type, iter, data, ...) \
-  GIRARA_LIST_FOREACH(list, type, iter, data) \
-  __VA_ARGS__ \
+#define GIRARA_LIST_FOREACH_BODY_WITH_ITER(list, type, iter, data, ...)                                                \
+  GIRARA_LIST_FOREACH(list, type, iter, data)                                                                          \
+  __VA_ARGS__                                                                                                          \
   GIRARA_LIST_FOREACH_END(list, type, iter, data)
 
 #define GIRARA_LIST_FOREACH_BODY(list, type, data, ...)                                                                \
@@ -300,8 +303,7 @@ girara_tree_node_t* girara_node_new(void* data) GIRARA_VISIBLE;
  * @param node The girara node object
  * @param gfree Pointer to the free function
  */
-void girara_node_set_free_function(girara_tree_node_t* node,
-    girara_free_function_t gfree) GIRARA_VISIBLE;
+void girara_node_set_free_function(girara_tree_node_t* node, girara_free_function_t gfree) GIRARA_VISIBLE;
 
 /**
  * Free a node. This will remove the node from its' parent and will destroy all
@@ -326,8 +328,7 @@ void girara_node_append(girara_tree_node_t* parent, girara_tree_node_t* child) G
  * @param data The data of the node
  * @return The node object or NULL if an error occurred
  */
-girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent,
-    void* data) GIRARA_VISIBLE;
+girara_tree_node_t* girara_node_append_data(girara_tree_node_t* parent, void* data) GIRARA_VISIBLE;
 
 /**
  * Get parent node.

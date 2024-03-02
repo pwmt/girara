@@ -17,10 +17,8 @@
 
 #define COMMENT_PREFIX "\"#"
 
-static void
-cb_window_icon(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
-{
+static void cb_window_icon(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type),
+                           const void* value, void* UNUSED(data)) {
   g_return_if_fail(session != NULL && value != NULL);
 
   if (session->gtk.window == NULL) {
@@ -30,24 +28,20 @@ cb_window_icon(girara_session_t* session, const char* UNUSED(name),
   girara_set_window_icon(session, value);
 }
 
-static void
-cb_font(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
-{
+static void cb_font(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type),
+                    const void* value, void* UNUSED(data)) {
   g_return_if_fail(session != NULL && value != NULL);
 
   css_template_fill_font(session->private_data->csstemplate, value);
 }
 
-static void
-cb_color(girara_session_t* session, const char* name,
-    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
-{
+static void cb_color(girara_session_t* session, const char* name, girara_setting_type_t UNUSED(type), const void* value,
+                     void* UNUSED(data)) {
   g_return_if_fail(session != NULL && value != NULL);
 
   const char* str_value = value;
 
-  GdkRGBA color = { 0, 0, 0, 0 };
+  GdkRGBA color = {0, 0, 0, 0};
   gdk_rgba_parse(&color, str_value);
 
   char* colorstr = gdk_rgba_to_string(&color);
@@ -55,10 +49,8 @@ cb_color(girara_session_t* session, const char* name,
   g_free(colorstr);
 }
 
-static void
-cb_guioptions(girara_session_t* session, const char* UNUSED(name),
-    girara_setting_type_t UNUSED(type), const void* value, void* UNUSED(data))
-{
+static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type),
+                          const void* value, void* UNUSED(data)) {
   g_return_if_fail(session != NULL && value != NULL);
 
   /* set default values */
@@ -73,20 +65,20 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
 
   for (size_t i = 0; i < input_length; i++) {
     switch (input[i]) {
-      /* command line */
-      case 'c':
-        show_commandline = true;
-        break;
-      /* statusbar */
-      case 's':
-        show_statusbar = true;
-        break;
-      case 'h':
-        show_hscrollbar = true;
-        break;
-      case 'v':
-        show_vscrollbar = true;
-        break;
+    /* command line */
+    case 'c':
+      show_commandline = true;
+      break;
+    /* statusbar */
+    case 's':
+      show_statusbar = true;
+      break;
+    case 'h':
+      show_hscrollbar = true;
+      break;
+    case 'v':
+      show_vscrollbar = true;
+      break;
     }
   }
 
@@ -107,28 +99,26 @@ cb_guioptions(girara_session_t* session, const char* UNUSED(name),
     gtk_widget_hide(session->gtk.statusbar);
   }
 
-  scrolled_window_set_scrollbar_visibility(
-    GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
+  scrolled_window_set_scrollbar_visibility(GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
 }
 
-void
-girara_config_load_default(girara_session_t* session)
-{
+void girara_config_load_default(girara_session_t* session) {
   if (session == NULL) {
     return;
   }
 
   /* values */
-  const int statusbar_h_padding   = 8;
-  const int statusbar_v_padding   = 2;
-  const int window_width          = 800;
-  const int window_height         = 600;
-  const int n_completion_items    = 15;
-  girara_mode_t normal_mode = session->modes.normal;
+  const int statusbar_h_padding = 8;
+  const int statusbar_v_padding = 2;
+  const int window_width        = 800;
+  const int window_height       = 600;
+  const int n_completion_items  = 15;
+  girara_mode_t normal_mode     = session->modes.normal;
 
   /* other values */
   session->global.autohide_inputbar = true;
 
+  /* clang-format off */
   /* settings */
   girara_setting_add(session, "font",                     "monospace normal 9", STRING,  FALSE, _("Font"), cb_font, NULL);
   girara_setting_add(session, "default-fg",               "#DDDDDD",            STRING,  FALSE,  _("Default foreground color"), cb_color, NULL);
@@ -217,16 +207,15 @@ girara_config_load_default(girara_session_t* session)
   girara_shortcut_mapping_add(session, "set",              girara_sc_set);
   girara_shortcut_mapping_add(session, "toggle_inputbar",  girara_sc_toggle_inputbar);
   girara_shortcut_mapping_add(session, "toggle_statusbar", girara_sc_toggle_statusbar);
+  /* clang-format on */
 }
 
-bool
-girara_config_handle_add(girara_session_t* session, const char* identifier, girara_command_function_t handle)
-{
+bool girara_config_handle_add(girara_session_t* session, const char* identifier, girara_command_function_t handle) {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(identifier != NULL, false);
 
   girara_session_private_t* session_private = session->private_data;
-  bool found = false;
+  bool found                                = false;
 
   /* search for existing config handle */
   for (size_t idx = 0; idx != girara_list_size(session_private->config.handles); ++idx) {
@@ -250,9 +239,7 @@ girara_config_handle_add(girara_session_t* session, const char* identifier, gira
   return true;
 }
 
-void
-girara_config_handle_free(girara_config_handle_t* handle)
-{
+void girara_config_handle_free(girara_config_handle_t* handle) {
   if (handle == NULL) {
     return;
   }
@@ -261,9 +248,7 @@ girara_config_handle_free(girara_config_handle_t* handle)
   g_free(handle);
 }
 
-static bool
-config_parse(girara_session_t* session, const char* path)
-{
+static bool config_parse(girara_session_t* session, const char* path) {
   /* open file */
   FILE* file = girara_file_open(path, "r");
 
@@ -273,7 +258,7 @@ config_parse(girara_session_t* session, const char* path)
   }
 
   /* read lines */
-  char* line = NULL;
+  char* line               = NULL;
   unsigned int line_number = 1;
   while ((line = girara_file_read_line(file)) != NULL) {
     /* skip empty lines and comments */
@@ -282,15 +267,15 @@ config_parse(girara_session_t* session, const char* path)
       continue;
     }
 
-    girara_list_t* argument_list = girara_list_new2(g_free);
+    girara_list_t* argument_list = girara_list_new_with_free(g_free);
     if (argument_list == NULL) {
       g_free(line);
       fclose(file);
       return false;
     }
 
-    gchar** argv = NULL;
-    gint    argc = 0;
+    gchar** argv  = NULL;
+    gint argc     = 0;
     GError* error = NULL;
 
     /* parse current line */
@@ -325,8 +310,8 @@ config_parse(girara_session_t* session, const char* path)
           newpath = g_strdup(argv[1]);
         } else {
           char* basename = g_path_get_dirname(path);
-          char* tmp = g_build_filename(basename, argv[1], NULL);
-          newpath = girara_fix_path(tmp);
+          char* tmp      = g_build_filename(basename, argv[1], NULL);
+          newpath        = girara_fix_path(tmp);
           g_free(tmp);
           g_free(basename);
         }
@@ -369,9 +354,7 @@ config_parse(girara_session_t* session, const char* path)
   return true;
 }
 
-void
-girara_config_parse(girara_session_t* session, const char* path)
-{
+void girara_config_parse(girara_session_t* session, const char* path) {
   girara_debug("reading configuration file '%s'", path);
   config_parse(session, path);
 }

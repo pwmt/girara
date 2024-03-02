@@ -20,9 +20,7 @@
 #include "settings.h"
 #include "internal.h"
 
-char*
-girara_fix_path(const char* path)
-{
+char* girara_fix_path(const char* path) {
   if (path == NULL) {
     return NULL;
   }
@@ -30,8 +28,8 @@ girara_fix_path(const char* path)
   char* rpath = NULL;
   if (path[0] == '~') {
     const size_t len = strlen(path);
-    char* user = NULL;
-    size_t idx = 1;
+    char* user       = NULL;
+    size_t idx       = 1;
 
     if (len > 1 && path[1] != '/') {
       while (path[idx] && path[idx] != '/') {
@@ -54,27 +52,24 @@ girara_fix_path(const char* path)
     rpath = g_strdup(path);
   } else {
     char* curdir = g_get_current_dir();
-    rpath = g_build_filename(curdir, path, NULL);
+    rpath        = g_build_filename(curdir, path, NULL);
     g_free(curdir);
   }
 
   return rpath;
 }
 
-bool
-girara_xdg_open_with_working_directory(const char* uri, const char* working_directory)
-{
+bool girara_xdg_open_with_working_directory(const char* uri, const char* working_directory) {
   if (uri == NULL || strlen(uri) == 0) {
     return false;
   }
 
   /* g_spawn_async expects char** */
   static char xdg_open[] = "xdg-open";
-  char* argv[] = { xdg_open, g_strdup(uri), NULL };
+  char* argv[]           = {xdg_open, g_strdup(uri), NULL};
 
   GError* error = NULL;
-  bool res = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
-      NULL, NULL, &error);
+  bool res      = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
   if (error != NULL) {
     girara_warning("Failed to execute 'xdg-open %s': %s", uri, error->message);
     g_error_free(error);
@@ -105,16 +100,12 @@ girara_xdg_open_with_working_directory(const char* uri, const char* working_dire
   return res;
 }
 
-bool
-girara_xdg_open(const char* uri)
-{
+bool girara_xdg_open(const char* uri) {
   return girara_xdg_open_with_working_directory(uri, NULL);
 }
 
 #if defined(HAVE_GETPWNAM_R)
-static char*
-get_home_directory_getpwnam(const char* user)
-{
+static char* get_home_directory_getpwnam(const char* user) {
 #ifdef _SC_GETPW_R_SIZE_MAX
   int bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
   if (bufsize < 0) {
@@ -131,19 +122,16 @@ get_home_directory_getpwnam(const char* user)
 
   struct passwd pwd;
   struct passwd* result = NULL;
-  if (getpwnam_r(user, &pwd, buffer, bufsize, &result) != 0) {
-    g_free(buffer);
-    return NULL;
+  char* dir             = NULL;
+  if (getpwnam_r(user, &pwd, buffer, bufsize, &result) == 0 && result != NULL) {
+    dir = g_strdup(pwd.pw_dir);
   }
 
-  char* dir = g_strdup(pwd.pw_dir);
   g_free(buffer);
   return dir;
 }
 #else
-static char*
-get_home_directory_getpwnam(const char* user)
-{
+static char* get_home_directory_getpwnam(const char* user) {
   const struct passwd* pwd = getpwnam(user);
   if (pwd != NULL) {
     return g_strdup(pwd->pw_dir);
@@ -153,9 +141,7 @@ get_home_directory_getpwnam(const char* user)
 }
 #endif
 
-char*
-girara_get_home_directory(const char* user)
-{
+char* girara_get_home_directory(const char* user) {
   if (user == NULL || g_strcmp0(user, g_get_user_name()) == 0) {
     return g_strdup(g_get_home_dir());
   }
@@ -163,49 +149,44 @@ girara_get_home_directory(const char* user)
   return get_home_directory_getpwnam(user);
 }
 
-char*
-girara_get_xdg_path(girara_xdg_path_t path)
-{
+char* girara_get_xdg_path(girara_xdg_path_t path) {
   static const char VARS[][16] = {
-    [XDG_CONFIG_DIRS] = "XDG_CONFIG_DIRS",
-    [XDG_DATA_DIRS] = "XDG_DATA_DIRS"
+      [XDG_CONFIG_DIRS] = "XDG_CONFIG_DIRS",
+      [XDG_DATA_DIRS]   = "XDG_DATA_DIRS",
   };
 
   static const char DEFAULTS[][29] = {
-    [XDG_CONFIG_DIRS] = "/etc/xdg",
-    [XDG_DATA_DIRS] = "/usr/local/share/:/usr/share"
+      [XDG_CONFIG_DIRS] = "/etc/xdg",
+      [XDG_DATA_DIRS]   = "/usr/local/share/:/usr/share",
   };
 
   switch (path) {
-    case XDG_DATA:
-      return g_strdup(g_get_user_data_dir());
-    case XDG_CONFIG:
-      return g_strdup(g_get_user_config_dir());
-    case XDG_CONFIG_DIRS:
-    case XDG_DATA_DIRS:
-    {
-      const char* tmp = g_getenv(VARS[path]);
-      if (tmp == NULL || !g_strcmp0(tmp, "")) {
-        return g_strdup(DEFAULTS[path]);
-      }
-      return g_strdup(tmp);
+  case XDG_DATA:
+    return g_strdup(g_get_user_data_dir());
+  case XDG_CONFIG:
+    return g_strdup(g_get_user_config_dir());
+  case XDG_CONFIG_DIRS:
+  case XDG_DATA_DIRS: {
+    const char* tmp = g_getenv(VARS[path]);
+    if (tmp == NULL || !g_strcmp0(tmp, "")) {
+      return g_strdup(DEFAULTS[path]);
     }
-    case XDG_CACHE:
-      return g_strdup(g_get_user_cache_dir());
+    return g_strdup(tmp);
+  }
+  case XDG_CACHE:
+    return g_strdup(g_get_user_cache_dir());
   }
 
   return NULL;
 }
 
-girara_list_t*
-girara_split_path_array(const char* patharray)
-{
+girara_list_t* girara_split_path_array(const char* patharray) {
   if (patharray == NULL || !g_strcmp0(patharray, "")) {
     return NULL;
   }
 
-  girara_list_t* res = girara_list_new2(g_free);
-  char** paths = g_strsplit(patharray, ":", 0);
+  girara_list_t* res = girara_list_new_with_free(g_free);
+  char** paths       = g_strsplit(patharray, ":", 0);
   for (size_t i = 0; paths[i] != NULL; ++i) {
     girara_list_append(res, g_strdup(paths[i]));
   }
@@ -214,9 +195,7 @@ girara_split_path_array(const char* patharray)
   return res;
 }
 
-FILE*
-girara_file_open(const char* path, const char* mode)
-{
+FILE* girara_file_open(const char* path, const char* mode) {
   if (path == NULL || mode == NULL) {
     return NULL;
   }
@@ -228,7 +207,7 @@ girara_file_open(const char* path, const char* mode)
 
   FILE* fp = fopen(fixed_path, mode);
   g_free(fixed_path);
-  if (fp  == NULL) {
+  if (fp == NULL) {
     return NULL;
   }
 
@@ -236,16 +215,14 @@ girara_file_open(const char* path, const char* mode)
 }
 
 #if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)
-char*
-girara_file_read_line(FILE* file)
-{
+char* girara_file_read_line(FILE* file) {
   if (file == NULL) {
     return NULL;
   }
 
   size_t size = 0;
-  char* line = fgetln(file, &size);
-  if (line  == NULL) {
+  char* line  = fgetln(file, &size);
+  if (line == NULL) {
     return NULL;
   }
 
@@ -260,15 +237,13 @@ girara_file_read_line(FILE* file)
   return copy;
 }
 #else
-char*
-girara_file_read_line(FILE* file)
-{
+char* girara_file_read_line(FILE* file) {
   if (file == NULL) {
     return NULL;
   }
 
   size_t size = 0;
-  char* line = NULL;
+  char* line  = NULL;
   if (getline(&line, &size, file) == -1) {
     if (line != NULL) {
       free(line);
@@ -285,9 +260,7 @@ girara_file_read_line(FILE* file)
 }
 #endif
 
-char*
-girara_file_read(const char* path)
-{
+char* girara_file_read(const char* path) {
   if (path == NULL) {
     return NULL;
   }
@@ -302,9 +275,7 @@ girara_file_read(const char* path)
   return content;
 }
 
-char*
-girara_file_read2(FILE* file)
-{
+char* girara_file_read2(FILE* file) {
   if (file == NULL) {
     return NULL;
   }
@@ -319,17 +290,16 @@ girara_file_read2(FILE* file)
   fseeko(file, curpos, SEEK_SET);
 
   if (size == 0) {
-    char* content = malloc(1);
-    content[0] = '\0';
-    return content;
+    return g_try_malloc0(1);
   }
+
   /* this can happen on 32 bit systems */
   if ((uintmax_t)size >= (uintmax_t)SIZE_MAX) {
     girara_error("file is too large");
     return NULL;
   }
 
-  char* buffer = malloc(size + 1);
+  char* buffer = g_try_malloc(size + 1);
   if (buffer == NULL) {
     return NULL;
   }
@@ -344,64 +314,33 @@ girara_file_read2(FILE* file)
   return buffer;
 }
 
-void
-girara_clean_line(char* line)
-{
+void girara_clean_line(char* line) {
   if (line == NULL) {
     return;
   }
 
-  unsigned int i = 0;
-  unsigned int j = 0;
-  bool ws_mode   = true;
+  size_t i     = 0;
+  size_t j     = 0;
+  bool ws_mode = true;
 
-  for(i = 0; i < strlen(line); i++) {
+  for (i = 0; i < strlen(line); ++i) {
     if (isspace(line[i]) != 0) {
       if (ws_mode == true) {
         continue;
       }
 
       line[j++] = ' ';
-      ws_mode = true;
+      ws_mode   = true;
     } else {
       line[j++] = line[i];
-      ws_mode = false;
+      ws_mode   = false;
     }
   }
 
   line[j] = '\0';
 }
 
-void*
-girara_safe_realloc(void** ptr, size_t size)
-{
-  if (ptr == NULL) {
-    return NULL;
-  }
-
-  if (size == 0) {
-    goto error_free;
-  }
-
-  void* tmp = realloc(*ptr, size);
-  if (tmp == NULL) {
-    goto error_free;
-  }
-
-  *ptr = tmp;
-  return tmp;
-
-error_free:
-
-  free(*ptr);
-  *ptr = NULL;
-
-  return NULL;
-}
-
-char*
-girara_escape_string(const char* value)
-{
+char* girara_escape_string(const char* value) {
   if (value == NULL) {
     return NULL;
   }
@@ -418,9 +357,7 @@ girara_escape_string(const char* value)
   return g_string_free(str, FALSE);
 }
 
-char*
-girara_replace_substring(const char* string, const char* old, const char* new)
-{
+char* girara_replace_substring(const char* string, const char* old, const char* new) {
   if (string == NULL || old == NULL || new == NULL) {
     return NULL;
   }
@@ -430,15 +367,13 @@ girara_replace_substring(const char* string, const char* old, const char* new)
   }
 
   gchar** split = g_strsplit(string, old, -1);
-  char* ret = g_strjoinv(new, split);
+  char* ret     = g_strjoinv(new, split);
   g_strfreev(split);
 
   return ret;
 }
 
-bool
-girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list)
-{
+bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list) {
   if (session == NULL || argument_list == NULL) {
     return false;
   }
@@ -479,9 +414,7 @@ girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argumen
   return ret;
 }
 
-void
-widget_add_class(GtkWidget* widget, const char* styleclass)
-{
+void widget_add_class(GtkWidget* widget, const char* styleclass) {
   if (widget == NULL || styleclass == NULL) {
     return;
   }
@@ -492,9 +425,7 @@ widget_add_class(GtkWidget* widget, const char* styleclass)
   }
 }
 
-void
-widget_remove_class(GtkWidget* widget, const char* styleclass)
-{
+void widget_remove_class(GtkWidget* widget, const char* styleclass) {
   if (widget == NULL || styleclass == NULL) {
     return;
   }
@@ -505,15 +436,11 @@ widget_remove_class(GtkWidget* widget, const char* styleclass)
   }
 }
 
-const char*
-girara_version(void)
-{
+const char* girara_version(void) {
   return GIRARA_VERSION;
 }
 
-int
-list_strcmp(const void* data1, const void* data2)
-{
+int list_strcmp(const void* data1, const void* data2) {
   const char* str1 = data1;
   const char* str2 = data2;
 

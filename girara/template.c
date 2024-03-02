@@ -54,10 +54,6 @@ static void free_variable(void* data) {
 
   g_free(variable->value);
   g_free(variable->name);
-
-  variable->name  = NULL;
-  variable->value = NULL;
-
   g_free(variable);
 }
 
@@ -150,8 +146,8 @@ static void girara_template_init(GiraraTemplate* template) {
   priv->base                  = g_strdup("");
   priv->variable_regex        = regex;
   priv->variable_check_regex  = check_regex;
-  priv->variables_in_base     = girara_list_new2(g_free);
-  priv->variables             = girara_list_new2(free_variable);
+  priv->variables_in_base     = girara_list_new_with_free(g_free);
+  priv->variables             = girara_list_new_with_free(free_variable);
   priv->valid                 = true;
 }
 

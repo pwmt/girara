@@ -23,6 +23,6 @@ void girara_config_parse(girara_session_t* session, const char* path) GIRARA_VIS
  * @return true if no error occurred, otherwise false
  */
 bool girara_config_handle_add(girara_session_t* session, const char* identifier,
-    girara_command_function_t handle) GIRARA_VISIBLE;
+                              girara_command_function_t handle) GIRARA_VISIBLE;
 
 #endif
