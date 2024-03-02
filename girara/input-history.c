@@ -21,16 +21,12 @@ G_DEFINE_TYPE_WITH_CODE(GiraraInputHistory, girara_input_history, G_TYPE_OBJECT,
 /* Methods */
 static void ih_dispose(GObject* object);
 static void ih_finalize(GObject* object);
-static void ih_set_property(GObject* object, guint prop_id,
-    const GValue* value, GParamSpec* pspec);
-static void ih_get_property(GObject* object, guint prop_id, GValue* value,
-    GParamSpec* pspec);
+static void ih_set_property(GObject* object, guint prop_id, const GValue* value, GParamSpec* pspec);
+static void ih_get_property(GObject* object, guint prop_id, GValue* value, GParamSpec* pspec);
 static void ih_append(GiraraInputHistory* history, const char* input);
 static girara_list_t* ih_list(GiraraInputHistory* history);
-static const char* ih_next(GiraraInputHistory* history,
-    const char* current_input);
-static const char* ih_previous(GiraraInputHistory* history,
-    const char* current_input);
+static const char* ih_next(GiraraInputHistory* history, const char* current_input);
+static const char* ih_previous(GiraraInputHistory* history, const char* current_input);
 static void ih_reset(GiraraInputHistory* history);
 
 /* Properties */
@@ -40,9 +36,7 @@ enum {
 };
 
 /* Class init */
-static void
-girara_input_history_class_init(GiraraInputHistoryClass* class)
-{
+static void girara_input_history_class_init(GiraraInputHistoryClass* class) {
   /* overwrite methods */
   GObjectClass* object_class = G_OBJECT_CLASS(class);
   object_class->dispose      = ih_dispose;
@@ -50,18 +44,18 @@ girara_input_history_class_init(GiraraInputHistoryClass* class)
   object_class->set_property = ih_set_property;
   object_class->get_property = ih_get_property;
 
-  class->append = ih_append;
-  class->list = ih_list;
-  class->next = ih_next;
+  class->append   = ih_append;
+  class->list     = ih_list;
+  class->next     = ih_next;
   class->previous = ih_previous;
-  class->reset = ih_reset;
+  class->reset    = ih_reset;
 
   /* properties */
-  g_object_class_install_property(object_class, PROP_IO,
-    g_param_spec_object("io", "history reader/writer",
-      "GiraraInputHistoryIO object used to read and write history",
-      girara_input_history_io_get_type(),
-      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS));
+  g_object_class_install_property(
+      object_class, PROP_IO,
+      g_param_spec_object("io", "history reader/writer", "GiraraInputHistoryIO object used to read and write history",
+                          girara_input_history_io_get_type(),
+                          G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS));
 }
 
 /* Object init */
@@ -73,10 +67,8 @@ static void girara_input_history_init(GiraraInputHistory* history) {
 }
 
 /* GObject dispose */
-static void
-ih_dispose(GObject* object)
-{
-  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+static void ih_dispose(GObject* object) {
+  GiraraInputHistory* ih          = GIRARA_INPUT_HISTORY(object);
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
 
   g_clear_object(&priv->io);
@@ -85,10 +77,8 @@ ih_dispose(GObject* object)
 }
 
 /* GObject finalize */
-static void
-ih_finalize(GObject* object)
-{
-  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+static void ih_finalize(GObject* object) {
+  GiraraInputHistory* ih          = GIRARA_INPUT_HISTORY(object);
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
   girara_list_free(priv->history);
   g_free(priv->command_line);
@@ -97,59 +87,48 @@ ih_finalize(GObject* object)
 }
 
 /* GObject set_property */
-static void
-ih_set_property(GObject* object, guint prop_id, const GValue* value,
-    GParamSpec* pspec)
-{
-  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+static void ih_set_property(GObject* object, guint prop_id, const GValue* value, GParamSpec* pspec) {
+  GiraraInputHistory* ih          = GIRARA_INPUT_HISTORY(object);
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
 
   switch (prop_id) {
-    case PROP_IO: {
-      g_clear_object(&priv->io);
+  case PROP_IO: {
+    g_clear_object(&priv->io);
 
-      gpointer* tmp = g_value_dup_object(value);
-      if (tmp != NULL) {
-        priv->io = GIRARA_INPUT_HISTORY_IO(tmp);
-      }
-      girara_input_history_reset(GIRARA_INPUT_HISTORY(object));
-      break;
+    gpointer* tmp = g_value_dup_object(value);
+    if (tmp != NULL) {
+      priv->io = GIRARA_INPUT_HISTORY_IO(tmp);
     }
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+    girara_input_history_reset(GIRARA_INPUT_HISTORY(object));
+    break;
+  }
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
   }
 }
 
 /* GObject get_property */
-static void
-ih_get_property(GObject* object, guint prop_id, GValue* value,
-    GParamSpec* pspec)
-{
-  GiraraInputHistory* ih = GIRARA_INPUT_HISTORY(object);
+static void ih_get_property(GObject* object, guint prop_id, GValue* value, GParamSpec* pspec) {
+  GiraraInputHistory* ih          = GIRARA_INPUT_HISTORY(object);
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(ih);
 
   switch (prop_id) {
-    case PROP_IO:
-      g_value_set_object(value, priv->io);
-      break;
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+  case PROP_IO:
+    g_value_set_object(value, priv->io);
+    break;
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
   }
 }
 
 /* Object new */
-GiraraInputHistory*
-girara_input_history_new(GiraraInputHistoryIO* io)
-{
-  return GIRARA_INPUT_HISTORY(g_object_new(GIRARA_TYPE_INPUT_HISTORY, "io",
-        io, NULL));
+GiraraInputHistory* girara_input_history_new(GiraraInputHistoryIO* io) {
+  return GIRARA_INPUT_HISTORY(g_object_new(GIRARA_TYPE_INPUT_HISTORY, "io", io, NULL));
 }
 
 /* Method implementions */
 
-static void
-ih_append(GiraraInputHistory* history, const char* input)
-{
+static void ih_append(GiraraInputHistory* history, const char* input) {
   if (input == NULL) {
     return;
   }
@@ -175,16 +154,12 @@ ih_append(GiraraInputHistory* history, const char* input)
   girara_input_history_reset(history);
 }
 
-static girara_list_t*
-ih_list(GiraraInputHistory* history)
-{
+static girara_list_t* ih_list(GiraraInputHistory* history) {
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
   return priv->history;
 }
 
-static const char*
-find_next(GiraraInputHistory* history, const char* current_input, bool next)
-{
+static const char* find_next(GiraraInputHistory* history, const char* current_input, bool next) {
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
 
   girara_list_t* list = girara_input_history_list(history);
@@ -198,7 +173,7 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
   }
 
   if (priv->reset == true) {
-    priv->current = length;
+    priv->current       = length;
     priv->current_match = priv->current;
   }
 
@@ -208,12 +183,12 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
     priv->command_line = g_strdup(current_input);
   }
 
-  size_t i = 0;
+  size_t i            = 0;
   const char* command = NULL;
   for (; i < length; ++i) {
     if (priv->reset == true || next == false) {
       if (priv->current < 1) {
-        priv->reset = false;
+        priv->reset   = false;
         priv->current = priv->current_match;
         return NULL;
       } else {
@@ -223,7 +198,7 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
       if (priv->current + 1 >= length) {
         /* At the bottom of the history, return what the command-line was. */
         priv->current_match = length;
-        priv->current = priv->current_match;
+        priv->current       = priv->current_match;
         return priv->command_line;
       } else {
         ++priv->current;
@@ -237,7 +212,7 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
 
     /* Only match history items starting with what was on the command-line. */
     if (g_str_has_prefix(command, priv->command_line)) {
-      priv->reset = false;
+      priv->reset         = false;
       priv->current_match = priv->current;
       break;
     }
@@ -250,23 +225,17 @@ find_next(GiraraInputHistory* history, const char* current_input, bool next)
   return command;
 }
 
-static const char*
-ih_next(GiraraInputHistory* history, const char* current_input)
-{
+static const char* ih_next(GiraraInputHistory* history, const char* current_input) {
   return find_next(history, current_input, true);
 }
 
-static const char*
-ih_previous(GiraraInputHistory* history, const char* current_input)
-{
+static const char* ih_previous(GiraraInputHistory* history, const char* current_input) {
   return find_next(history, current_input, false);
 }
 
-static void
-ih_reset(GiraraInputHistory* history)
-{
+static void ih_reset(GiraraInputHistory* history) {
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
-  priv->reset = true;
+  priv->reset                     = true;
 
   if (priv->io != NULL) {
     girara_list_t* list = girara_input_history_list(history);
@@ -285,16 +254,12 @@ ih_reset(GiraraInputHistory* history)
 
 /* Wrapper functions for the members */
 
-void
-girara_input_history_append(GiraraInputHistory* history, const char* input)
-{
+void girara_input_history_append(GiraraInputHistory* history, const char* input) {
   g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
   GIRARA_INPUT_HISTORY_GET_CLASS(history)->append(history, input);
 }
 
-girara_list_t*
-girara_input_history_list(GiraraInputHistory* history)
-{
+girara_list_t* girara_input_history_list(GiraraInputHistory* history) {
   g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
 
   GiraraInputHistoryClass* klass = GIRARA_INPUT_HISTORY_GET_CLASS(history);
@@ -303,23 +268,17 @@ girara_input_history_list(GiraraInputHistory* history)
   return klass->list(history);
 }
 
-const char*
-girara_input_history_next(GiraraInputHistory* history, const char* current_input)
-{
+const char* girara_input_history_next(GiraraInputHistory* history, const char* current_input) {
   g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
   return GIRARA_INPUT_HISTORY_GET_CLASS(history)->next(history, current_input);
 }
 
-const char*
-girara_input_history_previous(GiraraInputHistory* history, const char* current_input)
-{
+const char* girara_input_history_previous(GiraraInputHistory* history, const char* current_input) {
   g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
   return GIRARA_INPUT_HISTORY_GET_CLASS(history)->previous(history, current_input);
 }
 
-void
-girara_input_history_reset(GiraraInputHistory* history)
-{
+void girara_input_history_reset(GiraraInputHistory* history) {
   g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
 
   GiraraInputHistoryClass* klass = GIRARA_INPUT_HISTORY_GET_CLASS(history);

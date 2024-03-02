@@ -14,24 +14,16 @@
 #include <string.h>
 
 static const guint ALL_ACCELS_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
-static const guint MOUSE_MASK = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK |
-  GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK;
+static const guint MOUSE_MASK      = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK | GDK_BUTTON1_MASK |
+                                GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK;
 
-static bool
-clean_mask(GtkWidget* widget, guint hardware_keycode, GdkModifierType state, gint group, guint* clean, guint* keyval)
-{
+static bool clean_mask(GtkWidget* widget, guint hardware_keycode, GdkModifierType state, gint group, guint* clean,
+                       guint* keyval) {
   GdkDisplay* display      = gtk_widget_get_display(widget);
   GdkModifierType consumed = 0;
 
-  if ((gdk_keymap_translate_keyboard_state(
-        gdk_keymap_get_for_display(display),
-        hardware_keycode,
-        state, group,
-        keyval,
-        NULL,
-        NULL,
-        &consumed)
-      ) == FALSE) {
+  if ((gdk_keymap_translate_keyboard_state(gdk_keymap_get_for_display(display), hardware_keycode, state, group, keyval,
+                                           NULL, NULL, &consumed)) == FALSE) {
     return false;
   }
 
@@ -41,46 +33,43 @@ clean_mask(GtkWidget* widget, guint hardware_keycode, GdkModifierType state, gin
 
   /* numpad numbers */
   switch (*keyval) {
-    case GDK_KEY_KP_0:
-      *keyval = GDK_KEY_0;
-      break;
-    case GDK_KEY_KP_1:
-      *keyval = GDK_KEY_1;
-      break;
-    case GDK_KEY_KP_2:
-      *keyval = GDK_KEY_2;
-      break;
-    case GDK_KEY_KP_3:
-      *keyval = GDK_KEY_3;
-      break;
-    case GDK_KEY_KP_4:
-      *keyval = GDK_KEY_4;
-      break;
-    case GDK_KEY_KP_5:
-      *keyval = GDK_KEY_5;
-      break;
-    case GDK_KEY_KP_6:
-      *keyval = GDK_KEY_6;
-      break;
-    case GDK_KEY_KP_7:
-      *keyval = GDK_KEY_7;
-      break;
-    case GDK_KEY_KP_8:
-      *keyval = GDK_KEY_8;
-      break;
-    case GDK_KEY_KP_9:
-      *keyval = GDK_KEY_9;
-      break;
+  case GDK_KEY_KP_0:
+    *keyval = GDK_KEY_0;
+    break;
+  case GDK_KEY_KP_1:
+    *keyval = GDK_KEY_1;
+    break;
+  case GDK_KEY_KP_2:
+    *keyval = GDK_KEY_2;
+    break;
+  case GDK_KEY_KP_3:
+    *keyval = GDK_KEY_3;
+    break;
+  case GDK_KEY_KP_4:
+    *keyval = GDK_KEY_4;
+    break;
+  case GDK_KEY_KP_5:
+    *keyval = GDK_KEY_5;
+    break;
+  case GDK_KEY_KP_6:
+    *keyval = GDK_KEY_6;
+    break;
+  case GDK_KEY_KP_7:
+    *keyval = GDK_KEY_7;
+    break;
+  case GDK_KEY_KP_8:
+    *keyval = GDK_KEY_8;
+    break;
+  case GDK_KEY_KP_9:
+    *keyval = GDK_KEY_9;
+    break;
   }
 
   return true;
 }
 
 /* callback implementation */
-gboolean
-girara_callback_view_key_press_event(GtkWidget* widget,
-    GdkEventKey* event, girara_session_t* session)
-{
+gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session) {
   g_return_val_if_fail(session != NULL, FALSE);
 
   guint clean  = 0;
@@ -194,9 +183,9 @@ girara_callback_view_key_press_event(GtkWidget* widget,
     /* free buffer if buffer will never match a command */
     if (matching_command == false) {
       g_string_free(session_private->buffer.command, TRUE);
-      g_string_free(session->global.buffer,  TRUE);
+      g_string_free(session->global.buffer, TRUE);
       session_private->buffer.command = NULL;
-      session->global.buffer  = NULL;
+      session->global.buffer          = NULL;
       session_private->buffer.n       = 0;
 
       if (session->events.buffer_changed != NULL) {
@@ -208,35 +197,30 @@ girara_callback_view_key_press_event(GtkWidget* widget,
   return FALSE;
 }
 
-gboolean
-girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
-    GdkEventButton* button, girara_session_t* session)
-{
+gboolean girara_callback_view_button_press_event(GtkWidget* UNUSED(widget), GdkEventButton* button,
+                                                 girara_session_t* session) {
   g_return_val_if_fail(session != NULL, false);
-  g_return_val_if_fail(button  != NULL, false);
+  g_return_val_if_fail(button != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event = {
-    .x = button->x,
-    .y = button->y
-  };
+  girara_event_t event = {.x = button->x, .y = button->y};
 
   switch (button->type) {
-    case GDK_BUTTON_PRESS:
-      event.type = GIRARA_EVENT_BUTTON_PRESS;
-      break;
-    case GDK_2BUTTON_PRESS:
-      event.type = GIRARA_EVENT_2BUTTON_PRESS;
-      break;
-    case GDK_3BUTTON_PRESS:
-      event.type = GIRARA_EVENT_3BUTTON_PRESS;
-      break;
-    default: /* do not handle unknown events */
-      event.type = GIRARA_EVENT_OTHER;
-      break;
+  case GDK_BUTTON_PRESS:
+    event.type = GIRARA_EVENT_BUTTON_PRESS;
+    break;
+  case GDK_2BUTTON_PRESS:
+    event.type = GIRARA_EVENT_2BUTTON_PRESS;
+    break;
+  case GDK_3BUTTON_PRESS:
+    event.type = GIRARA_EVENT_3BUTTON_PRESS;
+    break;
+  default: /* do not handle unknown events */
+    event.type = GIRARA_EVENT_OTHER;
+    break;
   }
 
-  const guint state = button->state & MOUSE_MASK;
+  const guint state                         = button->state & MOUSE_MASK;
   girara_session_private_t* session_private = session->private_data;
 
   /* search registered mouse events */
@@ -253,18 +237,13 @@ girara_callback_view_button_press_event(GtkWidget* UNUSED(widget),
   return false;
 }
 
-gboolean
-girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventButton* button, girara_session_t* session)
-{
+gboolean girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventButton* button,
+                                                   girara_session_t* session) {
   g_return_val_if_fail(session != NULL, false);
-  g_return_val_if_fail(button  != NULL, false);
+  g_return_val_if_fail(button != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event = {
-    .type = GIRARA_EVENT_BUTTON_RELEASE,
-    .x    = button->x,
-    .y    = button->y
-  };
+  girara_event_t event = {.type = GIRARA_EVENT_BUTTON_RELEASE, .x = button->x, .y = button->y};
 
   const guint state                         = button->state & MOUSE_MASK;
   girara_session_private_t* session_private = session->private_data;
@@ -283,18 +262,13 @@ girara_callback_view_button_release_event(GtkWidget* UNUSED(widget), GdkEventBut
   return false;
 }
 
-gboolean
-girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEventMotion* button, girara_session_t* session)
-{
+gboolean girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEventMotion* button,
+                                                         girara_session_t* session) {
   g_return_val_if_fail(session != NULL, false);
-  g_return_val_if_fail(button  != NULL, false);
+  g_return_val_if_fail(button != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event = {
-    .type = GIRARA_EVENT_MOTION_NOTIFY,
-    .x    = button->x,
-    .y    = button->y
-  };
+  girara_event_t event = {.type = GIRARA_EVENT_MOTION_NOTIFY, .x = button->x, .y = button->y};
 
   const guint state                         = button->state & MOUSE_MASK;
   girara_session_private_t* session_private = session->private_data;
@@ -312,38 +286,34 @@ girara_callback_view_button_motion_notify_event(GtkWidget* UNUSED(widget), GdkEv
   return false;
 }
 
-gboolean
-girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scroll, girara_session_t* session)
-{
+gboolean girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scroll,
+                                           girara_session_t* session) {
   g_return_val_if_fail(session != NULL, false);
-  g_return_val_if_fail(scroll  != NULL, false);
+  g_return_val_if_fail(scroll != NULL, false);
 
   /* prepare girara event */
-  girara_event_t event = {
-    .x    = scroll->x,
-    .y    = scroll->y
-  };
+  girara_event_t event = {.x = scroll->x, .y = scroll->y};
 
   switch (scroll->direction) {
-    case GDK_SCROLL_UP:
-      event.type = GIRARA_EVENT_SCROLL_UP;
-      break;
-    case GDK_SCROLL_DOWN:
-      event.type = GIRARA_EVENT_SCROLL_DOWN;
-      break;
-    case GDK_SCROLL_LEFT:
-      event.type = GIRARA_EVENT_SCROLL_LEFT;
-      break;
-    case GDK_SCROLL_RIGHT:
-      event.type = GIRARA_EVENT_SCROLL_RIGHT;
-      break;
-    case GDK_SCROLL_SMOOTH:
-      event.type = GIRARA_EVENT_SCROLL_BIDIRECTIONAL;
-      /* We abuse x and y here. We really need more fields in girara_event_t. */
-      gdk_event_get_scroll_deltas((GdkEvent*)scroll, &event.x, &event.y);
-      break;
-    default:
-      return false;
+  case GDK_SCROLL_UP:
+    event.type = GIRARA_EVENT_SCROLL_UP;
+    break;
+  case GDK_SCROLL_DOWN:
+    event.type = GIRARA_EVENT_SCROLL_DOWN;
+    break;
+  case GDK_SCROLL_LEFT:
+    event.type = GIRARA_EVENT_SCROLL_LEFT;
+    break;
+  case GDK_SCROLL_RIGHT:
+    event.type = GIRARA_EVENT_SCROLL_RIGHT;
+    break;
+  case GDK_SCROLL_SMOOTH:
+    event.type = GIRARA_EVENT_SCROLL_BIDIRECTIONAL;
+    /* We abuse x and y here. We really need more fields in girara_event_t. */
+    gdk_event_get_scroll_deltas((GdkEvent*)scroll, &event.x, &event.y);
+    break;
+  default:
+    return false;
   }
 
   const guint state                         = scroll->state & MOUSE_MASK;
@@ -363,9 +333,7 @@ girara_callback_view_scroll_event(GtkWidget* UNUSED(widget), GdkEventScroll* scr
   return false;
 }
 
-gboolean
-girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
-{
+gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session) {
   g_return_val_if_fail(session != NULL, FALSE);
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
@@ -391,7 +359,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
     return return_value;
   }
 
-  gchar *input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
+  gchar* input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
   if (input == NULL) {
     girara_isc_abort(session, NULL, NULL, 0);
     return false;
@@ -408,7 +376,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   girara_input_history_append(session->command_history, command);
 
   /* special commands */
-  char *identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
+  char* identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
   if (identifier_s == NULL) {
     return false;
   }
@@ -435,9 +403,7 @@ girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* session)
   return ret;
 }
 
-gboolean
-girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session)
-{
+gboolean girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session) {
   g_return_val_if_fail(session != NULL, false);
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
@@ -485,13 +451,11 @@ girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, g
   return custom_ret;
 }
 
-gboolean
-girara_callback_inputbar_changed_event(GtkEditable* entry, girara_session_t* session)
-{
+gboolean girara_callback_inputbar_changed_event(GtkEditable* entry, girara_session_t* session) {
   g_return_val_if_fail(session != NULL, false);
 
   /* special commands */
-  char *identifier_s = gtk_editable_get_chars(entry, 0, 1);
+  char* identifier_s = gtk_editable_get_chars(entry, 0, 1);
   if (identifier_s == NULL) {
     return false;
   }

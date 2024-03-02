@@ -8,16 +8,14 @@
 static girara_log_level_t log_level = GIRARA_DEBUG;
 
 static const char NAMES[][8] = {
-  [GIRARA_DEBUG] = "debug",
-  [GIRARA_INFO] = "info",
-  [GIRARA_WARNING] = "warning",
-  [GIRARA_ERROR] = "error"
+    [GIRARA_DEBUG]   = "debug",
+    [GIRARA_INFO]    = "info",
+    [GIRARA_WARNING] = "warning",
+    [GIRARA_ERROR]   = "error",
 };
 
-void
-girara_vlog(const char* location, const char* function, girara_log_level_t level, const char* format, va_list ap)
-{
-  if (level < log_level || level < GIRARA_DEBUG || level > GIRARA_ERROR ) {
+void girara_vlog(const char* location, const char* function, girara_log_level_t level, const char* format, va_list ap) {
+  if (level < log_level || level < GIRARA_DEBUG || level > GIRARA_ERROR) {
     return;
   }
 
@@ -34,23 +32,17 @@ girara_vlog(const char* location, const char* function, girara_log_level_t level
   fprintf(stderr, "\n");
 }
 
-void
-girara_log(const char* location, const char* function, girara_log_level_t level, const char* format, ...)
-{
+void girara_log(const char* location, const char* function, girara_log_level_t level, const char* format, ...) {
   va_list ap;
   va_start(ap, format);
   girara_vlog(location, function, level, format, ap);
   va_end(ap);
 }
 
-girara_log_level_t
-girara_get_log_level(void)
-{
+girara_log_level_t girara_get_log_level(void) {
   return log_level;
 }
 
-void
-girara_set_log_level(girara_log_level_t level)
-{
+void girara_set_log_level(girara_log_level_t level) {
   log_level = level;
 }

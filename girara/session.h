@@ -132,8 +132,7 @@ char* girara_buffer_get(girara_session_t* session) GIRARA_VISIBLE;
  * @param format String format
  * @param ...
  */
-void girara_notify(girara_session_t* session, int level,
-    const char* format, ...) GIRARA_PRINTF(3, 4) GIRARA_VISIBLE;
+void girara_notify(girara_session_t* session, int level, const char* format, ...) GIRARA_PRINTF(3, 4) GIRARA_VISIBLE;
 
 /**
  * Creates a girara dialog
@@ -145,9 +144,9 @@ void girara_notify(girara_session_t* session, int level,
  * @param activate_event Callback function to a custom activate event handler
  * @param data Custom data that is passed to the callback functions
  */
-void girara_dialog(girara_session_t* session, const char* dialog, bool
-    invisible, girara_callback_inputbar_key_press_event_t key_press_event,
-    girara_callback_inputbar_activate_t activate_event, void* data) GIRARA_VISIBLE;
+void girara_dialog(girara_session_t* session, const char* dialog, bool invisible,
+                   girara_callback_inputbar_key_press_event_t key_press_event,
+                   girara_callback_inputbar_activate_t activate_event, void* data) GIRARA_VISIBLE;
 
 /**
  * Adds a new mode by its string identifier
@@ -221,6 +220,7 @@ GiraraTemplate* girara_session_get_template(girara_session_t* session) GIRARA_VI
  * @note Using the template @c girara_template_new("") will use the default gtk style
  *
  */
-void girara_session_set_template(girara_session_t* session, GiraraTemplate* template, bool init_variables) GIRARA_VISIBLE;
+void girara_session_set_template(girara_session_t* session, GiraraTemplate* template,
+                                 bool init_variables) GIRARA_VISIBLE;
 
 #endif

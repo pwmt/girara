@@ -6,10 +6,8 @@
 #include "internal.h"
 #include "settings.h"
 
-girara_statusbar_item_t*
-girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill,
-                          bool left, girara_statusbar_event_t callback)
-{
+girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, bool expand, bool fill, bool left,
+                                                   girara_statusbar_event_t callback) {
   g_return_val_if_fail(session != NULL, FALSE);
 
   girara_session_private_t* session_private = session->private_data;
@@ -54,14 +52,12 @@ void girara_statusbar_item_free(girara_statusbar_item_t* item) {
   g_free(item);
 }
 
-bool
-girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, const char* text)
-{
+bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, const char* text) {
   g_return_val_if_fail(session != NULL, false);
-  g_return_val_if_fail(item    != NULL, false);
+  g_return_val_if_fail(item != NULL, false);
 
   char* escaped_text = g_markup_escape_text(text, -1);
-  gtk_label_set_markup((GtkLabel*) item->text, escaped_text);
+  gtk_label_set_markup((GtkLabel*)item->text, escaped_text);
   g_free(escaped_text);
 
   return true;

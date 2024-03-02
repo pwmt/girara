@@ -33,29 +33,27 @@ struct girara_setting_s {
   bool init_only;                     /**< Option can be set only before girara gets initialized */
 };
 
-void
-girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, const void* value)
-{
+void girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, const void* value) {
   g_return_if_fail(setting && (value || setting->type == STRING));
 
-  switch(setting->type) {
-    case BOOLEAN:
-      setting->value.b = *((const bool *) value);
-      break;
-    case FLOAT:
-      setting->value.f = *((const float *) value);
-      break;
-    case INT:
-      setting->value.i = *((const int *) value);
-      break;
-    case STRING:
-      if (setting->value.s != NULL) {
-        g_free(setting->value.s);
-      }
-      setting->value.s = value ? g_strdup(value) : NULL;
-      break;
-    default:
-      g_assert(false);
+  switch (setting->type) {
+  case BOOLEAN:
+    setting->value.b = *((const bool*)value);
+    break;
+  case FLOAT:
+    setting->value.f = *((const float*)value);
+    break;
+  case INT:
+    setting->value.i = *((const int*)value);
+    break;
+  case STRING:
+    if (setting->value.s != NULL) {
+      g_free(setting->value.s);
+    }
+    setting->value.s = value ? g_strdup(value) : NULL;
+    break;
+  default:
+    g_assert(false);
   }
 
   if (session && setting->callback != NULL) {
@@ -63,9 +61,8 @@ girara_setting_set_value(girara_session_t* session, girara_setting_t* setting, c
   }
 }
 
-bool
-girara_setting_add(girara_session_t* session, const char* name, const void* value, girara_setting_type_t type, bool init_only, const char* description, girara_setting_callback_t callback, void* data)
-{
+bool girara_setting_add(girara_session_t* session, const char* name, const void* value, girara_setting_type_t type,
+                        bool init_only, const char* description, girara_setting_callback_t callback, void* data) {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
   g_return_val_if_fail(type != UNKNOWN, false);
@@ -94,9 +91,7 @@ girara_setting_add(girara_session_t* session, const char* name, const void* valu
   return true;
 }
 
-bool
-girara_setting_set(girara_session_t* session, const char* name, const void* value)
-{
+bool girara_setting_set(girara_session_t* session, const char* name, const void* value) {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(name != NULL, false);
 
@@ -109,46 +104,38 @@ girara_setting_set(girara_session_t* session, const char* name, const void* valu
   return true;
 }
 
-bool
-girara_setting_get_value(girara_setting_t* setting, void* dest)
-{
+bool girara_setting_get_value(girara_setting_t* setting, void* dest) {
   g_return_val_if_fail(setting != NULL && dest != NULL, false);
 
-  switch(setting->type) {
-    case BOOLEAN:
-    {
-      bool *bvalue = (bool *)dest;
-      *bvalue = setting->value.b;
-      break;
-    }
-    case FLOAT:
-    {
-      float *fvalue = (float *)dest;
-      *fvalue = setting->value.f;
-      break;
-    }
-    case INT:
-    {
-      int   *ivalue = (int*) dest;
-      *ivalue = setting->value.i;
-      break;
-    }
-    case STRING:
-    {
-      char **svalue = (char**) dest;
-      *svalue = setting->value.s ? g_strdup(setting->value.s) : NULL;
-      break;
-    }
-    default:
-      g_assert(false);
+  switch (setting->type) {
+  case BOOLEAN: {
+    bool* bvalue = (bool*)dest;
+    *bvalue      = setting->value.b;
+    break;
+  }
+  case FLOAT: {
+    float* fvalue = (float*)dest;
+    *fvalue       = setting->value.f;
+    break;
+  }
+  case INT: {
+    int* ivalue = (int*)dest;
+    *ivalue     = setting->value.i;
+    break;
+  }
+  case STRING: {
+    char** svalue = (char**)dest;
+    *svalue       = setting->value.s ? g_strdup(setting->value.s) : NULL;
+    break;
+  }
+  default:
+    g_assert(false);
   }
 
   return true;
 }
 
-bool
-girara_setting_get(girara_session_t* session, const char* name, void* dest)
-{
+bool girara_setting_get(girara_session_t* session, const char* name, void* dest) {
   g_return_val_if_fail(session != NULL && name != NULL && dest != NULL, false);
 
   girara_setting_t* setting = girara_setting_find(session, name);
@@ -159,9 +146,7 @@ girara_setting_get(girara_session_t* session, const char* name, void* dest)
   return girara_setting_get_value(setting, dest);
 }
 
-void
-girara_setting_free(girara_setting_t* setting)
-{
+void girara_setting_free(girara_setting_t* setting) {
   if (!setting) {
     return;
   }
@@ -188,14 +173,12 @@ girara_setting_t* girara_setting_find(girara_session_t* session, const char* nam
   return NULL;
 }
 
-const char*
-girara_setting_get_name(const girara_setting_t* setting) {
+const char* girara_setting_get_name(const girara_setting_t* setting) {
   g_return_val_if_fail(setting, NULL);
   return setting->name;
 }
 
-girara_setting_type_t
-girara_setting_get_type(girara_setting_t* setting) {
+girara_setting_type_t girara_setting_get_type(girara_setting_t* setting) {
   g_return_val_if_fail(setting, UNKNOWN);
   return setting->type;
 }
@@ -236,25 +219,24 @@ static void dump_setting(JsonBuilder* builder, const girara_setting_t* setting) 
   json_builder_set_member_name(builder, "value");
   const char* type = NULL;
   switch (setting->type) {
-    case BOOLEAN:
-      json_builder_add_boolean_value(builder, setting->value.b);
-      type = "boolean";
-      break;
-    case FLOAT:
-      json_builder_add_double_value(builder, setting->value.f);
-      type = "float";
-      break;
-    case INT:
-      json_builder_add_int_value(builder, setting->value.i);
-      type = "int";
-      break;
-    case STRING:
-      json_builder_add_string_value(builder,
-                                    setting->value.s ? setting->value.s : "");
-      type = "string";
-      break;
-    default:
-      girara_debug("Invalid setting: %s", setting->name);
+  case BOOLEAN:
+    json_builder_add_boolean_value(builder, setting->value.b);
+    type = "boolean";
+    break;
+  case FLOAT:
+    json_builder_add_double_value(builder, setting->value.f);
+    type = "float";
+    break;
+  case INT:
+    json_builder_add_int_value(builder, setting->value.i);
+    type = "int";
+    break;
+  case STRING:
+    json_builder_add_string_value(builder, setting->value.s ? setting->value.s : "");
+    type = "string";
+    break;
+  default:
+    girara_debug("Invalid setting: %s", setting->name);
   }
 
   if (type != NULL) {

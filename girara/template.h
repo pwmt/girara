@@ -19,18 +19,12 @@ struct girara_template_class_s {
   void (*changed)(GiraraTemplate*);
 };
 
-#define GIRARA_TYPE_TEMPLATE \
-  (girara_template_get_type())
-#define GIRARA_TEMPLATE(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplate))
-#define GIRARA_TEMPLATE_CLASS(obj) \
-  (G_TYPE_CHECK_CLASS_CAST((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplateClass))
-#define GIRARA_IS_TEMPLATE(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj), GIRARA_TYPE_TEMPLATE))
-#define GIRARA_IS_TEMPLATE_CLASS(obj) \
-  (G_TYPE_CHECK_CLASS_TYPE((obj), GIRARA_TYPE_TEMPLATE))
-#define GIRARA_TEMPLATE_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplateClass))
+#define GIRARA_TYPE_TEMPLATE (girara_template_get_type())
+#define GIRARA_TEMPLATE(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplate))
+#define GIRARA_TEMPLATE_CLASS(obj) (G_TYPE_CHECK_CLASS_CAST((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplateClass))
+#define GIRARA_IS_TEMPLATE(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), GIRARA_TYPE_TEMPLATE))
+#define GIRARA_IS_TEMPLATE_CLASS(obj) (G_TYPE_CHECK_CLASS_TYPE((obj), GIRARA_TYPE_TEMPLATE))
+#define GIRARA_TEMPLATE_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplateClass))
 
 /**
  * Returns the type of the template.

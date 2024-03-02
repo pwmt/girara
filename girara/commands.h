@@ -18,10 +18,9 @@
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_inputbar_command_add(girara_session_t* session,
-    const char* command, const char* abbreviation,
-    girara_command_function_t function, girara_completion_function_t completion,
-    const char* description) GIRARA_VISIBLE;
+bool girara_inputbar_command_add(girara_session_t* session, const char* command, const char* abbreviation,
+                                 girara_command_function_t function, girara_completion_function_t completion,
+                                 const char* description) GIRARA_VISIBLE;
 
 /**
  * Adds a special command
@@ -36,9 +35,8 @@ bool girara_inputbar_command_add(girara_session_t* session,
  * @return TRUE No error occurred
  * @return FALSE An error occurred
  */
-bool girara_special_command_add(girara_session_t* session, char identifier,
-    girara_inputbar_special_function_t function, bool always, int argument_n,
-    void* argument_data) GIRARA_VISIBLE;
+bool girara_special_command_add(girara_session_t* session, char identifier, girara_inputbar_special_function_t function,
+                                bool always, int argument_n, void* argument_data) GIRARA_VISIBLE;
 
 /**
  * Parse input and execute the command
@@ -48,6 +46,5 @@ bool girara_special_command_add(girara_session_t* session, char identifier,
  * @return TRUE No error occurred
  * @return FALSE An error occured */
 bool girara_command_run(girara_session_t* session, const char* input) GIRARA_VISIBLE;
-
 
 #endif
