@@ -91,10 +91,9 @@ void css_template_fill_font(GiraraTemplate* csstemplate, const char* font) {
     g_free(size);
   }
 
-  const unsigned int font_weight = pango_font_description_get_weight(descr);
-  char* font_weight_str          = g_strdup_printf("%u", font_weight);
-  girara_template_set_variable_value(csstemplate, "font-weight", font_weight_str);
-  g_free(font_weight_str);
+  char font_weight[G_ASCII_DTOSTR_BUF_SIZE];
+  g_ascii_dtostr(font_weight, G_ASCII_DTOSTR_BUF_SIZE, pango_font_description_get_weight(descr));
+  girara_template_set_variable_value(csstemplate, "font-weight", font_weight);
 
   pango_font_description_free(descr);
 }
