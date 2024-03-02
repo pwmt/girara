@@ -91,55 +91,10 @@ void css_template_fill_font(GiraraTemplate* csstemplate, const char* font) {
     g_free(size);
   }
 
-  switch (pango_font_description_get_weight(descr)) {
-  case PANGO_WEIGHT_THIN:
-    girara_template_set_variable_value(csstemplate, "font-weight", "thin");
-    break;
-
-  case PANGO_WEIGHT_ULTRALIGHT:
-    girara_template_set_variable_value(csstemplate, "font-weight", "ultralight");
-    break;
-
-  case PANGO_WEIGHT_SEMILIGHT:
-    girara_template_set_variable_value(csstemplate, "font-weight", "semilight");
-    break;
-
-  case PANGO_WEIGHT_LIGHT:
-    girara_template_set_variable_value(csstemplate, "font-weight", "light");
-    break;
-
-  case PANGO_WEIGHT_BOOK:
-    girara_template_set_variable_value(csstemplate, "font-weight", "book");
-    break;
-
-  case PANGO_WEIGHT_MEDIUM:
-    girara_template_set_variable_value(csstemplate, "font-weight", "medium");
-    break;
-
-  case PANGO_WEIGHT_SEMIBOLD:
-    girara_template_set_variable_value(csstemplate, "font-weight", "semibold");
-    break;
-
-  case PANGO_WEIGHT_BOLD:
-    girara_template_set_variable_value(csstemplate, "font-weight", "bold");
-    break;
-
-  case PANGO_WEIGHT_ULTRABOLD:
-    girara_template_set_variable_value(csstemplate, "font-weight", "ultrabold");
-    break;
-
-  case PANGO_WEIGHT_HEAVY:
-    girara_template_set_variable_value(csstemplate, "font-weight", "heavy");
-    break;
-
-  case PANGO_WEIGHT_ULTRAHEAVY:
-    girara_template_set_variable_value(csstemplate, "font-weight", "ultraheavy");
-    break;
-
-  default:
-    girara_template_set_variable_value(csstemplate, "font-weight", "normal");
-    break;
-  }
+  const unsigned int font_weight = pango_font_description_get_weight(descr);
+  char* font_weight_str          = g_strdup_printf("%u", font_weight);
+  girara_template_set_variable_value(csstemplate, "font-weight", font_weight_str);
+  g_free(font_weight_str);
 
   pango_font_description_free(descr);
 }
