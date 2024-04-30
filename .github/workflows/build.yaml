@@ -11,7 +11,11 @@ jobs:
   build-test-debian-trixie:
     name: Test on Debian trixie
     runs-on: ubuntu-latest
-    container: ghcr.io/pwmt/github-actions-debian:trixie
+    container:
+      image: ghcr.io/pwmt/github-actions-debian:trixie
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Build and test
