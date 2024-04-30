@@ -51,4 +51,4 @@ refer to the meson documentation for platform specific dependencies.
 Bugs
 ----
 
-Please report bugs at https://git.pwmt.org/pwmt/girara.
+Please report bugs at https://github.com/pwmt/girara.
