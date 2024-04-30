@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/pwmt/github-actions-debian:trixie
     steps:
-    - uses: actions/checkout@v4
-    - name: Build and test
-      run: |
-      - mkdir build
-      - cd build
-      - meson ..
-      - ninja --verbose
-      - ninja test --verbose
+      - uses: actions/checkout@v4
+      - name: Build and test
+        run: |
+          mkdir build
+          cd build
+          meson ..
+          ninja --verbose
+          ninja test --verbose
