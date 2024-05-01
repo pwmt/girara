@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.4.3',
+  version: '0.4.4',
   meson_version: '>=0.61',
   default_options: ['c_std=c17', 'warning_level=3'],
 )
@@ -31,7 +31,7 @@ localedir = get_option('localedir')
 
 # required dependencies
 libm = cc.find_library('m', required: false)
-glib = dependency('glib-2.0', version: '>=2.74')
+glib = dependency('glib-2.0', version: '>=2.72')
 gtk3 = dependency('gtk+-3.0', version: '>=3.24')
 pango = dependency('pango', version: '>=1.50')
 

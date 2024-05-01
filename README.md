@@ -14,7 +14,7 @@ Requirements
 The following dependencies are required:
 
 * `gtk3` (>= 3.24)
-* `glib` (>= 2.74)
+* `glib` (>= 2.72)
 
 The following dependencies are optional:
 
@@ -51,4 +51,4 @@ refer to the meson documentation for platform specific dependencies.
 Bugs
 ----
 
-Please report bugs at https://git.pwmt.org/pwmt/girara.
+Please report bugs at https://github.com/pwmt/girara.
