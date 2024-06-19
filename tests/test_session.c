@@ -1,40 +1,24 @@
 /* SPDX-License-Identifier: Zlib */
 
-#include <check.h>
-
 #include "session.h"
-#include "tests.h"
 
-START_TEST(test_create) {
+static void test_create(void) {
   girara_session_t* session = girara_session_create();
-  ck_assert_msg(session != NULL, "Could not create session");
+  g_assert_nonnull(session);
   girara_session_destroy(session);
-} END_TEST
-
-START_TEST(test_init) {
-  girara_session_t* session = girara_session_create();
-  ck_assert_msg(session != NULL, "Could not create session");
-  bool result = girara_session_init(session, NULL);
-  ck_assert_msg(result == true, "Could not init session");
-  girara_session_destroy(session);
-} END_TEST
-
-static Suite* suite_session(void)
-{
-  TCase* tcase = NULL;
-  Suite* suite = suite_create("Session");
-
-  /* basic */
-  tcase = tcase_create("basic");
-  tcase_add_checked_fixture(tcase, setup, NULL);
-  tcase_add_test(tcase, test_create);
-  tcase_add_test(tcase, test_init);
-  suite_add_tcase(suite, tcase);
-
-  return suite;
 }
 
-int main()
-{
-  return run_suite(suite_session());
+static void test_init(void) {
+  girara_session_t* session = girara_session_create();
+  g_assert_nonnull(session);
+  g_assert_true(girara_session_init(session, NULL));
+  girara_session_destroy(session);
+}
+
+int main(int argc, char* argv[]) {
+  gtk_init(NULL, NULL);
+  g_test_init(&argc, &argv, NULL);
+  g_test_add_func("/session/crate", test_create);
+  g_test_add_func("/session/init", test_init);
+  return g_test_run();
 }
