@@ -3,12 +3,7 @@
 #ifndef GIRARA_TESTS_H
 #define GIRARA_TESTS_H
 
-#include <check.h>
-
 #include <girara/log.h>
-
-int run_suite(Suite* suite);
-void setup(void);
 
 static void critical_print(const gchar* GIRARA_UNUSED(log_domain), GLogLevelFlags GIRARA_UNUSED(log_level),
                            const gchar* message, gpointer GIRARA_UNUSED(user_data)) {
