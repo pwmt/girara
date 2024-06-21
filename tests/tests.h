@@ -3,12 +3,8 @@
 #ifndef GIRARA_TESTS_H
 #define GIRARA_TESTS_H
 
-#include <stdio.h>
-
 static void glog_handler(const gchar* GIRARA_UNUSED(log_domain), GLogLevelFlags GIRARA_UNUSED(log_level),
-                         const gchar* message, gpointer GIRARA_UNUSED(user_data)) {
-  printf("# glog message: %s\n", message);
-}
+                         const gchar* GIRARA_UNUSED(message), gpointer GIRARA_UNUSED(user_data)) {}
 
 static gboolean ignore_all_log_errors(const gchar* GIRARA_UNUSED(log_domain), GLogLevelFlags GIRARA_UNUSED(log_level),
                                       const gchar* GIRARA_UNUSED(message), gpointer GIRARA_UNUSED(user_data)) {
