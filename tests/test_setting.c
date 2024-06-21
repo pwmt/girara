@@ -3,7 +3,11 @@
 #include "session.h"
 #include "settings.h"
 
+#include "tests.h"
+
 static void test_settings_basic(void) {
+  setup_logger();
+
   girara_session_t* session = girara_session_create();
   g_assert_nonnull(session);
 
@@ -53,6 +57,8 @@ static void setting_callback(girara_session_t* session, const char* name, girara
 }
 
 static void test_settings_callback(void) {
+  setup_logger();
+
   girara_session_t* session = girara_session_create();
   g_assert_nonnull(session);
 
@@ -64,6 +70,8 @@ static void test_settings_callback(void) {
 }
 
 int main(int argc, char* argv[]) {
+  setup_logger();
+
   gtk_init(NULL, NULL);
   g_test_init(&argc, &argv, NULL);
   g_test_add_func("/settings/basic", test_settings_basic);
