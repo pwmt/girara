@@ -5,7 +5,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-static girara_log_level_t log_level = GIRARA_DEBUG;
+static girara_log_level_t log_level = GIRARA_ERROR;
 
 static const char NAMES[][8] = {
     [GIRARA_DEBUG]   = "debug",
