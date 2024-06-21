@@ -78,7 +78,8 @@ if get_option('tests').allowed()
       env: [
         'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
         'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
-        'NO_AT_BRIDGE=1'
+        'NO_AT_BRIDGE=1',
+        'MESA_LOG=null'
       ]
     )
 
@@ -95,7 +96,8 @@ if get_option('tests').allowed()
       env: [
         'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
         'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
-        'NO_AT_BRIDGE=1'
+        'NO_AT_BRIDGE=1',
+        'MESA_LOG=null'
       ]
     )
 
@@ -112,7 +114,8 @@ if get_option('tests').allowed()
       env: [
         'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
         'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
-        'NO_AT_BRIDGE=1'
+        'NO_AT_BRIDGE=1',
+        'MESA_LOG=null'
       ]
     )
   endif
