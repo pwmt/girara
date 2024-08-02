@@ -300,8 +300,9 @@ girara_session_t* girara_session_create(void) {
 
   /* make notification text selectable */
   gtk_label_set_selectable(GTK_LABEL(session->gtk.notification_text), TRUE);
-  /* ellipsize notification text */
-  gtk_label_set_ellipsize(GTK_LABEL(session->gtk.notification_text), PANGO_ELLIPSIZE_END);
+  /* wrap notification text */
+  gtk_label_set_line_wrap(GTK_LABEL(session->gtk.notification_text), TRUE);
+  gtk_label_set_line_wrap_mode(GTK_LABEL(session->gtk.notification_text), PANGO_WRAP_WORD_CHAR);
 
   return session;
 }
@@ -403,7 +404,7 @@ bool girara_session_init(girara_session_t* session, const char* sessionname) {
 
   /* notification area */
   gtk_container_add(GTK_CONTAINER(session->gtk.notification_area), session->gtk.notification_text);
-  gtk_widget_set_halign(session->gtk.notification_text, GTK_ALIGN_START);
+  gtk_label_set_xalign(GTK_LABEL(session->gtk.notification_text), 0.0);
   gtk_widget_set_valign(session->gtk.notification_text, GTK_ALIGN_CENTER);
   gtk_label_set_use_markup(GTK_LABEL(session->gtk.notification_text), TRUE);
 
