@@ -423,12 +423,17 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
       unsigned int current_item = g_list_position(entries, entries_current);
 
       GList* tmpentry = entries;
+      girara_internal_completion_entry_t *tmp;
       for (unsigned int i = 0; i < n_elements; i++) {
+        tmp = (girara_internal_completion_entry_t*)tmpentry->data;
         if ((i >= (current_item - lh) && (i <= current_item + uh)) || (i < n_completion_items && current_item < lh) ||
             (i >= (n_elements - n_completion_items) && (current_item >= (n_elements - uh)))) {
-          gtk_widget_show(GTK_WIDGET(((girara_internal_completion_entry_t*)tmpentry->data)->widget));
+          gtk_widget_show(GTK_WIDGET(tmp->widget));
         } else {
-          gtk_widget_hide(GTK_WIDGET(((girara_internal_completion_entry_t*)tmpentry->data)->widget));
+          if (!tmp->group){
+
+            gtk_widget_hide(GTK_WIDGET(tmp->widget));
+          }
         }
 
         tmpentry = g_list_next(tmpentry);
