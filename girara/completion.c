@@ -420,20 +420,33 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
       unsigned int uh = ceil(n_completion_items / 2.0);
       unsigned int lh = floor(n_completion_items / 2.0);
 
-      unsigned int current_item = g_list_position(entries, entries_current);
+      unsigned int current_item  = g_list_position(entries, entries_current);
+      unsigned int current_group = current_item;
+
+      GList* tmp_group = entries_current;
+      bool has_group   = false;
+      while (tmp_group != NULL) {
+        if (((girara_internal_completion_entry_t*)tmp_group->data)->group) {
+          has_group = true;
+        }
+        current_group--;
+        tmp_group = tmp_group->prev;
+      }
 
       GList* tmpentry = entries;
-      girara_internal_completion_entry_t *tmp;
+      girara_internal_completion_entry_t* tmp;
       for (unsigned int i = 0; i < n_elements; i++) {
         tmp = (girara_internal_completion_entry_t*)tmpentry->data;
-        if ((i >= (current_item - lh) && (i <= current_item + uh)) || (i < n_completion_items && current_item < lh) ||
-            (i >= (n_elements - n_completion_items) && (current_item >= (n_elements - uh)))) {
+        /* If there is less than n-completion-items that need to be shown, show everything.
+         * Else, show n-completion-items items
+         * Additionally, the current group name is always shown */
+        if ((n_elements <= n_completion_items) || (i >= (current_item - lh) && (i <= current_item + uh)) ||
+            (i < n_completion_items && current_item < lh) ||
+            (i >= (n_elements - n_completion_items) && (current_item >= (n_elements - uh))) ||
+            (has_group && i == current_group)) {
           gtk_widget_show(GTK_WIDGET(tmp->widget));
         } else {
-          if (!tmp->group){
-
-            gtk_widget_hide(GTK_WIDGET(tmp->widget));
-          }
+          gtk_widget_hide(GTK_WIDGET(tmp->widget));
         }
 
         tmpentry = g_list_next(tmpentry);
