@@ -428,6 +428,7 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
       while (tmp_group != NULL) {
         if (((girara_internal_completion_entry_t*)tmp_group->data)->group) {
           has_group = true;
+          break;
         }
         current_group--;
         tmp_group = tmp_group->prev;
