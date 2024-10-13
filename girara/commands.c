@@ -23,6 +23,8 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
   static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
       {"BackSpace", GDK_KEY_BackSpace},
       {"CapsLock", GDK_KEY_Caps_Lock},
+      {"NumLock", GDK_KEY_Num_Lock},
+      {"ScrollLock", GDK_KEY_Scroll_Lock},
       {"Down", GDK_KEY_Down},
       {"Esc", GDK_KEY_Escape},
       {"F10", GDK_KEY_F10},
@@ -54,6 +56,19 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
       {"KPRight", GDK_KEY_KP_Right},
       {"KPUp", GDK_KEY_KP_Up},
       {"KPDown", GDK_KEY_KP_Down},
+      {"KPBegin", GDK_KEY_KP_Begin},
+      {"KPPrior", GDK_KEY_KP_Prior},
+      {"KPNext", GDK_KEY_KP_Next},
+      {"KPPageUp", GDK_KEY_KP_Prior},
+      {"KPPageDown", GDK_KEY_KP_Next},
+      {"KPEnd", GDK_KEY_KP_End},
+      {"KPHome", GDK_KEY_KP_Home},
+      {"KPInsert", GDK_KEY_KP_Insert},
+      {"KPDelete", GDK_KEY_KP_Delete},
+      {"KPMultiply", GDK_KEY_KP_Multiply},
+      {"KPAdd", GDK_KEY_KP_Add},
+      {"KPSubtract", GDK_KEY_KP_Subtract},
+      {"KPDivide", GDK_KEY_KP_Divide},
   };
 
   typedef struct gdk_mouse_button_s {
