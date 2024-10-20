@@ -152,6 +152,7 @@ pkg.generate(
 )
 
 girara_dependency = declare_dependency(link_with: girara, include_directories: include_directories)
+meson.override_dependency('girara-gtk3', girara_dependency)
 
 subdir('doc')
 subdir('tests')
