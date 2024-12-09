@@ -81,8 +81,7 @@ typedef bool (*girara_inputbar_special_function_t)(girara_session_t* session, co
  * Function declaration of a command function
  *
  * @param session The current girara session
- * @param argc Number of arguments
- * @param argv Arguments
+ * @param argument_list Arguments
  */
 typedef bool (*girara_command_function_t)(girara_session_t* session, girara_list_t* argument_list);
 

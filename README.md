@@ -28,7 +28,6 @@ For building girara, the following dependencies are also required:
 
 The following dependencies are optional build-time only dependencies:
 
-* `check` (>= 0.11): for tests
 * `doxygen`: HTML documentation
 
 To disable the optional support for `json-glib-1.0`, configure the build system

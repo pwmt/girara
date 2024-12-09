@@ -140,11 +140,23 @@ gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* ev
     if (session->events.buffer_changed != NULL) {
       session->events.buffer_changed(session);
     }
+  } else if (keyval == GDK_KEY_Escape) {
+    if (session_private->buffer.command != NULL) {
+      g_string_free(session_private->buffer.command, TRUE);
+      session_private->buffer.command = NULL;
+    }
+    if (session->global.buffer != NULL) {
+      g_string_free(session->global.buffer, TRUE);
+      session->global.buffer = NULL;
+    }
+    if (session->events.buffer_changed != NULL) {
+      session->events.buffer_changed(session);
+    }
   }
 
   /* check for buffer command */
   if (session_private->buffer.command != NULL) {
-    bool matching_command = FALSE;
+    bool matching_command = false;
 
     for (size_t idx = 0; idx != girara_list_size(session->bindings.shortcuts); ++idx) {
       girara_shortcut_t* shortcut = girara_list_nth(session->bindings.shortcuts, idx);
@@ -175,7 +187,7 @@ gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* ev
             return TRUE;
           }
 
-          matching_command = TRUE;
+          matching_command = true;
         }
       }
     }
@@ -338,7 +350,7 @@ gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* se
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
   if (session->signals.inputbar_custom_activate != NULL) {
-    bool return_value = session->signals.inputbar_custom_activate(entry, session->signals.inputbar_custom_data);
+    gboolean return_value = session->signals.inputbar_custom_activate(entry, session->signals.inputbar_custom_data);
 
     /* disconnect custom handler */
     session->signals.inputbar_custom_activate        = NULL;

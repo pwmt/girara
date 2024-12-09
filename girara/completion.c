@@ -118,6 +118,17 @@ void girara_completion_group_add_element(girara_completion_group_t* group, const
   girara_list_append(group->elements, new_element);
 }
 
+static unsigned int find_completion_group_index(GList* current_entry, unsigned int current_index) {
+  for (; current_entry != NULL; current_entry = current_entry->prev, --current_index) {
+    girara_internal_completion_entry_t* tmp = current_entry->data;
+    if (tmp->group) {
+      return current_index;
+    }
+  }
+
+  return UINT_MAX;
+}
+
 bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event),
                            unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
@@ -417,18 +428,24 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
       /* hide other items */
       unsigned int n_completion_items = 15;
       girara_setting_get(session, "n-completion-items", &n_completion_items);
-      unsigned int uh = ceil(n_completion_items / 2.0);
-      unsigned int lh = floor(n_completion_items / 2.0);
+      const unsigned int uh = ceil(n_completion_items / 2.0);
+      const unsigned int lh = floor(n_completion_items / 2.0);
 
-      unsigned int current_item = g_list_position(entries, entries_current);
+      const unsigned int current_item  = g_list_position(entries, entries_current);
+      const unsigned int current_group = find_completion_group_index(entries_current, current_item);
 
       GList* tmpentry = entries;
       for (unsigned int i = 0; i < n_elements; i++) {
-        if ((i >= (current_item - lh) && (i <= current_item + uh)) || (i < n_completion_items && current_item < lh) ||
-            (i >= (n_elements - n_completion_items) && (current_item >= (n_elements - uh)))) {
-          gtk_widget_show(GTK_WIDGET(((girara_internal_completion_entry_t*)tmpentry->data)->widget));
+        girara_internal_completion_entry_t* tmp = tmpentry->data;
+        /* If there is less than n-completion-items that need to be shown, show everything.
+         * Else, show n-completion-items items
+         * Additionally, the current group name is always shown */
+        if ((n_elements <= n_completion_items) || (i >= (current_item - lh) && (i <= current_item + uh)) ||
+            (i < n_completion_items && current_item < lh) ||
+            (i >= (n_elements - n_completion_items) && (current_item >= (n_elements - uh))) || (i == current_group)) {
+          gtk_widget_show(GTK_WIDGET(tmp->widget));
         } else {
-          gtk_widget_hide(GTK_WIDGET(((girara_internal_completion_entry_t*)tmpentry->data)->widget));
+          gtk_widget_hide(GTK_WIDGET(tmp->widget));
         }
 
         tmpentry = g_list_next(tmpentry);

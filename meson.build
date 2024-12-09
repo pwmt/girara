@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '0.4.4',
+  version: '0.4.5',
   meson_version: '>=0.61',
   default_options: ['c_std=c17', 'warning_level=3'],
 )
@@ -152,6 +152,7 @@ pkg.generate(
 )
 
 girara_dependency = declare_dependency(link_with: girara, include_directories: include_directories)
+meson.override_dependency('girara-gtk3', girara_dependency)
 
 subdir('doc')
 subdir('tests')
