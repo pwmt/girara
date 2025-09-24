@@ -43,7 +43,7 @@ has_getpwnam_r = cc.has_function('getpwnam_r', prefix: '#define _DEFAULT_SOURCE\
 
 # defines
 defines = [
-  '-DGETTEXT_PACKAGE="libgirara-gtk3-@0@"'.format(so_major),
+  '-DGETTEXT_PACKAGE="org.pwmt.girara.gtk3.@0@"'.format(so_major),
   '-DLOCALEDIR="@0@"'.format(join_paths(prefix, localedir)),
   '-D_DEFAULT_SOURCE',
 ]
