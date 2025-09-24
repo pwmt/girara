@@ -22,7 +22,7 @@ The following dependencies are optional:
 
 For building girara, the following dependencies are also required:
 
-* `meson` (>= 0.61)
+* `meson` (>= 1.0)
 * `gettext`
 * `pkgconf`
 
