@@ -26,6 +26,24 @@ jobs:
           ninja --verbose
           ninja test --verbose
 
+  build-test-debian-forky:
+    name: Test on Debian forky
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/pwmt/github-actions-debian:forky
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test
+        run: |
+          mkdir build
+          cd build
+          meson ..
+          ninja --verbose
+          ninja test --verbose
+
   build-test-ubuntu-noble:
     name: Test on Ubuntu noble
     runs-on: ubuntu-latest
