@@ -260,60 +260,6 @@ char* girara_file_read_line(FILE* file) {
 }
 #endif
 
-char* girara_file_read(const char* path) {
-  if (path == NULL) {
-    return NULL;
-  }
-
-  FILE* file = girara_file_open(path, "r");
-  if (file == NULL) {
-    return NULL;
-  }
-
-  char* content = girara_file_read2(file);
-  fclose(file);
-  return content;
-}
-
-char* girara_file_read2(FILE* file) {
-  if (file == NULL) {
-    return NULL;
-  }
-
-  const off_t curpos = ftello(file);
-  if (curpos == -1) {
-    return NULL;
-  }
-
-  fseeko(file, 0, SEEK_END);
-  const off_t size = ftello(file) - curpos;
-  fseeko(file, curpos, SEEK_SET);
-
-  if (size == 0) {
-    return g_try_malloc0(1);
-  }
-
-  /* this can happen on 32 bit systems */
-  if ((uintmax_t)size >= (uintmax_t)SIZE_MAX) {
-    girara_error("file is too large");
-    return NULL;
-  }
-
-  char* buffer = g_try_malloc(size + 1);
-  if (buffer == NULL) {
-    return NULL;
-  }
-
-  size_t read = fread(buffer, size, 1, file);
-  if (read != 1) {
-    free(buffer);
-    return NULL;
-  }
-
-  buffer[size] = '\0';
-  return buffer;
-}
-
 void girara_clean_line(char* line) {
   if (line == NULL) {
     return;

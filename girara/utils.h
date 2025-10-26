@@ -94,22 +94,6 @@ FILE* girara_file_open(const char* path, const char* mode) GIRARA_VISIBLE;
 char* girara_file_read_line(FILE* file) GIRARA_VISIBLE;
 
 /**
- * Reads the whole content from a file. Returned string has to be released with g_free.
- *
- * @param path Path to the file
- * @return Read file or NULL if an error occurred
- */
-char* girara_file_read(const char* path) GIRARA_VISIBLE;
-
-/**
- * Reads the whole content from a file. Returned string has to be released with g_free.
- *
- * @param file file to read
- * @return Read file or NULL if an error occurred
- */
-char* girara_file_read2(FILE* file) GIRARA_VISIBLE;
-
-/**
  * Trims and cleans a line from multiple whitespaces
  *
  * @param line

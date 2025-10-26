@@ -137,7 +137,6 @@ static void test_file_invariants(void) {
   g_assert_null(girara_file_open(NULL, "r"));
 
   g_assert_null(girara_file_read_line(NULL));
-  g_assert_null(girara_file_read(NULL));
 }
 
 static void test_file_read(void) {
@@ -153,10 +152,6 @@ static void test_file_read(void) {
   if (g_file_set_contents(path, CONTENT, -1, NULL) == FALSE) {
     g_assert_not_reached();
   }
-
-  char* content = girara_file_read(path);
-  g_assert_cmpstr(content, ==, CONTENT);
-  free(content);
 
   FILE* file = girara_file_open(path, "r");
   g_assert_nonnull(file);
