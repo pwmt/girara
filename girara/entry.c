@@ -50,4 +50,6 @@ static void girara_entry_paste_primary(GiraraEntry* self) {
   } else {
     gtk_widget_error_bell(GTK_WIDGET(self));
   }
+
+  g_value_unset(&editable);
 }
