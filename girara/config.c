@@ -250,27 +250,41 @@ void girara_config_handle_free(girara_config_handle_t* handle) {
 
 static bool config_parse(girara_session_t* session, const char* path) {
   /* open file */
-  FILE* file = girara_file_open(path, "r");
+  GFile* f = g_file_new_for_path(path);
+  if (f == NULL) {
+    girara_debug("failed to open config file '%s'", path);
+    return false;
+  }
 
-  if (file == NULL) {
+  GFileInputStream* stream = g_file_read(f, NULL, NULL);
+  g_object_unref(f);
+  if (stream == NULL) {
+    girara_debug("failed to open config file '%s'", path);
+    return false;
+  }
+
+  GDataInputStream* datastream = g_data_input_stream_new(G_INPUT_STREAM(stream));
+  g_object_unref(stream);
+  if (datastream == NULL) {
     girara_debug("failed to open config file '%s'", path);
     return false;
   }
 
   /* read lines */
   char* line               = NULL;
+  gsize line_length        = 0;
   unsigned int line_number = 1;
-  while ((line = girara_file_read_line(file)) != NULL) {
+  while ((line = g_data_input_stream_read_line(datastream, &line_length, NULL, NULL)) != NULL) {
     /* skip empty lines and comments */
-    if (strlen(line) == 0 || strchr(COMMENT_PREFIX, line[0]) != NULL) {
+    if (line_length == 0 || strchr(COMMENT_PREFIX, line[0]) != NULL) {
       g_free(line);
       continue;
     }
 
     girara_list_t* argument_list = girara_list_new_with_free(g_free);
     if (argument_list == NULL) {
+      g_object_unref(datastream);
       g_free(line);
-      fclose(file);
       return false;
     }
 
@@ -290,7 +304,7 @@ static bool config_parse(girara_session_t* session, const char* path) {
         girara_error("Could not parse line %d in '%s': %s", line_number, path, error->message);
 
         g_error_free(error);
-        fclose(file);
+        g_object_unref(datastream);
         g_free(line);
         return false;
       } else {
@@ -350,7 +364,7 @@ static bool config_parse(girara_session_t* session, const char* path) {
     g_free(line);
   }
 
-  fclose(file);
+  g_object_unref(datastream);
   return true;
 }
 
