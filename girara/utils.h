@@ -76,24 +76,6 @@ girara_list_t* girara_split_path_array(const char* patharray) GIRARA_VISIBLE;
 char* girara_fix_path(const char* path) GIRARA_VISIBLE;
 
 /**
- * Open a file in a safe way
- *
- * @param path Path of the file
- * @param mode Mode that the file should be opened
- * @return NULL if an error occurred
- */
-FILE* girara_file_open(const char* path, const char* mode) GIRARA_VISIBLE;
-
-/**
- * Reads a line from the file. The returned string has to be released with
- * g_free.
- *
- * @param file The file stream
- * @return Read line or NULL if an error occurred
- */
-char* girara_file_read_line(FILE* file) GIRARA_VISIBLE;
-
-/**
  * Trims and cleans a line from multiple whitespaces
  *
  * @param line
