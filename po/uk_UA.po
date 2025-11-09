@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-08 15:10+0100\n"
+"POT-Creation-Date: 2025-11-09 17:55+0100\n"
 "PO-Revision-Date: 2012-03-26 16:41+0000\n"
 "Last-Translator: Юрій Яновський <lytvyn349@ukr.net>\n"
 "Language-Team: Ukrainian (Ukraine) (http://app.transifex.com/pwmt/girara/"
@@ -20,226 +20,227 @@ msgstr ""
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: girara/commands.c:111 girara/commands.c:316
+#: girara/commands.c:113 girara/commands.c:318
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Неправильна кількість переданих аргументів: %zu замість принаймні %u"
 
-#: girara/commands.c:147
+#: girara/commands.c:150
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Вказано незареєстрований режим: %s"
 
-#: girara/commands.c:181
+#: girara/commands.c:184
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Недійсний модифікатор у %s"
 
-#: girara/commands.c:220
+#: girara/commands.c:223
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Недійсне спеціальне значення клавіші для %s"
 
-#: girara/commands.c:256
+#: girara/commands.c:259
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Недійсне значення спеціальної клавіші або режиму %s"
 
-#: girara/commands.c:341
+#: girara/commands.c:344
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Неправильна функція скорочення: %s"
 
-#: girara/commands.c:430
+#: girara/commands.c:422
 msgid "Not enough arguments."
 msgstr "Аргументів недостатньо."
 
-#: girara/commands.c:435
+#: girara/commands.c:427
 msgid "Too many arguments."
 msgstr "Занадто багато аргументів."
 
-#: girara/commands.c:448
+#: girara/commands.c:440
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Невідомий параметр:% s"
 
-#: girara/commands.c:462
+#: girara/commands.c:453
 msgid "true"
 msgstr "правда"
 
-#: girara/commands.c:462
+#: girara/commands.c:453
 msgid "false"
 msgstr "неправда"
 
-#: girara/commands.c:494
+#: girara/commands.c:482
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Не визначено значення для параметра: %s"
 
-#: girara/commands.c:509
+#: girara/commands.c:497
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Невідоме значення для параметра: %s"
 
 #. unhandled command
-#: girara/commands.c:696
+#: girara/commands.c:671
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Неправильна команда: %s"
 
+#. clang-format off
 #. settings
-#: girara/config.c:133
+#: girara/config.c:123
 msgid "Font"
 msgstr "Шрифт"
 
-#: girara/config.c:134
+#: girara/config.c:124
 msgid "Default foreground color"
 msgstr "Типовий колір тексту"
 
-#: girara/config.c:135
+#: girara/config.c:125
 msgid "Default background color"
 msgstr "Типовий колір тла"
 
-#: girara/config.c:136
+#: girara/config.c:126
 msgid "Inputbar foreground color"
 msgstr "Колір тексту панелі введення"
 
-#: girara/config.c:137
+#: girara/config.c:127
 msgid "Inputbar background color"
 msgstr "Колір тла панелі введення"
 
-#: girara/config.c:138
+#: girara/config.c:128
 msgid "Statusbar foreground color"
 msgstr "Колір тексту панелі стану"
 
-#: girara/config.c:139
+#: girara/config.c:129
 msgid "Statsubar background color"
 msgstr "Колір тла панелі стану"
 
-#: girara/config.c:140
+#: girara/config.c:130
 msgid "Completion foreground color"
 msgstr "Колір тексту автодоповнення"
 
-#: girara/config.c:141
+#: girara/config.c:131
 msgid "Completion background color"
 msgstr "Колір тла автодоповнення"
 
-#: girara/config.c:142
+#: girara/config.c:132
 msgid "Completion group foreground color"
 msgstr "Колір тексту групи автодоповнення"
 
-#: girara/config.c:143
+#: girara/config.c:133
 msgid "Completion group background color"
 msgstr "Колір тла групи автодоповнення"
 
-#: girara/config.c:144
+#: girara/config.c:134
 msgid "Completion highlight foreground color"
 msgstr "Колір тексту виділення в автодоповненні"
 
-#: girara/config.c:145
+#: girara/config.c:135
 msgid "Completion highlight background color"
 msgstr "Колір тла виділення в автодоповненні"
 
-#: girara/config.c:146
+#: girara/config.c:136
 msgid "Error notification foreground color"
 msgstr "Колір тексту сповіщення про помилку"
 
-#: girara/config.c:147
+#: girara/config.c:137
 msgid "Error notification background color"
 msgstr "Колір тла сповіщення про помилку"
 
-#: girara/config.c:148
+#: girara/config.c:138
 msgid "Warning notification foreground color"
 msgstr "Колір тексту у сповіщеннях-попередженнях"
 
-#: girara/config.c:149
+#: girara/config.c:139
 msgid "Warning notifaction background color"
 msgstr "Колір тла у сповіщеннях-попередженнях"
 
-#: girara/config.c:150
+#: girara/config.c:140
 msgid "Notification foreground color"
 msgstr "Колір тексту сповіщень"
 
-#: girara/config.c:151
+#: girara/config.c:141
 msgid "Notification background color"
 msgstr "Колір тла сповіщень"
 
-#: girara/config.c:152
+#: girara/config.c:142
 msgid "Scrollbar foreground color"
 msgstr "Колір смуги прокрутки"
 
-#: girara/config.c:153
+#: girara/config.c:143
 msgid "Scrollbar background color"
 msgstr "Тло смуги прокрутки"
 
-#: girara/config.c:155
+#: girara/config.c:145
 msgid "Initial window width"
 msgstr "Початкова ширина вікна"
 
-#: girara/config.c:156
+#: girara/config.c:146
 msgid "Initial window height"
 msgstr "Початкова висота вікна"
 
-#: girara/config.c:157
+#: girara/config.c:147
 msgid "Horizontal padding for the status, input, and notification bars"
 msgstr "Горизонтальні проміжки для панелей стану, вводу та сповіщення"
 
-#: girara/config.c:158
+#: girara/config.c:148
 msgid "Vertical padding for the status, input, and notification bars"
 msgstr "Вертикальні проміжки для панелей стану, вводу та сповіщення"
 
-#: girara/config.c:159
+#: girara/config.c:149
 msgid "Number of completion items"
 msgstr "Кількість елементів автодоповнення"
 
-#: girara/config.c:160
+#: girara/config.c:150
 msgid "Window icon"
 msgstr "Значок вікна"
 
-#: girara/config.c:161
+#: girara/config.c:151
 msgid "Command to execute in :exec"
 msgstr "Команда для виконання у :exec"
 
-#: girara/config.c:162
+#: girara/config.c:152
 msgid "Show or hide certain GUI elements"
 msgstr "Показати або приховати певні елементи графічного інтерфейсу"
 
 #. commands
-#: girara/config.c:198
+#: girara/config.c:188
 msgid "Execute a command"
 msgstr "Виконати команду"
 
-#: girara/config.c:199
+#: girara/config.c:189
 msgid "Map a key sequence"
 msgstr "Створити комбінацію клавіш"
 
-#: girara/config.c:200
+#: girara/config.c:190
 msgid "Quit the program"
 msgstr "Вийти з програму"
 
-#: girara/config.c:201
+#: girara/config.c:191
 msgid "Set an option"
 msgstr "Задати параметр"
 
-#: girara/config.c:202
+#: girara/config.c:192
 msgid "Unmap a key sequence"
 msgstr "Вилучити комбінацію клавіш"
 
-#: girara/config.c:204
+#: girara/config.c:194
 msgid "Dump settings to a file"
 msgstr "Зберегти налаштування у файл"
 
-#: girara/settings.c:284
+#: girara/settings.c:264
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr "Неправильна кількість переданих аргументів: %zu замість 1"
 
-#: girara/settings.c:306
+#: girara/settings.c:286
 #, c-format
 msgid "Failed to write JSON: %s"
 msgstr ""
 
-#: girara/utils.c:473
+#: girara/utils.c:289
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Не вдалося виконати команду: %s"
