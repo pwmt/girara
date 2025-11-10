@@ -59,14 +59,6 @@ bool girara_xdg_open(const char* uri) GIRARA_VISIBLE;
 bool girara_xdg_open_with_working_directory(const char* uri, const char* working_directory) GIRARA_VISIBLE;
 
 /**
- * Splits paths separated by : (as in $PATH) into a list.
- *
- * @param patharray String like $PATH to split
- * @return a list of paths and NULL on failure.
- */
-girara_list_t* girara_split_path_array(const char* patharray) GIRARA_VISIBLE;
-
-/**
  * Returns a "fixed" version of path. Which means, it will be an absolute path
  * and fully expanded. ~ and ~user will be replaced by the current user's home
  * directory (user's home directory respectively).

@@ -131,24 +131,6 @@ static void test_xdg_path(void) {
   xdg_path_impl(XDG_CACHE, "XDG_CACHE_HOME", g_get_user_cache_dir());
 }
 
-static void test_split_path(void) {
-  g_assert_null(girara_split_path_array(NULL));
-  g_assert_null(girara_split_path_array(""));
-
-  girara_list_t* res = girara_split_path_array("one/path");
-  g_assert_nonnull(res);
-  g_assert_cmpuint(girara_list_size(res), ==, 1);
-  g_assert_cmpstr(girara_list_nth(res, 0), ==, "one/path");
-  girara_list_free(res);
-
-  res = girara_split_path_array("first/path:second/path");
-  g_assert_nonnull(res);
-  g_assert_cmpuint(girara_list_size(res), ==, 2);
-  g_assert_cmpstr(girara_list_nth(res, 0), ==, "first/path");
-  g_assert_cmpstr(girara_list_nth(res, 1), ==, "second/path");
-  girara_list_free(res);
-}
-
 static void test_strings_replace_substrings_invalid(void) {
   g_assert_null(girara_replace_substring(NULL, NULL, NULL));
   g_assert_null(girara_replace_substring("", NULL, NULL));
@@ -189,7 +171,6 @@ int main(int argc, char* argv[]) {
   g_test_add_func("/home/get_home", test_home_directory_get_HOME);
   g_test_add_func("/path/fix_basic", test_fix_path_basic);
   g_test_add_func("/path/fix_extend", test_fix_path_extended);
-  g_test_add_func("/path/split", test_split_path);
   g_test_add_func("/string/replace_1", test_strings_replace_substrings_1);
   g_test_add_func("/string/replace_2", test_strings_replace_substrings_2);
   g_test_add_func("/string/replace_3", test_strings_replace_substrings_3);
