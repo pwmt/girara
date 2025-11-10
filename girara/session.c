@@ -65,6 +65,7 @@ static void init_template_engine(GiraraTemplate* csstemplate) {
       "font-family",
       "font-size",
       "font-weight",
+      "font-style",
   };
 
   for (size_t idx = 0; idx < LENGTH(variable_names); ++idx) {
@@ -96,6 +97,14 @@ void css_template_fill_font(GiraraTemplate* csstemplate, const char* font) {
   girara_template_set_variable_value(csstemplate, "font-weight", font_weight_str);
   g_free(font_weight_str);
 
+  static const char STYLE_TO_STR[3][10] = {
+      [PANGO_STYLE_NORMAL]  = "normal",
+      [PANGO_STYLE_ITALIC]  = "italic",
+      [PANGO_STYLE_OBLIQUE] = "oblique",
+  };
+  const PangoStyle style = pango_font_description_get_style(descr);
+  girara_template_set_variable_value(csstemplate, "font-style", STYLE_TO_STR[style]);
+
   pango_font_description_free(descr);
 }
 
@@ -113,6 +122,7 @@ static void fill_template_with_values(girara_session_t* session) {
     girara_template_set_variable_value(csstemplate, "font-family", "monospace");
     girara_template_set_variable_value(csstemplate, "font-size", "9pt");
     girara_template_set_variable_value(csstemplate, "font-weight", "normal");
+    girara_template_set_variable_value(csstemplate, "font-style", "normal");
   };
 
   /* parse color values */
