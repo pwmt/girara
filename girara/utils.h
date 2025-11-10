@@ -76,13 +76,6 @@ girara_list_t* girara_split_path_array(const char* patharray) GIRARA_VISIBLE;
 char* girara_fix_path(const char* path) GIRARA_VISIBLE;
 
 /**
- * Trims and cleans a line from multiple whitespaces
- *
- * @param line
- */
-void girara_clean_line(char* line) GIRARA_VISIBLE;
-
-/**
  * Escape \\, \\t, ", ' and spaces in strings.
  * @param value The string to be escaped.
  * @returns The escaped string. Needs to be freed with g_free.

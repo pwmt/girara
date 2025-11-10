@@ -195,32 +195,6 @@ girara_list_t* girara_split_path_array(const char* patharray) {
   return res;
 }
 
-void girara_clean_line(char* line) {
-  if (line == NULL) {
-    return;
-  }
-
-  size_t i     = 0;
-  size_t j     = 0;
-  bool ws_mode = true;
-
-  for (i = 0; i < strlen(line); ++i) {
-    if (isspace(line[i]) != 0) {
-      if (ws_mode == true) {
-        continue;
-      }
-
-      line[j++] = ' ';
-      ws_mode   = true;
-    } else {
-      line[j++] = line[i];
-      ws_mode   = false;
-    }
-  }
-
-  line[j] = '\0';
-}
-
 char* girara_escape_string(const char* value) {
   if (value == NULL) {
     return NULL;
