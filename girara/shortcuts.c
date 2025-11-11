@@ -12,8 +12,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-static void girara_toggle_widget_visibility(GtkWidget* widget);
-
 bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, const char* buffer,
                          girara_shortcut_function_t function, girara_mode_t mode, int argument_n, void* argument_data) {
   g_return_val_if_fail(session != NULL, false);
