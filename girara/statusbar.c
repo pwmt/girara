@@ -48,10 +48,6 @@ girara_statusbar_item_t* girara_statusbar_item_add(girara_session_t* session, bo
   return item;
 }
 
-void girara_statusbar_item_free(girara_statusbar_item_t* item) {
-  g_free(item);
-}
-
 bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_item_t* item, const char* text) {
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(item != NULL, false);

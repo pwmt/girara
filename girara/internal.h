@@ -30,19 +30,11 @@ HIDDEN void girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping);
 
 HIDDEN void girara_shortcut_free(girara_shortcut_t* shortcut);
 
-HIDDEN void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* shortcut);
-
 HIDDEN void girara_mode_string_free(girara_mode_string_t* mode);
-
-HIDDEN void girara_statusbar_item_free(girara_statusbar_item_t* statusbaritem);
 
 HIDDEN void girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping);
 
-HIDDEN void girara_special_command_free(girara_special_command_t* special_command);
-
 HIDDEN void girara_command_free(girara_command_t* command);
-
-HIDDEN void girara_mouse_event_free(girara_mouse_event_t* mouse_event);
 
 HIDDEN void girara_config_load_default(girara_session_t* session);
 

@@ -585,10 +585,6 @@ bool girara_special_command_add(girara_session_t* session, char identifier, gira
   return true;
 }
 
-void girara_special_command_free(girara_special_command_t* special_command) {
-  g_free(special_command);
-}
-
 void girara_command_free(girara_command_t* command) {
   if (command == NULL) {
     return;

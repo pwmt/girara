@@ -122,10 +122,6 @@ bool girara_inputbar_shortcut_remove(girara_session_t* session, guint modifier, 
   return true;
 }
 
-void girara_inputbar_shortcut_free(girara_inputbar_shortcut_t* inputbar_shortcut) {
-  g_free(inputbar_shortcut);
-}
-
 bool girara_isc_activate(girara_session_t* session, girara_argument_t* UNUSED(argument), girara_event_t* UNUSED(event),
                          unsigned int UNUSED(t)) {
   girara_callback_inputbar_activate(session->gtk.inputbar_entry, session);
@@ -714,8 +710,4 @@ bool girara_mouse_event_remove(girara_session_t* session, guint mask, guint butt
   }
 
   return false;
-}
-
-void girara_mouse_event_free(girara_mouse_event_t* mouse_event) {
-  g_free(mouse_event);
 }
