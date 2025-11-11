@@ -97,7 +97,7 @@ void css_template_fill_font(GiraraTemplate* csstemplate, const char* font) {
   girara_template_set_variable_value(csstemplate, "font-weight", font_weight_str);
   g_free(font_weight_str);
 
-  static const char STYLE_TO_STR[3][10] = {
+  static const char STYLE_TO_STR[3][8] = {
       [PANGO_STYLE_NORMAL]  = "normal",
       [PANGO_STYLE_ITALIC]  = "italic",
       [PANGO_STYLE_OBLIQUE] = "oblique",
