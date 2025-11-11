@@ -302,7 +302,11 @@ void girara_list_sort(girara_list_t* list, girara_compare_function_t compare) {
   }
 
   comparer_t comp = {compare};
+#if GLIB_CHECK_VERSION(2, 81, 1)
   g_sort_array(list->start, list->size, sizeof(void*), comparer, &comp);
+#else
+  g_qsort_with_data(list->start, list->size, sizeof(void*), comparer, &comp);
+#endif
 }
 
 void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data) {

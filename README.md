@@ -14,7 +14,7 @@ Requirements
 The following dependencies are required:
 
 * `gtk3` (>= 3.24)
-* `glib` (>= 2.81.1)
+* `glib` (>= 2.72)
 
 The following dependencies are optional:
 
