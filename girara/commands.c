@@ -626,11 +626,8 @@ bool girara_command_run(girara_session_t* session, const char* input) {
         return false;
       }
 
-      girara_list_set_free_function(argument_list, g_free);
-
       for (int i = 1; i < argc; i++) {
-        char* argument = g_strdup(argv[i]);
-        girara_list_append(argument_list, (void*)argument);
+        girara_list_append(argument_list, argv[i]);
       }
 
       binding_command->function(session, argument_list);
