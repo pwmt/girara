@@ -586,14 +586,12 @@ bool girara_special_command_add(girara_session_t* session, char identifier, gira
 }
 
 void girara_command_free(girara_command_t* command) {
-  if (command == NULL) {
-    return;
+  if (command != NULL) {
+    g_free(command->description);
+    g_free(command->abbr);
+    g_free(command->command);
+    g_free(command);
   }
-
-  g_free(command->description);
-  g_free(command->abbr);
-  g_free(command->command);
-  g_free(command);
 }
 
 bool girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list) {

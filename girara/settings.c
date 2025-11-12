@@ -147,16 +147,14 @@ bool girara_setting_get(girara_session_t* session, const char* name, void* dest)
 }
 
 void girara_setting_free(girara_setting_t* setting) {
-  if (!setting) {
-    return;
+  if (setting != NULL) {
+    if (setting->type == STRING) {
+      g_free(setting->value.s);
+    }
+    g_free(setting->description);
+    g_free(setting->name);
+    g_free(setting);
   }
-
-  if (setting->type == STRING) {
-    g_free(setting->value.s);
-  }
-  g_free(setting->description);
-  g_free(setting->name);
-  g_free(setting);
 }
 
 girara_setting_t* girara_setting_find(girara_session_t* session, const char* name) {

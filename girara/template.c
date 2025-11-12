@@ -46,15 +46,12 @@ static variable_t* new_variable(const char* name) {
 }
 
 static void free_variable(void* data) {
-  if (data == NULL) {
-    return;
+  if (data != NULL) {
+    variable_t* variable = data;
+    g_free(variable->value);
+    g_free(variable->name);
+    g_free(variable);
   }
-
-  variable_t* variable = data;
-
-  g_free(variable->value);
-  g_free(variable->name);
-  g_free(variable);
 }
 
 static int compare_variable_name(const void* data1, const void* data2) {

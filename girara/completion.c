@@ -48,14 +48,11 @@ struct girara_completion_s {
 typedef struct girara_internal_completion_entry_s girara_internal_completion_entry_t;
 
 static void completion_element_free(girara_completion_element_t* element) {
-  if (element == NULL) {
-    return;
+  if (element != NULL) {
+    g_free(element->description);
+    g_free(element->value);
+    g_free(element);
   }
-
-  /* free element */
-  g_free(element->description);
-  g_free(element->value);
-  g_free(element);
 }
 
 girara_completion_t* girara_completion_init(void) {
@@ -87,23 +84,18 @@ void girara_completion_add_group(girara_completion_t* completion, girara_complet
 }
 
 void girara_completion_group_free(girara_completion_group_t* group) {
-  if (group == NULL) {
-    return;
+  if (group != NULL) {
+    girara_list_free(group->elements);
+    g_free(group->value);
+    g_free(group);
   }
-
-  girara_list_free(group->elements);
-  g_free(group->value);
-  g_free(group);
 }
 
 void girara_completion_free(girara_completion_t* completion) {
-  if (completion == NULL) {
-    return;
+  if (completion != NULL) {
+    girara_list_free(completion->groups);
+    g_free(completion);
   }
-
-  girara_list_free(completion->groups);
-  /* free completion */
-  g_free(completion);
 }
 
 void girara_completion_group_add_element(girara_completion_group_t* group, const char* name, const char* description) {

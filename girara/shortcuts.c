@@ -70,10 +70,11 @@ bool girara_shortcut_remove(girara_session_t* session, guint modifier, guint key
 }
 
 void girara_shortcut_free(girara_shortcut_t* shortcut) {
-  g_return_if_fail(shortcut != NULL);
-  g_free(shortcut->buffered_command);
-  g_free(shortcut->argument.data);
-  g_free(shortcut);
+  if (shortcut != NULL) {
+    g_free(shortcut->buffered_command);
+    g_free(shortcut->argument.data);
+    g_free(shortcut);
+  }
 }
 
 bool girara_inputbar_shortcut_add(girara_session_t* session, guint modifier, guint key,
@@ -623,12 +624,10 @@ bool girara_shortcut_mapping_add(girara_session_t* session, const char* identifi
 }
 
 void girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping) {
-  if (mapping == NULL) {
-    return;
+  if (mapping != NULL) {
+    g_free(mapping->identifier);
+    g_free(mapping);
   }
-
-  g_free(mapping->identifier);
-  g_free(mapping);
 }
 
 bool girara_argument_mapping_add(girara_session_t* session, const char* identifier, int value) {
@@ -658,12 +657,10 @@ bool girara_argument_mapping_add(girara_session_t* session, const char* identifi
 }
 
 void girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping) {
-  if (argument_mapping == NULL) {
-    return;
+  if (argument_mapping != NULL) {
+    g_free(argument_mapping->identifier);
+    g_free(argument_mapping);
   }
-
-  g_free(argument_mapping->identifier);
-  g_free(argument_mapping);
 }
 
 bool girara_mouse_event_add(girara_session_t* session, guint mask, guint button, girara_shortcut_function_t function,
