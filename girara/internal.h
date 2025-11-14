@@ -30,8 +30,6 @@ HIDDEN void girara_shortcut_mapping_free(girara_shortcut_mapping_t* mapping);
 
 HIDDEN void girara_shortcut_free(girara_shortcut_t* shortcut);
 
-HIDDEN void girara_mode_string_free(girara_mode_string_t* mode);
-
 HIDDEN void girara_argument_mapping_free(girara_argument_mapping_t* argument_mapping);
 
 HIDDEN void girara_command_free(girara_command_t* command);

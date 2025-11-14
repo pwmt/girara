@@ -234,6 +234,13 @@ void scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window, bool sh
   gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
 }
 
+static void girara_mode_string_free(girara_mode_string_t* mode) {
+  if (mode != NULL) {
+    g_free(mode->name);
+    g_free(mode);
+  }
+}
+
 girara_session_t* girara_session_create(void) {
   ensure_gettext_initialized();
 
@@ -715,15 +722,6 @@ girara_mode_t girara_mode_add(girara_session_t* session, const char* name) {
   girara_list_append(session->modes.identifiers, mode);
 
   return mode->index;
-}
-
-void girara_mode_string_free(girara_mode_string_t* mode) {
-  if (mode == NULL) {
-    return;
-  }
-
-  g_free(mode->name);
-  g_free(mode);
 }
 
 girara_mode_t girara_mode_get(girara_session_t* session) {
