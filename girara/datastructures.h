@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <sys/types.h>
+#include <glib.h>
 
 #include "macros.h"
 #include "types.h"
@@ -63,12 +64,16 @@ void girara_list_set_free_function(girara_list_t* list, girara_free_function_t g
  */
 void girara_list_clear(girara_list_t* list) GIRARA_VISIBLE;
 
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC(girara_list_t, girara_list_clear)
+
 /**
  * Destroy list.
  *
  * @param list The girara list object
  */
 void girara_list_free(girara_list_t* list) GIRARA_VISIBLE;
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(girara_list_t, girara_list_free)
 
 /**
  * Append an element to the list.
@@ -243,6 +248,8 @@ void girara_list_iterator_set(girara_list_iterator_t* iter, void* data) GIRARA_V
  */
 void girara_list_iterator_free(girara_list_iterator_t* iter) GIRARA_VISIBLE;
 
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(girara_list_iterator_t, girara_list_iterator_free)
+
 /**
  * Call function for each element in the list.
  *
@@ -312,6 +319,8 @@ void girara_node_set_free_function(girara_tree_node_t* node, girara_free_functio
  * @param node The girara node object
  */
 void girara_node_free(girara_tree_node_t* node) GIRARA_VISIBLE;
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(girara_tree_node_t, girara_node_free)
 
 /**
  * Append a node to another node.
