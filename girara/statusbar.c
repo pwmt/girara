@@ -52,9 +52,8 @@ bool girara_statusbar_item_set_text(girara_session_t* session, girara_statusbar_
   g_return_val_if_fail(session != NULL, false);
   g_return_val_if_fail(item != NULL, false);
 
-  char* escaped_text = g_markup_escape_text(text, -1);
+  g_autofree char* escaped_text = g_markup_escape_text(text, -1);
   gtk_label_set_markup((GtkLabel*)item->text, escaped_text);
-  g_free(escaped_text);
 
   return true;
 }

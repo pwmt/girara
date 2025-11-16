@@ -371,14 +371,13 @@ gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* se
     return return_value;
   }
 
-  gchar* input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
+  g_autofree gchar* input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
   if (input == NULL) {
     girara_isc_abort(session, NULL, NULL, 0);
     return false;
   }
 
   if (strlen(input) == 0) {
-    g_free(input);
     girara_isc_abort(session, NULL, NULL, 0);
     return false;
   }
@@ -388,14 +387,12 @@ gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* se
   girara_input_history_append(session->command_history, command);
 
   /* special commands */
-  char* identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
+  g_autofree char* identifier_s = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, 1);
   if (identifier_s == NULL) {
     return false;
   }
 
   const char identifier = identifier_s[0];
-  g_free(identifier_s);
-
   girara_debug("Processing special command with identifier '%c'.", identifier);
   for (size_t idx = 0; idx != girara_list_size(session->bindings.special_commands); ++idx) {
     girara_special_command_t* special_command = girara_list_nth(session->bindings.special_commands, idx);
@@ -410,9 +407,7 @@ gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* se
     }
   }
 
-  bool ret = girara_command_run(session, input);
-  g_free(input);
-  return ret;
+  return girara_command_run(session, input);
 }
 
 gboolean girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session) {
@@ -467,20 +462,17 @@ gboolean girara_callback_inputbar_changed_event(GtkEditable* entry, girara_sessi
   g_return_val_if_fail(session != NULL, false);
 
   /* special commands */
-  char* identifier_s = gtk_editable_get_chars(entry, 0, 1);
+  g_autofree char* identifier_s = gtk_editable_get_chars(entry, 0, 1);
   if (identifier_s == NULL) {
     return false;
   }
 
   char identifier = identifier_s[0];
-  g_free(identifier_s);
-
   for (size_t idx = 0; idx != girara_list_size(session->bindings.special_commands); ++idx) {
     girara_special_command_t* special_command = girara_list_nth(session->bindings.special_commands, idx);
     if ((special_command->identifier == identifier) && (special_command->always == true)) {
-      gchar* input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
+      g_autofree gchar* input = gtk_editable_get_chars(GTK_EDITABLE(entry), 1, -1);
       special_command->function(session, input, &(special_command->argument));
-      g_free(input);
       return true;
     }
   }

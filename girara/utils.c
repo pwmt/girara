@@ -27,9 +27,9 @@ char* girara_fix_path(const char* path) {
 
   char* rpath = NULL;
   if (path[0] == '~') {
-    const size_t len = strlen(path);
-    char* user       = NULL;
-    size_t idx       = 1;
+    const size_t len      = strlen(path);
+    g_autofree char* user = NULL;
+    size_t idx            = 1;
 
     if (len > 1 && path[1] != '/') {
       while (path[idx] && path[idx] != '/') {
@@ -39,21 +39,17 @@ char* girara_fix_path(const char* path) {
       user = g_strndup(path + 1, idx - 1);
     }
 
-    char* home_path = girara_get_home_directory(user);
-    g_free(user);
-
+    g_autofree char* home_path = girara_get_home_directory(user);
     if (home_path == NULL) {
       return g_strdup(path);
     }
 
     rpath = g_build_filename(home_path, path + idx, NULL);
-    g_free(home_path);
   } else if (g_path_is_absolute(path) == TRUE) {
     rpath = g_strdup(path);
   } else {
-    char* curdir = g_get_current_dir();
-    rpath        = g_build_filename(curdir, path, NULL);
-    g_free(curdir);
+    g_autofree char* curdir = g_get_current_dir();
+    rpath                   = g_build_filename(curdir, path, NULL);
   }
 
   return rpath;
@@ -68,11 +64,10 @@ bool girara_xdg_open_with_working_directory(const char* uri, const char* working
   static char xdg_open[] = "xdg-open";
   char* argv[]           = {xdg_open, g_strdup(uri), NULL};
 
-  GError* error = NULL;
-  bool res      = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
+  g_autoptr(GError) error = NULL;
+  bool res                = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
   if (error != NULL) {
     girara_warning("Failed to execute 'xdg-open %s': %s", uri, error->message);
-    g_error_free(error);
     error = NULL;
   }
 
@@ -86,12 +81,10 @@ bool girara_xdg_open_with_working_directory(const char* uri, const char* working
     res = g_app_info_launch_default_for_uri(uri, NULL, &error);
     if (error != NULL) {
       girara_warning("Failed to open '%s': %s", uri, error->message);
-      g_error_free(error);
     }
 
     if (working_directory != NULL) {
       g_chdir(current_dir);
-      g_free(current_dir);
     }
   }
 
@@ -112,10 +105,10 @@ static char* get_home_directory_getpwnam(const char* user) {
     bufsize = 4096;
   }
 #else
-  const int bufsize = 4096;
+  static const int bufsize = 4096;
 #endif
 
-  char* buffer = g_try_malloc0(sizeof(char) * bufsize);
+  g_autofree char* buffer = g_try_malloc0(sizeof(char) * bufsize);
   if (buffer == NULL) {
     return NULL;
   }
@@ -127,7 +120,6 @@ static char* get_home_directory_getpwnam(const char* user) {
     dir = g_strdup(pwd.pw_dir);
   }
 
-  g_free(buffer);
   return dir;
 }
 #else
@@ -218,7 +210,7 @@ bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* ar
     return false;
   }
 
-  char* cmd = NULL;
+  g_autofree char* cmd = NULL;
   girara_setting_get(session, "exec-command", &cmd);
   if (cmd == NULL || strlen(cmd) == 0) {
     girara_debug("exec-command is empty, executing directly.");
@@ -227,29 +219,24 @@ bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* ar
   }
 
   bool dont_append_first_space = cmd == NULL;
-  GString* command             = g_string_new(cmd ? cmd : "");
-  g_free(cmd);
+  g_autoptr(GString) command   = g_string_new(cmd ? cmd : "");
 
   for (size_t idx = 0; idx != girara_list_size(argument_list); ++idx) {
     if (dont_append_first_space == false) {
       g_string_append_c(command, ' ');
     }
     dont_append_first_space = false;
-    char* tmp               = g_shell_quote(girara_list_nth(argument_list, idx));
+    g_autofree char* tmp    = g_shell_quote(girara_list_nth(argument_list, idx));
     g_string_append(command, tmp);
-    g_free(tmp);
   };
 
-  GError* error = NULL;
+  g_autoptr(GError) error = NULL;
   girara_info("executing: %s", command->str);
   gboolean ret = g_spawn_command_line_async(command->str, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
     girara_notify(session, GIRARA_ERROR, _("Failed to execute command: %s"), error->message);
-    g_error_free(error);
   }
-
-  g_string_free(command, TRUE);
 
   return ret;
 }

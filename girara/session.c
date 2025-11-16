@@ -86,16 +86,14 @@ void css_template_fill_font(GiraraTemplate* csstemplate, const char* font) {
     girara_debug("no font size given, defaulting to 9");
     girara_template_set_variable_value(csstemplate, "font-size", "9pt");
   } else {
-    char* size = g_strdup_printf("%d%s", pango_font_description_get_size(descr) / PANGO_SCALE,
-                                 pango_font_description_get_size_is_absolute(descr) == FALSE ? "pt" : "");
+    g_autofree char* size = g_strdup_printf("%d%s", pango_font_description_get_size(descr) / PANGO_SCALE,
+                                            pango_font_description_get_size_is_absolute(descr) == FALSE ? "pt" : "");
     girara_template_set_variable_value(csstemplate, "font-size", size);
-    g_free(size);
   }
 
-  const unsigned int font_weight = pango_font_description_get_weight(descr);
-  char* font_weight_str          = g_strdup_printf("%u", font_weight);
+  const unsigned int font_weight   = pango_font_description_get_weight(descr);
+  g_autofree char* font_weight_str = g_strdup_printf("%u", font_weight);
   girara_template_set_variable_value(csstemplate, "font-weight", font_weight_str);
-  g_free(font_weight_str);
 
   static const char STYLE_TO_STR[3][8] = {
       [PANGO_STYLE_NORMAL]  = "normal",
@@ -113,11 +111,10 @@ static void fill_template_with_values(girara_session_t* session) {
 
   girara_template_set_variable_value(csstemplate, "session", session->private_data->session_name);
 
-  char* font = NULL;
+  g_autofree char* font = NULL;
   girara_setting_get(session, "font", &font);
   if (font != NULL) {
     css_template_fill_font(csstemplate, font);
-    g_free(font);
   } else {
     girara_template_set_variable_value(csstemplate, "font-family", "monospace");
     girara_template_set_variable_value(csstemplate, "font-size", "9pt");
@@ -150,18 +147,16 @@ static void fill_template_with_values(girara_session_t* session) {
   };
 
   for (size_t i = 0; i < LENGTH(color_settings); ++i) {
-    char* tmp_value = NULL;
+    g_autofree char* tmp_value = NULL;
     girara_setting_get(session, color_settings[i], &tmp_value);
 
     GdkRGBA color = {0, 0, 0, 0};
     if (tmp_value != NULL) {
       gdk_rgba_parse(&color, tmp_value);
-      g_free(tmp_value);
     }
 
-    char* colorstr = gdk_rgba_to_string(&color);
+    g_autofree char* colorstr = gdk_rgba_to_string(&color);
     girara_template_set_variable_value(csstemplate, color_settings[i], colorstr);
-    g_free(colorstr);
   }
 
   /* we want inputbar_entry the same height as notification_text and statusbar,
@@ -194,7 +189,7 @@ static void fill_template_with_values(girara_session_t* session) {
 
 static void css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session) {
   GtkCssProvider* provider = session->private_data->gtk.cssprovider;
-  char* css_data           = girara_template_evaluate(csstemplate);
+  g_autofree char* css_data           = girara_template_evaluate(csstemplate);
   if (css_data == NULL) {
     girara_error("Error while evaluating templates.");
     return;
@@ -210,14 +205,10 @@ static void css_template_changed(GiraraTemplate* csstemplate, girara_session_t* 
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   }
 
-  GError* error = NULL;
+  g_autoptr(GError) error = NULL;
   if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
     girara_error("Unable to load CSS: %s", error->message);
-    g_free(css_data);
-    g_error_free(error);
-    return;
   }
-  g_free(css_data);
 }
 
 void scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window, bool show_horizontal, bool show_vertical) {
@@ -402,12 +393,11 @@ bool girara_session_init(girara_session_t* session, const char* sessionname) {
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   /* invisible scrollbars */
-  char* guioptions = NULL;
+  g_autofree char* guioptions = NULL;
   girara_setting_get(session, "guioptions", &guioptions);
 
   const bool show_hscrollbar = guioptions != NULL && strchr(guioptions, 'h') != NULL;
   const bool show_vscrollbar = guioptions != NULL && strchr(guioptions, 'v') != NULL;
-  g_free(guioptions);
 
   scrolled_window_set_scrollbar_visibility(GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
 
@@ -507,12 +497,11 @@ bool girara_session_init(girara_session_t* session, const char* sessionname) {
     gtk_widget_hide(GTK_WIDGET(session->gtk.statusbar));
   }
 
-  char* window_icon = NULL;
+  g_autofree char* window_icon = NULL;
   girara_setting_get(session, "window-icon", &window_icon);
   if (window_icon != NULL && strlen(window_icon) != 0) {
     girara_set_window_icon(session, window_icon);
   }
-  g_free(window_icon);
 
   gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 
@@ -638,11 +627,10 @@ void girara_notify(girara_session_t* session, int level, const char* format, ...
   /* prepare message */
   va_list ap;
   va_start(ap, format);
-  char* message = g_strdup_vprintf(format, ap);
+  g_autofree char* message = g_strdup_vprintf(format, ap);
   va_end(ap);
 
   gtk_label_set_markup(GTK_LABEL(session->gtk.notification_text), message);
-  g_free(message);
 
   /* update visibility */
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
@@ -752,26 +740,24 @@ bool girara_set_window_icon(girara_session_t* session, const char* name) {
     return false;
   }
 
-  GtkWindow* window = GTK_WINDOW(session->gtk.window);
-  char* path        = girara_fix_path(name);
-  bool success      = true;
+  GtkWindow* window     = GTK_WINDOW(session->gtk.window);
+  g_autofree char* path = girara_fix_path(name);
+  bool success          = true;
 
   if (g_file_test(path, G_FILE_TEST_EXISTS) == TRUE) {
     girara_debug("Loading window icon from file: %s", path);
 
-    GError* error = NULL;
-    success       = gtk_window_set_icon_from_file(window, path, &error);
+    g_autoptr(GError) error = NULL;
+    success                 = gtk_window_set_icon_from_file(window, path, &error);
 
     if (success == false) {
       girara_debug("Failed to load window icon (file): %s", error->message);
-      g_error_free(error);
     }
   } else {
     girara_debug("Loading window icon with name: %s", name);
     gtk_window_set_icon_name(window, name);
   }
 
-  g_free(path);
   return success;
 }
 

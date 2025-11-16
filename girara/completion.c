@@ -128,7 +128,7 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
   g_return_val_if_fail(session != NULL, false);
 
   /* get current text */
-  gchar* input = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
+  g_autofree gchar* input = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
   if (input == NULL) {
     return false;
   }
@@ -136,7 +136,6 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
   const size_t input_length = strlen(input);
 
   if (input_length == 0 || input[0] != ':') {
-    g_free(input);
     return false;
   }
 
@@ -144,13 +143,11 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
   gint n_parameter = 0;
   if (input_length > 1) {
     if (g_shell_parse_argv(input + 1, &n_parameter, &elements, NULL) == FALSE) {
-      g_free(input);
       return false;
     }
   } else {
     elements = g_try_malloc0(2 * sizeof(char*));
     if (elements == NULL) {
-      g_free(input);
       return false;
     }
     elements[0] = g_strdup("");
@@ -159,8 +156,6 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
   if (n_parameter == 1 && input[input_length - 1] == ' ') {
     n_parameter += 1;
   }
-
-  g_free(input);
 
   /* get current values */
   gchar* current_command   = (elements[0] != NULL && elements[0][0] != '\0') ? g_strdup(elements[0]) : NULL;
@@ -501,12 +496,10 @@ static GtkEventBox* girara_completion_row_create(const char* command, const char
   gtk_label_set_ellipsize(show_command, PANGO_ELLIPSIZE_END);
   gtk_label_set_ellipsize(show_description, PANGO_ELLIPSIZE_END);
 
-  gchar* c = command ? g_markup_printf_escaped(FORMAT_COMMAND, command) : NULL;
-  gchar* d = description ? g_markup_printf_escaped(FORMAT_DESCRIPTION, description) : NULL;
+  g_autofree gchar* c = command ? g_markup_printf_escaped(FORMAT_COMMAND, command) : NULL;
+  g_autofree gchar* d = description ? g_markup_printf_escaped(FORMAT_DESCRIPTION, description) : NULL;
   gtk_label_set_markup(show_command, command ? c : "");
   gtk_label_set_markup(show_description, description ? d : "");
-  g_free(c);
-  g_free(d);
 
   const char* class = group == true ? "completion-group" : "completion";
   widget_add_class(GTK_WIDGET(show_command), class);
@@ -526,10 +519,10 @@ static GtkEventBox* girara_completion_row_create(const char* command, const char
 static void girara_completion_row_set_color(GtkEventBox* row, int mode) {
   g_return_if_fail(row != NULL);
 
-  GtkBox* col     = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
-  GList* items    = gtk_container_get_children(GTK_CONTAINER(col));
-  GtkWidget* cmd  = GTK_WIDGET(g_list_nth_data(items, 0));
-  GtkWidget* desc = GTK_WIDGET(g_list_nth_data(items, 1));
+  GtkBox* col            = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
+  g_autoptr(GList) items = gtk_container_get_children(GTK_CONTAINER(col));
+  GtkWidget* cmd         = GTK_WIDGET(g_list_nth_data(items, 0));
+  GtkWidget* desc        = GTK_WIDGET(g_list_nth_data(items, 1));
 
   if (mode == GIRARA_HIGHLIGHT) {
     gtk_widget_set_state_flags(cmd, GTK_STATE_FLAG_SELECTED, false);
@@ -540,6 +533,4 @@ static void girara_completion_row_set_color(GtkEventBox* row, int mode) {
     gtk_widget_unset_state_flags(desc, GTK_STATE_FLAG_SELECTED);
     gtk_widget_unset_state_flags(GTK_WIDGET(row), GTK_STATE_FLAG_SELECTED);
   }
-
-  g_list_free(items);
 }

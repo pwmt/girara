@@ -261,14 +261,13 @@ void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, v
 
 #define GIRARA_LIST_FOREACH(list, type, iter, data)                                                                    \
   do {                                                                                                                 \
-    girara_list_iterator_t* iter = girara_list_iterator(list);                                                         \
+    g_autoptr(girara_list_iterator_t) iter = girara_list_iterator(list);                                               \
     while (girara_list_iterator_is_valid(iter)) {                                                                      \
       type data = (type)girara_list_iterator_data(iter);
 
 #define GIRARA_LIST_FOREACH_END(list, type, iter, data)                                                                \
   girara_list_iterator_next(iter);                                                                                     \
   }                                                                                                                    \
-  girara_list_iterator_free(iter);                                                                                     \
   }                                                                                                                    \
   while (0)
 

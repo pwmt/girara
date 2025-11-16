@@ -277,12 +277,11 @@ bool girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_l
   JsonNode* root = json_builder_get_root(builder);
   json_generator_set_root(gen, root);
 
-  bool ret      = true;
-  GError* error = NULL;
+  bool ret                = true;
+  g_autoptr(GError) error = NULL;
   if (!json_generator_to_file(gen, girara_list_nth(argument_list, 0), &error)) {
     girara_warning("Failed to write JSON: %s", error->message);
     girara_notify(session, GIRARA_ERROR, _("Failed to write JSON: %s"), error->message);
-    g_error_free(error);
     ret = false;
   }
 
