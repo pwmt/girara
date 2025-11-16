@@ -47,8 +47,10 @@ struct girara_completion_s {
 
 typedef struct girara_internal_completion_entry_s girara_internal_completion_entry_t;
 
-static void completion_element_free(girara_completion_element_t* element) {
-  if (element != NULL) {
+static void completion_element_free(void* data) {
+  if (data != NULL) {
+    girara_completion_element_t* element = data;
+
     g_free(element->description);
     g_free(element->value);
     g_free(element);
@@ -66,7 +68,7 @@ girara_completion_group_t* girara_completion_group_create(girara_session_t* UNUS
   girara_completion_group_t* group = g_malloc(sizeof(girara_completion_group_t));
 
   group->value    = name ? g_strdup(name) : NULL;
-  group->elements = girara_list_new_with_free((girara_free_function_t)completion_element_free);
+  group->elements = girara_list_new_with_free(completion_element_free);
 
   if (group->elements == NULL) {
     g_free(group);
