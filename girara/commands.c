@@ -352,7 +352,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
   /* Check for passed argument */
   if (unmap == false) {
     if (++current_command < number_of_arguments) {
-      tmp = (char*)girara_list_nth(argument_list, current_command);
+      tmp = girara_list_nth(argument_list, current_command);
 
       for (size_t idx = 0; idx != girara_list_size(session_private->config.argument_mappings); ++idx) {
         girara_argument_mapping_t* mapping = girara_list_nth(session_private->config.argument_mappings, idx);
@@ -368,7 +368,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
         /* If a known argument is passed and there are still more arguments,
          * we save the next one in the data field */
       } else if (++current_command < number_of_arguments) {
-        tmp                    = (char*)girara_list_nth(argument_list, current_command);
+        tmp                    = girara_list_nth(argument_list, current_command);
         shortcut_argument_data = tmp;
       }
     }
@@ -429,7 +429,7 @@ bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list) {
   }
 
   /* search for existing setting */
-  char* name = (char*)girara_list_nth(argument_list, 0);
+  char* name = girara_list_nth(argument_list, 0);
   if (name == NULL) {
     return false;
   }
@@ -476,7 +476,7 @@ bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list) {
       return false;
     }
   } else {
-    char* value = (char*)girara_list_nth(argument_list, 1);
+    const char* value = girara_list_nth(argument_list, 1);
     if (value == NULL) {
       girara_warning("No value defined for option: %s", name);
       girara_notify(session, GIRARA_ERROR, _("No value defined for option: %s"), name);
