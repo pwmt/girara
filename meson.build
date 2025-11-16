@@ -1,6 +1,6 @@
 project('girara', 'c',
   version: '0.4.5',
-  meson_version: '>=1.0',
+  meson_version: '>=1.5',
   default_options: ['c_std=c17', 'warning_level=3'],
 )
 
@@ -28,6 +28,11 @@ cc = meson.get_compiler('c')
 
 prefix = get_option('prefix')
 localedir = get_option('localedir')
+
+# required attributes
+cc.compiles('''#if !__has_attribute(cleanup)
+#error attribute cleanup not supported
+#endif''', name: '__attribute__(cleanup)', required: true)
 
 # required dependencies
 libm = cc.find_library('m', required: false)
