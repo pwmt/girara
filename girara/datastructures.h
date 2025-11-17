@@ -257,32 +257,6 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC(girara_list_iterator_t, girara_list_iterator_free)
  */
 void girara_list_foreach(girara_list_t* list, girara_list_callback_t callback, void* data) GIRARA_VISIBLE;
 
-#define GIRARA_LIST_FOREACH(list, type, iter, data)                                                                    \
-  do {                                                                                                                 \
-    g_autoptr(girara_list_iterator_t) iter = girara_list_iterator(list);                                               \
-    while (girara_list_iterator_is_valid(iter)) {                                                                      \
-      type data = (type)girara_list_iterator_data(iter);
-
-#define GIRARA_LIST_FOREACH_END(list, type, iter, data)                                                                \
-  girara_list_iterator_next(iter);                                                                                     \
-  }                                                                                                                    \
-  }                                                                                                                    \
-  while (0)
-
-#define GIRARA_LIST_FOREACH_BODY_WITH_ITER(list, type, iter, data, ...)                                                \
-  GIRARA_LIST_FOREACH(list, type, iter, data)                                                                          \
-  __VA_ARGS__                                                                                                          \
-  GIRARA_LIST_FOREACH_END(list, type, iter, data)
-
-#define GIRARA_LIST_FOREACH_BODY(list, type, data, ...)                                                                \
-  do {                                                                                                                 \
-    for (size_t GIRARA_LIST_FOREACH_BODY_IDX = 0; GIRARA_LIST_FOREACH_BODY_IDX < girara_list_size(list);               \
-         ++GIRARA_LIST_FOREACH_BODY_IDX) {                                                                             \
-      type data = (type)girara_list_nth(list, GIRARA_LIST_FOREACH_BODY_IDX);                                           \
-      __VA_ARGS__                                                                                                      \
-    }                                                                                                                  \
-  } while (0)
-
 /**
  * Merge a list into another one. Both lists need to have the same free
  * function. If other has a source free function set it will be set to NULL as
