@@ -26,8 +26,6 @@ girara_list_t* girara_list_new(void) GIRARA_VISIBLE;
  */
 girara_list_t* girara_list_new_with_free(girara_free_function_t gfree) GIRARA_VISIBLE;
 
-#define girara_list_new2 girara_list_new_with_free
-
 /**
  * Create a new (sorted) list.
  *
