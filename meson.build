@@ -62,7 +62,8 @@ flags = [
   '-Wmissing-declarations',
   '-Werror=implicit-function-declaration',
   '-Werror=vla',
-  '-Werror=int-conversion'
+  '-Werror=int-conversion',
+  '-Werror=maybe-uninitialized'
 ]
 flags = cc.get_supported_arguments(flags)
 
