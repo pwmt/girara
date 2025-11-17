@@ -45,8 +45,6 @@ girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp) GIRARA_VISI
 girara_list_t* girara_sorted_list_new_with_free(girara_compare_function_t cmp,
                                                 girara_free_function_t gfree) GIRARA_VISIBLE;
 
-#define girara_sorted_list_new2 girara_sorted_list_new_with_free
-
 /**
  * Set the function which should be called if the stored data should be freed.
  *
