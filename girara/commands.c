@@ -555,7 +555,6 @@ bool girara_special_command_add(girara_session_t* session, char identifier, gira
     }
   };
 
-
   /* create new special command */
   girara_special_command_t* special_command = g_malloc0(sizeof(girara_special_command_t));
 

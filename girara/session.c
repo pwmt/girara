@@ -188,8 +188,8 @@ static void fill_template_with_values(girara_session_t* session) {
 }
 
 static void css_template_changed(GiraraTemplate* csstemplate, girara_session_t* session) {
-  GtkCssProvider* provider = session->private_data->gtk.cssprovider;
-  g_autofree char* css_data           = girara_template_evaluate(csstemplate);
+  GtkCssProvider* provider  = session->private_data->gtk.cssprovider;
+  g_autofree char* css_data = girara_template_evaluate(csstemplate);
   if (css_data == NULL) {
     girara_error("Error while evaluating templates.");
     return;

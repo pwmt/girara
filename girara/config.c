@@ -250,21 +250,19 @@ void girara_config_handle_free(girara_config_handle_t* handle) {
 
 static bool config_parse(girara_session_t* session, const char* path) {
   /* open file */
-  GFile* f = g_file_new_for_path(path);
+  g_autoptr(GFile) f = g_file_new_for_path(path);
   if (f == NULL) {
     girara_debug("failed to open config file '%s'", path);
     return false;
   }
 
-  GFileInputStream* stream = g_file_read(f, NULL, NULL);
-  g_object_unref(f);
+  g_autoptr(GFileInputStream) stream = g_file_read(f, NULL, NULL);
   if (stream == NULL) {
     girara_debug("failed to open config file '%s'", path);
     return false;
   }
 
-  GDataInputStream* datastream = g_data_input_stream_new(G_INPUT_STREAM(stream));
-  g_object_unref(stream);
+  g_autoptr(GDataInputStream) datastream = g_data_input_stream_new(G_INPUT_STREAM(stream));
   if (datastream == NULL) {
     girara_debug("failed to open config file '%s'", path);
     return false;
@@ -281,16 +279,15 @@ static bool config_parse(girara_session_t* session, const char* path) {
       continue;
     }
 
-    girara_list_t* argument_list = girara_list_new_with_free(g_free);
+    g_autoptr(girara_list_t) argument_list = girara_list_new_with_free(g_free);
     if (argument_list == NULL) {
-      g_object_unref(datastream);
       g_free(line);
       return false;
     }
 
-    gchar** argv  = NULL;
-    gint argc     = 0;
-    GError* error = NULL;
+    gchar** argv            = NULL;
+    gint argc               = 0;
+    g_autoptr(GError) error = NULL;
 
     /* parse current line */
     if (g_shell_parse_argv(line, &argc, &argv, &error) != FALSE) {
@@ -299,16 +296,11 @@ static bool config_parse(girara_session_t* session, const char* path) {
         girara_list_append(argument_list, argument);
       }
     } else {
-      girara_list_free(argument_list);
       if (error->code != G_SHELL_ERROR_EMPTY_STRING) {
         girara_error("Could not parse line %d in '%s': %s", line_number, path, error->message);
-
-        g_error_free(error);
-        g_object_unref(datastream);
         g_free(line);
         return false;
       } else {
-        g_error_free(error);
         g_free(line);
         continue;
       }
@@ -319,15 +311,13 @@ static bool config_parse(girara_session_t* session, const char* path) {
       if (argc != 2) {
         girara_warning("Could not process line %d in '%s': usage: include path.", line_number, path);
       } else {
-        char* newpath = NULL;
+        g_autofree char* newpath = NULL;
         if (g_path_is_absolute(argv[1]) == TRUE) {
           newpath = g_strdup(argv[1]);
         } else {
-          char* basename = g_path_get_dirname(path);
-          char* tmp      = g_build_filename(basename, argv[1], NULL);
-          newpath        = girara_fix_path(tmp);
-          g_free(tmp);
-          g_free(basename);
+          g_autofree char* basename = g_path_get_dirname(path);
+          g_autofree char* tmp      = g_build_filename(basename, argv[1], NULL);
+          newpath                   = girara_fix_path(tmp);
         }
 
         if (g_strcmp0(newpath, path) == 0) {
@@ -338,7 +328,6 @@ static bool config_parse(girara_session_t* session, const char* path) {
             girara_warning("Could not process line %d in '%s': failed to load '%s'.", line_number, path, newpath);
           }
         }
-        g_free(newpath);
       }
     } else {
       /* search for config handle */
@@ -359,12 +348,10 @@ static bool config_parse(girara_session_t* session, const char* path) {
     }
 
     line_number++;
-    girara_list_free(argument_list);
     g_strfreev(argv);
     g_free(line);
   }
 
-  g_object_unref(datastream);
   return true;
 }
 

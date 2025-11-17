@@ -332,7 +332,7 @@ static void girara_template_class_init(GiraraTemplateClass* class) {
 /* GObject init */
 static void girara_template_init(GiraraTemplate* template) {
   g_autoptr(GError) error = NULL;
-  GRegex* regex = g_regex_new("@([A-Za-z0-9][A-Za-z0-9_-]*)@", G_REGEX_OPTIMIZE, 0, &error);
+  GRegex* regex           = g_regex_new("@([A-Za-z0-9][A-Za-z0-9_-]*)@", G_REGEX_OPTIMIZE, 0, &error);
   if (regex == NULL) {
     girara_error("Failed to create regex: %s", error->message);
   }
