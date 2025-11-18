@@ -13,10 +13,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void girara_cmd_display_shortcut(girara_session_t *session, char *key_str,
-                                        guint modifier, guint key, girara_mode_t mode) {
+static void girara_cmd_display_shortcut(girara_session_t* session, const char* key_str, guint modifier, guint key,
+                                        girara_mode_t mode) {
   girara_session_private_t* session_private = session->private_data;
-  GStrvBuilder *builder = g_strv_builder_new();
+  g_autoptr(GStrvBuilder) builder           = g_strv_builder_new();
 
   /* get mode name string */
   for (size_t idx = 0; idx != girara_list_size(session->modes.identifiers); ++idx) {
@@ -25,7 +25,7 @@ static void girara_cmd_display_shortcut(girara_session_t *session, char *key_str
       continue;
     }
 
-    char *mode_str = g_strdup_printf("[%s]", mode_string->name);
+    char* mode_str = g_strdup_printf("[%s]", mode_string->name);
     g_strv_builder_take(builder, mode_str);
   }
 
@@ -37,13 +37,13 @@ static void girara_cmd_display_shortcut(girara_session_t *session, char *key_str
   g_strv_builder_add(builder, ":");
 
   /* find shortcut */
-  girara_shortcut_t *shortcut = NULL;
+  girara_shortcut_t* shortcut = NULL;
   for (size_t idx = 0; idx != girara_list_size(session->bindings.shortcuts); ++idx) {
     girara_shortcut_t* shortcuts_it = girara_list_nth(session->bindings.shortcuts, idx);
-    bool eq_mask = shortcuts_it->mask == modifier;
-    bool eq_key = shortcuts_it->key == key;
-    bool eq_mode = shortcuts_it->mode == mode || mode == 0;
-    bool zero_mask_key = (modifier != 0 || key != 0); 
+    bool eq_mask                    = shortcuts_it->mask == modifier;
+    bool eq_key                     = shortcuts_it->key == key;
+    bool eq_mode                    = shortcuts_it->mode == mode || mode == 0;
+    bool zero_mask_key              = (modifier != 0 || key != 0);
 
     if ((eq_mask && eq_key && eq_mode && zero_mask_key) == false) {
       continue;
@@ -69,7 +69,7 @@ static void girara_cmd_display_shortcut(girara_session_t *session, char *key_str
     }
 
     if (!found_mapping) {
-      girara_warning("shortcut for key %d with mask %d and mode %d found in bindings, but not present in config", 
+      girara_warning("shortcut for key %d with mask %d and mode %d found in bindings, but not present in config",
                      shortcut->key, shortcut->mask, shortcut->mode);
     }
 
@@ -78,24 +78,17 @@ static void girara_cmd_display_shortcut(girara_session_t *session, char *key_str
     }
   }
 
-  GStrv array = g_strv_builder_end(builder);
-  char *msg = g_strjoinv(" ", array);
-  char *esc_msg = g_markup_escape_text(msg, -1);
-
+  GStrv array          = g_strv_builder_end(builder);
+  g_autofree char* msg = g_strjoinv(" ", array);
+  g_autofree char* esc_msg  = g_markup_escape_text(msg, -1);
   girara_notify(session, GIRARA_INFO, "%s", esc_msg);
-
   g_strfreev(array);
-  g_free(msg);
-  g_free(esc_msg);
-
-  g_strv_builder_unref(builder);
 }
 
-static void girara_cmd_display_mouse_event(girara_session_t *session, char *button_str, char *event_str,
-                                           guint mask, guint button, girara_mode_t mode, 
-                                           girara_event_type_t event_type) {
+static void girara_cmd_display_mouse_event(girara_session_t* session, const char* button_str, const char* event_str, guint mask,
+                                           guint button, girara_mode_t mode, girara_event_type_t event_type) {
   girara_session_private_t* session_private = session->private_data;
-  GStrvBuilder *builder = g_strv_builder_new();
+  g_autoptr(GStrvBuilder) builder                     = g_strv_builder_new();
 
   /* get mode name string */
   for (size_t idx = 0; idx != girara_list_size(session->modes.identifiers); ++idx) {
@@ -104,14 +97,14 @@ static void girara_cmd_display_mouse_event(girara_session_t *session, char *butt
       continue;
     }
 
-    char *mode_str = g_strdup_printf("[%s]", mode_string->name);
+    char* mode_str = g_strdup_printf("[%s]", mode_string->name);
     g_strv_builder_take(builder, mode_str);
   }
 
   if (button_str != NULL) {
     g_strv_builder_add(builder, button_str);
   }
-  
+
   if (event_str != NULL) {
     g_strv_builder_add(builder, event_str);
   }
@@ -122,10 +115,10 @@ static void girara_cmd_display_mouse_event(girara_session_t *session, char *butt
   girara_mouse_event_t* mouse_event = NULL;
   for (size_t idx = 0; idx != girara_list_size(session->bindings.mouse_events); ++idx) {
     girara_mouse_event_t* me_it = girara_list_nth(session->bindings.mouse_events, idx);
-    bool eq_mask = me_it->mask == mask;
-    bool eq_button = me_it->button == button;
-    bool eq_mode = me_it->mode == mode;
-    bool eq_event = me_it->event_type == event_type;
+    bool eq_mask                = me_it->mask == mask;
+    bool eq_button              = me_it->button == button;
+    bool eq_mode                = me_it->mode == mode;
+    bool eq_event               = me_it->event_type == event_type;
     if ((eq_mask && eq_button && eq_mode && eq_event) == false) {
       continue;
     }
@@ -150,8 +143,9 @@ static void girara_cmd_display_mouse_event(girara_session_t *session, char *butt
     }
 
     if (!found_mapping) {
-      girara_warning("mouse event for button %d with mask %d, mode %d, event_type %d found in bindings, but not present in config", 
-                     mouse_event->button, mouse_event->mask, mouse_event->mode, mouse_event->event_type);
+      girara_warning(
+          "mouse event for button %d with mask %d, mode %d, event_type %d found in bindings, but not present in config",
+          mouse_event->button, mouse_event->mask, mouse_event->mode, mouse_event->event_type);
     }
 
     if (mouse_event->argument.data != NULL) {
@@ -159,17 +153,11 @@ static void girara_cmd_display_mouse_event(girara_session_t *session, char *butt
     }
   }
 
-  GStrv array = g_strv_builder_end(builder);
-  char *msg = g_strjoinv(" ", array);
-  char *esc_msg = g_markup_escape_text(msg, -1);
-
+  GStrv array   = g_strv_builder_end(builder);
+  g_autofree char* msg     = g_strjoinv(" ", array);
+  g_autofree char* esc_msg = g_markup_escape_text(msg, -1);
   girara_notify(session, GIRARA_INFO, "%s", esc_msg);
-
   g_strfreev(array);
-  g_free(msg);
-  g_free(esc_msg);
-
-  g_strv_builder_unref(builder);
 }
 
 /* default commands implementation */
@@ -274,8 +262,8 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
     return false;
   }
 
-  char *key_str = NULL;
-  char *event_str = NULL;
+  const char* key_str   = NULL;
+  const char* event_str = NULL;
 
   int shortcut_mask                            = 0;
   int shortcut_key                             = 0;
