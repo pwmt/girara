@@ -277,7 +277,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
   bool mouse_event                             = false;
 
   size_t current_command = 0;
-  g_autofree char* tmp   = girara_list_nth(argument_list, current_command);
+  char* tmp              = girara_list_nth(argument_list, current_command);
   size_t tmp_length      = g_utf8_strlen(tmp, -1);
   size_t tmp_size        = strlen(tmp);
 
@@ -316,9 +316,10 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
 
   key_str = girara_list_nth(argument_list, current_command);
 
+  g_autofree char* tmp_to_free = NULL;
   /* Check for multi key shortcut */
   if (tmp_length >= 3 && tmp[0] == '<' && tmp[tmp_size - 1] == '>') {
-    tmp        = g_strndup(tmp + 1, tmp_size - 2);
+    tmp        = tmp_to_free = g_strndup(tmp + 1, tmp_size - 2);
     tmp_length = g_utf8_strlen(tmp, -1);
     tmp_size   = strlen(tmp);
 
