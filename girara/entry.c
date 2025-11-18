@@ -33,7 +33,7 @@ GiraraEntry* girara_entry_new(void) {
 }
 
 static void girara_entry_paste_primary(GiraraEntry* self) {
-  GValue editable = G_VALUE_INIT;
+  g_auto(GValue) editable = G_VALUE_INIT;
   g_value_init(&editable, G_TYPE_BOOLEAN);
 
   g_object_get_property(G_OBJECT(self), "editable", &editable);
@@ -50,6 +50,4 @@ static void girara_entry_paste_primary(GiraraEntry* self) {
   } else {
     gtk_widget_error_bell(GTK_WIDGET(self));
   }
-
-  g_value_unset(&editable);
 }
