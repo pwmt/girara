@@ -79,7 +79,7 @@ static void girara_cmd_display_shortcut(girara_session_t* session, const char* k
   }
 
   GStrv array              = g_strv_builder_end(builder);
-  g_autofree char* msg     = g_strjoinv("", array);
+  g_autofree char* msg     = g_strjoinv(" ", array);
   g_autofree char* esc_msg = g_markup_escape_text(msg, -1);
   girara_notify(session, GIRARA_INFO, "%s", esc_msg);
   g_strfreev(array);
