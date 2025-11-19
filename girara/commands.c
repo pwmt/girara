@@ -31,10 +31,11 @@ static void girara_cmd_display_shortcut(girara_session_t* session, const char* k
 
   /* add key string */
   if (key_str != NULL) {
+    g_strv_builder_add(builder, " ");
     g_strv_builder_add(builder, key_str);
   }
 
-  g_strv_builder_add(builder, ":");
+  g_strv_builder_add(builder, ": ");
 
   /* find shortcut */
   girara_shortcut_t* shortcut = NULL;
@@ -79,7 +80,7 @@ static void girara_cmd_display_shortcut(girara_session_t* session, const char* k
   }
 
   GStrv array              = g_strv_builder_end(builder);
-  g_autofree char* msg     = g_strjoinv(" ", array);
+  g_autofree char* msg     = g_strjoinv("", array);
   g_autofree char* esc_msg = g_markup_escape_text(msg, -1);
   girara_notify(session, GIRARA_INFO, "%s", esc_msg);
   g_strfreev(array);
@@ -103,14 +104,16 @@ static void girara_cmd_display_mouse_event(girara_session_t* session, const char
   }
 
   if (button_str != NULL) {
+    g_strv_builder_add(builder, " ");
     g_strv_builder_add(builder, button_str);
   }
 
   if (event_str != NULL) {
+    g_strv_builder_add(builder, " ");
     g_strv_builder_add(builder, event_str);
   }
 
-  g_strv_builder_add(builder, ":");
+  g_strv_builder_add(builder, ": ");
 
   /* find mouse event */
   girara_mouse_event_t* mouse_event = NULL;
@@ -155,7 +158,7 @@ static void girara_cmd_display_mouse_event(girara_session_t* session, const char
   }
 
   GStrv array              = g_strv_builder_end(builder);
-  g_autofree char* msg     = g_strjoinv(" ", array);
+  g_autofree char* msg     = g_strjoinv("", array);
   g_autofree char* esc_msg = g_markup_escape_text(msg, -1);
   girara_notify(session, GIRARA_INFO, "%s", esc_msg);
   g_strfreev(array);
