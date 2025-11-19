@@ -78,17 +78,18 @@ static void girara_cmd_display_shortcut(girara_session_t* session, const char* k
     }
   }
 
-  GStrv array          = g_strv_builder_end(builder);
-  g_autofree char* msg = g_strjoinv(" ", array);
-  g_autofree char* esc_msg  = g_markup_escape_text(msg, -1);
+  GStrv array              = g_strv_builder_end(builder);
+  g_autofree char* msg     = g_strjoinv("", array);
+  g_autofree char* esc_msg = g_markup_escape_text(msg, -1);
   girara_notify(session, GIRARA_INFO, "%s", esc_msg);
   g_strfreev(array);
 }
 
-static void girara_cmd_display_mouse_event(girara_session_t* session, const char* button_str, const char* event_str, guint mask,
-                                           guint button, girara_mode_t mode, girara_event_type_t event_type) {
+static void girara_cmd_display_mouse_event(girara_session_t* session, const char* button_str, const char* event_str,
+                                           guint mask, guint button, girara_mode_t mode,
+                                           girara_event_type_t event_type) {
   girara_session_private_t* session_private = session->private_data;
-  g_autoptr(GStrvBuilder) builder                     = g_strv_builder_new();
+  g_autoptr(GStrvBuilder) builder           = g_strv_builder_new();
 
   /* get mode name string */
   for (size_t idx = 0; idx != girara_list_size(session->modes.identifiers); ++idx) {
@@ -153,7 +154,7 @@ static void girara_cmd_display_mouse_event(girara_session_t* session, const char
     }
   }
 
-  GStrv array   = g_strv_builder_end(builder);
+  GStrv array              = g_strv_builder_end(builder);
   g_autofree char* msg     = g_strjoinv(" ", array);
   g_autofree char* esc_msg = g_markup_escape_text(msg, -1);
   girara_notify(session, GIRARA_INFO, "%s", esc_msg);
@@ -316,16 +317,14 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
 
   key_str = girara_list_nth(argument_list, current_command);
 
-  g_autofree char* tmp_to_free = NULL;
   /* Check for multi key shortcut */
   if (tmp_length >= 3 && tmp[0] == '<' && tmp[tmp_size - 1] == '>') {
-    tmp        = tmp_to_free = g_strndup(tmp + 1, tmp_size - 2);
-    tmp_length = g_utf8_strlen(tmp, -1);
-    tmp_size   = strlen(tmp);
+    g_autofree char* tmp_inner = g_strndup(tmp + 1, tmp_size - 2);
+    size_t tmp_inner_length    = g_utf8_strlen(tmp, -1);
 
     /* Multi key shortcut */
-    if (strchr(tmp, '-') != NULL && g_utf8_get_char(g_utf8_offset_to_pointer(tmp, 1)) == '-' && tmp_length > 2) {
-      switch (g_utf8_get_char(tmp)) {
+    if (strchr(tmp_inner, '-') != NULL && g_utf8_get_char(g_utf8_offset_to_pointer(tmp, 1)) == '-' && tmp_inner_length > 2) {
+      switch (g_utf8_get_char(tmp_inner)) {
       case 'S':
         shortcut_mask = GDK_SHIFT_MASK;
         break;
@@ -337,19 +336,19 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
         shortcut_mask = GDK_CONTROL_MASK;
         break;
       default:
-        girara_warning("Invalid modifier in %s", tmp);
-        girara_notify(session, GIRARA_ERROR, _("Invalid modifier in %s"), tmp);
+        girara_warning("Invalid modifier in %s", tmp_inner);
+        girara_notify(session, GIRARA_ERROR, _("Invalid modifier in %s"), tmp_inner);
         return false;
       }
 
       /* Single key */
-      if (tmp_length == 3) {
-        shortcut_key = gdk_unicode_to_keyval(g_utf8_get_char(g_utf8_offset_to_pointer(tmp, 2)));
+      if (tmp_inner_length == 3) {
+        shortcut_key = gdk_unicode_to_keyval(g_utf8_get_char(g_utf8_offset_to_pointer(tmp_inner, 2)));
         /* Possible special key */
       } else {
         bool found = false;
         for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
-          if (g_strcmp0(tmp + 2, gdk_keyboard_buttons[i].identifier) == 0) {
+          if (g_strcmp0(tmp_inner + 2, gdk_keyboard_buttons[i].identifier) == 0) {
             shortcut_key = gdk_keyboard_buttons[i].keyval;
             found        = true;
             break;
@@ -357,7 +356,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
         }
 
         for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
-          if (!g_strcmp0(tmp + 2, gdk_mouse_buttons[i].identifier)) {
+          if (!g_strcmp0(tmp_inner + 2, gdk_mouse_buttons[i].identifier)) {
             shortcut_mouse_button = gdk_mouse_buttons[i].button;
             mouse_event           = true;
             found                 = true;
@@ -366,7 +365,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
         }
 
         for (unsigned int i = 0; i < LENGTH(event_types); i++) {
-          if (!g_strcmp0(tmp + 2, event_types[i].identifier)) {
+          if (!g_strcmp0(tmp_inner + 2, event_types[i].identifier)) {
             event_type  = event_types[i].event;
             mouse_event = true;
             found       = true;
@@ -375,8 +374,8 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
         }
 
         if (found == false) {
-          girara_warning("Invalid special key value or mode: %s", tmp);
-          girara_notify(session, GIRARA_ERROR, _("Invalid special key value for %s"), tmp);
+          girara_warning("Invalid special key value or mode: %s", tmp_inner);
+          girara_notify(session, GIRARA_ERROR, _("Invalid special key value for %s"), tmp_inner);
           return false;
         }
       }
@@ -384,7 +383,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
     } else {
       bool found = false;
       for (unsigned int i = 0; i < LENGTH(gdk_keyboard_buttons); i++) {
-        if (g_strcmp0(tmp, gdk_keyboard_buttons[i].identifier) == 0) {
+        if (g_strcmp0(tmp_inner, gdk_keyboard_buttons[i].identifier) == 0) {
           shortcut_key = gdk_keyboard_buttons[i].keyval;
           found        = true;
           break;
@@ -392,7 +391,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
       }
 
       for (unsigned int i = 0; i < LENGTH(gdk_mouse_buttons); i++) {
-        if (!g_strcmp0(tmp, gdk_mouse_buttons[i].identifier)) {
+        if (!g_strcmp0(tmp_inner, gdk_mouse_buttons[i].identifier)) {
           shortcut_mouse_button = gdk_mouse_buttons[i].button;
           mouse_event           = true;
           found                 = true;
@@ -401,7 +400,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
       }
 
       for (unsigned int i = 0; i < LENGTH(event_types); i++) {
-        if (!g_strcmp0(tmp, event_types[i].identifier)) {
+        if (!g_strcmp0(tmp_inner, event_types[i].identifier)) {
           event_type  = event_types[i].event;
           mouse_event = true;
           found       = true;
@@ -410,8 +409,8 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
       }
 
       if (found == false) {
-        girara_warning("Invalid special key value or mode: %s", tmp);
-        girara_notify(session, GIRARA_ERROR, _("Invalid special key value or mode %s"), tmp);
+        girara_warning("Invalid special key value or mode: %s", tmp_inner);
+        girara_notify(session, GIRARA_ERROR, _("Invalid special key value or mode %s"), tmp_inner);
         return false;
       }
     }
@@ -423,118 +422,109 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
     shortcut_buffer_command = g_strdup(tmp);
   }
 
+  if (unmap == true) {
+    if (mouse_event == false) {
+      girara_shortcut_remove(session, shortcut_mask, shortcut_key, shortcut_buffer_command, shortcut_mode);
+    } else {
+      girara_mouse_event_remove(session, shortcut_mask, shortcut_mouse_button, shortcut_mode);
+    }
+    return true;
+  }
+
   /* check for mouse mode */
   bool mouse_mode = false;
-  if (unmap == false) {
-    if (current_command + 1 < number_of_arguments) {
-      tmp        = girara_list_nth(argument_list, current_command + 1);
-      tmp_length = g_utf8_strlen(tmp, -1);
-      tmp_size   = strlen(tmp);
+  if (current_command + 1 < number_of_arguments) {
+    tmp        = girara_list_nth(argument_list, current_command + 1);
+    tmp_length = g_utf8_strlen(tmp, -1);
+    tmp_size   = strlen(tmp);
 
-      if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_size - 1] == ']') {
-        mouse_mode = true;
-        event_str = girara_list_nth(argument_list, ++current_command);
+    if (tmp_length >= 3 && tmp[0] == '[' && tmp[tmp_size - 1] == ']') {
+      mouse_mode = true;
+      event_str  = girara_list_nth(argument_list, ++current_command);
 
-        if (mouse_event == false) {
-          girara_warning("Mode passed on non-mouse event: %s", tmp);
-          return false;
+      if (mouse_event == false) {
+        girara_warning("Mode passed on non-mouse event: %s", tmp);
+        return false;
+      }
+
+      g_autofree char* tmp_inner = g_strndup(tmp + 1, tmp_size - 2);
+
+      bool found = false;
+      for (unsigned int i = 0; i < LENGTH(mouse_events); i++) {
+        if (!g_strcmp0(tmp_inner, mouse_events[i].identifier)) {
+          event_type = mouse_events[i].event;
+          found      = true;
+          break;
         }
+      }
 
-        g_autofree char* tmp_inner = g_strndup(tmp + 1, tmp_size - 2);
-
-        bool found = false;
-        for (unsigned int i = 0; i < LENGTH(mouse_events); i++) {
-          if (!g_strcmp0(tmp_inner, mouse_events[i].identifier)) {
-            event_type = mouse_events[i].event;
-            found      = true;
-            break;
-          }
-        }
-
-        if (found == false) {
-          girara_warning("Invalid mouse event mode has been passed: %s", tmp_inner);
-          return false;
-        }
+      if (found == false) {
+        girara_warning("Invalid mouse event mode has been passed: %s", tmp_inner);
+        return false;
       }
     }
   }
 
   /* display mapping if no shortcut is supplied */
-  if (unmap == false) {
-    if (current_command + 1 == number_of_arguments) {
-      if (mouse_mode) {
-        girara_cmd_display_mouse_event(session, key_str, event_str, shortcut_mask, 
-                                       shortcut_mouse_button, shortcut_mode, event_type);
-      } else {
-        girara_cmd_display_shortcut(session, key_str, shortcut_mask, shortcut_key, shortcut_mode);
-      }
-
-      return false;
+  if (current_command + 1 == number_of_arguments) {
+    if (mouse_mode) {
+      girara_cmd_display_mouse_event(session, key_str, event_str, shortcut_mask, shortcut_mouse_button, shortcut_mode,
+                                     event_type);
+    } else {
+      girara_cmd_display_shortcut(session, key_str, shortcut_mask, shortcut_key, shortcut_mode);
     }
-
-    tmp = girara_list_nth(argument_list, ++current_command);
+    return true;
   }
+
+  tmp = girara_list_nth(argument_list, ++current_command);
 
   girara_session_private_t* session_private = session->private_data;
 
   /* Check for passed shortcut command */
-  if (unmap == false) {
-    bool found_mapping = false;
-    for (size_t idx = 0; idx != girara_list_size(session_private->config.shortcut_mappings); ++idx) {
-      girara_shortcut_mapping_t* mapping = girara_list_nth(session_private->config.shortcut_mappings, idx);
+  bool found_mapping = false;
+  for (size_t idx = 0; idx != girara_list_size(session_private->config.shortcut_mappings); ++idx) {
+    girara_shortcut_mapping_t* mapping = girara_list_nth(session_private->config.shortcut_mappings, idx);
+    if (!g_strcmp0(tmp, mapping->identifier)) {
+      shortcut_function = mapping->function;
+      found_mapping     = true;
+      break;
+    }
+  }
+
+  if (found_mapping == false) {
+    girara_warning("Not a valid shortcut function: %s", tmp);
+    girara_notify(session, GIRARA_ERROR, _("Not a valid shortcut function: %s"), tmp);
+    return false;
+  }
+
+  /* Check for passed argument */
+  if (++current_command < number_of_arguments) {
+    tmp = girara_list_nth(argument_list, current_command);
+
+    for (size_t idx = 0; idx != girara_list_size(session_private->config.argument_mappings); ++idx) {
+      girara_argument_mapping_t* mapping = girara_list_nth(session_private->config.argument_mappings, idx);
       if (!g_strcmp0(tmp, mapping->identifier)) {
-        shortcut_function = mapping->function;
-        found_mapping     = true;
+        shortcut_argument_n = mapping->value;
         break;
       }
     }
 
-    if (found_mapping == false) {
-      girara_warning("Not a valid shortcut function: %s", tmp);
-      girara_notify(session, GIRARA_ERROR, _("Not a valid shortcut function: %s"), tmp);
-      return false;
-    }
-  }
-
-  /* Check for passed argument */
-  if (unmap == false) {
-    if (++current_command < number_of_arguments) {
-      tmp = girara_list_nth(argument_list, current_command);
-
-      for (size_t idx = 0; idx != girara_list_size(session_private->config.argument_mappings); ++idx) {
-        girara_argument_mapping_t* mapping = girara_list_nth(session_private->config.argument_mappings, idx);
-        if (!g_strcmp0(tmp, mapping->identifier)) {
-          shortcut_argument_n = mapping->value;
-          break;
-        }
-      }
-
-      /* If no known argument is passed we save it in the data field */
-      if (shortcut_argument_n == 0) {
-        shortcut_argument_data = tmp;
-        /* If a known argument is passed and there are still more arguments,
-         * we save the next one in the data field */
-      } else if (++current_command < number_of_arguments) {
-        tmp                    = girara_list_nth(argument_list, current_command);
-        shortcut_argument_data = tmp;
-      }
+    /* If no known argument is passed we save it in the data field */
+    if (shortcut_argument_n == 0) {
+      shortcut_argument_data = tmp;
+      /* If a known argument is passed and there are still more arguments,
+       * we save the next one in the data field */
+    } else if (++current_command < number_of_arguments) {
+      shortcut_argument_data = girara_list_nth(argument_list, current_command);
     }
   }
 
   if (mouse_event == false) {
-    if (unmap == true) {
-      girara_shortcut_remove(session, shortcut_mask, shortcut_key, shortcut_buffer_command, shortcut_mode);
-    } else {
-      girara_shortcut_add(session, shortcut_mask, shortcut_key, shortcut_buffer_command, shortcut_function,
-                          shortcut_mode, shortcut_argument_n, shortcut_argument_data);
-    }
+    girara_shortcut_add(session, shortcut_mask, shortcut_key, shortcut_buffer_command, shortcut_function, shortcut_mode,
+                        shortcut_argument_n, shortcut_argument_data);
   } else {
-    if (unmap == true) {
-      girara_mouse_event_remove(session, shortcut_mask, shortcut_mouse_button, shortcut_mode);
-    } else {
-      girara_mouse_event_add(session, shortcut_mask, shortcut_mouse_button, shortcut_function, shortcut_mode,
-                             event_type, shortcut_argument_n, shortcut_argument_data);
-    }
+    girara_mouse_event_add(session, shortcut_mask, shortcut_mouse_button, shortcut_function, shortcut_mode, event_type,
+                           shortcut_argument_n, shortcut_argument_data);
   }
 
   return true;
