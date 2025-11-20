@@ -61,7 +61,7 @@ msgstr "Занадто багато аргументів."
 #: girara/commands.c:440
 #, c-format
 msgid "Unknown option: %s"
-msgstr "Невідомий параметр:% s"
+msgstr "Невідомий параметр: %s"
 
 #: girara/commands.c:453
 msgid "true"
