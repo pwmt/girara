@@ -266,9 +266,6 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
     return false;
   }
 
-  const char* key_str   = NULL;
-  const char* event_str = NULL;
-
   int shortcut_mask                            = 0;
   int shortcut_key                             = 0;
   int shortcut_mouse_button                    = 0;
@@ -318,7 +315,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
     tmp_size   = strlen(tmp);
   }
 
-  key_str = girara_list_nth(argument_list, current_command);
+  const char* key_str = girara_list_nth(argument_list, current_command);
 
   /* Check for multi key shortcut */
   if (tmp_length >= 3 && tmp[0] == '<' && tmp[tmp_size - 1] == '>') {
@@ -326,7 +323,8 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
     size_t tmp_inner_length    = g_utf8_strlen(tmp, -1);
 
     /* Multi key shortcut */
-    if (strchr(tmp_inner, '-') != NULL && g_utf8_get_char(g_utf8_offset_to_pointer(tmp, 1)) == '-' && tmp_inner_length > 2) {
+    if (strchr(tmp_inner, '-') != NULL && g_utf8_get_char(g_utf8_offset_to_pointer(tmp, 1)) == '-' &&
+        tmp_inner_length > 2) {
       switch (g_utf8_get_char(tmp_inner)) {
       case 'S':
         shortcut_mask = GDK_SHIFT_MASK;
@@ -435,7 +433,8 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
   }
 
   /* check for mouse mode */
-  bool mouse_mode = false;
+  bool mouse_mode       = false;
+  const char* event_str = NULL;
   if (current_command + 1 < number_of_arguments) {
     tmp        = girara_list_nth(argument_list, current_command + 1);
     tmp_length = g_utf8_strlen(tmp, -1);
