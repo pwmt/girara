@@ -56,8 +56,6 @@ static void init_template_engine(GiraraTemplate* csstemplate) {
       "notification-warning-bg",
       "notification-fg",
       "notification-bg",
-      "scrollbar-fg",
-      "scrollbar-bg",
       "bottombox-padding1",
       "bottombox-padding2",
       "bottombox-padding3",
@@ -142,8 +140,6 @@ static void fill_template_with_values(girara_session_t* session) {
       "notification-warning-bg",
       "notification-fg",
       "notification-bg",
-      "scrollbar-fg",
-      "scrollbar-bg",
   };
 
   for (size_t i = 0; i < LENGTH(color_settings); ++i) {
@@ -209,20 +205,6 @@ static void css_template_changed(GiraraTemplate* csstemplate, girara_session_t* 
   if (gtk_css_provider_load_from_data(provider, css_data, -1, &error) == FALSE) {
     girara_error("Unable to load CSS: %s", error->message);
   }
-}
-
-void scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window, bool show_horizontal, bool show_vertical) {
-  GtkPolicyType hpolicy = GTK_POLICY_AUTOMATIC;
-  GtkPolicyType vpolicy = GTK_POLICY_AUTOMATIC;
-
-  if (show_horizontal == false) {
-    hpolicy = GTK_POLICY_EXTERNAL;
-  }
-  if (show_vertical == false) {
-    vpolicy = GTK_POLICY_EXTERNAL;
-  }
-
-  gtk_scrolled_window_set_policy(window, hpolicy, vpolicy);
 }
 
 static void mode_string_free(void* data) {
@@ -299,9 +281,8 @@ girara_session_t* girara_session_create(void) {
   session->gtk.statusbar_entries  = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   session->gtk.inputbar_box       = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
-  session->gtk.view     = gtk_scrolled_window_new(NULL, NULL);
-  session->gtk.viewport = gtk_viewport_new(NULL, NULL);
-  gtk_widget_add_events(session->gtk.viewport, GDK_SCROLL_MASK);
+  session->gtk.view = gtk_stack_new();
+  gtk_widget_add_events(session->gtk.view, GDK_SCROLL_MASK);
   session->gtk.statusbar         = gtk_event_box_new();
   session->gtk.notification_area = gtk_event_box_new();
   session->gtk.notification_text = gtk_label_new(NULL);
@@ -335,7 +316,7 @@ bool girara_session_init(girara_session_t* session, const char* sessionname) {
   session->private_data->session_name = g_strdup((sessionname == NULL) ? "girara" : sessionname);
 
   /* enable smooth scroll events */
-  gtk_widget_add_events(session->gtk.viewport, GDK_SMOOTH_SCROLL_MASK);
+  gtk_widget_add_events(session->gtk.view, GDK_SMOOTH_SCROLL_MASK);
 
   /* load CSS style */
   fill_template_with_values(session);
@@ -392,21 +373,6 @@ bool girara_session_init(girara_session_t* session, const char* sessionname) {
 
   session->signals.view_scroll_event = g_signal_connect(G_OBJECT(session->gtk.view), "scroll-event",
                                                         G_CALLBACK(girara_callback_view_scroll_event), session);
-
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(session->gtk.view), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-  /* invisible scrollbars */
-  g_autofree char* guioptions = NULL;
-  girara_setting_get(session, "guioptions", &guioptions);
-
-  const bool show_hscrollbar = guioptions != NULL && strchr(guioptions, 'h') != NULL;
-  const bool show_vscrollbar = guioptions != NULL && strchr(guioptions, 'v') != NULL;
-
-  scrolled_window_set_scrollbar_visibility(GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
-
-  /* viewport */
-  gtk_container_add(GTK_CONTAINER(session->gtk.view), session->gtk.viewport);
-  gtk_viewport_set_shadow_type(GTK_VIEWPORT(session->gtk.viewport), GTK_SHADOW_NONE);
 
   /* statusbar */
   gtk_container_add(GTK_CONTAINER(session->gtk.statusbar), GTK_WIDGET(session->gtk.statusbar_entries));
@@ -649,7 +615,10 @@ void girara_notify(girara_session_t* session, int level, const char* format, ...
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
 
-  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
+  GtkWidget* view_child = gtk_stack_get_visible_child(GTK_STACK(session->gtk.view));
+  if (view_child != NULL) {
+    gtk_widget_grab_focus(GTK_WIDGET(view_child));
+  }
 }
 
 void girara_dialog(girara_session_t* session, const char* dialog, bool invisible,
@@ -686,16 +655,14 @@ void girara_dialog(girara_session_t* session, const char* dialog, bool invisible
 bool girara_set_view(girara_session_t* session, GtkWidget* widget) {
   g_return_val_if_fail(session != NULL, false);
 
-  GtkWidget* child = gtk_bin_get_child(GTK_BIN(session->gtk.viewport));
-
-  if (child != NULL) {
-    g_object_ref(child);
-    gtk_container_remove(GTK_CONTAINER(session->gtk.viewport), child);
+  GtkWidget* parent = gtk_widget_get_parent(widget);
+  if (parent != session->gtk.view) {
+    gtk_container_add(GTK_CONTAINER(session->gtk.view), widget);
   }
 
-  gtk_container_add(GTK_CONTAINER(session->gtk.viewport), widget);
-  gtk_widget_show_all(widget);
-  gtk_widget_grab_focus(session->gtk.view);
+  gtk_widget_set_visible(widget, true);
+  gtk_stack_set_visible_child(GTK_STACK(session->gtk.view), widget);
+  gtk_widget_grab_focus(widget);
 
   return true;
 }
