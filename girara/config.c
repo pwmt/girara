@@ -56,8 +56,6 @@ static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), g
   /* set default values */
   bool show_commandline = false;
   bool show_statusbar   = false;
-  bool show_hscrollbar  = false;
-  bool show_vscrollbar  = false;
 
   /* evaluate input */
   const char* input         = value;
@@ -72,12 +70,6 @@ static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), g
     /* statusbar */
     case 's':
       show_statusbar = true;
-      break;
-    case 'h':
-      show_hscrollbar = true;
-      break;
-    case 'v':
-      show_vscrollbar = true;
       break;
     }
   }
@@ -98,8 +90,6 @@ static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), g
     session->global.hide_statusbar = true;
     gtk_widget_hide(session->gtk.statusbar);
   }
-
-  scrolled_window_set_scrollbar_visibility(GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
 }
 
 void girara_config_load_default(girara_session_t* session) {
@@ -139,8 +129,6 @@ void girara_config_load_default(girara_session_t* session) {
   girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  FALSE,  _("Warning notifaction background color"), cb_color, NULL);
   girara_setting_add(session, "notification-fg",          "#000000",            STRING,  FALSE,  _("Notification foreground color"), cb_color, NULL);
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  FALSE,  _("Notification background color"), cb_color, NULL);
-  girara_setting_add(session, "scrollbar-fg",             "#DDDDDD",            STRING,  FALSE,  _("Scrollbar foreground color"), cb_color, NULL);
-  girara_setting_add(session, "scrollbar-bg",             "#000000",            STRING,  FALSE,  _("Scrollbar background color"), cb_color, NULL);
   girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);

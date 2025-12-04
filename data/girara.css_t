@@ -8,15 +8,6 @@
   font-style: @font-style@;
 }
 
-/* Scrollbar */
-#@session@ scrolledwindow scrollbar {
-  background-color: @scrollbar-bg@;
-}
-
-#@session@ scrolledwindow scrollbar > slider {
-  background-color: @scrollbar-fg@;
-}
-
 /* Inputbar */
 #@session@ entry.inputbar {
   background-color: @inputbar-bg@;

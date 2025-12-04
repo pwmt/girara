@@ -40,9 +40,6 @@ HIDDEN void widget_add_class(GtkWidget* widget, const char* styleclass);
 
 HIDDEN void widget_remove_class(GtkWidget* widget, const char* styleclass);
 
-HIDDEN void scrolled_window_set_scrollbar_visibility(GtkScrolledWindow* window, bool show_horizontal,
-                                                     bool show_vertical);
-
 /**
  * Default complection function for the settings
  *
