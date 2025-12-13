@@ -126,6 +126,7 @@ static unsigned int find_completion_group_index(GList* current_entry, unsigned i
 bool girara_isc_completion(girara_session_t* session, girara_argument_t* argument, girara_event_t* UNUSED(event),
                            unsigned int UNUSED(t)) {
   g_return_val_if_fail(session != NULL, false);
+  girara_session_private_t* priv = session->private_data;
 
   /* get current text */
   g_autofree gchar* input = gtk_editable_get_chars(GTK_EDITABLE(session->gtk.inputbar_entry), 0, -1);
@@ -163,14 +164,7 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
 
   size_t current_command_length = current_command ? strlen(current_command) : 0;
 
-  static GList* entries           = NULL;
-  static GList* entries_current   = NULL;
-  static char* previous_command   = NULL;
-  static char* previous_parameter = NULL;
-  static bool command_mode        = true;
-  static size_t previous_length   = 0;
-
-  const bool is_single_entry = (1 == g_list_length(entries));
+  const bool is_single_entry = 1 == g_list_length(priv->completion.entries);
 
   /* delete old list iff
    *   the completion should be hidden
@@ -180,12 +174,14 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
    *   there is only one completion entry
    */
   if ((argument->n == GIRARA_HIDE) ||
-      (current_parameter && previous_parameter && g_strcmp0(current_parameter, previous_parameter)) ||
-      (current_command && previous_command && g_strcmp0(current_command, previous_command)) ||
-      (input_length != previous_length) || is_single_entry) {
+      (current_parameter && priv->completion.previous_parameter &&
+       g_strcmp0(current_parameter, priv->completion.previous_parameter)) ||
+      (current_command && priv->completion.previous_command &&
+       g_strcmp0(current_command, priv->completion.previous_command)) ||
+      (input_length != priv->completion.previous_length) || is_single_entry) {
     if (session->gtk.results != NULL) {
       /* destroy elements */
-      for (GList* element = entries; element; element = g_list_next(element)) {
+      for (GList* element = priv->completion.entries; element; element = g_list_next(element)) {
         girara_internal_completion_entry_t* entry = (girara_internal_completion_entry_t*)element->data;
 
         if (entry != NULL) {
@@ -195,23 +191,23 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
         }
       }
 
-      g_list_free(entries);
-      entries         = NULL;
-      entries_current = NULL;
+      g_list_free(priv->completion.entries);
+      priv->completion.entries         = NULL;
+      priv->completion.entries_current = NULL;
 
       /* delete row box */
       gtk_widget_destroy(GTK_WIDGET(session->gtk.results));
       session->gtk.results = NULL;
     }
 
-    command_mode = true;
+    priv->completion.command_mode = true;
 
     if (argument->n == GIRARA_HIDE) {
-      g_free(previous_command);
-      previous_command = NULL;
+      g_free(priv->completion.previous_command);
+      priv->completion.previous_command = NULL;
 
-      g_free(previous_parameter);
-      previous_parameter = NULL;
+      g_free(priv->completion.previous_parameter);
+      priv->completion.previous_parameter = NULL;
 
       g_strfreev(elements);
 
@@ -239,7 +235,7 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
 
     if (n_parameter <= 1) {
       /* based on commands */
-      command_mode = true;
+      priv->completion.command_mode = true;
 
       /* create command rows */
       for (size_t idx = 0; idx != girara_list_size(session->bindings.commands); ++idx) {
@@ -253,7 +249,7 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
           entry->value                              = g_strdup(command->command);
           entry->widget = girara_completion_row_create(command->command, command->description, FALSE);
 
-          entries = g_list_append(entries, entry);
+          priv->completion.entries = g_list_append(priv->completion.entries, entry);
 
           /* show entry row */
           gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
@@ -262,20 +258,21 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
     }
 
     /* based on parameters */
-    if (n_parameter > 1 || g_list_length(entries) == 1) {
+    if (n_parameter > 1 || g_list_length(priv->completion.entries) == 1) {
       /* if only one command exists try to run parameter completion */
-      if (g_list_length(entries) == 1) {
-        girara_internal_completion_entry_t* entry = g_list_first(entries)->data;
+      if (g_list_length(priv->completion.entries) == 1) {
+        girara_internal_completion_entry_t* entry = g_list_first(priv->completion.entries)->data;
 
         /* unset command mode */
-        command_mode           = false;
-        current_command        = entry->value;
-        current_command_length = strlen(current_command);
+        priv->completion.command_mode = false;
+        current_command               = entry->value;
+        current_command_length        = strlen(current_command);
 
         /* clear list */
         gtk_widget_destroy(GTK_WIDGET(entry->widget));
 
-        entries = g_list_remove(entries, g_list_first(entries)->data);
+        priv->completion.entries =
+            g_list_remove(priv->completion.entries, g_list_first(priv->completion.entries)->data);
         g_free(entry);
       }
 
@@ -287,9 +284,9 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
              !strncmp(current_command, command_it->command, current_command_length)) ||
             (current_command != NULL && command_it->abbr != NULL &&
              !strncmp(current_command, command_it->abbr, current_command_length))) {
-          g_free(previous_command);
-          previous_command = g_strdup(command_it->command);
-          command          = command_it;
+          g_free(priv->completion.previous_command);
+          priv->completion.previous_command = g_strdup(command_it->command);
+          command                           = command_it;
           break;
         }
       }
@@ -308,10 +305,10 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
         entry->value                              = g_strdup(command->command);
         entry->widget = girara_completion_row_create(command->command, command->description, FALSE);
 
-        entries = g_list_append(entries, entry);
+        priv->completion.entries = g_list_append(priv->completion.entries, entry);
 
         gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
-        command_mode = true;
+        priv->completion.command_mode = true;
       } else {
         /* generate completion result
          * XXX: the last argument should only be current_paramater ... but
@@ -340,7 +337,7 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
             entry->value                              = g_strdup(group->value);
             entry->widget                             = girara_completion_row_create(group->value, NULL, TRUE);
 
-            entries = g_list_append(entries, entry);
+            priv->completion.entries = g_list_append(priv->completion.entries, entry);
 
             gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
           }
@@ -353,57 +350,59 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
             entry->value                              = g_strdup(element->value);
             entry->widget = girara_completion_row_create(element->value, element->description, FALSE);
 
-            entries = g_list_append(entries, entry);
+            priv->completion.entries = g_list_append(priv->completion.entries, entry);
 
             gtk_box_pack_start(session->gtk.results, GTK_WIDGET(entry->widget), FALSE, FALSE, 0);
           }
         }
         girara_completion_free(result);
 
-        command_mode = false;
+        priv->completion.command_mode = false;
       }
     }
 
-    if (entries != NULL) {
-      entries_current = (argument->n == GIRARA_NEXT) ? g_list_last(entries) : entries;
-      gtk_box_pack_start(session->private_data->gtk.bottom_box, GTK_WIDGET(session->gtk.results), FALSE, FALSE, 0);
+    if (priv->completion.entries != NULL) {
+      priv->completion.entries_current =
+          (argument->n == GIRARA_NEXT) ? g_list_last(priv->completion.entries) : priv->completion.entries;
+      gtk_box_pack_start(priv->gtk.bottom_box, GTK_WIDGET(session->gtk.results), FALSE, FALSE, 0);
       gtk_widget_show(GTK_WIDGET(session->gtk.results));
     }
   }
 
   /* update entries */
-  unsigned int n_elements = g_list_length(entries);
-  if (entries != NULL && n_elements > 0) {
+  unsigned int n_elements = g_list_length(priv->completion.entries);
+  if (priv->completion.entries != NULL && n_elements > 0) {
     if (n_elements > 1) {
-      girara_completion_row_set_color(((girara_internal_completion_entry_t*)entries_current->data)->widget,
-                                      GIRARA_NORMAL);
+      girara_completion_row_set_color(
+          ((girara_internal_completion_entry_t*)priv->completion.entries_current->data)->widget, GIRARA_NORMAL);
 
       bool next_group = FALSE;
 
       for (unsigned int i = 0; i < n_elements; i++) {
         if (argument->n == GIRARA_NEXT || argument->n == GIRARA_NEXT_GROUP) {
-          GList* entry = g_list_next(entries_current);
+          GList* entry = g_list_next(priv->completion.entries_current);
           if (entry == NULL) {
-            entry = g_list_first(entries);
+            entry = g_list_first(priv->completion.entries);
           }
 
-          entries_current = entry;
+          priv->completion.entries_current = entry;
         } else if (argument->n == GIRARA_PREVIOUS || argument->n == GIRARA_PREVIOUS_GROUP) {
-          GList* entry = g_list_previous(entries_current);
+          GList* entry = g_list_previous(priv->completion.entries_current);
           if (entry == NULL) {
-            entry = g_list_last(entries);
+            entry = g_list_last(priv->completion.entries);
           }
 
-          entries_current = entry;
+          priv->completion.entries_current = entry;
         }
 
-        if (((girara_internal_completion_entry_t*)entries_current->data)->group) {
-          if (command_mode == false && (argument->n == GIRARA_NEXT_GROUP || argument->n == GIRARA_PREVIOUS_GROUP)) {
+        if (((girara_internal_completion_entry_t*)priv->completion.entries_current->data)->group) {
+          if (priv->completion.command_mode == false &&
+              (argument->n == GIRARA_NEXT_GROUP || argument->n == GIRARA_PREVIOUS_GROUP)) {
             next_group = TRUE;
           }
           continue;
         } else {
-          if (command_mode == false && (next_group == 0) &&
+          if (priv->completion.command_mode == false && (next_group == 0) &&
               (argument->n == GIRARA_NEXT_GROUP || argument->n == GIRARA_PREVIOUS_GROUP)) {
             continue;
           }
@@ -411,8 +410,8 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
         }
       }
 
-      girara_completion_row_set_color(((girara_internal_completion_entry_t*)entries_current->data)->widget,
-                                      GIRARA_HIGHLIGHT);
+      girara_completion_row_set_color(
+          ((girara_internal_completion_entry_t*)priv->completion.entries_current->data)->widget, GIRARA_HIGHLIGHT);
 
       /* hide other items */
       unsigned int n_completion_items = 15;
@@ -420,10 +419,10 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
       const unsigned int uh = ceil(n_completion_items / 2.0);
       const unsigned int lh = floor(n_completion_items / 2.0);
 
-      const unsigned int current_item  = g_list_position(entries, entries_current);
-      const unsigned int current_group = find_completion_group_index(entries_current, current_item);
+      const unsigned int current_item  = g_list_position(priv->completion.entries, priv->completion.entries_current);
+      const unsigned int current_group = find_completion_group_index(priv->completion.entries_current, current_item);
 
-      GList* tmpentry = entries;
+      GList* tmpentry = priv->completion.entries;
       for (unsigned int i = 0; i < n_elements; i++) {
         girara_internal_completion_entry_t* tmp = tmpentry->data;
         /* If there is less than n-completion-items that need to be shown, show everything.
@@ -440,17 +439,19 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
         tmpentry = g_list_next(tmpentry);
       }
     } else {
-      gtk_widget_hide(GTK_WIDGET(((girara_internal_completion_entry_t*)(g_list_nth(entries, 0))->data)->widget));
+      gtk_widget_hide(
+          GTK_WIDGET(((girara_internal_completion_entry_t*)(g_list_nth(priv->completion.entries, 0))->data)->widget));
     }
 
     /* update text */
     char* temp;
-    char* escaped_value = girara_escape_string(((girara_internal_completion_entry_t*)entries_current->data)->value);
-    if (command_mode == true) {
+    char* escaped_value =
+        girara_escape_string(((girara_internal_completion_entry_t*)priv->completion.entries_current->data)->value);
+    if (priv->completion.command_mode == true) {
       char* space = (n_elements == 1) ? " " : "";
       temp        = g_strconcat(":", escaped_value, space, NULL);
     } else {
-      temp = g_strconcat(":", previous_command, " ", escaped_value, NULL);
+      temp = g_strconcat(":", priv->completion.previous_command, " ", escaped_value, NULL);
     }
 
     gtk_entry_set_text(session->gtk.inputbar_entry, temp);
@@ -458,14 +459,18 @@ bool girara_isc_completion(girara_session_t* session, girara_argument_t* argumen
     g_free(escaped_value);
 
     /* update previous */
-    g_free(previous_parameter);
-    g_free(previous_command);
+    g_free(priv->completion.previous_parameter);
+    g_free(priv->completion.previous_command);
 
-    previous_command   = g_strdup((command_mode) ? ((girara_internal_completion_entry_t*)entries_current->data)->value
-                                                 : current_command);
-    previous_parameter = g_strdup((command_mode) ? current_parameter
-                                                 : ((girara_internal_completion_entry_t*)entries_current->data)->value);
-    previous_length    = strlen(temp);
+    priv->completion.previous_command =
+        g_strdup((priv->completion.command_mode)
+                     ? ((girara_internal_completion_entry_t*)priv->completion.entries_current->data)->value
+                     : current_command);
+    priv->completion.previous_parameter =
+        g_strdup((priv->completion.command_mode)
+                     ? current_parameter
+                     : ((girara_internal_completion_entry_t*)priv->completion.entries_current->data)->value);
+    priv->completion.previous_length = strlen(temp);
     g_free(temp);
   }
 

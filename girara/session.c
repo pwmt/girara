@@ -283,6 +283,9 @@ girara_session_t* girara_session_create(void) {
   session_private->config.argument_mappings =
       girara_list_new_with_free((girara_free_function_t)girara_argument_mapping_free);
 
+  /* completion state */
+  session_private->completion.command_mode = true;
+
   /* command history */
   session->command_history = girara_input_history_new(NULL);
 
@@ -511,9 +514,19 @@ bool girara_session_init(girara_session_t* session, const char* sessionname) {
 static void girara_session_private_free(girara_session_private_t* session) {
   g_return_if_fail(session != NULL);
 
-  if (session->session_name != NULL) {
-    g_free(session->session_name);
-  }
+  g_free(session->session_name);
+  session->session_name = NULL;
+
+  // clean up completation state
+  g_list_free(session->completion.entries);
+  session->completion.entries         = NULL;
+  session->completion.entries_current = NULL;
+
+  g_free(session->completion.previous_command);
+  session->completion.previous_command = NULL;
+
+  g_free(session->completion.previous_parameter);
+  session->completion.previous_parameter = NULL;
 
   /* clean up config handles */
   girara_list_free(session->config.handles);

@@ -263,6 +263,15 @@ struct girara_session_private_s {
     girara_list_t* shortcut_mappings;
     girara_list_t* argument_mappings;
   } config;
+
+  struct {
+    GList* entries;
+    GList* entries_current;
+    char* previous_command;
+    char* previous_parameter;
+    size_t previous_length;
+    bool command_mode;
+  } completion;
 };
 
 #endif
