@@ -270,7 +270,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
   int shortcut_key                             = 0;
   int shortcut_mouse_button                    = 0;
   girara_mode_t shortcut_mode                  = session->modes.normal;
-  g_autofree char* shortcut_argument_data      = NULL;
+  char* shortcut_argument_data                 = NULL;
   int shortcut_argument_n                      = 0;
   g_autofree char* shortcut_buffer_command     = NULL;
   girara_event_type_t event_type               = GIRARA_EVENT_BUTTON_PRESS;
