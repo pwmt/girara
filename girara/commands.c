@@ -501,7 +501,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
   /* Check for passed argument */
   char* shortcut_argument_data = NULL;
   if (++current_command < number_of_arguments) {
-    tmp = girara_list_nth(argument_list, current_command);
+    const size_t stored_current_command = current_command;
 
     for (size_t idx = 0; idx != girara_list_size(session_private->config.argument_mappings); ++idx) {
       girara_argument_mapping_t* mapping = girara_list_nth(session_private->config.argument_mappings, idx);
@@ -513,7 +513,7 @@ static bool girara_cmd_map_unmap(girara_session_t* session, girara_list_t* argum
 
     /* If no known argument is passed we save it in the data field */
     if (shortcut_argument_n == 0) {
-      shortcut_argument_data = tmp;
+      shortcut_argument_data = girara_list_nth(argument_list, stored_current_command);
       /* If a known argument is passed and there are still more arguments,
        * we save the next one in the data field */
     } else if (++current_command < number_of_arguments) {
