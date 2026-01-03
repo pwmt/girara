@@ -75,6 +75,7 @@ static void girara_cmd_display_shortcut(girara_session_t* session, const char* k
     }
 
     if (shortcut->argument.data != NULL) {
+      g_strv_builder_add(builder, " ");
       g_strv_builder_add(builder, shortcut->argument.data);
     }
   }
@@ -153,6 +154,7 @@ static void girara_cmd_display_mouse_event(girara_session_t* session, const char
     }
 
     if (mouse_event->argument.data != NULL) {
+      g_strv_builder_add(builder, " ");
       g_strv_builder_add(builder, mouse_event->argument.data);
     }
   }
