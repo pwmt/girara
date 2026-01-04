@@ -28,6 +28,7 @@ typedef struct girara_shortcut_s girara_shortcut_t;
 typedef struct girara_inputbar_shortcut_s girara_inputbar_shortcut_t;
 typedef struct girara_special_command_s girara_special_command_t;
 typedef struct girara_event_s girara_event_t;
+typedef struct girara_record_item_s girara_record_item_t;
 
 /**
  * This structure defines the possible argument identifiers

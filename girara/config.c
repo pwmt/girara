@@ -9,6 +9,7 @@
 #include "commands.h"
 #include "datastructures.h"
 #include "internal.h"
+#include "record.h"
 #include "session.h"
 #include "settings.h"
 #include "shortcuts.h"
@@ -92,6 +93,48 @@ static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), g
   }
 }
 
+static void cb_macro_record_changed(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type),
+                           const void* value, void* UNUSED(data)) {
+  g_return_if_fail(session != NULL && value != NULL);
+  girara_session_private_t* session_private = session->private_data;
+
+  const bool* record_keys = value;
+  if (*record_keys) {
+    girara_info("macro recording started");
+
+    char* path = "";
+    girara_setting_get(session, "macro-filename", &path);
+
+    g_autoptr(GFile) file = g_file_new_for_path(path);
+    if (file == NULL) {
+      girara_notify(session, GIRARA_ERROR, "failed to open file '%s'", path);
+      girara_info("failed to open file '%s'", path);
+      return;
+    }
+
+    session_private->record.output = g_file_replace(file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, NULL);
+    if (session_private->record.output == NULL) {
+      girara_notify(session, GIRARA_ERROR, "failed to open file '%s'", path);
+      girara_info("failed to open file '%s'", path);
+      return;
+    }
+
+    girara_record_init(session);
+  } else {
+    girara_info("macro recording stopped");
+    g_output_stream_close(G_OUTPUT_STREAM(session_private->record.output), NULL, NULL);
+  }
+}
+
+static void cb_macro_record_filter(girara_session_t* session, const char* UNUSED(name), girara_setting_type_t UNUSED(type),
+                                   const void* value, void* UNUSED(data)) {
+  g_return_if_fail(session != NULL && value != NULL);
+  girara_session_private_t* session_private = session->private_data;
+
+  girara_list_clear(session_private->record.filter_keys);
+  girara_record_filter_keys(session, (char *)value);
+}
+
 void girara_config_load_default(girara_session_t* session) {
   if (session == NULL) {
     return;
@@ -138,6 +181,10 @@ void girara_config_load_default(girara_session_t* session) {
   girara_setting_add(session, "window-icon",              "",                   STRING,  FALSE, _("Window icon"), cb_window_icon, NULL);
   girara_setting_add(session, "exec-command",             "",                   STRING,  FALSE, _("Command to execute in :exec"), NULL, NULL);
   girara_setting_add(session, "guioptions",               "s",                  STRING,  FALSE, _("Show or hide certain GUI elements"), cb_guioptions, NULL);
+  bool bool_value = false;
+  girara_setting_add(session, "macro-record",             &bool_value,          BOOLEAN, FALSE, _("Record macro and save to file"), cb_macro_record_changed, NULL);
+  girara_setting_add(session, "macro-filename",           "girara.macro",       STRING,  FALSE, _("Output location of macro"), NULL, NULL);
+  girara_setting_add(session, "macro-filter",             "",                   STRING,  FALSE, _("String of keys to ignore during macro recording"), cb_macro_record_filter, NULL);
 
   /* shortcuts */
   girara_shortcut_add(session, 0,                GDK_KEY_Escape,      NULL, girara_sc_abort,           normal_mode, 0, NULL);
@@ -173,13 +220,14 @@ void girara_config_load_default(girara_session_t* session) {
   girara_inputbar_shortcut_add(session, GDK_CONTROL_MASK, GDK_KEY_n,            girara_isc_command_history,     GIRARA_NEXT,                 NULL);
 
   /* commands */
-  girara_inputbar_command_add(session, "exec",  NULL, girara_cmd_exec,        NULL,          _("Execute a command"));
-  girara_inputbar_command_add(session, "map",   "m",  girara_cmd_map,         NULL,          _("Map a key sequence"));
-  girara_inputbar_command_add(session, "quit",  "q",  girara_cmd_quit,        NULL,          _("Quit the program"));
-  girara_inputbar_command_add(session, "set",   "s",  girara_cmd_set,         girara_cc_set, _("Set an option"));
-  girara_inputbar_command_add(session, "unmap", NULL, girara_cmd_unmap,       NULL,          _("Unmap a key sequence"));
+  girara_inputbar_command_add(session, "exec",       NULL, girara_cmd_exec,        NULL,          _("Execute a command"));
+  girara_inputbar_command_add(session, "map",        "m",  girara_cmd_map,         NULL,          _("Map a key sequence"));
+  girara_inputbar_command_add(session, "quit",       "q",  girara_cmd_quit,        NULL,          _("Quit the program"));
+  girara_inputbar_command_add(session, "set",        "s",  girara_cmd_set,         girara_cc_set, _("Set an option"));
+  girara_inputbar_command_add(session, "macro_load", NULL, girara_cmd_load_macro,  NULL,          _("Load macro"));
+  girara_inputbar_command_add(session, "unmap",      NULL, girara_cmd_unmap,       NULL,          _("Unmap a key sequence"));
 #ifdef WITH_JSON
-  girara_inputbar_command_add(session, "dump",  NULL, girara_cmd_dump_config, NULL,          _("Dump settings to a file"));
+  girara_inputbar_command_add(session, "dump",       NULL, girara_cmd_dump_config, NULL,          _("Dump settings to a file"));
 #endif
 
   /* config handle */
@@ -192,6 +240,9 @@ void girara_config_load_default(girara_session_t* session) {
   girara_shortcut_mapping_add(session, "feedkeys",         girara_sc_feedkeys);
   girara_shortcut_mapping_add(session, "focus_inputbar",   girara_sc_focus_inputbar);
   girara_shortcut_mapping_add(session, "quit",             girara_sc_quit);
+  girara_shortcut_mapping_add(session, "macro_load",       girara_sc_macro_load);
+  girara_shortcut_mapping_add(session, "macro_run",        girara_sc_macro_run);
+  girara_shortcut_mapping_add(session, "macro_breakpoint", girara_sc_macro_breakpoint);
   girara_shortcut_mapping_add(session, "set",              girara_sc_set);
   girara_shortcut_mapping_add(session, "toggle_inputbar",  girara_sc_toggle_inputbar);
   girara_shortcut_mapping_add(session, "toggle_statusbar", girara_sc_toggle_statusbar);

@@ -6,6 +6,7 @@
 #include "datastructures.h"
 #include "input-history.h"
 #include "internal.h"
+#include "record.h"
 #include "session.h"
 #include "shortcuts.h"
 #include "utils.h"
@@ -72,6 +73,9 @@ static bool clean_mask(GtkWidget* widget, guint hardware_keycode, GdkModifierTyp
 gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* event, girara_session_t* session) {
   g_return_val_if_fail(session != NULL, FALSE);
 
+  /* record keys */
+  girara_record_key_event(session, "view", event);
+  
   guint clean  = 0;
   guint keyval = 0;
 
@@ -412,6 +416,9 @@ gboolean girara_callback_inputbar_activate(GtkEntry* entry, girara_session_t* se
 
 gboolean girara_callback_inputbar_key_press_event(GtkWidget* entry, GdkEventKey* event, girara_session_t* session) {
   g_return_val_if_fail(session != NULL, false);
+
+  /* record keys */
+  girara_record_key_event(session, "inputbar", event);
 
   /* a custom handler has been installed (e.g. by girara_dialog) */
   gboolean custom_ret = false;

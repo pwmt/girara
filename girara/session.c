@@ -8,8 +8,10 @@
 #include "css-definitions.h"
 #include "datastructures.h"
 #include "entry.h"
+#include "types.h"
 #include "input-history.h"
 #include "internal.h"
+#include "record.h"
 #include "settings.h"
 #include "shortcuts.h"
 #include "template.h"
@@ -231,8 +233,11 @@ girara_session_t* girara_session_create(void) {
   session->bindings.shortcuts               = girara_list_new_with_free((girara_free_function_t)girara_shortcut_free);
   session->bindings.inputbar_shortcuts      = girara_list_new_with_free(g_free);
   session_private->elements.statusbar_items = girara_list_new_with_free(g_free);
+  session_private->record.filter_keys       = girara_list_new_with_free((girara_free_function_t)gdk_event_free);
+  session_private->record.recording         = girara_list_new_with_free((girara_free_function_t)girara_record_item_free);
 
   g_mutex_init(&session_private->feedkeys_mutex);
+  g_mutex_init(&session_private->record.mutex);
 
   /* settings */
   session_private->settings =
@@ -523,6 +528,11 @@ static void girara_session_private_free(girara_session_private_t* session) {
   /* clean up settings */
   girara_list_free(session->settings);
   session->settings = NULL;
+
+  /* clean up recordings */
+  girara_list_free(session->record.filter_keys);
+  session->record.filter_keys = NULL;
+  g_mutex_clear(&session->record.mutex);
 
   /* clean up mutex */
   g_mutex_clear(&session->feedkeys_mutex);

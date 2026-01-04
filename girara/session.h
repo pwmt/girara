@@ -75,6 +75,10 @@ struct girara_session_s {
     girara_mode_t normal;       /**< The normal mode */
     girara_mode_t inputbar;     /**< The inputbar mode */
   } modes;
+
+  struct {
+    girara_callback_record_assert_t assert_cb;  /**< Macro assert handler */
+  } record;
 };
 
 /**

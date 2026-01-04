@@ -6,6 +6,7 @@
 #include "input-history.h"
 #include "internal.h"
 #include "log.h"
+#include "record.h"
 #include "session.h"
 #include "settings.h"
 
@@ -311,6 +312,30 @@ bool girara_sc_quit(girara_session_t* session, girara_argument_t* UNUSED(argumen
   girara_isc_completion(session, &arg, NULL, 0);
 
   gtk_main_quit();
+
+  return false;
+}
+
+bool girara_sc_macro_load(girara_session_t* session, girara_argument_t* argument, 
+                           girara_event_t* UNUSED(event), unsigned int UNUSED(t)) {
+  g_return_val_if_fail(session != NULL, false);
+  girara_record_load_macro(session, argument->data);
+
+  return false;
+}
+
+bool girara_sc_macro_run(girara_session_t* session, girara_argument_t* UNUSED(argument), 
+                           girara_event_t* UNUSED(event), unsigned int UNUSED(t)) {
+  g_return_val_if_fail(session != NULL, false);
+  girara_record_run_macro(session);
+
+  return false;
+}
+
+bool girara_sc_macro_breakpoint(girara_session_t* session, girara_argument_t* UNUSED(argument), 
+                                girara_event_t* UNUSED(event), unsigned int UNUSED(t)) {
+  g_return_val_if_fail(session != NULL, false);
+  girara_record_breakpoint(session);
 
   return false;
 }
