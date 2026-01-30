@@ -27,9 +27,9 @@ char* girara_fix_path(const char* path) {
 
   char* rpath = NULL;
   if (path[0] == '~') {
-    const size_t len = strlen(path);
-    char* user       = NULL;
-    size_t idx       = 1;
+    const size_t len      = strlen(path);
+    g_autofree char* user = NULL;
+    size_t idx            = 1;
 
     if (len > 1 && path[1] != '/') {
       while (path[idx] && path[idx] != '/') {
@@ -39,21 +39,17 @@ char* girara_fix_path(const char* path) {
       user = g_strndup(path + 1, idx - 1);
     }
 
-    char* home_path = girara_get_home_directory(user);
-    g_free(user);
-
+    g_autofree char* home_path = girara_get_home_directory(user);
     if (home_path == NULL) {
       return g_strdup(path);
     }
 
     rpath = g_build_filename(home_path, path + idx, NULL);
-    g_free(home_path);
   } else if (g_path_is_absolute(path) == TRUE) {
     rpath = g_strdup(path);
   } else {
-    char* curdir = g_get_current_dir();
-    rpath        = g_build_filename(curdir, path, NULL);
-    g_free(curdir);
+    g_autofree char* curdir = g_get_current_dir();
+    rpath                   = g_build_filename(curdir, path, NULL);
   }
 
   return rpath;
@@ -68,11 +64,10 @@ bool girara_xdg_open_with_working_directory(const char* uri, const char* working
   static char xdg_open[] = "xdg-open";
   char* argv[]           = {xdg_open, g_strdup(uri), NULL};
 
-  GError* error = NULL;
-  bool res      = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
+  g_autoptr(GError) error = NULL;
+  bool res                = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
   if (error != NULL) {
     girara_warning("Failed to execute 'xdg-open %s': %s", uri, error->message);
-    g_error_free(error);
     error = NULL;
   }
 
@@ -86,12 +81,10 @@ bool girara_xdg_open_with_working_directory(const char* uri, const char* working
     res = g_app_info_launch_default_for_uri(uri, NULL, &error);
     if (error != NULL) {
       girara_warning("Failed to open '%s': %s", uri, error->message);
-      g_error_free(error);
     }
 
     if (working_directory != NULL) {
       g_chdir(current_dir);
-      g_free(current_dir);
     }
   }
 
@@ -112,10 +105,10 @@ static char* get_home_directory_getpwnam(const char* user) {
     bufsize = 4096;
   }
 #else
-  const int bufsize = 4096;
+  static const int bufsize = 4096;
 #endif
 
-  char* buffer = g_try_malloc0(sizeof(char) * bufsize);
+  g_autofree char* buffer = g_try_malloc0(sizeof(char) * bufsize);
   if (buffer == NULL) {
     return NULL;
   }
@@ -127,7 +120,6 @@ static char* get_home_directory_getpwnam(const char* user) {
     dir = g_strdup(pwd.pw_dir);
   }
 
-  g_free(buffer);
   return dir;
 }
 #else
@@ -180,166 +172,6 @@ char* girara_get_xdg_path(girara_xdg_path_t path) {
   return NULL;
 }
 
-girara_list_t* girara_split_path_array(const char* patharray) {
-  if (patharray == NULL || !g_strcmp0(patharray, "")) {
-    return NULL;
-  }
-
-  girara_list_t* res = girara_list_new_with_free(g_free);
-  char** paths       = g_strsplit(patharray, ":", 0);
-  for (size_t i = 0; paths[i] != NULL; ++i) {
-    girara_list_append(res, g_strdup(paths[i]));
-  }
-  g_strfreev(paths);
-
-  return res;
-}
-
-FILE* girara_file_open(const char* path, const char* mode) {
-  if (path == NULL || mode == NULL) {
-    return NULL;
-  }
-
-  char* fixed_path = girara_fix_path(path);
-  if (fixed_path == NULL) {
-    return NULL;
-  }
-
-  FILE* fp = fopen(fixed_path, mode);
-  g_free(fixed_path);
-  if (fp == NULL) {
-    return NULL;
-  }
-
-  return fp;
-}
-
-#if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)
-char* girara_file_read_line(FILE* file) {
-  if (file == NULL) {
-    return NULL;
-  }
-
-  size_t size = 0;
-  char* line  = fgetln(file, &size);
-  if (line == NULL) {
-    return NULL;
-  }
-
-  char* copy = g_strndup(line, size);
-  if (copy == NULL) {
-    return NULL;
-  }
-
-  /* remove the trailing line deliminator */
-  g_strdelimit(copy, "\n\r", '\0');
-
-  return copy;
-}
-#else
-char* girara_file_read_line(FILE* file) {
-  if (file == NULL) {
-    return NULL;
-  }
-
-  size_t size = 0;
-  char* line  = NULL;
-  if (getline(&line, &size, file) == -1) {
-    if (line != NULL) {
-      free(line);
-    }
-    return NULL;
-  }
-
-  /* remove the trailing line deliminator */
-  g_strdelimit(line, "\n\r", '\0');
-
-  char* duplicate = g_strdup(line);
-  free(line);
-  return duplicate;
-}
-#endif
-
-char* girara_file_read(const char* path) {
-  if (path == NULL) {
-    return NULL;
-  }
-
-  FILE* file = girara_file_open(path, "r");
-  if (file == NULL) {
-    return NULL;
-  }
-
-  char* content = girara_file_read2(file);
-  fclose(file);
-  return content;
-}
-
-char* girara_file_read2(FILE* file) {
-  if (file == NULL) {
-    return NULL;
-  }
-
-  const off_t curpos = ftello(file);
-  if (curpos == -1) {
-    return NULL;
-  }
-
-  fseeko(file, 0, SEEK_END);
-  const off_t size = ftello(file) - curpos;
-  fseeko(file, curpos, SEEK_SET);
-
-  if (size == 0) {
-    return g_try_malloc0(1);
-  }
-
-  /* this can happen on 32 bit systems */
-  if ((uintmax_t)size >= (uintmax_t)SIZE_MAX) {
-    girara_error("file is too large");
-    return NULL;
-  }
-
-  char* buffer = g_try_malloc(size + 1);
-  if (buffer == NULL) {
-    return NULL;
-  }
-
-  size_t read = fread(buffer, size, 1, file);
-  if (read != 1) {
-    free(buffer);
-    return NULL;
-  }
-
-  buffer[size] = '\0';
-  return buffer;
-}
-
-void girara_clean_line(char* line) {
-  if (line == NULL) {
-    return;
-  }
-
-  size_t i     = 0;
-  size_t j     = 0;
-  bool ws_mode = true;
-
-  for (i = 0; i < strlen(line); ++i) {
-    if (isspace(line[i]) != 0) {
-      if (ws_mode == true) {
-        continue;
-      }
-
-      line[j++] = ' ';
-      ws_mode   = true;
-    } else {
-      line[j++] = line[i];
-      ws_mode   = false;
-    }
-  }
-
-  line[j] = '\0';
-}
-
 char* girara_escape_string(const char* value) {
   if (value == NULL) {
     return NULL;
@@ -378,7 +210,7 @@ bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* ar
     return false;
   }
 
-  char* cmd = NULL;
+  g_autofree char* cmd = NULL;
   girara_setting_get(session, "exec-command", &cmd);
   if (cmd == NULL || strlen(cmd) == 0) {
     girara_debug("exec-command is empty, executing directly.");
@@ -387,29 +219,24 @@ bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* ar
   }
 
   bool dont_append_first_space = cmd == NULL;
-  GString* command             = g_string_new(cmd ? cmd : "");
-  g_free(cmd);
+  g_autoptr(GString) command   = g_string_new(cmd ? cmd : "");
 
   for (size_t idx = 0; idx != girara_list_size(argument_list); ++idx) {
     if (dont_append_first_space == false) {
       g_string_append_c(command, ' ');
     }
     dont_append_first_space = false;
-    char* tmp               = g_shell_quote(girara_list_nth(argument_list, idx));
+    g_autofree char* tmp    = g_shell_quote(girara_list_nth(argument_list, idx));
     g_string_append(command, tmp);
-    g_free(tmp);
   };
 
-  GError* error = NULL;
+  g_autoptr(GError) error = NULL;
   girara_info("executing: %s", command->str);
   gboolean ret = g_spawn_command_line_async(command->str, &error);
   if (error != NULL) {
     girara_warning("Failed to execute command: %s", error->message);
     girara_notify(session, GIRARA_ERROR, _("Failed to execute command: %s"), error->message);
-    g_error_free(error);
   }
-
-  g_string_free(command, TRUE);
 
   return ret;
 }

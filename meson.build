@@ -1,6 +1,6 @@
 project('girara', 'c',
-  version: '0.4.5',
-  meson_version: '>=0.61',
+  version: '2026.01.30',
+  meson_version: '>=1.5',
   default_options: ['c_std=c17', 'warning_level=3'],
 )
 
@@ -14,7 +14,7 @@ version_array = version.split('.')
 # * If any of the exported datastructures have changed in a incompatible way
 #   bump SOMAJOR and set SOMINOR to 0.
 # * If a function has been added bump SOMINOR.
-so_major = '4'
+so_major = '5'
 so_minor = '0'
 so_version = '@0@.@1@'.format(so_major, so_minor)
 
@@ -28,6 +28,11 @@ cc = meson.get_compiler('c')
 
 prefix = get_option('prefix')
 localedir = get_option('localedir')
+
+# required attributes
+cc.compiles('''#if !__has_attribute(cleanup)
+#error attribute cleanup not supported
+#endif''', name: '__attribute__(cleanup)', required: true)
 
 # required dependencies
 libm = cc.find_library('m', required: false)
@@ -43,7 +48,7 @@ has_getpwnam_r = cc.has_function('getpwnam_r', prefix: '#define _DEFAULT_SOURCE\
 
 # defines
 defines = [
-  '-DGETTEXT_PACKAGE="libgirara-gtk3-@0@"'.format(so_major),
+  '-DGETTEXT_PACKAGE="org.pwmt.girara.gtk3.@0@"'.format(so_major),
   '-DLOCALEDIR="@0@"'.format(join_paths(prefix, localedir)),
   '-D_DEFAULT_SOURCE',
 ]
@@ -57,7 +62,8 @@ flags = [
   '-Wmissing-declarations',
   '-Werror=implicit-function-declaration',
   '-Werror=vla',
-  '-Werror=int-conversion'
+  '-Werror=int-conversion',
+  '-Werror=maybe-uninitialized'
 ]
 flags = cc.get_supported_arguments(flags)
 

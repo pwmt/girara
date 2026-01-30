@@ -59,14 +59,6 @@ bool girara_xdg_open(const char* uri) GIRARA_VISIBLE;
 bool girara_xdg_open_with_working_directory(const char* uri, const char* working_directory) GIRARA_VISIBLE;
 
 /**
- * Splits paths separated by : (as in $PATH) into a list.
- *
- * @param patharray String like $PATH to split
- * @return a list of paths and NULL on failure.
- */
-girara_list_t* girara_split_path_array(const char* patharray) GIRARA_VISIBLE;
-
-/**
  * Returns a "fixed" version of path. Which means, it will be an absolute path
  * and fully expanded. ~ and ~user will be replaced by the current user's home
  * directory (user's home directory respectively).
@@ -74,47 +66,6 @@ girara_list_t* girara_split_path_array(const char* patharray) GIRARA_VISIBLE;
  * @return the "fixed" path (needs to be freed with g_free).
  */
 char* girara_fix_path(const char* path) GIRARA_VISIBLE;
-
-/**
- * Open a file in a safe way
- *
- * @param path Path of the file
- * @param mode Mode that the file should be opened
- * @return NULL if an error occurred
- */
-FILE* girara_file_open(const char* path, const char* mode) GIRARA_VISIBLE;
-
-/**
- * Reads a line from the file. The returned string has to be released with
- * g_free.
- *
- * @param file The file stream
- * @return Read line or NULL if an error occurred
- */
-char* girara_file_read_line(FILE* file) GIRARA_VISIBLE;
-
-/**
- * Reads the whole content from a file. Returned string has to be released with g_free.
- *
- * @param path Path to the file
- * @return Read file or NULL if an error occurred
- */
-char* girara_file_read(const char* path) GIRARA_VISIBLE;
-
-/**
- * Reads the whole content from a file. Returned string has to be released with g_free.
- *
- * @param file file to read
- * @return Read file or NULL if an error occurred
- */
-char* girara_file_read2(FILE* file) GIRARA_VISIBLE;
-
-/**
- * Trims and cleans a line from multiple whitespaces
- *
- * @param line
- */
-void girara_clean_line(char* line) GIRARA_VISIBLE;
 
 /**
  * Escape \\, \\t, ", ' and spaces in strings.

@@ -244,10 +244,9 @@ static void ih_reset(GiraraInputHistory* history) {
     }
     girara_list_clear(list);
 
-    girara_list_t* newlist = girara_input_history_io_read(priv->io);
+    g_autoptr(girara_list_t) newlist = girara_input_history_io_read(priv->io);
     if (newlist != NULL) {
       girara_list_merge(list, newlist);
-      girara_list_free(newlist);
     }
   }
 }

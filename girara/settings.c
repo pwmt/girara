@@ -147,16 +147,14 @@ bool girara_setting_get(girara_session_t* session, const char* name, void* dest)
 }
 
 void girara_setting_free(girara_setting_t* setting) {
-  if (!setting) {
-    return;
+  if (setting != NULL) {
+    if (setting->type == STRING) {
+      g_free(setting->value.s);
+    }
+    g_free(setting->description);
+    g_free(setting->name);
+    g_free(setting);
   }
-
-  if (setting->type == STRING) {
-    g_free(setting->value.s);
-  }
-  g_free(setting->description);
-  g_free(setting->name);
-  g_free(setting);
 }
 
 girara_setting_t* girara_setting_find(girara_session_t* session, const char* name) {
@@ -279,12 +277,11 @@ bool girara_cmd_dump_config(girara_session_t* session, girara_list_t* argument_l
   JsonNode* root = json_builder_get_root(builder);
   json_generator_set_root(gen, root);
 
-  bool ret      = true;
-  GError* error = NULL;
+  bool ret                = true;
+  g_autoptr(GError) error = NULL;
   if (!json_generator_to_file(gen, girara_list_nth(argument_list, 0), &error)) {
     girara_warning("Failed to write JSON: %s", error->message);
     girara_notify(session, GIRARA_ERROR, _("Failed to write JSON: %s"), error->message);
-    g_error_free(error);
     ret = false;
   }
 

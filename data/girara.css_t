@@ -5,20 +5,10 @@
   font-family: @font-family@;
   font-size: @font-size@;
   font-weight: @font-weight@;
-}
-
-/* Scrollbar */
-
-#@session@ scrolledwindow scrollbar {
-  background-color: @scrollbar-bg@;
-}
-
-#@session@ scrolledwindow scrollbar > slider {
-  background-color: @scrollbar-fg@;
+  font-style: @font-style@;
 }
 
 /* Inputbar */
-
 #@session@ entry.inputbar {
   background-color: @inputbar-bg@;
 }
@@ -30,7 +20,6 @@
 }
 
 /* Completion entries and groups */
-
 #@session@ .completion, .completion-box {
   color: @completion-fg@;
   background-color: @completion-bg@;
@@ -52,7 +41,6 @@
 }
 
 /* Statusbar */
-
 #@session@ .statusbar {
   color: @statusbar-fg@;
   background-color: @statusbar-bg@;

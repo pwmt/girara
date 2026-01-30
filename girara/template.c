@@ -46,15 +46,12 @@ static variable_t* new_variable(const char* name) {
 }
 
 static void free_variable(void* data) {
-  if (data == NULL) {
-    return;
+  if (data != NULL) {
+    variable_t* variable = data;
+    g_free(variable->value);
+    g_free(variable->name);
+    g_free(variable);
   }
-
-  variable_t* variable = data;
-
-  g_free(variable->value);
-  g_free(variable->name);
-  g_free(variable);
 }
 
 static int compare_variable_name(const void* data1, const void* data2) {
@@ -67,15 +64,6 @@ static int compare_variable_name(const void* data1, const void* data2) {
 
   return g_strcmp0(variable->name, name);
 }
-
-/* Methods */
-static void dispose(GObject* object);
-static void finalize(GObject* object);
-static void set_property(GObject* object, guint prop_id, const GValue* value, GParamSpec* pspec);
-static void get_property(GObject* object, guint prop_id, GValue* value, GParamSpec* pspec);
-static void base_changed(GiraraTemplate* object);
-static void variable_changed(GiraraTemplate* object, const char* name);
-static void template_changed(GiraraTemplate* object);
 
 /* Properties */
 enum {
@@ -92,64 +80,6 @@ enum {
 };
 
 static guint signals[LAST_SIGNAL] = {0};
-
-/* Class init */
-static void girara_template_class_init(GiraraTemplateClass* class) {
-  /* overwrite methods */
-  GObjectClass* object_class = G_OBJECT_CLASS(class);
-  object_class->dispose      = dispose;
-  object_class->finalize     = finalize;
-  object_class->set_property = set_property;
-  object_class->get_property = get_property;
-
-  class->base_changed     = base_changed;
-  class->variable_changed = variable_changed;
-  class->changed          = template_changed;
-
-  /* add properties */
-  g_object_class_install_property(object_class, PROP_BASE,
-                                  g_param_spec_object("base", "base template", "String used as base for the template.",
-                                                      girara_template_get_type(),
-                                                      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-  /* add signals */
-  signals[BASE_CHANGED] =
-      g_signal_new("base-changed", GIRARA_TYPE_TEMPLATE, G_SIGNAL_RUN_FIRST,
-                   G_STRUCT_OFFSET(GiraraTemplateClass, base_changed), NULL, NULL, NULL, G_TYPE_NONE, 0);
-
-  signals[VARIABLE_CHANGED] = g_signal_new("variable-changed", GIRARA_TYPE_TEMPLATE, G_SIGNAL_RUN_FIRST,
-                                           G_STRUCT_OFFSET(GiraraTemplateClass, variable_changed), NULL, NULL, NULL,
-                                           G_TYPE_NONE, 1, G_TYPE_STRING);
-
-  signals[TEMPLATE_CHANGED] =
-      g_signal_new("changed", GIRARA_TYPE_TEMPLATE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(GiraraTemplateClass, changed),
-                   NULL, NULL, NULL, G_TYPE_NONE, 0);
-}
-
-/* GObject init */
-static void girara_template_init(GiraraTemplate* template) {
-  GError* error = NULL;
-  GRegex* regex = g_regex_new("@([A-Za-z0-9][A-Za-z0-9_-]*)@", G_REGEX_OPTIMIZE, 0, &error);
-  if (regex == NULL) {
-    girara_error("Failed to create regex: %s", error->message);
-    g_error_free(error);
-  }
-
-  GRegex* check_regex = g_regex_new("^[A-Za-z0-9][A-Za-z0-9_-]*$", G_REGEX_OPTIMIZE, 0, &error);
-  if (check_regex == NULL) {
-    girara_error("Failed to create regex: %s", error->message);
-    g_regex_unref(regex);
-    g_error_free(error);
-  }
-
-  GiraraTemplatePrivate* priv = girara_template_get_instance_private(template);
-  priv->base                  = g_strdup("");
-  priv->variable_regex        = regex;
-  priv->variable_check_regex  = check_regex;
-  priv->variables_in_base     = girara_list_new_with_free(g_free);
-  priv->variables             = girara_list_new_with_free(free_variable);
-  priv->valid                 = true;
-}
 
 /* GObject dispose */
 static void dispose(GObject* object) {
@@ -245,11 +175,11 @@ static void base_changed(GiraraTemplate* object) {
   girara_list_clear(priv->variables_in_base);
   priv->valid = true;
 
-  GMatchInfo* match_info = NULL;
+  g_autoptr(GMatchInfo) match_info = NULL;
   if (g_regex_match(priv->variable_regex, priv->base, 0, &match_info) == true) {
     while (g_match_info_matches(match_info) == true) {
-      char* variable = g_match_info_fetch(match_info, 1);
-      char* found    = girara_list_find(priv->variables_in_base, list_strcmp, variable);
+      g_autofree char* variable = g_match_info_fetch(match_info, 1);
+      char* found               = girara_list_find(priv->variables_in_base, list_strcmp, variable);
 
       if (priv->valid == true) {
         if (girara_list_find(priv->variables, compare_variable_name, variable) == NULL) {
@@ -260,24 +190,23 @@ static void base_changed(GiraraTemplate* object) {
 
       if (found == NULL) {
         girara_list_append(priv->variables_in_base, variable);
-      } else {
-        g_free(variable);
+        variable = NULL;
       }
 
       g_match_info_next(match_info, NULL);
     }
   }
-  g_match_info_free(match_info);
 }
 
 static void variable_changed(GiraraTemplate* object, const char* GIRARA_UNUSED(name)) {
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   priv->valid                 = true;
 
-  for (size_t idx = 0; idx != girara_list_size(priv->variables_in_base) && priv->valid == true; ++idx) {
+  for (size_t idx = 0; idx != girara_list_size(priv->variables_in_base); ++idx) {
     if (girara_list_find(priv->variables, compare_variable_name, girara_list_nth(priv->variables_in_base, idx)) ==
         NULL) {
       priv->valid = false;
+      break;
     }
   }
 }
@@ -346,12 +275,11 @@ void girara_template_set_variable_value(GiraraTemplate* object, const char* name
 static gboolean eval_replace_cb(const GMatchInfo* info, GString* res, void* data) {
   girara_list_t* variables = data;
 
-  char* name           = g_match_info_fetch(info, 1);
-  variable_t* variable = girara_list_find(variables, compare_variable_name, name);
+  g_autofree char* name = g_match_info_fetch(info, 1);
+  variable_t* variable  = girara_list_find(variables, compare_variable_name, name);
   g_return_val_if_fail(variable != NULL, TRUE);
 
   g_string_append(res, variable->value);
-  g_free(name);
 
   return FALSE;
 }
@@ -366,4 +294,60 @@ char* girara_template_evaluate(GiraraTemplate* object) {
   }
 
   return g_regex_replace_eval(priv->variable_regex, priv->base, -1, 0, 0, eval_replace_cb, priv->variables, NULL);
+}
+
+/* Class init */
+static void girara_template_class_init(GiraraTemplateClass* class) {
+  /* overwrite methods */
+  GObjectClass* object_class = G_OBJECT_CLASS(class);
+  object_class->dispose      = dispose;
+  object_class->finalize     = finalize;
+  object_class->set_property = set_property;
+  object_class->get_property = get_property;
+
+  class->base_changed     = base_changed;
+  class->variable_changed = variable_changed;
+  class->changed          = template_changed;
+
+  /* add properties */
+  g_object_class_install_property(object_class, PROP_BASE,
+                                  g_param_spec_object("base", "base template", "String used as base for the template.",
+                                                      girara_template_get_type(),
+                                                      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+  /* add signals */
+  signals[BASE_CHANGED] =
+      g_signal_new("base-changed", GIRARA_TYPE_TEMPLATE, G_SIGNAL_RUN_FIRST,
+                   G_STRUCT_OFFSET(GiraraTemplateClass, base_changed), NULL, NULL, NULL, G_TYPE_NONE, 0);
+
+  signals[VARIABLE_CHANGED] = g_signal_new("variable-changed", GIRARA_TYPE_TEMPLATE, G_SIGNAL_RUN_FIRST,
+                                           G_STRUCT_OFFSET(GiraraTemplateClass, variable_changed), NULL, NULL, NULL,
+                                           G_TYPE_NONE, 1, G_TYPE_STRING);
+
+  signals[TEMPLATE_CHANGED] =
+      g_signal_new("changed", GIRARA_TYPE_TEMPLATE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(GiraraTemplateClass, changed),
+                   NULL, NULL, NULL, G_TYPE_NONE, 0);
+}
+
+/* GObject init */
+static void girara_template_init(GiraraTemplate* template) {
+  g_autoptr(GError) error = NULL;
+  GRegex* regex           = g_regex_new("@([A-Za-z0-9][A-Za-z0-9_-]*)@", G_REGEX_OPTIMIZE, 0, &error);
+  if (regex == NULL) {
+    girara_error("Failed to create regex: %s", error->message);
+  }
+
+  GRegex* check_regex = g_regex_new("^[A-Za-z0-9][A-Za-z0-9_-]*$", G_REGEX_OPTIMIZE, 0, &error);
+  if (check_regex == NULL) {
+    girara_error("Failed to create regex: %s", error->message);
+    g_regex_unref(regex);
+  }
+
+  GiraraTemplatePrivate* priv = girara_template_get_instance_private(template);
+  priv->base                  = g_strdup("");
+  priv->variable_regex        = regex;
+  priv->variable_check_regex  = check_regex;
+  priv->variables_in_base     = girara_list_new_with_free(g_free);
+  priv->variables             = girara_list_new_with_free(free_variable);
+  priv->valid                 = true;
 }

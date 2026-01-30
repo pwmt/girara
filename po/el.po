@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girara\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-08 15:10+0100\n"
-"PO-Revision-Date: 2012-03-26 16:41+0000\n"
+"POT-Creation-Date: 2026-01-30 21:31+0100\n"
+"PO-Revision-Date: 2026-01-30 21:28+0100\n"
 "Last-Translator: Nisok Kosin <nisok@in.gr>, 2012\n"
 "Language-Team: Greek (http://app.transifex.com/pwmt/girara/language/el/)\n"
 "Language: el\n"
@@ -18,226 +18,223 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: girara/commands.c:111 girara/commands.c:316
+#: girara/commands.c:266
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of at least %u"
 msgstr "Εισαγωγή μη έγγυρου αριθμού παραμέτρων: %zu αντί κατ'ελάχιστο %u"
 
-#: girara/commands.c:147
+#: girara/commands.c:302
 #, c-format
 msgid "Unregistered mode specified: %s"
 msgstr "Επιλέχθηκε μη καταχωρημένη λειτουργία: %s"
 
-#: girara/commands.c:181
+#: girara/commands.c:310
+msgid "Invalid number of arguments passed"
+msgstr "Εισαγωγή μη έγγυρου αριθμού παραμέτρων"
+
+#: girara/commands.c:342
 #, c-format
 msgid "Invalid modifier in %s"
 msgstr "Μη έγγυρος τροποποιητής στο %s"
 
-#: girara/commands.c:220
+#: girara/commands.c:380
 #, c-format
 msgid "Invalid special key value for %s"
 msgstr "Μη έγγυρη επιλογή ειδικού πλήκτρου στο %s"
 
-#: girara/commands.c:256
+#: girara/commands.c:415
 #, c-format
 msgid "Invalid special key value or mode %s"
 msgstr "Μη έγγυρη τιμή ειδικού πλήκτρου %s"
 
-#: girara/commands.c:341
+#: girara/commands.c:499
 #, c-format
 msgid "Not a valid shortcut function: %s"
 msgstr "Μη έγγυρη συντόμευση λειτουργίας: %s"
 
-#: girara/commands.c:430
+#: girara/commands.c:559
 msgid "Not enough arguments."
-msgstr "Ανεπαρκείς παράμετροι"
+msgstr "Ανεπαρκείς παράμετροι."
 
-#: girara/commands.c:435
+#: girara/commands.c:564
 msgid "Too many arguments."
-msgstr "Πολλές παράμετροι"
+msgstr "Πολλές παράμετροι."
 
-#: girara/commands.c:448
+#: girara/commands.c:577
 #, c-format
 msgid "Unknown option: %s"
 msgstr "Μή έγγυρη επιλογή: %s"
 
-#: girara/commands.c:462
+#: girara/commands.c:590
 msgid "true"
 msgstr "Αληθές"
 
-#: girara/commands.c:462
+#: girara/commands.c:590
 msgid "false"
 msgstr "Ψευδές"
 
-#: girara/commands.c:494
+#: girara/commands.c:618
 #, c-format
 msgid "No value defined for option: %s"
 msgstr "Καμία τιμή δεν έχει καθοριστεί για την επιλογή: %s"
 
-#: girara/commands.c:509
+#: girara/commands.c:633
 #, c-format
 msgid "Unknown value for option: %s"
 msgstr "Άγνωστη τιμή για την επιλογή: %s"
 
 #. unhandled command
-#: girara/commands.c:696
+#: girara/commands.c:797
 #, c-format
 msgid "Not a valid command: %s"
 msgstr "Μη έγγυρη εντολή: %s"
 
+#. clang-format off
 #. settings
-#: girara/config.c:133
+#: girara/config.c:113
 msgid "Font"
 msgstr "Γραμματοσειρά"
 
-#: girara/config.c:134
+#: girara/config.c:114
 msgid "Default foreground color"
 msgstr "Προεπιλεγμένο χρώμα προσκηνίου"
 
-#: girara/config.c:135
+#: girara/config.c:115
 msgid "Default background color"
 msgstr "Προεπιλεγμένο χρώμα πρασκηνίου"
 
-#: girara/config.c:136
+#: girara/config.c:116
 msgid "Inputbar foreground color"
 msgstr "Χρώμα μπάρας εισαγωγής"
 
-#: girara/config.c:137
+#: girara/config.c:117
 msgid "Inputbar background color"
 msgstr "Χρώμα φόντου μπάρας εισαγωγής"
 
-#: girara/config.c:138
+#: girara/config.c:118
 msgid "Statusbar foreground color"
 msgstr "Χρώμα μπάρας κατάστασης"
 
-#: girara/config.c:139
+#: girara/config.c:119
 msgid "Statsubar background color"
 msgstr "Χρώμα φόντου μπάρας κατάστασης"
 
-#: girara/config.c:140
+#: girara/config.c:120
 msgid "Completion foreground color"
 msgstr "Χρώμα επιλογών συμπλήρωσης"
 
-#: girara/config.c:141
+#: girara/config.c:121
 msgid "Completion background color"
 msgstr "Χρώμα συμπλήρωσης λέξεων"
 
-#: girara/config.c:142
+#: girara/config.c:122
 msgid "Completion group foreground color"
 msgstr "Χρώμα μενού συμπλήρωσης λέξεων"
 
-#: girara/config.c:143
+#: girara/config.c:123
 msgid "Completion group background color"
 msgstr "Χρώμα φόντου του μενού συμπλήρωσης λέξεων"
 
-#: girara/config.c:144
+#: girara/config.c:124
 msgid "Completion highlight foreground color"
 msgstr "Χρώμα τονισμού συμπλήρωσης λέξεων"
 
-#: girara/config.c:145
+#: girara/config.c:125
 msgid "Completion highlight background color"
 msgstr "Χρώμα φόντου τονισμού συμπλήρωσης λέξεων"
 
-#: girara/config.c:146
+#: girara/config.c:126
 msgid "Error notification foreground color"
 msgstr "Χρώμα ειδοποίησης σφάλματος"
 
-#: girara/config.c:147
+#: girara/config.c:127
 msgid "Error notification background color"
 msgstr "Χρώμα φόντου ειδοποίησης σφάλματος"
 
-#: girara/config.c:148
+#: girara/config.c:128
 msgid "Warning notification foreground color"
 msgstr "Χρώμα ειδοποίησης προειδοποίησης"
 
-#: girara/config.c:149
+#: girara/config.c:129
 msgid "Warning notifaction background color"
 msgstr "Χρώμα φόντου ειδοποίησης προειδοποίησης"
 
-#: girara/config.c:150
+#: girara/config.c:130
 msgid "Notification foreground color"
 msgstr "Χρώμα ειδοποίησης"
 
-#: girara/config.c:151
+#: girara/config.c:131
 msgid "Notification background color"
 msgstr "Χρώμα φόντου ειδοποίησης"
 
-#: girara/config.c:152
-msgid "Scrollbar foreground color"
-msgstr ""
-
-#: girara/config.c:153
-msgid "Scrollbar background color"
-msgstr ""
-
-#: girara/config.c:155
+#: girara/config.c:133
 msgid "Initial window width"
 msgstr "Αρχικό πλάτος παραθύρου"
 
-#: girara/config.c:156
+#: girara/config.c:134
 msgid "Initial window height"
 msgstr "Αρχικό ύψος παραθύρου"
 
-#: girara/config.c:157
+#: girara/config.c:135
 msgid "Horizontal padding for the status, input, and notification bars"
 msgstr ""
 
-#: girara/config.c:158
+#: girara/config.c:136
 msgid "Vertical padding for the status, input, and notification bars"
 msgstr ""
 
-#: girara/config.c:159
+#: girara/config.c:137
 msgid "Number of completion items"
 msgstr "Αριθμός στοιχείων συμπλήρωσης"
 
-#: girara/config.c:160
+#: girara/config.c:138
 msgid "Window icon"
 msgstr "Εικονίδιο παραθύρου"
 
-#: girara/config.c:161
+#: girara/config.c:139
 msgid "Command to execute in :exec"
 msgstr "Η εντολή που θα εκτελεστεί στο :exec"
 
-#: girara/config.c:162
+#: girara/config.c:140
 msgid "Show or hide certain GUI elements"
 msgstr "Εμφάνιση είτε απόκριψη συγκεκριμένω στοιχείων του GUI"
 
 #. commands
-#: girara/config.c:198
+#: girara/config.c:176
 msgid "Execute a command"
 msgstr "Εκτέλεση εντολής"
 
-#: girara/config.c:199
+#: girara/config.c:177
 msgid "Map a key sequence"
 msgstr "Χαρτογράφηση / map αλληλουχίας πλήκτρων"
 
-#: girara/config.c:200
+#: girara/config.c:178
 msgid "Quit the program"
 msgstr "Εγκατάληψη της εφαρμογής"
 
-#: girara/config.c:201
+#: girara/config.c:179
 msgid "Set an option"
 msgstr "Ρύθμιση επιλογής"
 
-#: girara/config.c:202
+#: girara/config.c:180
 msgid "Unmap a key sequence"
 msgstr "Απόχαρτογράφηση / unmap αλληλουχίας πλήκτρων"
 
-#: girara/config.c:204
+#: girara/config.c:182
 msgid "Dump settings to a file"
 msgstr ""
 
-#: girara/settings.c:284
+#: girara/settings.c:262
 #, c-format
 msgid "Invalid number of arguments passed: %zu instead of 1"
 msgstr ""
 
-#: girara/settings.c:306
+#: girara/settings.c:284
 #, c-format
 msgid "Failed to write JSON: %s"
 msgstr ""
 
-#: girara/utils.c:473
+#: girara/utils.c:238
 #, c-format
 msgid "Failed to execute command: %s"
 msgstr "Αποτυχία στην εκτέλεση της εντολής: %s"

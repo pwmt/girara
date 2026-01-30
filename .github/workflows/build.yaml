@@ -17,7 +17,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build and test
         run: |
           mkdir build
@@ -26,16 +26,16 @@ jobs:
           ninja --verbose
           ninja test --verbose
 
-  build-test-debian-bookworm:
-    name: Test on Debian bookworm
+  build-test-debian-forky:
+    name: Test on Debian forky
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/pwmt/github-actions-debian:bookworm
+      image: ghcr.io/pwmt/github-actions-debian:forky
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build and test
         run: |
           mkdir build
@@ -53,25 +53,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Build and test
-        run: |
-          mkdir build
-          cd build
-          meson ..
-          ninja --verbose
-          ninja test --verbose
-
-  build-test-ubuntu-jammy:
-    name: Test on Ubuntu jammy
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/pwmt/github-actions-ubuntu:jammy
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build and test
         run: |
           mkdir build
@@ -89,7 +71,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build and test
         run: |
           mkdir build

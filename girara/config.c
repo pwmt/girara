@@ -56,8 +56,6 @@ static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), g
   /* set default values */
   bool show_commandline = false;
   bool show_statusbar   = false;
-  bool show_hscrollbar  = false;
-  bool show_vscrollbar  = false;
 
   /* evaluate input */
   const char* input         = value;
@@ -72,12 +70,6 @@ static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), g
     /* statusbar */
     case 's':
       show_statusbar = true;
-      break;
-    case 'h':
-      show_hscrollbar = true;
-      break;
-    case 'v':
-      show_vscrollbar = true;
       break;
     }
   }
@@ -98,8 +90,6 @@ static void cb_guioptions(girara_session_t* session, const char* UNUSED(name), g
     session->global.hide_statusbar = true;
     gtk_widget_hide(session->gtk.statusbar);
   }
-
-  scrolled_window_set_scrollbar_visibility(GTK_SCROLLED_WINDOW(session->gtk.view), show_hscrollbar, show_vscrollbar);
 }
 
 void girara_config_load_default(girara_session_t* session) {
@@ -139,8 +129,6 @@ void girara_config_load_default(girara_session_t* session) {
   girara_setting_add(session, "notification-warning-bg",  "#F3F000",            STRING,  FALSE,  _("Warning notifaction background color"), cb_color, NULL);
   girara_setting_add(session, "notification-fg",          "#000000",            STRING,  FALSE,  _("Notification foreground color"), cb_color, NULL);
   girara_setting_add(session, "notification-bg",          "#FFFFFF",            STRING,  FALSE,  _("Notification background color"), cb_color, NULL);
-  girara_setting_add(session, "scrollbar-fg",             "#DDDDDD",            STRING,  FALSE,  _("Scrollbar foreground color"), cb_color, NULL);
-  girara_setting_add(session, "scrollbar-bg",             "#000000",            STRING,  FALSE,  _("Scrollbar background color"), cb_color, NULL);
   girara_setting_add(session, "word-separator",           " /.-=&#?",           STRING,  TRUE,  NULL, NULL, NULL);
   girara_setting_add(session, "window-width",             &window_width,        INT,     TRUE,  _("Initial window width"), NULL, NULL);
   girara_setting_add(session, "window-height",            &window_height,       INT,     TRUE,  _("Initial window height"), NULL, NULL);
@@ -250,33 +238,44 @@ void girara_config_handle_free(girara_config_handle_t* handle) {
 
 static bool config_parse(girara_session_t* session, const char* path) {
   /* open file */
-  FILE* file = girara_file_open(path, "r");
+  g_autoptr(GFile) f = g_file_new_for_path(path);
+  if (f == NULL) {
+    girara_debug("failed to open config file '%s'", path);
+    return false;
+  }
 
-  if (file == NULL) {
+  g_autoptr(GFileInputStream) stream = g_file_read(f, NULL, NULL);
+  if (stream == NULL) {
+    girara_debug("failed to open config file '%s'", path);
+    return false;
+  }
+
+  g_autoptr(GDataInputStream) datastream = g_data_input_stream_new(G_INPUT_STREAM(stream));
+  if (datastream == NULL) {
     girara_debug("failed to open config file '%s'", path);
     return false;
   }
 
   /* read lines */
   char* line               = NULL;
+  gsize line_length        = 0;
   unsigned int line_number = 1;
-  while ((line = girara_file_read_line(file)) != NULL) {
+  while ((line = g_data_input_stream_read_line(datastream, &line_length, NULL, NULL)) != NULL) {
     /* skip empty lines and comments */
-    if (strlen(line) == 0 || strchr(COMMENT_PREFIX, line[0]) != NULL) {
+    if (line_length == 0 || strchr(COMMENT_PREFIX, line[0]) != NULL) {
       g_free(line);
       continue;
     }
 
-    girara_list_t* argument_list = girara_list_new_with_free(g_free);
+    g_autoptr(girara_list_t) argument_list = girara_list_new_with_free(g_free);
     if (argument_list == NULL) {
       g_free(line);
-      fclose(file);
       return false;
     }
 
-    gchar** argv  = NULL;
-    gint argc     = 0;
-    GError* error = NULL;
+    gchar** argv            = NULL;
+    gint argc               = 0;
+    g_autoptr(GError) error = NULL;
 
     /* parse current line */
     if (g_shell_parse_argv(line, &argc, &argv, &error) != FALSE) {
@@ -285,16 +284,11 @@ static bool config_parse(girara_session_t* session, const char* path) {
         girara_list_append(argument_list, argument);
       }
     } else {
-      girara_list_free(argument_list);
       if (error->code != G_SHELL_ERROR_EMPTY_STRING) {
         girara_error("Could not parse line %d in '%s': %s", line_number, path, error->message);
-
-        g_error_free(error);
-        fclose(file);
         g_free(line);
         return false;
       } else {
-        g_error_free(error);
         g_free(line);
         continue;
       }
@@ -305,15 +299,13 @@ static bool config_parse(girara_session_t* session, const char* path) {
       if (argc != 2) {
         girara_warning("Could not process line %d in '%s': usage: include path.", line_number, path);
       } else {
-        char* newpath = NULL;
+        g_autofree char* newpath = NULL;
         if (g_path_is_absolute(argv[1]) == TRUE) {
           newpath = g_strdup(argv[1]);
         } else {
-          char* basename = g_path_get_dirname(path);
-          char* tmp      = g_build_filename(basename, argv[1], NULL);
-          newpath        = girara_fix_path(tmp);
-          g_free(tmp);
-          g_free(basename);
+          g_autofree char* basename = g_path_get_dirname(path);
+          g_autofree char* tmp      = g_build_filename(basename, argv[1], NULL);
+          newpath                   = girara_fix_path(tmp);
         }
 
         if (g_strcmp0(newpath, path) == 0) {
@@ -324,7 +316,6 @@ static bool config_parse(girara_session_t* session, const char* path) {
             girara_warning("Could not process line %d in '%s': failed to load '%s'.", line_number, path, newpath);
           }
         }
-        g_free(newpath);
       }
     } else {
       /* search for config handle */
@@ -345,12 +336,10 @@ static bool config_parse(girara_session_t* session, const char* path) {
     }
 
     line_number++;
-    girara_list_free(argument_list);
     g_strfreev(argv);
     g_free(line);
   }
 
-  fclose(file);
   return true;
 }
 
