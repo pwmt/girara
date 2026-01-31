@@ -283,6 +283,7 @@ girara_session_t* girara_session_create(void) {
   gtk_box_set_homogeneous(session->gtk.inputbar_box, TRUE);
   session->gtk.view = gtk_stack_new();
   gtk_widget_add_events(session->gtk.view, GDK_SCROLL_MASK);
+  gtk_widget_set_can_focus(session->gtk.view, true);
   session->gtk.statusbar         = gtk_event_box_new();
   session->gtk.notification_area = gtk_event_box_new();
   session->gtk.notification_text = gtk_label_new(NULL);
@@ -615,10 +616,7 @@ void girara_notify(girara_session_t* session, int level, const char* format, ...
   gtk_widget_show(GTK_WIDGET(session->gtk.notification_area));
   gtk_widget_hide(GTK_WIDGET(session->gtk.inputbar));
 
-  GtkWidget* view_child = gtk_stack_get_visible_child(GTK_STACK(session->gtk.view));
-  if (view_child != NULL) {
-    gtk_widget_grab_focus(GTK_WIDGET(view_child));
-  }
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 }
 
 void girara_dialog(girara_session_t* session, const char* dialog, bool invisible,
@@ -662,7 +660,7 @@ bool girara_set_view(girara_session_t* session, GtkWidget* widget) {
 
   gtk_widget_set_visible(widget, true);
   gtk_stack_set_visible_child(GTK_STACK(session->gtk.view), widget);
-  gtk_widget_grab_focus(widget);
+  gtk_widget_grab_focus(GTK_WIDGET(session->gtk.view));
 
   return true;
 }
