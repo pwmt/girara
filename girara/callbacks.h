@@ -27,6 +27,15 @@ typedef gboolean (*girara_callback_inputbar_key_press_event_t)(GtkWidget* widget
 typedef gboolean (*girara_callback_inputbar_activate_t)(GtkEntry* entry, void* data);
 
 /**
+ * Callback definition for macro assert handler
+ *
+ * @param entry The inputbar
+ * @param data Custom data
+ * @return true if no error occurred
+ */
+typedef gboolean (*girara_callback_record_assert_t)(girara_session_t* session, char* name, char* value);
+
+/**
  * Default callback for key press events in the view area
  *
  * @param widget The used widget

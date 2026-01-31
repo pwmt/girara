@@ -98,6 +98,16 @@ HIDDEN bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_li
  */
 HIDDEN bool girara_cmd_exec(girara_session_t* session, girara_list_t* argument_list);
 
+/**
+ * Load macro from file
+ *
+ * @param session The used girara session
+ * @param argument_list List of passed arguments
+ * @return TRUE No error occurred
+ * @return FALSE An error occurred
+ */
+HIDDEN bool girara_cmd_load_macro(girara_session_t* session, girara_list_t* argument_list);
+
 #ifdef WITH_JSON
 /**
  * Dump current settings to a JSON file
@@ -220,6 +230,35 @@ struct girara_statusbar_item_s {
 };
 
 /**
+ * Structure of a macro recording item
+ */
+
+typedef enum girara_record_type_e {
+  RECORD_ASSERT,
+  RECORD_KEY,
+  RECORD_BREAKPOINT,
+} girara_record_type_t;
+
+typedef struct girara_record_assert_s {
+  char* name;
+  char* value;
+} girara_record_assert_t;
+
+typedef struct girara_record_key_s {
+  int state;
+  int keyval;
+} girara_record_key_t;
+
+struct girara_record_item_s {
+  girara_record_type_t type;
+  union {
+    girara_record_assert_t assert;
+    girara_record_key_t key;
+  };
+};
+
+
+/**
  * Private data of the girara session
  */
 struct girara_session_private_s {
@@ -269,6 +308,14 @@ struct girara_session_private_s {
     size_t previous_length;
     bool command_mode;
   } completion;
+
+  struct {
+    GFileOutputStream* output;
+    GMutex mutex;
+    unsigned int index;
+    girara_list_t* recording;
+    girara_list_t* filter_keys;
+  } record;
 };
 
 typedef struct gdk_keyboard_button_s {

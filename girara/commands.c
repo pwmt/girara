@@ -7,6 +7,7 @@
 #include "session.h"
 #include "settings.h"
 #include "shortcuts.h"
+#include "record.h"
 #include "utils.h"
 
 #include <glib/gi18n-lib.h>
@@ -645,6 +646,26 @@ bool girara_cmd_set(girara_session_t* session, girara_list_t* argument_list) {
       return false;
     }
   }
+
+  return true;
+}
+
+bool girara_cmd_load_macro(girara_session_t* session, girara_list_t* argument_list) {
+  const size_t number_of_arguments = girara_list_size(argument_list);
+
+  if (number_of_arguments == 0) {
+    girara_warning("Not enough arguments for :macro_load.");
+    girara_notify(session, GIRARA_ERROR, _("Not enough arguments."));
+    return false;
+  }
+  if (number_of_arguments > 2) {
+    girara_warning("Too many arguments for :macro_load.");
+    girara_notify(session, GIRARA_ERROR, _("Too many arguments."));
+    return false;
+  }
+
+  char* path = girara_list_nth(argument_list, 0);
+  girara_record_load_macro(session, path);
 
   return true;
 }
