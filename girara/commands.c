@@ -166,12 +166,7 @@ static void girara_cmd_display_mouse_event(girara_session_t* session, const char
   g_strfreev(array);
 }
 
-typedef struct gdk_keyboard_button_s {
-  const char* identifier;
-  int keyval;
-} gdk_keyboard_button_t;
-
-static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
+const gdk_keyboard_button_t gdk_keyboard_buttons[48] = {
     {"BackSpace", GDK_KEY_BackSpace},
     {"CapsLock", GDK_KEY_Caps_Lock},
     {"NumLock", GDK_KEY_Num_Lock},

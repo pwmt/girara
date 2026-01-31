@@ -271,4 +271,11 @@ struct girara_session_private_s {
   } completion;
 };
 
+typedef struct gdk_keyboard_button_s {
+  const char* identifier;
+  int keyval;
+} gdk_keyboard_button_t;
+
+extern const gdk_keyboard_button_t gdk_keyboard_buttons[48];
+
 #endif
