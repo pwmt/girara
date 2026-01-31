@@ -466,7 +466,7 @@ bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument, 
   }
 
   typedef struct gdk_keyboard_button_s {
-    char* identifier;
+    const char* identifier;
     int keyval;
   } gdk_keyboard_button_t;
 
@@ -506,7 +506,7 @@ bool girara_sc_feedkeys(girara_session_t* session, girara_argument_t* argument, 
       {"KPDown", GDK_KEY_KP_Down},
   };
 
-  char* input               = (char*)argument->data;
+  const char* input         = argument->data;
   unsigned int input_length = strlen(input);
 
   t = MAX(1, t);

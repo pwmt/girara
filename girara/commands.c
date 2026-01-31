@@ -167,7 +167,7 @@ static void girara_cmd_display_mouse_event(girara_session_t* session, const char
 }
 
 typedef struct gdk_keyboard_button_s {
-  char* identifier;
+  const char* identifier;
   int keyval;
 } gdk_keyboard_button_t;
 
@@ -223,7 +223,7 @@ static const gdk_keyboard_button_t gdk_keyboard_buttons[] = {
 };
 
 typedef struct gdk_mouse_button_s {
-  char* identifier;
+  const char* identifier;
   int button;
 } gdk_mouse_button_t;
 
@@ -234,7 +234,7 @@ static const gdk_mouse_button_t gdk_mouse_buttons[] = {
 };
 
 typedef struct event_type_s {
-  char* identifier;
+  const char* identifier;
   int event;
 } event_type_t;
 
@@ -245,7 +245,7 @@ static const event_type_t event_types[] = {
 };
 
 typedef struct mouse_event_s {
-  char* identifier;
+  const char* identifier;
   int event;
 } mouse_event_t;
 
