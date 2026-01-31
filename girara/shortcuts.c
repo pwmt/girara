@@ -41,7 +41,7 @@ bool girara_shortcut_add(girara_session_t* session, guint modifier, guint key, c
 
   shortcut->mask             = modifier;
   shortcut->key              = key;
-  shortcut->buffered_command = g_strdup(buffer);
+  shortcut->buffered_command = buffer != NULL ? g_strdup(buffer) : NULL;
   shortcut->function         = function;
   shortcut->mode             = mode;
   shortcut->argument         = argument;
