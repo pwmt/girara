@@ -3,6 +3,7 @@
 #include "template.h"
 #include "utils.h"
 #include "datastructures.h"
+#include "log.h"
 #include "internal.h"
 
 #include <glib.h>

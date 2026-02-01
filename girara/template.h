@@ -19,6 +19,9 @@ struct girara_template_class_s {
   void (*changed)(GiraraTemplate*);
 };
 
+typedef struct girara_template_s GiraraTemplate;
+typedef struct girara_template_class_s GiraraTemplateClass;
+
 #define GIRARA_TYPE_TEMPLATE (girara_template_get_type())
 #define GIRARA_TEMPLATE(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplate))
 #define GIRARA_TEMPLATE_CLASS(obj) (G_TYPE_CHECK_CLASS_CAST((obj), GIRARA_TYPE_TEMPLATE, GiraraTemplateClass))
