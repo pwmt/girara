@@ -4,9 +4,11 @@
 #define GIRARA_H
 
 #include "macros.h"
-#include "utils.h"
+
 #include "datastructures.h"
-#include "template.h"
+#include "input-history.h"
 #include "log.h"
+#include "template.h"
+#include "utils.h"
 
 #endif
