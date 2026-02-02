@@ -1,10 +1,10 @@
 /* SPDX-License-Identifier: Zlib */
 
 #include "input-history.h"
+
+#include "datastructures.h"
 #include "internal.h"
 #include "utils.h"
-
-#include <girara/datastructures.h>
 
 /**
  * Private data of the input history

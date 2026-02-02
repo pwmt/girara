@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: Zlib */
 
 #include "input-history.h"
-#include <girara/macros.h>
 
 G_DEFINE_INTERFACE(GiraraInputHistoryIO, girara_input_history_io, G_TYPE_OBJECT)
 
