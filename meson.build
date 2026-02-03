@@ -1,5 +1,5 @@
 project('girara', 'c',
-  version: '2026.02.03',
+  version: '2026.02.04',
   meson_version: '>=1.5',
   default_options: ['c_std=c17', 'warning_level=3'],
 )
@@ -91,6 +91,8 @@ headers = files(
   'girara/input-history.h',
   'girara/log.h',
   'girara/macros.h',
+  'girara/template.h',
+  'girara/types.h',
   'girara/utils.h'
 )
 headers += version_header
