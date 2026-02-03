@@ -1,11 +1,13 @@
 /* SPDX-License-Identifier: Zlib */
 
 #include "template.h"
-#include "utils.h"
-#include "datastructures.h"
-#include "internal.h"
 
 #include <glib.h>
+
+#include "datastructures.h"
+#include "internal.h"
+#include "log.h"
+#include "utils.h"
 
 /**
  * Private data of the template

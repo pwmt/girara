@@ -5,9 +5,8 @@
 
 #include <stdio.h>
 
-#include "types.h"
 #include "macros.h"
-#include "log.h"
+#include "types.h"
 
 /**
  * Enum for directories specified in the XDG specification.
@@ -85,15 +84,6 @@ char* girara_escape_string(const char* value) GIRARA_VISIBLE;
  * @return new allocated string, needs to be freed with g_free
  */
 char* girara_replace_substring(const char* string, const char* old, const char* new) GIRARA_VISIBLE;
-
-/**
- * Execute command from argument list
- *
- * @param session The used girara session
- * @param argument_list The argument list
- * @return true if no error occurred
- */
-bool girara_exec_with_argument_list(girara_session_t* session, girara_list_t* argument_list) GIRARA_VISIBLE;
 
 /**
  * Return version of girara.

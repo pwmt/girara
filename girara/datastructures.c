@@ -1,9 +1,11 @@
 /* SPDX-License-Identifier: Zlib */
 
+#include "datastructures.h"
+
 #include <stdlib.h>
 #include <glib.h>
 
-#include "datastructures.h"
+#include "log.h"
 #include "utils.h"
 
 struct girara_tree_node_s {

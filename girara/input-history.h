@@ -4,8 +4,9 @@
 #define GIRARA_INPUT_HISTORY_H
 
 #include <glib-object.h>
-#include "macros.h"
+
 #include "types.h"
+#include "macros.h"
 
 struct girara_input_history_io_interface_s {
   GTypeInterface parent_iface;
