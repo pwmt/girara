@@ -91,6 +91,8 @@ headers = files(
   'girara/input-history.h',
   'girara/log.h',
   'girara/macros.h',
+  'girara/template.h',
+  'girara/types.h',
   'girara/utils.h'
 )
 headers += version_header
