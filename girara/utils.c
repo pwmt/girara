@@ -1,10 +1,11 @@
 /* SPDX-License-Identifier: Zlib */
 
+#include "utils.h"
+
 #include <ctype.h>
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gio/gio.h>
-#include <limits.h>
 #include <pwd.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -12,7 +13,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "utils.h"
 #include "datastructures.h"
 #include "internal.h"
 #include "log.h"

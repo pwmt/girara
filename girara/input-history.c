@@ -4,7 +4,6 @@
 
 #include "datastructures.h"
 #include "internal.h"
-#include "utils.h"
 
 /**
  * Private data of the input history

@@ -6,7 +6,6 @@
 #include <glib.h>
 
 #include "log.h"
-#include "utils.h"
 
 struct girara_tree_node_s {
   GNode* node;                 /**> The node object */
