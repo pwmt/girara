@@ -17,11 +17,7 @@ datastructures = executable('test_datastructures', files('test_datastructures.c'
 )
 test('datastructures', datastructures,
   timeout: 60*60,
-  protocol: 'tap',
-  env: [
-    'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
-    'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir())
-  ]
+  protocol: 'tap'
 )
 
 template = executable('test_template', files('test_template.c'),
@@ -31,11 +27,7 @@ template = executable('test_template', files('test_template.c'),
 )
 test('template', template,
   timeout: 60*60,
-  protocol: 'tap',
-  env: [
-    'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
-    'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir())
-  ]
+  protocol: 'tap'
 )
 
 utils = executable('test_utils', files('test_utils.c'),
