@@ -76,7 +76,8 @@ include_directories = [
 
 # source files
 sources = files(
-  'girara/datastructures.c',
+  'girara/datastructures-list.c',
+  'girara/datastructures-node.c',
   'girara/input-history-io.c',
   'girara/input-history.c',
   'girara/log.c',
