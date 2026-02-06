@@ -10,12 +10,8 @@
 struct girara_tree_node_s {
   GNode* node;                 /**> The node object */
   girara_free_function_t free; /**> The free function */
+  void* data;                  /**> The data */
 };
-
-typedef struct girara_tree_node_data_s {
-  girara_tree_node_t* node; /**> The node */
-  void* data;               /**> The data */
-} girara_tree_node_data_t;
 
 struct girara_list_s {
   void** start;                  /**> List start */
@@ -337,18 +333,10 @@ girara_tree_node_t* girara_node_new(void* data) {
     return NULL;
   }
 
-  girara_tree_node_data_t* nodedata = g_try_malloc0(sizeof(girara_tree_node_data_t));
-  if (nodedata == NULL) {
-    g_free(node);
-    return NULL;
-  }
-
-  nodedata->data = data;
-  nodedata->node = node;
-  node->node     = g_node_new(nodedata);
+  node->data = data;
+  node->node = g_node_new(node);
 
   if (node->node == NULL) {
-    g_free(nodedata);
     g_free(node);
     return NULL;
   }
@@ -366,21 +354,15 @@ void girara_node_free(girara_tree_node_t* node) {
     return;
   }
 
-  g_return_if_fail(node->node);
-  girara_tree_node_data_t* nodedata = node->node->data;
-  g_return_if_fail(nodedata);
-
   if (node->free != NULL) {
-    (*node->free)(nodedata->data);
+    node->free(node->data);
   }
-
-  g_free(nodedata);
 
   GNode* childnode = node->node->children;
   while (childnode != NULL) {
-    GNode* nextnode                        = childnode->next;
-    girara_tree_node_data_t* childnodedata = childnode->data;
-    girara_node_free(childnodedata->node);
+    GNode* nextnode                   = childnode->next;
+    girara_tree_node_t* childnodedata = childnode->data;
+    girara_node_free(childnodedata);
     childnode = nextnode;
   }
 
@@ -410,10 +392,10 @@ girara_tree_node_t* girara_node_get_parent(girara_tree_node_t* node) {
     return NULL;
   }
 
-  girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*)node->node->parent->data;
-  g_return_val_if_fail(nodedata, NULL);
+  girara_tree_node_t* parent = node->node->parent->data;
+  g_return_val_if_fail(parent, NULL);
 
-  return nodedata->node;
+  return parent;
 }
 
 girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node) {
@@ -425,10 +407,10 @@ girara_tree_node_t* girara_node_get_root(girara_tree_node_t* node) {
 
   GNode* root = g_node_get_root(node->node);
   g_return_val_if_fail(root, NULL);
-  girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*)root->data;
-  g_return_val_if_fail(nodedata, NULL);
+  girara_tree_node_t* root_node = root->data;
+  g_return_val_if_fail(root_node, NULL);
 
-  return nodedata->node;
+  return root_node;
 }
 
 girara_list_t* girara_node_get_children(girara_tree_node_t* node) {
@@ -438,8 +420,7 @@ girara_list_t* girara_node_get_children(girara_tree_node_t* node) {
 
   GNode* childnode = node->node->children;
   while (childnode != NULL) {
-    girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*)childnode->data;
-    girara_list_append(list, nodedata->node);
+    girara_list_append(list, childnode->data);
     childnode = childnode->next;
   }
 
@@ -453,21 +434,17 @@ size_t girara_node_get_num_children(girara_tree_node_t* node) {
 }
 
 void* girara_node_get_data(girara_tree_node_t* node) {
-  g_return_val_if_fail(node && node->node, NULL);
-  girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*)node->node->data;
-  g_return_val_if_fail(nodedata, NULL);
+  g_return_val_if_fail(node, NULL);
 
-  return nodedata->data;
+  return node->data;
 }
 
 void girara_node_set_data(girara_tree_node_t* node, void* data) {
-  g_return_if_fail(node && node->node);
-  girara_tree_node_data_t* nodedata = (girara_tree_node_data_t*)node->node->data;
-  g_return_if_fail(nodedata);
+  g_return_if_fail(node);
 
   if (node->free != NULL) {
-    (*node->free)(nodedata->data);
+    node->free(node->data);
   }
 
-  nodedata->data = data;
+  node->data = data;
 }
