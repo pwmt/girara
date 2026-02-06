@@ -35,32 +35,26 @@ girara_list_t* girara_list_new(void) {
 
 girara_list_t* girara_list_new_with_free(girara_free_function_t gfree) {
   girara_list_t* list = g_try_malloc0(sizeof(girara_list_t));
-  if (list == NULL) {
-    return NULL;
+  if (list != NULL) {
+    list->free = gfree;
   }
-
-  list->free = gfree;
   return list;
 }
 
 girara_list_t* girara_sorted_list_new(girara_compare_function_t cmp) {
   girara_list_t* list = g_try_malloc0(sizeof(girara_list_t));
-  if (list == NULL) {
-    return NULL;
+  if (list != NULL) {
+    list->cmp = cmp;
   }
-
-  list->cmp = cmp;
   return list;
 }
 
 girara_list_t* girara_sorted_list_new_with_free(girara_compare_function_t cmp, girara_free_function_t gfree) {
   girara_list_t* list = g_try_malloc0(sizeof(girara_list_t));
-  if (list == NULL) {
-    return NULL;
+  if (list != NULL) {
+    list->free = gfree;
+    list->cmp  = cmp;
   }
-
-  list->free = gfree;
-  list->cmp  = cmp;
   return list;
 }
 
@@ -85,12 +79,10 @@ void girara_list_clear(girara_list_t* list) {
 }
 
 void girara_list_free(girara_list_t* list) {
-  if (list == NULL) {
-    return;
+  if (list != NULL) {
+    girara_list_clear(list);
+    g_free(list);
   }
-
-  girara_list_clear(list);
-  g_free(list);
 }
 
 void girara_list_append(girara_list_t* list, void* data) {
@@ -147,7 +139,7 @@ void girara_list_set_nth(girara_list_t* list, size_t n, void* data) {
   g_return_if_fail(list->cmp == NULL);
 
   if (list->free != NULL) {
-    (*list->free)(list->start[n]);
+    list->free(list->start[n]);
   }
 
   list->start[n] = data;
@@ -183,11 +175,9 @@ girara_list_iterator_t* girara_list_iterator(girara_list_t* list) {
   }
 
   girara_list_iterator_t* iter = g_try_malloc0(sizeof(girara_list_iterator_t));
-  if (iter == NULL) {
-    return NULL;
+  if (iter != NULL) {
+    iter->list = list;
   }
-
-  iter->list = list;
   return iter;
 }
 
