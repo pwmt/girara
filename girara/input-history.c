@@ -62,7 +62,7 @@ static void girara_input_history_class_init(GiraraInputHistoryClass* class) {
 /* Object init */
 static void girara_input_history_init(GiraraInputHistory* history) {
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
-  priv->history                   = girara_list_new_with_free((girara_free_function_t)g_free);
+  priv->history                   = girara_list_new_with_free(g_free);
   priv->reset                     = true;
   priv->io                        = NULL;
 }
