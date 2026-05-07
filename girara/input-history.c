@@ -140,7 +140,7 @@ static void ih_append(GiraraInputHistory* history, const char* input) {
   }
 
   void* data = NULL;
-  while ((data = girara_list_find(list, list_strcmp, data)) != NULL) {
+  while ((data = girara_list_find(list, list_strcmp, input)) != NULL) {
     girara_list_remove(list, data);
   }
 
