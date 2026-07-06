@@ -46,3 +46,17 @@ girara_log_level_t girara_get_log_level(void) {
 void girara_set_log_level(girara_log_level_t level) {
   log_level = level;
 }
+
+void girara_set_log_level_from_string(const char* loglevel) {
+  if (loglevel == NULL || g_strcmp0(loglevel, "info") == 0) {
+    girara_set_log_level(GIRARA_INFO);
+  } else if (g_strcmp0(loglevel, "warning") == 0) {
+    girara_set_log_level(GIRARA_WARNING);
+  } else if (g_strcmp0(loglevel, "error") == 0) {
+    girara_set_log_level(GIRARA_ERROR);
+  } else if (g_strcmp0(loglevel, "debug") == 0) {
+    girara_set_log_level(GIRARA_DEBUG);
+  } else {
+    girara_error("Invalid log level: %s", loglevel);
+  }
+}
