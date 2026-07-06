@@ -126,6 +126,4 @@ girara_dependency = declare_dependency(link_with: girara, include_directories: i
 meson.override_dependency('girara', girara_dependency)
 
 subdir('doc')
-if get_option('tests').allowed()
-  subdir('tests')
-endif
+subdir('tests')
