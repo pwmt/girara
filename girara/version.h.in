@@ -7,7 +7,7 @@
 #define GIRARA_VERSION_MAJOR @GVMAJOR@
 #define GIRARA_VERSION_MINOR @GVMINOR@
 #define GIRARA_VERSION_REV @GVREV@
-#define GIRARA_VERSION "@GVMAJOR@.@GVMINOR@.@GVREV@"
+#define GIRARA_VERSION "@version@"
 /* clang-format on */
 
 #endif
