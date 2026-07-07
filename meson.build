@@ -1,7 +1,7 @@
 project(
   'girara',
   'c',
-  version: '2026.02.04',
+  version: '2026.07.07',
   meson_version: '>=1.5',
   default_options: ['c_std=c23', 'warning_level=3'],
 )
