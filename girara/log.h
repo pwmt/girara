@@ -77,7 +77,7 @@ void girara_set_log_level(girara_log_level_t level) GIRARA_VISIBLE;
 
 /**
  * Set the log level.
- * @param lavel String representation of the log level, i.e., info, debug, warning, or error.
+ * @param level String representation of the log level, i.e., "info", "debug", "warning", or "error".
  */
 void girara_set_log_level_from_string(const char* loglevel) GIRARA_VISIBLE;
 
