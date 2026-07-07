@@ -4,7 +4,6 @@
 
 #include "datastructures.h"
 #include "internal.h"
-#include "utils.h"
 
 /**
  * Private data of the input history
@@ -63,7 +62,7 @@ static void girara_input_history_class_init(GiraraInputHistoryClass* class) {
 /* Object init */
 static void girara_input_history_init(GiraraInputHistory* history) {
   GiraraInputHistoryPrivate* priv = girara_input_history_get_instance_private(history);
-  priv->history                   = girara_list_new_with_free((girara_free_function_t)g_free);
+  priv->history                   = girara_list_new_with_free(g_free);
   priv->reset                     = true;
   priv->io                        = NULL;
 }
@@ -141,7 +140,7 @@ static void ih_append(GiraraInputHistory* history, const char* input) {
   }
 
   void* data = NULL;
-  while ((data = girara_list_find(list, list_strcmp, data)) != NULL) {
+  while ((data = girara_list_find(list, list_strcmp, input)) != NULL) {
     girara_list_remove(list, data);
   }
 

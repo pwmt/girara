@@ -1,10 +1,11 @@
 /* SPDX-License-Identifier: Zlib */
 
+#include "utils.h"
+
 #include <ctype.h>
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gio/gio.h>
-#include <limits.h>
 #include <pwd.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -12,7 +13,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "utils.h"
 #include "datastructures.h"
 #include "internal.h"
 #include "log.h"
@@ -65,12 +65,12 @@ bool girara_xdg_open_with_working_directory(const char* uri, const char* working
   bool res                = g_spawn_async(working_directory, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error);
   if (error != NULL) {
     girara_warning("Failed to execute 'xdg-open %s': %s", uri, error->message);
-    error = NULL;
+    g_clear_error(&error);
   }
 
   if (res == false) {
     /* fall back to `gio open` */
-    char* current_dir = working_directory != NULL ? g_get_current_dir() : NULL;
+    g_autofree char* current_dir = working_directory != NULL ? g_get_current_dir() : NULL;
     if (working_directory != NULL) {
       g_chdir(working_directory);
     }

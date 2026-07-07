@@ -3,7 +3,7 @@
 #ifndef GIRARA_UTILS_H
 #define GIRARA_UTILS_H
 
-#include <stdio.h>
+#include <stdbool.h>
 
 #include "macros.h"
 #include "types.h"

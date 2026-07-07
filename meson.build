@@ -1,7 +1,9 @@
-project('girara', 'c',
-  version: '2026.02.04',
+project(
+  'girara',
+  'c',
+  version: '2026.07.07',
   meson_version: '>=1.5',
-  default_options: ['c_std=c17', 'warning_level=3'],
+  default_options: ['c_std=c23', 'warning_level=3'],
 )
 
 version = meson.project_version()
@@ -26,12 +28,14 @@ conf_data.set('version', version)
 
 cc = meson.get_compiler('c')
 
-prefix = get_option('prefix')
-
 # required attributes
-cc.compiles('''#if !__has_attribute(cleanup)
+cc.compiles(
+  '''#if !__has_attribute(cleanup)
 #error attribute cleanup not supported
-#endif''', name: '__attribute__(cleanup)', required: true)
+#endif''',
+  name: '__attribute__(cleanup)',
+  required: true,
+)
 
 # required dependencies
 libm = cc.find_library('m', required: false)
@@ -43,7 +47,10 @@ build_dependencies = [libm, glib, gobject, gio]
 pc_requires = ['glib-2.0', 'gobject-2.0', 'gio-2.0']
 
 # supported functions
-has_getpwnam_r = cc.has_function('getpwnam_r', prefix: '#define _DEFAULT_SOURCE\n#include <sys/types.h>\n#include <pwd.h>')
+has_getpwnam_r = cc.has_function(
+  'getpwnam_r',
+  prefix: '#define _DEFAULT_SOURCE\n#include <sys/types.h>\n#include <pwd.h>',
+)
 
 # defines
 defines = [
@@ -60,7 +67,7 @@ flags = [
   '-Werror=implicit-function-declaration',
   '-Werror=vla',
   '-Werror=int-conversion',
-  '-Werror=maybe-uninitialized'
+  '-Werror=maybe-uninitialized',
 ]
 flags = cc.get_supported_arguments(flags)
 
@@ -68,20 +75,19 @@ flags = cc.get_supported_arguments(flags)
 version_header = configure_file(
   input: 'girara/version.h.in',
   output: 'girara-version.h',
-  configuration: conf_data
+  configuration: conf_data,
 )
-include_directories = [
-  include_directories('.')
-]
+include_directories = [include_directories('.')]
 
 # source files
 sources = files(
-  'girara/datastructures.c',
+  'girara/datastructures-list.c',
+  'girara/datastructures-node.c',
   'girara/input-history-io.c',
   'girara/input-history.c',
   'girara/log.c',
   'girara/template.c',
-  'girara/utils.c'
+  'girara/utils.c',
 )
 
 # header files to install
@@ -93,7 +99,7 @@ headers = files(
   'girara/macros.h',
   'girara/template.h',
   'girara/types.h',
-  'girara/utils.h'
+  'girara/utils.h',
 )
 headers += version_header
 
@@ -106,7 +112,7 @@ girara = library(
   install: true,
   include_directories: include_directories,
   c_args: defines + flags,
-  gnu_symbol_visibility: 'hidden'
+  gnu_symbol_visibility: 'hidden',
 )
 install_headers(headers, subdir: 'girara')
 

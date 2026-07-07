@@ -17,7 +17,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Build and test
         run: |
           mkdir build
@@ -34,7 +34,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Build and test
         run: |
           mkdir build
@@ -52,7 +52,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Build and test
         run: |
           mkdir build
@@ -61,16 +61,16 @@ jobs:
           ninja --verbose
           ninja test --verbose
 
-  build-test-ubuntu-noble:
-    name: Test on Ubuntu noble
+  build-test-ubuntu-resolute:
+    name: Test on Ubuntu resolute
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/pwmt/github-actions-ubuntu:noble
+      image: ghcr.io/pwmt/github-actions-ubuntu:resolute
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Build and test
         run: |
           mkdir build
@@ -88,7 +88,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Build and test
         run: |
           mkdir build
