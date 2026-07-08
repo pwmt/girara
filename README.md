@@ -16,7 +16,7 @@ Requirements
 
 The following dependencies are required:
 
-* `glib` (>= 2.72)
+* `glib` (>= 2.84)
 
 For building girara, the following dependencies are also required:
 
