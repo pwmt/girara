@@ -153,7 +153,7 @@ GiraraTemplate* girara_template_new(const char* base) {
 }
 
 void girara_template_set_base(GiraraTemplate* object, const char* base) {
-  g_return_if_fail(GIRARA_IS_TEMPLATE(object));
+  g_return_if_fail(object != NULL);
 
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   if (g_strcmp0(base, priv->base) != 0) {
@@ -166,7 +166,7 @@ void girara_template_set_base(GiraraTemplate* object, const char* base) {
 }
 
 const char* girara_template_get_base(GiraraTemplate* object) {
-  g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), NULL);
+  g_return_val_if_fail(object != NULL, NULL);
 
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   return priv->base;
@@ -216,14 +216,14 @@ static void variable_changed(GiraraTemplate* object, const char* GIRARA_UNUSED(n
 static void template_changed(GiraraTemplate* GIRARA_UNUSED(object)) {}
 
 girara_list_t* girara_template_referenced_variables(GiraraTemplate* object) {
-  g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), NULL);
+  g_return_val_if_fail(object != NULL, NULL);
 
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   return priv->variables_in_base;
 }
 
 bool girara_template_add_variable(GiraraTemplate* object, const char* name) {
-  g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), false);
+  g_return_val_if_fail(object != NULL, false);
   g_return_val_if_fail(name != NULL, false);
 
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
@@ -253,7 +253,7 @@ bool girara_template_add_variable(GiraraTemplate* object, const char* name) {
 }
 
 void girara_template_set_variable_value(GiraraTemplate* object, const char* name, const char* value) {
-  g_return_if_fail(GIRARA_IS_TEMPLATE(object));
+  g_return_if_fail(object != NULL);
   g_return_if_fail(name != NULL);
   g_return_if_fail(value != NULL);
 
@@ -287,7 +287,7 @@ static gboolean eval_replace_cb(const GMatchInfo* info, GString* res, void* data
 }
 
 char* girara_template_evaluate(GiraraTemplate* object) {
-  g_return_val_if_fail(GIRARA_IS_TEMPLATE(object), NULL);
+  g_return_val_if_fail(object != NULL, NULL);
 
   GiraraTemplatePrivate* priv = girara_template_get_instance_private(object);
   if (priv->valid == false) {
