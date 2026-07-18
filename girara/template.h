@@ -34,7 +34,7 @@ typedef struct girara_template_class_s GiraraTemplateClass;
  *
  * @return the type
  */
-GType girara_template_get_type(void) G_GNUC_CONST GIRARA_VISIBLE;
+GType girara_template_get_type(void) GIRARA_VISIBLE;
 
 /**
  * Create new template object.

@@ -255,12 +255,12 @@ static void ih_reset(GiraraInputHistory* history) {
 /* Wrapper functions for the members */
 
 void girara_input_history_append(GiraraInputHistory* history, const char* input) {
-  g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
+  g_return_if_fail(history != NULL);
   GIRARA_INPUT_HISTORY_GET_CLASS(history)->append(history, input);
 }
 
 girara_list_t* girara_input_history_list(GiraraInputHistory* history) {
-  g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
+  g_return_val_if_fail(history != NULL, NULL);
 
   GiraraInputHistoryClass* klass = GIRARA_INPUT_HISTORY_GET_CLASS(history);
   g_return_val_if_fail(klass != NULL && klass->list != NULL, NULL);
@@ -269,17 +269,17 @@ girara_list_t* girara_input_history_list(GiraraInputHistory* history) {
 }
 
 const char* girara_input_history_next(GiraraInputHistory* history, const char* current_input) {
-  g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
+  g_return_val_if_fail(history != NULL, NULL);
   return GIRARA_INPUT_HISTORY_GET_CLASS(history)->next(history, current_input);
 }
 
 const char* girara_input_history_previous(GiraraInputHistory* history, const char* current_input) {
-  g_return_val_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true, NULL);
+  g_return_val_if_fail(history != NULL, NULL);
   return GIRARA_INPUT_HISTORY_GET_CLASS(history)->previous(history, current_input);
 }
 
 void girara_input_history_reset(GiraraInputHistory* history) {
-  g_return_if_fail(GIRARA_IS_INPUT_HISTORY(history) == true);
+  g_return_if_fail(history != NULL);
 
   GiraraInputHistoryClass* klass = GIRARA_INPUT_HISTORY_GET_CLASS(history);
   g_return_if_fail(klass != NULL && klass->reset != NULL);

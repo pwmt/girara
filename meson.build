@@ -1,7 +1,7 @@
 project(
   'girara',
   'c',
-  version: '2026.07.07',
+  version: '2026.07.18',
   meson_version: '>=1.5',
   default_options: ['c_std=c23', 'warning_level=3'],
 )
@@ -39,9 +39,9 @@ cc.compiles(
 
 # required dependencies
 libm = cc.find_library('m', required: false)
-glib = dependency('glib-2.0', version: '>=2.72')
-gobject = dependency('gobject-2.0', version: '>=2.72')
-gio = dependency('gio-2.0', version: '>=2.72')
+glib = dependency('glib-2.0', version: '>=2.84')
+gobject = dependency('gobject-2.0', version: '>=2.84')
+gio = dependency('gio-2.0', version: '>=2.84')
 
 build_dependencies = [libm, glib, gobject, gio]
 pc_requires = ['glib-2.0', 'gobject-2.0', 'gio-2.0']
